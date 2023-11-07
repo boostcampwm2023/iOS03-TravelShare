@@ -1,0 +1,13 @@
+
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+}
+div.firsttab{
+    padding-left:20px;
+}
+div.tab {
+    padding-left: 40px;
+}

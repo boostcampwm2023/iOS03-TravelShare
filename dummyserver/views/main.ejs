@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <title>Macro_Project</title>
+    <link rel="stylesheet" href="/index.css">
+  </head>
+    
+  <body>
+    <%MacroData.forEach(data=>{ %>
+      <p>{</p>
+      <div class="firsttab">
+        <p>userInfo:</p>
+        <p>{</p>
+        <div class="tab">
+          <p>userId: <%=data.userinfo.userId%></p>
+          <p>username: <%=data.userinfo.username%></p>
+          <p>follower_num: <%=data.userinfo.follower_num%></p>
+        </div>
+        <p>}</p>
+        <p>postinfo:</p>
+        <p>{</p>
+        <div class="tab">
+          <p>postId: <%=data.postinfo.postId%></p>
+          <p>title: <%=data.postinfo.title%></p>
+          <p>view_num: <%=data.postinfo.view_num%></p>
+          <p>like_num: <%=data.postinfo.like_num%></p>
+          <p>summary: <%=data.postinfo.summary%></p>
+          <p>route: <%=data.postinfo.route%></p>
+          <p>hashtag: <%=data.postinfo.hashtag%></p>
+        </div>
+        <p>}</p>
+      </div>
+      <p>}</p>
+    <% })%>
+  </body>
+</html>
