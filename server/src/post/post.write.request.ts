@@ -20,7 +20,7 @@ class PostWriteElement {
     positionY: number;
 }
 
-export class PostWriteRequest {
+export class PostWriteBody {
     @ApiProperty({description: '제목'})
     @IsString()
     title: string;

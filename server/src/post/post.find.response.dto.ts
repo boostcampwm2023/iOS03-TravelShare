@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsObject, IsString, IsUrl, Min } from 'class-validator'
-import { UserSimpleResponse } from './user.simple.response';
+import { UserProfileResponse } from '../user/user.profile.response.dto';
 
 export class PostFindResponse {
     @ApiProperty({description: '게시글 id'})
@@ -32,5 +32,5 @@ export class PostFindResponse {
 
     @ApiProperty({description: '작성자 정보입니다.'})
     @IsObject()
-    user: UserSimpleResponse;
+    user: UserProfileResponse;
 }

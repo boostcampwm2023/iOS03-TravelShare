@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsArray, IsDate, IsInt, IsNumber, IsObject, IsString, IsUrl, Min, ValidateNested } from "class-validator";
 import { Type } from 'class-transformer'
-import { UserSimpleResponse } from "./user.simple.response";
+import { UserProfileResponse } from "../user/user.profile.response.dto";
 
 
 export class PostReadElement {
@@ -42,7 +42,7 @@ export class PostReadResponse {
 
     @ApiProperty({description: '작성자'})
     @IsObject()
-    user: UserSimpleResponse
+    user: UserProfileResponse
 
     @ApiProperty({description: '좋아요개수'})
     @IsInt()
