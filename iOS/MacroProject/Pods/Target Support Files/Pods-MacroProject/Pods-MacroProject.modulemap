@@ -1,0 +1,6 @@
+framework module Pods_MacroProject {
+  umbrella header "Pods-MacroProject-umbrella.h"
+
+  export *
+  module * { export * }
+}
