@@ -1,10 +1,9 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsOptional } from "class-validator";
-
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsOptional } from 'class-validator';
 
 export class UserProfileQuery {
-    @ApiProperty({description: '이메일(아이디).', required: false})
-    @IsOptional()
-    @IsEmail()
-    id?: string;
+  @ApiProperty({ description: '이메일(아이디).', required: false })
+  @IsOptional()
+  @IsEmail()
+  id?: string;
 }
