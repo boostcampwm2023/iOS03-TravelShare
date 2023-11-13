@@ -2,8 +2,8 @@
 # Reference : https://realm.github.io/SwiftLint/index.html
 excluded:
   - Pods
-  - Macro/AppDelegate.swift
-  - Macro/SceneDelegate.swift
+  - Macro/App/AppDelegate.swift
+  - Macro/App/SceneDelegate.swift
 analyzer_rules:
   - unused_declaration
   - unused_import
