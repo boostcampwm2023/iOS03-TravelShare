@@ -22,9 +22,12 @@ import { UserProfileResponse } from './user.profile.response.dto';
 import { UserProfileQuery } from './user.profile.query.dto';
 import { UserFollowQuery } from './user.follow.query.dto';
 import { UserProfileSimpleResponse } from './user.profile.simple.response.dto';
+import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
+  constructor(private readonly userService: UserService) {}
+
   @ApiOperation({ description: '회원가입' })
   @ApiResponse({ type: UserSigninResponse })
   @Post('signup')
