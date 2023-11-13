@@ -6,6 +6,8 @@
 	<array>
 		<string>나눔손글씨 배은혜체.ttf</string>
 	</array>
+	<key>NMFClientId</key>
+	<string>9wdoztuuak</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
