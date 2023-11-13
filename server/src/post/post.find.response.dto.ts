@@ -7,7 +7,7 @@ import {
   IsUrl,
   Min,
 } from 'class-validator';
-import { UserProfileResponse } from '../user/user.profile.response.dto';
+import { UserProfileSimpleResponse } from 'src/user/user.profile.simple.response.dto';
 
 export class PostFindResponse {
   @ApiProperty({ description: '게시글 id' })
@@ -39,7 +39,7 @@ export class PostFindResponse {
 
   @ApiProperty({ description: '작성자 정보입니다.' })
   @IsObject()
-  user: UserProfileResponse;
+  user: UserProfileSimpleResponse;
 
   @ApiProperty({ description: '좋아요 여부(내가 좋아요 눌렀었나?)' })
   @IsBoolean()

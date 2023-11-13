@@ -8,7 +8,12 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { UserSigninResponse } from './user.signin.response.dto';
 import { UserSignupBody } from './user.signup.body.dto';
 import { UserSigninBody } from './user.signin.body.dto';
@@ -16,6 +21,7 @@ import { UserProfileUpdateQuery } from './user.profile.update.query.dto';
 import { UserProfileResponse } from './user.profile.response.dto';
 import { UserProfileQuery } from './user.profile.query.dto';
 import { UserFollowQuery } from './user.follow.query.dto';
+import { UserProfileSimpleResponse } from './user.profile.simple.response.dto';
 
 @Controller('user')
 export class UserController {
@@ -36,8 +42,8 @@ export class UserController {
 
   @ApiOperation({ description: '회원탈퇴' })
   @ApiBearerAuth('access-token')
-  @Delete('signdown')
-  async signdown() {}
+  @Delete('delete')
+  async delete() {}
 
   @ApiOperation({ description: '회원정보 수정' })
   @ApiBearerAuth('access-token')
@@ -65,4 +71,16 @@ export class UserController {
   @ApiBearerAuth('access-token')
   @Patch('unfollow')
   async unfollow(@Query() follower: UserFollowQuery) {}
+
+  @ApiOperation({ description: '팔로워 리스트' })
+  @ApiQuery({ description: '유저 id', required: false })
+  @ApiResponse({ type: [UserProfileSimpleResponse] })
+  @Get('followers')
+  async followers(@Query() user: UserProfileQuery) {}
+
+  @ApiOperation({ description: '팔로잉 리스트' })
+  @ApiQuery({ description: '유저 id', required: false })
+  @ApiResponse({ type: [UserProfileSimpleResponse] })
+  @Get('followings')
+  async followings(@Query() user: UserProfileQuery) {}
 }
