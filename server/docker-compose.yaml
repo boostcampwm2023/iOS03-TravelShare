@@ -2,7 +2,7 @@ version: "1"
 services:
   node:
     image: "node:20.5.1"
-    user: "node"
+    user: "root"
     working_dir: "/node"
     volumes:
       - ./:/node
