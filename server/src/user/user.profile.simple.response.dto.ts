@@ -4,7 +4,7 @@ import { IsEmail, IsOptional, IsString, IsUrl } from 'class-validator';
 export class UserProfileSimpleResponse {
   @ApiProperty({ description: '작성자 email' })
   @IsEmail()
-  id: string;
+  userId: string;
 
   @ApiProperty({ description: '작성자 이름' })
   @IsString()
