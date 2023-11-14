@@ -9,7 +9,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = app.get(ConfigService);
 
-  app.useLogger(config.get('application.log') || ['log', 'warn', 'error', 'fatal'])
+  app.useLogger(
+    config.get('application.log') || ['log', 'warn', 'error', 'fatal'],
+  );
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.useGlobalInterceptors(new ResponseValidationInterceptor());
 

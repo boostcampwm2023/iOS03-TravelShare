@@ -15,7 +15,8 @@ import { ConfigService } from '@nestjs/config';
     UserModule,
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService)=> configService.get('typeorm')
+      useFactory: (configService: ConfigService) =>
+        configService.get('typeorm'),
     }),
     AppConfigModule,
     MapModule,
