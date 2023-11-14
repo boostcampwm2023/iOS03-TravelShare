@@ -3,7 +3,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { JWT_CREDENTIAL } from './auth.constants';
 import { JwtAuthenticationGuard } from './jwt.authentication.gaurd';
-import { RoleAuthorizationGuard } from './role.authentication.gaurd';
+import { RoleAuthorizationGuard } from './role.authorization.gaurd';
 import { ConfigService } from '@nestjs/config';
 
 @Module({
