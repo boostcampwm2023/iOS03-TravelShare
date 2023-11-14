@@ -2,13 +2,15 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ResponseValidationInterceptor } from './utils/response.validation.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'fatal', 'warn', 'log', 'verbose'],
   });
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({transform: true}));
+  app.useGlobalInterceptors(new ResponseValidationInterceptor())
 
   const config = new DocumentBuilder()
     .setTitle('여행갈래 api docs')
