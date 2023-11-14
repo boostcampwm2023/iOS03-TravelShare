@@ -25,7 +25,7 @@ import { AppConfigModule } from './config/app.config.module';
       logging: true,
     }),
     AppConfigModule,
-    MapModule
+    MapModule,
   ],
   controllers: [AppController],
   providers: [AppService],
