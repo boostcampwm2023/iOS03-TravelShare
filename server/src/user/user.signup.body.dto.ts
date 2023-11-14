@@ -11,7 +11,7 @@ import {
 export class UserSignupBody {
   @ApiProperty({ description: '이메일' })
   @IsEmail()
-  id: string;
+  userId: string;
 
   @ApiProperty({ description: '비밀번호' })
   @IsString()

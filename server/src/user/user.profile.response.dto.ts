@@ -16,7 +16,7 @@ import { PostFindResponse } from 'src/post/post.find.response.dto';
 export class UserProfileResponse {
   @ApiProperty({ description: '작성자 email' })
   @IsEmail()
-  id: string;
+  userId: string;
 
   @ApiProperty({ description: '작성자 이름' })
   @IsString()
