@@ -7,6 +7,8 @@ import {
 } from 'typeorm';
 import { Post } from './post.entity';
 
+export type UserRole = 'user' | 'admin';
+
 @Entity('user')
 export class User {
   @PrimaryGeneratedColumn('uuid', { name: 'user_id' })
@@ -21,8 +23,11 @@ export class User {
   @Column()
   password: string;
 
-  @Column()
+  @Column({ nullable: true })
   profile: string;
+
+  @Column('enum', { default: 'user', enum: ['user', 'admin'] })
+  role: UserRole;
 
   @ManyToMany(() => User, (user) => user.email)
   @JoinTable({
