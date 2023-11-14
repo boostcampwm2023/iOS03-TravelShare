@@ -16,7 +16,7 @@ export class UserService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async save(user: UserSignupBody) {
+  async signup(user: UserSignupBody) {
     const userDetail = await this.userRepository.save({
       ...user,
       password: await hash(user.password, await genSalt()),

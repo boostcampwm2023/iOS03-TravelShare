@@ -40,11 +40,11 @@ export class MapSearchResponse {
 
   @ApiProperty({ description: 'x좌표' })
   @IsNumber()
-  @Transform((value) => parseFloat(value.value) / 10000000)
+  @Transform(({ value }) => parseFloat(value) / 10000000)
   mapx: number;
 
   @ApiProperty({ description: 'y좌표' })
   @IsNumber()
-  @Transform((value) => parseFloat(value.value) / 10000000)
+  @Transform(({ value }) => parseFloat(value) / 10000000)
   mapy: number;
 }

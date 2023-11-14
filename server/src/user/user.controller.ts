@@ -25,6 +25,7 @@ import { UserProfileSimpleResponse } from './user.profile.simple.response.dto';
 import { UserService } from './user.service';
 import { UserDeleteBody } from './user.delete.body.dto';
 import { Public } from 'src/auth/auth.decorators';
+import { plainToInstance } from 'class-transformer';
 
 @Controller('user')
 export class UserController {
@@ -35,7 +36,9 @@ export class UserController {
   @Public()
   @Post('signup')
   async signup(@Body() user: UserSignupBody) {
-    return { token: await this.userService.save(user) };
+    return plainToInstance(UserSigninResponse, {
+      token: await this.userService.signup(user),
+    });
   }
 
   @ApiOperation({ description: '기본 로그인' })
@@ -43,7 +46,9 @@ export class UserController {
   @Public()
   @Post('signin')
   async signin(@Body() user: UserSigninBody) {
-    return { token: await this.userService.login(user) };
+    return plainToInstance(UserSigninResponse, {
+      token: await this.userService.login(user),
+    });
   }
 
   @ApiOperation({ description: '로그아웃' })

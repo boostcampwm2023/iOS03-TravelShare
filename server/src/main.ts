@@ -9,8 +9,8 @@ async function bootstrap() {
     logger: ['error', 'fatal', 'warn', 'log', 'verbose'],
   });
 
-  app.useGlobalPipes(new ValidationPipe({transform: true}));
-  app.useGlobalInterceptors(new ResponseValidationInterceptor())
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalInterceptors(new ResponseValidationInterceptor());
 
   const config = new DocumentBuilder()
     .setTitle('여행갈래 api docs')
