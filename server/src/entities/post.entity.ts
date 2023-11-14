@@ -17,8 +17,8 @@ export class Post {
   @PrimaryGeneratedColumn({ name: 'post_id' })
   postId: number;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'user_id' })
+  @ManyToOne(() => User, (user) => user.email)
+  @JoinColumn({ name: 'user_email' })
   writer: User;
 
   @Column()
@@ -48,10 +48,10 @@ export class Post {
   @Column('date', { name: 'end_at' })
   endAt: Date;
 
-  @ManyToMany(() => User)
+  @ManyToMany(() => User, (user) => user.email)
   @JoinTable({
     joinColumn: { name: 'post_id' },
-    inverseJoinColumn: { name: 'user_id' },
+    inverseJoinColumn: { name: 'user_email' },
   })
   likeUsers: Promise<User[]>;
 
