@@ -12,6 +12,8 @@ export default () => {
       config = load(readFileSync('application.production.yaml', 'utf-8'));
       break;
   }
-  config.jwt.secret = createSecretKey(config.jwt.secret).export();
+  config.application.jwt.secret = createSecretKey(
+    config.application.jwt.secret,
+  ).export();
   return config;
 };
