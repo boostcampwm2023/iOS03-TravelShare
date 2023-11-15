@@ -18,5 +18,5 @@ export class PostFindQuery {
   @IsIn(['writed', 'liked'])
   @IsOptional()
   @Transform(({ value }) => value.toLowerCase())
-  mode: string;
+  mode?: string;
 }
