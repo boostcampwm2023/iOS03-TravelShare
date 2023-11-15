@@ -8,6 +8,7 @@ import { MapModule } from './map/map.module';
 import { AppConfigModule } from './config/app.config.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigService } from '@nestjs/config';
+import { UtilsModule } from './utils/utils.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ConfigService } from '@nestjs/config';
     AppConfigModule,
     MapModule,
     AuthModule,
+    UtilsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

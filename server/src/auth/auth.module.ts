@@ -1,24 +1,13 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtModule } from '@nestjs/jwt';
 import { JWT_CREDENTIAL } from './auth.constants';
 import { JwtAuthenticationGuard } from './jwt.authentication.gaurd';
 import { RoleAuthorizationGuard } from './role.authorization.gaurd';
 import { ConfigService } from '@nestjs/config';
+import { AppleAuthModule } from './apple/apple.module';
 
 @Module({
-  imports: [
-    JwtModule.registerAsync({
-      global: true,
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.get('jwt.secret'),
-        signOptions: {
-          expiresIn: configService.get('jwt.expiresIn'),
-        },
-      }),
-    }),
-  ],
+  imports: [AppleAuthModule],
   providers: [
     {
       provide: APP_GUARD,
@@ -32,7 +21,7 @@ import { ConfigService } from '@nestjs/config';
       provide: JWT_CREDENTIAL,
       inject: [ConfigService],
       useFactory: (configService: ConfigService) =>
-        configService.get('jwt.secret'),
+        configService.get('application.jwt.secret'),
     },
   ],
 })
