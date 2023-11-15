@@ -16,8 +16,8 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ResponseValidationInterceptor());
 
   const documentConfig = new DocumentBuilder()
-    .setTitle('여행갈래 api docs')
-    .setDescription('여행갈래 앱 Api 문서입니다.')
+    .setTitle('어디갈래 api docs')
+    .setDescription('어디갈래 앱 Api 문서입니다.')
     .setVersion('0.1')
     .addBearerAuth(
       {

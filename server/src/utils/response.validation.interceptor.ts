@@ -4,7 +4,7 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { validate, validateOrReject } from 'class-validator';
+import { validateOrReject } from 'class-validator';
 import { Observable, map } from 'rxjs';
 
 @Injectable()
