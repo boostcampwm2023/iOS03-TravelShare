@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class CacheManager {
+struct CacheManager {
     private let memoryCache = NSCache<NSString, NSObject>()
 }
 
