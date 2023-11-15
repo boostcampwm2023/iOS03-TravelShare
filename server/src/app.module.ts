@@ -14,11 +14,6 @@ import { UtilsModule } from './utils/utils.module';
   imports: [
     PostModule,
     UserModule,
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) =>
-        configService.get('typeorm'),
-    }),
     AppConfigModule,
     MapModule,
     AuthModule,
