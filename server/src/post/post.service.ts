@@ -4,6 +4,10 @@ import { Post, PostContentElement } from 'src/entities/post.entity';
 import { Repository } from 'typeorm';
 import { PostWriteBody } from './post.write.body';
 import { Transactional } from 'src/utils/transactional.decorator';
+import {
+  PostFindMyLogQuery,
+  PostFindOtherUserLogQuery,
+} from './post.find.query.dto';
 
 @Injectable()
 export class PostService {
@@ -13,6 +17,46 @@ export class PostService {
     @InjectRepository(PostContentElement)
     private readonly postContentElementRepository: Repository<PostContentElement>,
   ) {}
+
+  async popularList(query: PostFindMyLogQuery) {
+    return await this.postRepository.find({
+      ...query,
+      order: {
+        likeNum: 'DESC',
+        viewNum: 'DESC',
+      },
+    });
+  }
+
+  async findByUser(query: PostFindOtherUserLogQuery) {
+    const opts = {
+      order: {
+        likeNum: 'DESC' as const,
+        viewNum: 'DESC' as const,
+      },
+      take: query.take ?? 10,
+      skip: query.skip ?? 0,
+    };
+    if (query.mode === 'liked') {
+      return await this.postRepository.find({
+        ...opts,
+        where: {
+          likeUsers: {
+            email: query.email,
+          },
+        },
+      });
+    } else {
+      return await this.postRepository.find({
+        ...opts,
+        where: {
+          writer: {
+            email: query.email,
+          },
+        },
+      });
+    }
+  }
 
   async detail(id: number) {
     return await this.postRepository.findOneOrFail({

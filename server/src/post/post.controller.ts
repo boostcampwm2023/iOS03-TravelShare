@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpStatus,
-  Patch,
-  Post,
-  Query,
-  Response,
-} from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -18,12 +9,16 @@ import {
 import { PostFindResponse } from './post.find.response.dto';
 import { PostReadResponse } from './post.read.response.dto';
 import { PostWriteBody } from './post.write.body';
-import { PostFindQuery } from './post.find.query.dto';
+import {
+  PostFindMyLogQuery,
+  PostFindOtherUserLogQuery,
+  PostFindQuery,
+  PostSearchKeywordQuery,
+} from './post.find.query.dto';
 import { plainToInstance } from 'class-transformer';
 import { PostService } from './post.service';
 import { AuthenticatedUser } from 'src/auth/auth.decorators';
-import { AuthUser } from 'src/auth/authentication.dto';
-import { Response as HttpResponse } from 'express';
+import { Authentication } from 'src/auth/authentication.dto';
 
 @ApiBearerAuth('access-token')
 @Controller('post')
@@ -31,9 +26,34 @@ export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @ApiResponse({ description: '리스트 조회', type: [PostFindResponse] })
-  @ApiQuery({ description: '' })
+  @ApiQuery({ description: '키워드 검색', type: PostSearchKeywordQuery })
+  @ApiQuery({ description: '기본(메인페이지)', type: PostFindMyLogQuery })
+  @ApiQuery({
+    description: '다른 유저 게시글',
+    type: PostFindOtherUserLogQuery,
+  })
   @Get('find')
-  async find(@Query() query: PostFindQuery) {}
+  async find(
+    @Query() query: PostFindQuery,
+    @AuthenticatedUser() user: Authentication,
+  ) {
+    if ('keyword' in query) {
+      return await this.postService.popularList(
+        plainToInstance(PostSearchKeywordQuery, query),
+      );
+    } else if ('email' in query) {
+      return await this.postService.findByUser(
+        plainToInstance(PostFindOtherUserLogQuery, query),
+      );
+    } else {
+      return await this.postService.findByUser(
+        plainToInstance(PostFindOtherUserLogQuery, {
+          ...query,
+          email: user.email,
+        }),
+      );
+    }
+  }
 
   @ApiResponse({ description: '상세 조회', type: PostReadResponse })
   @ApiQuery({ description: '게시글 id' })
@@ -47,7 +67,6 @@ export class PostController {
   async upload(@Body() post: PostWriteBody) {
     // return plainToInstance(PostWriteBody, await this.postService.upload(post));
     await this.postService.upload(post);
-    return {};
   }
 
   @ApiOperation({ description: '게시글 좋아요' })
@@ -55,11 +74,9 @@ export class PostController {
   @Patch('like')
   async like(
     @Query('id') id: number,
-    @AuthenticatedUser() user: AuthUser,
-    @Response() res: HttpResponse,
+    @AuthenticatedUser() user: Authentication,
   ) {
     await this.postService.like(user.email, id);
-    res.status(HttpStatus.OK).end();
   }
 
   @ApiOperation({ description: '게시글 좋아요 취소' })
@@ -67,8 +84,7 @@ export class PostController {
   @Patch('unlike')
   async unlike(
     @Query('id') id: number,
-    @AuthenticatedUser() user: AuthUser,
-    @Response() res: HttpResponse,
+    @AuthenticatedUser() user: Authentication,
   ) {
     await this.postService.unlike(user.email, id);
   }
