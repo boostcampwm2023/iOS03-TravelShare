@@ -19,10 +19,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       global: true,
     }),
     TypeOrmModule.forRootAsync({
-        inject: [ConfigService],
-        useFactory: (configService: ConfigService) =>
-          configService.get('typeorm'),
-      }),
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) =>
+        configService.get('typeorm'),
+    }),
   ],
   providers: [
     {
