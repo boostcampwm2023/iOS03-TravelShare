@@ -11,7 +11,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { UserProfileResponse } from '../user/user.profile.response.dto';
+import { UserProfileSimpleResponse } from 'src/user/user.profile.simple.response.dto';
 
 export class PostReadElement {
   @ApiProperty({ description: '이미지 url' })
@@ -51,7 +51,7 @@ export class PostReadResponse {
 
   @ApiProperty({ description: '작성자' })
   @IsObject()
-  user: UserProfileResponse;
+  user: UserProfileSimpleResponse;
 
   @ApiProperty({ description: '좋아요개수' })
   @IsInt()

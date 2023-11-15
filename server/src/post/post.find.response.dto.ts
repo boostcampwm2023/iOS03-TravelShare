@@ -13,7 +13,7 @@ export class PostFindResponse {
   @ApiProperty({ description: '게시글 id' })
   @IsInt()
   @Min(0)
-  id: number;
+  postId: number;
 
   @ApiProperty({ description: '게시글 타이틀' })
   @IsString()
