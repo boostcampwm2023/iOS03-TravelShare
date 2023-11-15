@@ -49,6 +49,10 @@ public enum ColorAsset {
         case statusRed
         case statusGreen
     }
+    
+    public enum SpecialColor {
+        case opacity30
+    }
 }
 
 @available(iOS 13.0, *)
@@ -98,6 +102,12 @@ public extension UIColor {
         switch name {
         case .statusRed: return UIColor(hexCode: "#FF4250")
         case .statusGreen: return UIColor(hexCode: "#BAFFC9")
+        }
+    }
+    
+    static func appColor(_ name: ColorAsset.SpecialColor) -> UIColor {
+        switch name {
+        case .opacity30: return UIColor(hexCode: "#242831", alpha: 0.3)
         }
     }
 }
