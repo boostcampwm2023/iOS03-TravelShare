@@ -14,7 +14,18 @@
 		AA46C4C12B02304600856628 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA46C4C02B02304600856628 /* Assets.xcassets */; };
 		AA46C4CD2B02332F00856628 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = AA46C4CC2B02332F00856628 /* .swiftlint.yml */; };
 		AA46C4D02B025BA400856628 /* MacroDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = AA46C4CF2B025BA400856628 /* MacroDesignSystem */; };
-		AA46C4D22B025CB500856628 /* 나눔손글씨 배은혜체.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AA46C4D12B025CB500856628 /* 나눔손글씨 배은혜체.ttf */; };
+		BA86DF432B03130500491870 /* 나눔손글씨 배은혜체.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BA86DF422B03130500491870 /* 나눔손글씨 배은혜체.ttf */; };
+		BA86DF482B03163D00491870 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA86DF472B03163D00491870 /* TabBarViewController.swift */; };
+		BA86DF4A2B0316C100491870 /* TabBarBackgroundLargeCirclceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA86DF492B0316C100491870 /* TabBarBackgroundLargeCirclceView.swift */; };
+		BA86DF4C2B0316D500491870 /* TabBarBackgroundSmallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA86DF4B2B0316D500491870 /* TabBarBackgroundSmallView.swift */; };
+		BA86DF512B03253500491870 /* TabBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA86DF502B03253500491870 /* TabBarViewModel.swift */; };
+		BA86DF532B03255400491870 /* TabComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA86DF522B03255400491870 /* TabComponent.swift */; };
+		BA86DF552B0335D600491870 /* TabComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA86DF542B0335D600491870 /* TabComponentView.swift */; };
+		BA86DF572B034A0100491870 /* TabLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA86DF562B034A0100491870 /* TabLocation.swift */; };
+		BA86DF5A2B0354DD00491870 /* CircularViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA86DF592B0354DD00491870 /* CircularViewProtocol.swift */; };
+		BA86DF5C2B03583D00491870 /* TabBarCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA86DF5B2B03583D00491870 /* TabBarCenterView.swift */; };
+		BA86DF5E2B038B6B00491870 /* CAGradientLayer+.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA86DF5D2B038B6B00491870 /* CAGradientLayer+.swift */; };
+		BA86DF602B038B7600491870 /* UIScreen+.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA86DF5F2B038B7600491870 /* UIScreen+.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,9 +38,20 @@
 		AA46C4C52B02304600856628 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA46C4CC2B02332F00856628 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		AA46C4CE2B025AA300856628 /* MacroDesignSystem */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = MacroDesignSystem; path = ../MacroDesignSystem; sourceTree = "<group>"; };
-		AA46C4D12B025CB500856628 /* 나눔손글씨 배은혜체.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "나눔손글씨 배은혜체.ttf"; path = "../../../../../../Downloads/나눔손글씨 배은혜체.ttf"; sourceTree = "<group>"; };
 		AEE92490AF6F25C4DAF6AEF8 /* Pods-Macro.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Macro.release.xcconfig"; path = "Target Support Files/Pods-Macro/Pods-Macro.release.xcconfig"; sourceTree = "<group>"; };
 		B60928A2B9751095169A214C /* libPods-Macro.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Macro.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA86DF422B03130500491870 /* 나눔손글씨 배은혜체.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "나눔손글씨 배은혜체.ttf"; path = "../../../../../../../Downloads/나눔손글씨 배은혜체.ttf"; sourceTree = "<group>"; };
+		BA86DF472B03163D00491870 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		BA86DF492B0316C100491870 /* TabBarBackgroundLargeCirclceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarBackgroundLargeCirclceView.swift; sourceTree = "<group>"; };
+		BA86DF4B2B0316D500491870 /* TabBarBackgroundSmallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarBackgroundSmallView.swift; sourceTree = "<group>"; };
+		BA86DF502B03253500491870 /* TabBarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewModel.swift; sourceTree = "<group>"; };
+		BA86DF522B03255400491870 /* TabComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabComponent.swift; sourceTree = "<group>"; };
+		BA86DF542B0335D600491870 /* TabComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabComponentView.swift; sourceTree = "<group>"; };
+		BA86DF562B034A0100491870 /* TabLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabLocation.swift; sourceTree = "<group>"; };
+		BA86DF592B0354DD00491870 /* CircularViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularViewProtocol.swift; sourceTree = "<group>"; };
+		BA86DF5B2B03583D00491870 /* TabBarCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarCenterView.swift; sourceTree = "<group>"; };
+		BA86DF5D2B038B6B00491870 /* CAGradientLayer+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CAGradientLayer+.swift"; sourceTree = "<group>"; };
+		BA86DF5F2B038B7600491870 /* UIScreen+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScreen+.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,11 +100,70 @@
 			isa = PBXGroup;
 			children = (
 				AA46C4C52B02304600856628 /* Info.plist */,
+				BA86DF582B0354C400491870 /* Util */,
 				BAA07AE02B02523000884F3C /* Resource */,
 				BAA07ADF2B02521500884F3C /* App */,
+				BA86DF452B03147000491870 /* Common */,
 				BAA07ADE2B0251CF00884F3C /* Scene */,
 			);
 			path = Macro;
+			sourceTree = "<group>";
+		};
+		BA86DF452B03147000491870 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				BA86DF462B0315F200491870 /* TabBar */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		BA86DF462B0315F200491870 /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				BA86DF4D2B03173300491870 /* View */,
+				BA86DF4F2B03173E00491870 /* ViewModel */,
+				BA86DF4E2B03173800491870 /* Model */,
+			);
+			path = TabBar;
+			sourceTree = "<group>";
+		};
+		BA86DF4D2B03173300491870 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				BA86DF472B03163D00491870 /* TabBarViewController.swift */,
+				BA86DF492B0316C100491870 /* TabBarBackgroundLargeCirclceView.swift */,
+				BA86DF4B2B0316D500491870 /* TabBarBackgroundSmallView.swift */,
+				BA86DF5B2B03583D00491870 /* TabBarCenterView.swift */,
+				BA86DF542B0335D600491870 /* TabComponentView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		BA86DF4E2B03173800491870 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				BA86DF522B03255400491870 /* TabComponent.swift */,
+				BA86DF562B034A0100491870 /* TabLocation.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		BA86DF4F2B03173E00491870 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				BA86DF502B03253500491870 /* TabBarViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		BA86DF582B0354C400491870 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				BA86DF592B0354DD00491870 /* CircularViewProtocol.swift */,
+				BA86DF5D2B038B6B00491870 /* CAGradientLayer+.swift */,
+				BA86DF5F2B038B7600491870 /* UIScreen+.swift */,
+			);
+			path = Util;
 			sourceTree = "<group>";
 		};
 		BAA07ADE2B0251CF00884F3C /* Scene */ = {
@@ -105,7 +186,7 @@
 		BAA07AE02B02523000884F3C /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				AA46C4D12B025CB500856628 /* 나눔손글씨 배은혜체.ttf */,
+				BA86DF422B03130500491870 /* 나눔손글씨 배은혜체.ttf */,
 				AA46C4C02B02304600856628 /* Assets.xcassets */,
 			);
 			path = Resource;
@@ -215,8 +296,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA46C4CD2B02332F00856628 /* .swiftlint.yml in Resources */,
-				AA46C4D22B025CB500856628 /* 나눔손글씨 배은혜체.ttf in Resources */,
 				AA46C4C12B02304600856628 /* Assets.xcassets in Resources */,
+				BA86DF432B03130500491870 /* 나눔손글씨 배은혜체.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,9 +352,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA86DF482B03163D00491870 /* TabBarViewController.swift in Sources */,
+				BA86DF5E2B038B6B00491870 /* CAGradientLayer+.swift in Sources */,
+				BA86DF5C2B03583D00491870 /* TabBarCenterView.swift in Sources */,
 				AA46C4BC2B02304400856628 /* HomeViewController.swift in Sources */,
 				AA46C4B82B02304400856628 /* AppDelegate.swift in Sources */,
+				BA86DF4A2B0316C100491870 /* TabBarBackgroundLargeCirclceView.swift in Sources */,
+				BA86DF572B034A0100491870 /* TabLocation.swift in Sources */,
 				AA46C4BA2B02304400856628 /* SceneDelegate.swift in Sources */,
+				BA86DF512B03253500491870 /* TabBarViewModel.swift in Sources */,
+				BA86DF602B038B7600491870 /* UIScreen+.swift in Sources */,
+				BA86DF4C2B0316D500491870 /* TabBarBackgroundSmallView.swift in Sources */,
+				BA86DF532B03255400491870 /* TabComponent.swift in Sources */,
+				BA86DF5A2B0354DD00491870 /* CircularViewProtocol.swift in Sources */,
+				BA86DF552B0335D600491870 /* TabComponentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
