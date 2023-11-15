@@ -10,7 +10,7 @@ export const Public = () => SetMetadata(PUBLIC_ROUTE_KEY, true);
 export const UESR_ROLE_KEY = Symbol('USER_ROLE_KEY');
 export const Role = (role: string) => SetMetadata(UESR_ROLE_KEY, role);
 
-export const Authentication = createParamDecorator(
+export const AuthenticatedUser = createParamDecorator(
   (data: string, context: ExecutionContext) => {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
