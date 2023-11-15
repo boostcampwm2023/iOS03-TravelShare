@@ -5,14 +5,19 @@
 //  Created by 김경호 on 11/14/23.
 //
 
-import UIKit
 import AuthenticationServices
+import Combine
+import UIKit
 
 final class LoginViewController: UIViewController {
-    private var viewModel: LoginViewModelProtocol
+    // MARK: - Properties
+    private var subscriptions: Set<AnyCancellable> = []
+    private var viewModel: LoginViewModel
+    private var cacheManger: CacheManager = CacheManager()
+    private let inputSubject: PassthroughSubject<LoginViewModel.Input, Never> = .init()
     
     // MARK: - UI Componenets
-    private let appleLoginButton = ASAuthorizationAppleIDButton(type: .signIn, style: .black)
+    private let appleLoginButton = ASAuthorizationAppleIDButton(type: .continue, style: .black)
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -21,7 +26,7 @@ final class LoginViewController: UIViewController {
     }
     
     // MARK: - init
-    init(viewModel: LoginViewModelProtocol) {
+    init(viewModel: LoginViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -31,38 +36,9 @@ final class LoginViewController: UIViewController {
     }
 }
 
-// MARK: - Apple Login
-extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
-    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-        return self.view.window!
-    }
-    
-    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-        switch authorization.credential {
-        case let appleIDCredential as ASAuthorizationAppleIDCredential:
-            debugPrint("Login 성공")
-            let userIdentifier = appleIDCredential.user
-            let identityToken = appleIDCredential.identityToken
-        default:
-            break
-        }
-    }
-    
-    @objc private func loginButtonDidTap() {
-        let appleIDProvider = ASAuthorizationAppleIDProvider()
-        let request = appleIDProvider.createRequest()
-        request.requestedScopes = [.fullName, .email]
-        
-        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-        authorizationController.delegate = self
-        authorizationController.presentationContextProvider = self
-        authorizationController.performRequests()
-    }
-}
-
 // MARK: - UI Setting
 private extension LoginViewController {
-    func configureUI() {
+    private func configureUI() {
         view.backgroundColor = .systemBackground
         view.addSubview(appleLoginButton)
         
@@ -75,5 +51,64 @@ private extension LoginViewController {
             appleLoginButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             appleLoginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -200)
         ])
+    }
+}
+
+// MARK: - bind
+private extension LoginViewController {
+    func bind() {
+        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+        
+        outputSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] output in
+                switch output {
+                case.appleLoginCompleted:
+                    self?.navigationController?.setViewControllers([HomeViewController()], animated: true)
+                }
+            }
+            .store(in: &subscriptions)
+    }
+}
+
+
+// MARK: - Apple Login
+extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window!
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        switch authorization.credential {
+        case let appleIDCredential as ASAuthorizationAppleIDCredential:
+            debugPrint("Login 성공")
+            if let authorizationCode = appleIDCredential.authorizationCode, 
+                let identityToken = appleIDCredential.identityToken,
+               let authCodeString = String(data: authorizationCode, encoding: .utf8),
+               let identifyTokenString = String(data: identityToken, encoding: .utf8)
+            {
+                inputSubject.send(.appleLogin(
+                    identityToken: identifyTokenString,
+                    authorizationCode: authCodeString))
+            }
+        default:
+            break
+        }
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        debugPrint("User 인증 실패 : \(error.localizedDescription)")
+    }
+    
+    // MARK: - objc
+    @objc private func loginButtonDidTap() {
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.email]
+        
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        authorizationController.performRequests()
     }
 }
