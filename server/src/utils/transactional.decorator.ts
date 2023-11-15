@@ -15,7 +15,7 @@ export const Transactional: (
   isolationLevel?: IsolationLevel,
 ) => MethodDecorator = (isolationLevel?: IsolationLevel) => {
   return (target: any, property: string, descriptor: PropertyDescriptor) => {
-    const originalMethod: Function = descriptor.value;
+    const originalMethod = descriptor.value;
     const injectDataSourceToTarget = InjectDataSource();
     injectDataSourceToTarget(target, DATA_SOURCE);
     async function newMethod(this: any, ...args: any[]) {
