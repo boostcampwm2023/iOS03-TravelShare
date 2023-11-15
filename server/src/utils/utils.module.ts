@@ -4,6 +4,7 @@ import { ResponseValidationInterceptor } from './response.validation.interceptor
 import { HttpModule } from '@nestjs/axios';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Global()
 @Module({
@@ -17,6 +18,11 @@ import { ConfigService } from '@nestjs/config';
         configService.get('application.jwt'),
       global: true,
     }),
+    TypeOrmModule.forRootAsync({
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) =>
+          configService.get('typeorm'),
+      }),
   ],
   providers: [
     {
