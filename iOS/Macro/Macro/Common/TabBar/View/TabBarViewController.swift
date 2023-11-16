@@ -25,7 +25,7 @@ final class TabbarViewController: UIViewController {
     override func viewDidLoad() {
         setUpLayout()
         bind()
-        manageTabBarStatus(active: false)
+        manageTabBarStatus(active: viewModel.isTabBarActive)
         super.viewDidLoad()
     }
     
@@ -172,23 +172,27 @@ private extension TabbarViewController {
     /// 타이머가 활성화되어 있지 않은 경우, 사라지는 이벤트를 처리합니다.
     @objc func activeCenterHandleTapGesture(_ sender: UITapGestureRecognizer) {
         guard viewModel.timer == nil else { return }
+        self.viewModel.isTabBarActive = false
         disAppearEvent()
     }
     
     /// 타이머가 활성화되어 있지 않은 경우, 비활성 탭 바 센터 뷰를 숨기고 탭 바 큰 원형 뷰를 나타내는 이벤트를 처리합니다.
     @objc func inactiveCenterHandleTapGesture(_ sender: UITapGestureRecognizer) {
         guard viewModel.timer == nil else { return }
-        manageTabBarStatus(active: true)
+        self.viewModel.isTabBarActive = true
         appearEvent()
     }
     
     /// 탭된 뷰의 탭 컴포넌트 이미지를 현재 탭 컴포넌트 이미지와 교환하며, 비활성 탭 바 센터 뷰에 이미지를 설정하고 사라지는 이벤트를 처리합니다.
     @objc func tabComponentHandleTapGesture(_ sender: UITapGestureRecognizer) {
+        guard viewModel.timer == nil else { return }
+        
         guard let tappedView = sender.view as? TabComponentView else { return }
         guard let image = UIImage(systemName: tappedView.tabComponent.imageName) else { return }
         swap(&tappedView.tabComponent, &viewModel.currentTabComponent.value)
         
         inactiveTabBarCenterView.image = image
+        self.viewModel.isTabBarActive = false
         disAppearEvent()
     }
     
@@ -249,6 +253,7 @@ private extension TabbarViewController {
         self.viewModel.rotationAngle += self.generateAngle(per: 2)
         self.tabBarBackgroundLargeCirclceView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
         viewModel.timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
+            if !self.viewModel.isTabBarActive { return }
             if self.viewModel.animationStep < 2 {
                 self.viewModel.animationStep += 1
                 self.tabBarBackgroundLargeCirclceView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
@@ -289,6 +294,7 @@ private extension TabbarViewController {
                 })
                 self.viewModel.animationStep = 0
                 self.stopTimer()
+                self.manageTabBarStatus(active: self.viewModel.isTabBarActive)
             }
         }
     }
@@ -296,6 +302,7 @@ private extension TabbarViewController {
     func disAppearEvent() {
         self.viewModel.rotationAngle -= generateAngle(per: 1)
         viewModel.timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
+            if self.viewModel.isTabBarActive { return }
             if self.viewModel.animationStep < 2 {
                 self.viewModel.animationStep += 1
                 self.tabBarBackgroundLargeCirclceView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
@@ -324,7 +331,7 @@ private extension TabbarViewController {
                 
                 self.viewModel.animationStep = 0
                 self.stopTimer()
-                self.manageTabBarStatus(active: false)
+                self.manageTabBarStatus(active: self.viewModel.isTabBarActive)
             }
         }
     }
