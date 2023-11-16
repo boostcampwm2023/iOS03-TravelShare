@@ -8,28 +8,34 @@
 import UIKit.UIImage
 
 public enum ImageAsset {
-    case magnifyingglass
-    case house
-    case personCircle
-    case map
-    case squareAndPencil
-    case handThumbsup
-    case handThumbsupFill
-    case eyes
-    case paperplane
-    case lockFill
-    case lockOpenFill
-    case photo
-    case person2Fill
-    case chartBarDocHorizontal
-    case pin
-    case pinFill
-    case mappin
+    public enum SFSymbol {
+        case magnifyingglass
+        case house
+        case personCircle
+        case map
+        case squareAndPencil
+        case handThumbsup
+        case handThumbsupFill
+        case eyes
+        case paperplane
+        case lockFill
+        case lockOpenFill
+        case photo
+        case person2Fill
+        case chartBarDocHorizontal
+        case pin
+        case pinFill
+        case mappin
+    }
+    
+    public enum CustomImage {
+        case appLogo
+    }
 }
 
 @available(iOS 13.0, *)
 public extension UIImage {
-    static func appImage(_ name: ImageAsset) -> UIImage? {
+    static func appImage(_ name: ImageAsset.SFSymbol) -> UIImage? {
         switch name {
         case .magnifyingglass:
             return UIImage(systemName: "magnifyingglass")
@@ -65,6 +71,13 @@ public extension UIImage {
             return UIImage(systemName: "pin.fill")
         case .mappin:
             return UIImage(systemName: "mappin")
+        }
+    }
+    
+    static func appImage(_ name: ImageAsset.CustomImage) -> UIImage? {
+        switch name {
+        case .appLogo:
+            return UIImage(named: "logoImage")
         }
     }
 }
