@@ -14,6 +14,19 @@
 		AA46C4C12B02304600856628 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA46C4C02B02304600856628 /* Assets.xcassets */; };
 		AA46C4CD2B02332F00856628 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = AA46C4CC2B02332F00856628 /* .swiftlint.yml */; };
 		AA46C4D02B025BA400856628 /* MacroDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = AA46C4CF2B025BA400856628 /* MacroDesignSystem */; };
+		BA6C6DF32B05FFC500563B22 /* CAGradientLayer+.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DE22B05FFC400563B22 /* CAGradientLayer+.swift */; };
+		BA6C6DF42B05FFC500563B22 /* CircularViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DE32B05FFC400563B22 /* CircularViewProtocol.swift */; };
+		BA6C6DF52B05FFC500563B22 /* UIScreen+.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DE42B05FFC400563B22 /* UIScreen+.swift */; };
+		BA6C6DF62B05FFC500563B22 /* TabBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DE82B05FFC500563B22 /* TabBarViewModel.swift */; };
+		BA6C6DF72B05FFC500563B22 /* TabLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DEA2B05FFC500563B22 /* TabLocation.swift */; };
+		BA6C6DF82B05FFC500563B22 /* TabComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DEB2B05FFC500563B22 /* TabComponent.swift */; };
+		BA6C6DF92B05FFC500563B22 /* TabBarCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DED2B05FFC500563B22 /* TabBarCenterView.swift */; };
+		BA6C6DFA2B05FFC500563B22 /* TabBarBackgroundSmallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DEE2B05FFC500563B22 /* TabBarBackgroundSmallView.swift */; };
+		BA6C6DFB2B05FFC500563B22 /* TabBarBackgroundLargeCirclceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DEF2B05FFC500563B22 /* TabBarBackgroundLargeCirclceView.swift */; };
+		BA6C6DFC2B05FFC500563B22 /* TabComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DF02B05FFC500563B22 /* TabComponentView.swift */; };
+		BA6C6DFD2B05FFC500563B22 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DF12B05FFC500563B22 /* TabBarViewController.swift */; };
+		BA6C6DFE2B05FFC500563B22 /* TabBarOpacityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DF22B05FFC500563B22 /* TabBarOpacityView.swift */; };
+		BA6C6E002B06002500563B22 /* 나눔손글씨 배은혜체.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BA6C6DFF2B06002500563B22 /* 나눔손글씨 배은혜체.ttf */; };
 		D263CA132B02DD8900B4A144 /* RouteTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA122B02DD8900B4A144 /* RouteTableViewController.swift */; };
 		D263CA152B02ED2B00B4A144 /* RouteTableViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA142B02ED2B00B4A144 /* RouteTableViewControllerDelegate.swift */; };
 		D263CA1C2B04074D00B4A144 /* LocationDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA1B2B04074D00B4A144 /* LocationDetail.swift */; };
@@ -38,6 +51,19 @@
 		AA46C4C52B02304600856628 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA46C4CC2B02332F00856628 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		AA46C4CE2B025AA300856628 /* MacroDesignSystem */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = MacroDesignSystem; path = ../MacroDesignSystem; sourceTree = "<group>"; };
+		BA6C6DE22B05FFC400563B22 /* CAGradientLayer+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CAGradientLayer+.swift"; sourceTree = "<group>"; };
+		BA6C6DE32B05FFC400563B22 /* CircularViewProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularViewProtocol.swift; sourceTree = "<group>"; };
+		BA6C6DE42B05FFC400563B22 /* UIScreen+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScreen+.swift"; sourceTree = "<group>"; };
+		BA6C6DE82B05FFC500563B22 /* TabBarViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewModel.swift; sourceTree = "<group>"; };
+		BA6C6DEA2B05FFC500563B22 /* TabLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabLocation.swift; sourceTree = "<group>"; };
+		BA6C6DEB2B05FFC500563B22 /* TabComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabComponent.swift; sourceTree = "<group>"; };
+		BA6C6DED2B05FFC500563B22 /* TabBarCenterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarCenterView.swift; sourceTree = "<group>"; };
+		BA6C6DEE2B05FFC500563B22 /* TabBarBackgroundSmallView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarBackgroundSmallView.swift; sourceTree = "<group>"; };
+		BA6C6DEF2B05FFC500563B22 /* TabBarBackgroundLargeCirclceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarBackgroundLargeCirclceView.swift; sourceTree = "<group>"; };
+		BA6C6DF02B05FFC500563B22 /* TabComponentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabComponentView.swift; sourceTree = "<group>"; };
+		BA6C6DF12B05FFC500563B22 /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		BA6C6DF22B05FFC500563B22 /* TabBarOpacityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarOpacityView.swift; sourceTree = "<group>"; };
+		BA6C6DFF2B06002500563B22 /* 나눔손글씨 배은혜체.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "나눔손글씨 배은혜체.ttf"; path = "../../../../../../../Downloads/나눔손글씨 배은혜체.ttf"; sourceTree = "<group>"; };
 		D263CA122B02DD8900B4A144 /* RouteTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteTableViewController.swift; sourceTree = "<group>"; };
 		D263CA142B02ED2B00B4A144 /* RouteTableViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteTableViewControllerDelegate.swift; sourceTree = "<group>"; };
 		D263CA1B2B04074D00B4A144 /* LocationDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetail.swift; sourceTree = "<group>"; };
@@ -108,11 +134,71 @@
 			isa = PBXGroup;
 			children = (
 				AA46C4C52B02304600856628 /* Info.plist */,
+				BA6C6DE52B05FFC500563B22 /* Common */,
+				BA6C6DE12B05FFC400563B22 /* Util */,
 				BAA07AE02B02523000884F3C /* Resource */,
 				BAA07ADF2B02521500884F3C /* App */,
 				BAA07ADE2B0251CF00884F3C /* Scene */,
 			);
 			path = Macro;
+			sourceTree = "<group>";
+		};
+		BA6C6DE12B05FFC400563B22 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				BA6C6DE22B05FFC400563B22 /* CAGradientLayer+.swift */,
+				BA6C6DE32B05FFC400563B22 /* CircularViewProtocol.swift */,
+				BA6C6DE42B05FFC400563B22 /* UIScreen+.swift */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
+		BA6C6DE52B05FFC500563B22 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				BA6C6DE62B05FFC500563B22 /* TabBar */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		BA6C6DE62B05FFC500563B22 /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				BA6C6DE72B05FFC500563B22 /* ViewModel */,
+				BA6C6DE92B05FFC500563B22 /* Model */,
+				BA6C6DEC2B05FFC500563B22 /* View */,
+			);
+			path = TabBar;
+			sourceTree = "<group>";
+		};
+		BA6C6DE72B05FFC500563B22 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				BA6C6DE82B05FFC500563B22 /* TabBarViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		BA6C6DE92B05FFC500563B22 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				BA6C6DEA2B05FFC500563B22 /* TabLocation.swift */,
+				BA6C6DEB2B05FFC500563B22 /* TabComponent.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		BA6C6DEC2B05FFC500563B22 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				BA6C6DED2B05FFC500563B22 /* TabBarCenterView.swift */,
+				BA6C6DEE2B05FFC500563B22 /* TabBarBackgroundSmallView.swift */,
+				BA6C6DEF2B05FFC500563B22 /* TabBarBackgroundLargeCirclceView.swift */,
+				BA6C6DF02B05FFC500563B22 /* TabComponentView.swift */,
+				BA6C6DF12B05FFC500563B22 /* TabBarViewController.swift */,
+				BA6C6DF22B05FFC500563B22 /* TabBarOpacityView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		BAA07ADE2B0251CF00884F3C /* Scene */ = {
@@ -137,6 +223,7 @@
 		BAA07AE02B02523000884F3C /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				BA6C6DFF2B06002500563B22 /* 나눔손글씨 배은혜체.ttf */,
 				AA46C4C02B02304600856628 /* Assets.xcassets */,
 			);
 			path = Resource;
@@ -305,6 +392,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA46C4CD2B02332F00856628 /* .swiftlint.yml in Resources */,
+				BA6C6E002B06002500563B22 /* 나눔손글씨 배은혜체.ttf in Resources */,
 				AA46C4C12B02304600856628 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -377,20 +465,32 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA6C6DFA2B05FFC500563B22 /* TabBarBackgroundSmallView.swift in Sources */,
 				D263CA222B040EBE00B4A144 /* TravelViewModel.swift in Sources */,
 				D263CA132B02DD8900B4A144 /* RouteTableViewController.swift in Sources */,
+				BA6C6DF32B05FFC500563B22 /* CAGradientLayer+.swift in Sources */,
+				BA6C6DFE2B05FFC500563B22 /* TabBarOpacityView.swift in Sources */,
 				AA46C4BC2B02304400856628 /* HomeViewController.swift in Sources */,
 				D263CA152B02ED2B00B4A144 /* RouteTableViewControllerDelegate.swift in Sources */,
 				AA46C4B82B02304400856628 /* AppDelegate.swift in Sources */,
 				D263CA202B040BAF00B4A144 /* LocationSearcher.swift in Sources */,
+				BA6C6DF92B05FFC500563B22 /* TabBarCenterView.swift in Sources */,
+				BA6C6DF42B05FFC500563B22 /* CircularViewProtocol.swift in Sources */,
 				D263CA282B043C6B00B4A144 /* PinnedPlaceManager.swift in Sources */,
+				BA6C6DF52B05FFC500563B22 /* UIScreen+.swift in Sources */,
+				BA6C6DF62B05FFC500563B22 /* TabBarViewModel.swift in Sources */,
+				BA6C6DFD2B05FFC500563B22 /* TabBarViewController.swift in Sources */,
 				D263CA2F2B054A0E00B4A144 /* SearchResultViewController.swift in Sources */,
+				BA6C6DFC2B05FFC500563B22 /* TabComponentView.swift in Sources */,
 				D263CA262B04147E00B4A144 /* TravelViewController.swift in Sources */,
 				D263CA242B04134600B4A144 /* ViewModelProtocol.swift in Sources */,
 				D263CA2D2B052ECC00B4A144 /* TravelEndPoint.swift in Sources */,
 				AA46C4BA2B02304400856628 /* SceneDelegate.swift in Sources */,
+				BA6C6DFB2B05FFC500563B22 /* TabBarBackgroundLargeCirclceView.swift in Sources */,
 				D263CA1E2B0407E000B4A144 /* RouteRecorder.swift in Sources */,
 				D263CA1C2B04074D00B4A144 /* LocationDetail.swift in Sources */,
+				BA6C6DF72B05FFC500563B22 /* TabLocation.swift in Sources */,
+				BA6C6DF82B05FFC500563B22 /* TabComponent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
