@@ -23,5 +23,6 @@ final class TabBarViewModel {
     var rotationAngle: Double = 0
     var timer: Timer?
     
+    var isTabBarActive: Bool = false
     var animationStep: Int = 0
 }
