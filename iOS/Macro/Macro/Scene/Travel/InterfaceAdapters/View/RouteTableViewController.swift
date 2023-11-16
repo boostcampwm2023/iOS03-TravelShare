@@ -13,7 +13,6 @@ final class RouteTableViewController: UITableViewController {
   // MARK: - Properties
   
   weak var delegate: RouteTableViewControllerDelegate?
-  private var routeItems: [LocationDetail] = []
   private let dragIndicator = UIView()
   private var cancellables = Set<AnyCancellable>()
   var viewModel: TravelViewModel
@@ -62,7 +61,6 @@ final class RouteTableViewController: UITableViewController {
   // MARK: - Methods
   
   private func updatePinnedPlaces(_ places: [LocationDetail]) {
-    self.routeItems = places
     self.tableView.reloadData()
   }
   
@@ -94,12 +92,12 @@ final class RouteTableViewController: UITableViewController {
 // MARK: - TableView
 extension RouteTableViewController {
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return routeItems.count
+    return viewModel.savedRoute.pinnedPlaces.count
   }
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-    cell.textLabel?.text = routeItems[indexPath.row].title
+    cell.textLabel?.text = viewModel.savedRoute.pinnedPlaces[indexPath.row].title
     return cell
   }
   
@@ -108,14 +106,13 @@ extension RouteTableViewController {
   }
   
   override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-    let movedItem = routeItems.remove(at: sourceIndexPath.row)
-    routeItems.insert(movedItem, at: destinationIndexPath.row)
+      viewModel.movePinnedPlace(from: sourceIndexPath.row, to: destinationIndexPath.row)
   }
-  
+
   override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-    if editingStyle == .delete {
-      routeItems.remove(at: indexPath.row)
-      tableView.deleteRows(at: [indexPath], with: .fade)
-    }
+      if editingStyle == .delete {
+          viewModel.removePinnedPlace(at: indexPath.row)
+          tableView.deleteRows(at: [indexPath], with: .fade)
+      }
   }
 }

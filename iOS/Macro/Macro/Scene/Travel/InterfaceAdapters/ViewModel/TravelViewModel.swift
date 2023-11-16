@@ -111,4 +111,13 @@ final class TravelViewModel: ViewModelProtocol {
     }.store(in: &cancellables)
   }
   
+   func movePinnedPlace(from sourceIndex: Int, to destinationIndex: Int) {
+      let movedItem = savedRoute.pinnedPlaces.remove(at: sourceIndex)
+      savedRoute.pinnedPlaces.insert(movedItem, at: destinationIndex)
+  }
+
+  func removePinnedPlace(at index: Int) {
+      savedRoute.pinnedPlaces.remove(at: index)
+  }
+  
 }
