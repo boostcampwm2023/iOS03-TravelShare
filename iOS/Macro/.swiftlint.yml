@@ -9,7 +9,6 @@ analyzer_rules:
   - unused_import
 opt_in_rules:
   - array_init
-  - attributes
   - closure_end_indentation
   - closure_spacing
   - collection_alignment
@@ -44,7 +43,6 @@ opt_in_rules:
   - single_test_class
   - sorted_first_last
   - static_operator
-  - unavailable_function
   - unneeded_parentheses_in_closure_argument
   - untyped_error_in_catch
   - vertical_parameter_alignment_on_call
