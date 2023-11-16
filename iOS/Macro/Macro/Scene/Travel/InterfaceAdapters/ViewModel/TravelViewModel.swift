@@ -40,7 +40,7 @@ final class TravelViewModel: ViewModelProtocol {
   private let locationSearcher: LocationSearchUseCase
   private let pinnedPlaceManager: PinnedPlaceManageUseCase
   private var cancellables = Set<AnyCancellable>()
-  private var routePoints: [CLLocation] = []
+  private var savedRoute: SavedRoute = SavedRoute()
   
   // MARK: - Init
   
@@ -87,8 +87,8 @@ final class TravelViewModel: ViewModelProtocol {
     routeRecorder.startRecording()
     routeRecorder.locationPublisher
       .sink { [weak self] location in
-        self?.routePoints.append(location)
-        self?.outputSubject.send(.updateRoute(self?.routePoints ?? []))
+        self?.savedRoute.routePoints.append(location)
+        self?.outputSubject.send(.updateRoute(self?.savedRoute.routePoints ?? []))
       }
       .store(in: &cancellables)
   }
