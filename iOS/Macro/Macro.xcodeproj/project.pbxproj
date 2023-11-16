@@ -7,18 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		62F91DC0CDCC26F4102F184E /* libPods-Macro.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B60928A2B9751095169A214C /* libPods-Macro.a */; };
+		9BFF32D7723F20FDFD4D6D37 /* libPods-Macro.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EFE56344E8979EDA80D9E782 /* libPods-Macro.a */; };
 		AA46C4B82B02304400856628 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA46C4B72B02304400856628 /* AppDelegate.swift */; };
 		AA46C4BA2B02304400856628 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA46C4B92B02304400856628 /* SceneDelegate.swift */; };
 		AA46C4BC2B02304400856628 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA46C4BB2B02304400856628 /* HomeViewController.swift */; };
 		AA46C4C12B02304600856628 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA46C4C02B02304600856628 /* Assets.xcassets */; };
 		AA46C4CD2B02332F00856628 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = AA46C4CC2B02332F00856628 /* .swiftlint.yml */; };
 		AA46C4D02B025BA400856628 /* MacroDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = AA46C4CF2B025BA400856628 /* MacroDesignSystem */; };
-		AA46C4D22B025CB500856628 /* 나눔손글씨 배은혜체.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AA46C4D12B025CB500856628 /* 나눔손글씨 배은혜체.ttf */; };
+		D263CA132B02DD8900B4A144 /* RouteTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA122B02DD8900B4A144 /* RouteTableViewController.swift */; };
+		D263CA152B02ED2B00B4A144 /* RouteTableViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA142B02ED2B00B4A144 /* RouteTableViewControllerDelegate.swift */; };
+		D263CA1C2B04074D00B4A144 /* LocationDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA1B2B04074D00B4A144 /* LocationDetail.swift */; };
+		D263CA1E2B0407E000B4A144 /* RouteRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA1D2B0407E000B4A144 /* RouteRecorder.swift */; };
+		D263CA202B040BAF00B4A144 /* LocationSearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA1F2B040BAF00B4A144 /* LocationSearcher.swift */; };
+		D263CA222B040EBE00B4A144 /* TravelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA212B040EBE00B4A144 /* TravelViewModel.swift */; };
+		D263CA242B04134600B4A144 /* ViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA232B04134600B4A144 /* ViewModelProtocol.swift */; };
+		D263CA262B04147E00B4A144 /* TravelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA252B04147E00B4A144 /* TravelViewController.swift */; };
+		D263CA282B043C6B00B4A144 /* PinnedPlaceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA272B043C6B00B4A144 /* PinnedPlaceManager.swift */; };
+		D263CA2A2B05285C00B4A144 /* Network in Frameworks */ = {isa = PBXBuildFile; productRef = D263CA292B05285C00B4A144 /* Network */; };
+		D263CA2D2B052ECC00B4A144 /* TravelEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA2C2B052ECC00B4A144 /* TravelEndPoint.swift */; };
+		D263CA2F2B054A0E00B4A144 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA2E2B054A0E00B4A144 /* SearchResultViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		90F02CF53F0EBF405379697B /* Pods-Macro.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Macro.debug.xcconfig"; path = "Target Support Files/Pods-Macro/Pods-Macro.debug.xcconfig"; sourceTree = "<group>"; };
+		702FC922D425DD7839B1DA1B /* Pods-Macro.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Macro.debug.xcconfig"; path = "Target Support Files/Pods-Macro/Pods-Macro.debug.xcconfig"; sourceTree = "<group>"; };
 		AA46C4B42B02304400856628 /* Macro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Macro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA46C4B72B02304400856628 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AA46C4B92B02304400856628 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -27,9 +38,19 @@
 		AA46C4C52B02304600856628 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA46C4CC2B02332F00856628 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		AA46C4CE2B025AA300856628 /* MacroDesignSystem */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = MacroDesignSystem; path = ../MacroDesignSystem; sourceTree = "<group>"; };
-		AA46C4D12B025CB500856628 /* 나눔손글씨 배은혜체.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "나눔손글씨 배은혜체.ttf"; path = "../../../../../../Downloads/나눔손글씨 배은혜체.ttf"; sourceTree = "<group>"; };
-		AEE92490AF6F25C4DAF6AEF8 /* Pods-Macro.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Macro.release.xcconfig"; path = "Target Support Files/Pods-Macro/Pods-Macro.release.xcconfig"; sourceTree = "<group>"; };
-		B60928A2B9751095169A214C /* libPods-Macro.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Macro.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D263CA122B02DD8900B4A144 /* RouteTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteTableViewController.swift; sourceTree = "<group>"; };
+		D263CA142B02ED2B00B4A144 /* RouteTableViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteTableViewControllerDelegate.swift; sourceTree = "<group>"; };
+		D263CA1B2B04074D00B4A144 /* LocationDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetail.swift; sourceTree = "<group>"; };
+		D263CA1D2B0407E000B4A144 /* RouteRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteRecorder.swift; sourceTree = "<group>"; };
+		D263CA1F2B040BAF00B4A144 /* LocationSearcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearcher.swift; sourceTree = "<group>"; };
+		D263CA212B040EBE00B4A144 /* TravelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelViewModel.swift; sourceTree = "<group>"; };
+		D263CA232B04134600B4A144 /* ViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelProtocol.swift; sourceTree = "<group>"; };
+		D263CA252B04147E00B4A144 /* TravelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelViewController.swift; sourceTree = "<group>"; };
+		D263CA272B043C6B00B4A144 /* PinnedPlaceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinnedPlaceManager.swift; sourceTree = "<group>"; };
+		D263CA2C2B052ECC00B4A144 /* TravelEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelEndPoint.swift; sourceTree = "<group>"; };
+		D263CA2E2B054A0E00B4A144 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
+		EFE56344E8979EDA80D9E782 /* libPods-Macro.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Macro.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE963544592A2BC35C2CD604 /* Pods-Macro.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Macro.release.xcconfig"; path = "Target Support Files/Pods-Macro/Pods-Macro.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,8 +58,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D263CA2A2B05285C00B4A144 /* Network in Frameworks */,
 				AA46C4D02B025BA400856628 /* MacroDesignSystem in Frameworks */,
-				62F91DC0CDCC26F4102F184E /* libPods-Macro.a in Frameworks */,
+				9BFF32D7723F20FDFD4D6D37 /* libPods-Macro.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -48,10 +70,18 @@
 		1DE520A32C0A10F6528CFB99 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				90F02CF53F0EBF405379697B /* Pods-Macro.debug.xcconfig */,
-				AEE92490AF6F25C4DAF6AEF8 /* Pods-Macro.release.xcconfig */,
+				702FC922D425DD7839B1DA1B /* Pods-Macro.debug.xcconfig */,
+				FE963544592A2BC35C2CD604 /* Pods-Macro.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		5DD0A7BCA014FCD623890BA7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EFE56344E8979EDA80D9E782 /* libPods-Macro.a */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		AA46C4AB2B02304400856628 = {
@@ -62,7 +92,7 @@
 				AA46C4B62B02304400856628 /* Macro */,
 				AA46C4B52B02304400856628 /* Products */,
 				1DE520A32C0A10F6528CFB99 /* Pods */,
-				DE543D7354A51F649CF9AB42 /* Frameworks */,
+				5DD0A7BCA014FCD623890BA7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -88,7 +118,9 @@
 		BAA07ADE2B0251CF00884F3C /* Scene */ = {
 			isa = PBXGroup;
 			children = (
+				D263CA232B04134600B4A144 /* ViewModelProtocol.swift */,
 				BAA07AE32B0253E600884F3C /* Home */,
+				D263CA092B02B22D00B4A144 /* Travel */,
 			);
 			path = Scene;
 			sourceTree = "<group>";
@@ -105,7 +137,6 @@
 		BAA07AE02B02523000884F3C /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				AA46C4D12B025CB500856628 /* 나눔손글씨 배은혜체.ttf */,
 				AA46C4C02B02304600856628 /* Assets.xcassets */,
 			);
 			path = Resource;
@@ -143,12 +174,69 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		DE543D7354A51F649CF9AB42 /* Frameworks */ = {
+		D263CA092B02B22D00B4A144 /* Travel */ = {
 			isa = PBXGroup;
 			children = (
-				B60928A2B9751095169A214C /* libPods-Macro.a */,
+				D263CA2B2B052EAA00B4A144 /* Network */,
+				D263CA162B0404B600B4A144 /* Entities */,
+				D263CA172B0404BE00B4A144 /* UseCases */,
+				D263CA182B0404D700B4A144 /* InterfaceAdapters */,
 			);
-			name = Frameworks;
+			path = Travel;
+			sourceTree = "<group>";
+		};
+		D263CA0B2B02B24300B4A144 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				D263CA212B040EBE00B4A144 /* TravelViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		D263CA0C2B02B24B00B4A144 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				D263CA122B02DD8900B4A144 /* RouteTableViewController.swift */,
+				D263CA142B02ED2B00B4A144 /* RouteTableViewControllerDelegate.swift */,
+				D263CA252B04147E00B4A144 /* TravelViewController.swift */,
+				D263CA2E2B054A0E00B4A144 /* SearchResultViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		D263CA162B0404B600B4A144 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				D263CA1B2B04074D00B4A144 /* LocationDetail.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		D263CA172B0404BE00B4A144 /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				D263CA1D2B0407E000B4A144 /* RouteRecorder.swift */,
+				D263CA1F2B040BAF00B4A144 /* LocationSearcher.swift */,
+				D263CA272B043C6B00B4A144 /* PinnedPlaceManager.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		D263CA182B0404D700B4A144 /* InterfaceAdapters */ = {
+			isa = PBXGroup;
+			children = (
+				D263CA0C2B02B24B00B4A144 /* View */,
+				D263CA0B2B02B24300B4A144 /* ViewModel */,
+			);
+			path = InterfaceAdapters;
+			sourceTree = "<group>";
+		};
+		D263CA2B2B052EAA00B4A144 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				D263CA2C2B052ECC00B4A144 /* TravelEndPoint.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -158,11 +246,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AA46C4C82B02304600856628 /* Build configuration list for PBXNativeTarget "Macro" */;
 			buildPhases = (
-				F6B1D818AA86F1E4F4369DFE /* [CP] Check Pods Manifest.lock */,
+				E1400C2743BB88A75E2F3069 /* [CP] Check Pods Manifest.lock */,
 				AA46C4CB2B02326300856628 /* SwiftLint */,
 				AA46C4B02B02304400856628 /* Sources */,
 				AA46C4B12B02304400856628 /* Frameworks */,
 				AA46C4B22B02304400856628 /* Resources */,
+				984C78E5EDA08D76AAD74EAD /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -171,6 +260,7 @@
 			name = Macro;
 			packageProductDependencies = (
 				AA46C4CF2B025BA400856628 /* MacroDesignSystem */,
+				D263CA292B05285C00B4A144 /* Network */,
 			);
 			productName = Macro;
 			productReference = AA46C4B42B02304400856628 /* Macro.app */;
@@ -215,7 +305,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA46C4CD2B02332F00856628 /* .swiftlint.yml in Resources */,
-				AA46C4D22B025CB500856628 /* 나눔손글씨 배은혜체.ttf in Resources */,
 				AA46C4C12B02304600856628 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -223,6 +312,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		984C78E5EDA08D76AAD74EAD /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Macro/Pods-Macro-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Macro/Pods-Macro-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Macro/Pods-Macro-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		AA46C4CB2B02326300856628 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -242,7 +348,7 @@
 			shellPath = /bin/sh;
 			shellScript = "${PODS_ROOT}/SwiftLint/swiftlint\n";
 		};
-		F6B1D818AA86F1E4F4369DFE /* [CP] Check Pods Manifest.lock */ = {
+		E1400C2743BB88A75E2F3069 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -271,9 +377,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D263CA222B040EBE00B4A144 /* TravelViewModel.swift in Sources */,
+				D263CA132B02DD8900B4A144 /* RouteTableViewController.swift in Sources */,
 				AA46C4BC2B02304400856628 /* HomeViewController.swift in Sources */,
+				D263CA152B02ED2B00B4A144 /* RouteTableViewControllerDelegate.swift in Sources */,
 				AA46C4B82B02304400856628 /* AppDelegate.swift in Sources */,
+				D263CA202B040BAF00B4A144 /* LocationSearcher.swift in Sources */,
+				D263CA282B043C6B00B4A144 /* PinnedPlaceManager.swift in Sources */,
+				D263CA2F2B054A0E00B4A144 /* SearchResultViewController.swift in Sources */,
+				D263CA262B04147E00B4A144 /* TravelViewController.swift in Sources */,
+				D263CA242B04134600B4A144 /* ViewModelProtocol.swift in Sources */,
+				D263CA2D2B052ECC00B4A144 /* TravelEndPoint.swift in Sources */,
 				AA46C4BA2B02304400856628 /* SceneDelegate.swift in Sources */,
+				D263CA1E2B0407E000B4A144 /* RouteRecorder.swift in Sources */,
+				D263CA1C2B04074D00B4A144 /* LocationDetail.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -401,7 +518,7 @@
 		};
 		AA46C4C92B02304600856628 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 90F02CF53F0EBF405379697B /* Pods-Macro.debug.xcconfig */;
+			baseConfigurationReference = 702FC922D425DD7839B1DA1B /* Pods-Macro.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -410,8 +527,10 @@
 				DEVELOPMENT_TEAM = B3PWYBKFUK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Macro/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "이 앱을 사용하는 동안 위치 정보에 접근하도록 허용하시겠습니까?";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
@@ -434,7 +553,7 @@
 		};
 		AA46C4CA2B02304600856628 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AEE92490AF6F25C4DAF6AEF8 /* Pods-Macro.release.xcconfig */;
+			baseConfigurationReference = FE963544592A2BC35C2CD604 /* Pods-Macro.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -443,8 +562,10 @@
 				DEVELOPMENT_TEAM = B3PWYBKFUK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Macro/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "이 앱을 사용하는 동안 위치 정보에 접근하도록 허용하시겠습니까?";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
@@ -492,6 +613,10 @@
 		AA46C4CF2B025BA400856628 /* MacroDesignSystem */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MacroDesignSystem;
+		};
+		D263CA292B05285C00B4A144 /* Network */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Network;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
