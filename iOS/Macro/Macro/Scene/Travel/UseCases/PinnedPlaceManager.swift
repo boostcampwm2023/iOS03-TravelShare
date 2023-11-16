@@ -18,10 +18,8 @@ protocol PinnedPlaceManageUseCase {
   func exchangeRoute()
   
   /// 핀으로 특정 장소를 추가하는 함수
-  func addPinnedLocation(locationDetail: LocationDetail)
+  func addPinnedLocation(locationDetail: LocationDetail, to places: [LocationDetail]) -> [LocationDetail] 
   
-  /// 현재 핀으로 추가된 장소들의 정보를 얻는 함수
-  func getCurrendPinnedPlaces() -> [LocationDetail]
 }
 
 final class PinnedPlaceManager: PinnedPlaceManageUseCase {
@@ -29,7 +27,6 @@ final class PinnedPlaceManager: PinnedPlaceManageUseCase {
   // MARK: Properties
   
   private let provider: Requestable
-  private var pinnedPlace: [LocationDetail] = []
   
   // MARK: Init
   
@@ -47,12 +44,9 @@ final class PinnedPlaceManager: PinnedPlaceManageUseCase {
     // TODO: complete method
   }
   
-  func getCurrendPinnedPlaces() -> [LocationDetail] {
-    return pinnedPlace
-  }
-  
-  func addPinnedLocation(locationDetail: LocationDetail) {
-    pinnedPlace.append(locationDetail)
-    print(pinnedPlace.count)
+  func addPinnedLocation(locationDetail: LocationDetail, to places: [LocationDetail]) -> [LocationDetail] {
+    var newLocationDetail = places
+    newLocationDetail.append(locationDetail)
+    return newLocationDetail
   }
 }

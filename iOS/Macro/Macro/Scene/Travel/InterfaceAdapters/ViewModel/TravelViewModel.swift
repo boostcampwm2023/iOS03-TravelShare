@@ -78,8 +78,10 @@ final class TravelViewModel: ViewModelProtocol {
   }
   
   private func addPinnedLocation(locationDetail: LocationDetail) {
-    pinnedPlaceManager.addPinnedLocation(locationDetail: locationDetail)
-    outputSubject.send(.updatePinnedPlaces(pinnedPlaceManager.getCurrendPinnedPlaces()))
+    
+    let newPinnedPlaces = pinnedPlaceManager.addPinnedLocation(locationDetail: locationDetail, to: savedRoute.pinnedPlaces)
+    savedRoute.pinnedPlaces = newPinnedPlaces
+    outputSubject.send(.updatePinnedPlaces(newPinnedPlaces))
     outputSubject.send(.addPinnedPlaceInMap(locationDetail.mapx, locationDetail.mapy))
   }
   
