@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AppleClientAuthBody } from './apple.client.auth.body.dto';
 import { ConfigService } from '@nestjs/config';
-import { map } from 'rxjs';
+import { map, mergeMap } from 'rxjs';
 import { plainToInstance } from 'class-transformer';
 import {
   AppleIdentityTokenPublicKey,
@@ -18,6 +18,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Authentication } from '../authentication.dto';
 import { Transactional } from 'src/utils/transactional.decorator';
+import { AppleClientRevokeBody } from './apple.client.revoke.body.dto';
+import { AppleAuthTokenBody } from './apple.auth.token.body.dto';
+import { AppleAuthRevokeBody } from './apple.auth.revoke.body.dto';
+import { AppleAuthTokenResponse } from './apple.auth.token.response.dto';
 
 /**
  * ### AppleAuthService
@@ -82,9 +86,75 @@ export class AppleAuthService {
     );
   }
 
+  async revoke({ identityToken, authorizationCode }: AppleClientRevokeBody) {
+    const {
+      token: tokenRequest,
+      key: keysRequest,
+      revoke: revokeRequest,
+    } = this.configService.get('apple.auth');
+    const { alg, kid } = this.extractJwtHeader(identityToken);
+    const { payload, header, secret } = this.configService.get(
+      'apple.client_secret',
+    );
+    const clientSecret = this.jwtService.sign(payload, { header, secret });
+    return this.httpService.request(keysRequest).pipe(
+      map(({ data }) => {
+        return plainToInstance(
+          AppleIdentityTokenPublicKeys,
+          data,
+        ).findMatchedKeyBy(alg, kid);
+      }),
+      /**
+       * 2. 다음으로 public key의 e(exponent) n(modulus)를 이용해 JWK(Json Web Key)를 생성하고
+       * encoding합니다.
+       */
+      map((key: AppleIdentityTokenPublicKey & { [key: string]: any }) => {
+        return createPublicKey({ key, format: 'jwk' }).export({
+          type: 'pkcs1',
+          format: 'pem',
+        });
+      }),
+      /**
+       * 3. public key를 가지고 identityToken을 검증합니다.
+       */
+      //TODO: validation
+      map((publicKey) => {
+        return plainToInstance(
+          AppleIdentityTokenPayload,
+          this.jwtService.verify(identityToken, { secret: publicKey }),
+        );
+      }),
+      map((identityTokenPayload) => {
+        this.delete(identityTokenPayload);
+        return plainToInstance(AppleAuthTokenBody, {
+          client_secret: clientSecret,
+          client_id: payload.iss,
+          code: authorizationCode,
+        }).toString();
+      }),
+      mergeMap((data) => {
+        return this.httpService.request({ ...tokenRequest, data });
+      }),
+      map(({ data }) => {
+        return plainToInstance(AppleAuthTokenResponse, data).refresh_token;
+      }),
+      map((refreshToken) => {
+        return plainToInstance(AppleAuthRevokeBody, {
+          client_id: payload.iss,
+          client_secret: clientSecret,
+          token: refreshToken,
+          token_type_hint: 'refresh_token',
+        }).toString();
+      }),
+      mergeMap((tokenBody) => {
+        return this.httpService.request({ ...revokeRequest, data: tokenBody });
+      }),
+    );
+  }
+
   /**
    *
-   * @param param0
+   * @param
    * @returns
    */
   private async isUserExists({ sub }: AppleIdentityTokenPayload) {
@@ -123,6 +193,14 @@ export class AppleAuthService {
       ).user,
     );
     return this.createToken(user);
+  }
+
+  @Transactional()
+  private async delete({ sub }: AppleIdentityTokenPayload) {
+    const user = await this.appleAuthRepository.findOneOrFail({
+      where: { appleId: sub },
+    });
+    await this.userRepository.remove(user.user);
   }
 
   private createToken(user: Authentication) {
