@@ -9,11 +9,25 @@ import Combine
 import UIKit
 
 final class SearchResultViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+  
+  // MARK: - Properties
+  
   private var locationDetails: [LocationDetail]
   private var tableView: UITableView!
   private let viewModel: TravelViewModel
   private let inputSubject: PassthroughSubject<TravelViewModel.Input, Never> = .init()
   private var cancellables = Set<AnyCancellable>()
+  
+  // MARK: - Life Cycles
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    view.backgroundColor = .systemBackground
+    setupTableView()
+    bind()
+  }
+  
+  // MARK: - Init
   
   init(locationDetails: [LocationDetail], viewModel: TravelViewModel) {
     self.locationDetails = locationDetails
@@ -25,20 +39,7 @@ final class SearchResultViewController: UIViewController, UITableViewDataSource,
     fatalError("init(coder:) has not been implemented")
   }
   
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    view.backgroundColor = .systemBackground
-    setupTableView()
-    bind()
-  }
-  
-  private func bind() {
-    viewModel.transform(with: inputSubject.eraseToAnyPublisher())
-      .sink { [weak self] output in
-        // TODO: implements 
-      }
-      .store(in: &cancellables)
-  }
+  // MARK: - UI Settings
   
   private func setupTableView() {
     tableView = UITableView()
@@ -56,6 +57,27 @@ final class SearchResultViewController: UIViewController, UITableViewDataSource,
     ])
   }
   
+  // MARK: - Bind
+  
+  private func bind() {
+    viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+      .sink { _ in
+        // TODO: implements 
+      }
+      .store(in: &cancellables)
+  }
+  
+  // MARK: - Methods
+  
+  @objc func pinLocation(_ sender: UIButton) {
+    let locationDetail = locationDetails[sender.tag]
+    inputSubject.send(.addPinnedLocation(locationDetail))
+  }
+}
+
+// MARK: - TableView
+
+extension SearchResultViewController {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return locationDetails.count
   }
@@ -76,10 +98,5 @@ final class SearchResultViewController: UIViewController, UITableViewDataSource,
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     // TODO: 테이블 뷰가 눌리면, 경로추천 segment 실행
-  }
-  
-  @objc func pinLocation(_ sender: UIButton) {
-    let locationDetail = locationDetails[sender.tag]
-    inputSubject.send(.addPinnedLocation(locationDetail))
   }
 }

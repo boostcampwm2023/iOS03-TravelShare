@@ -11,7 +11,7 @@ import Foundation
 
 final class TravelViewModel: ViewModelProtocol {
   
-  // MARK: Input
+  // MARK: - Input
   
   enum Input {
     case startTravel
@@ -22,7 +22,7 @@ final class TravelViewModel: ViewModelProtocol {
     case addPinnedLocation(LocationDetail)
   }
   
-  // MARK: Output
+  // MARK: - Output
   
   enum Output {
     case exchangeCell
@@ -33,7 +33,7 @@ final class TravelViewModel: ViewModelProtocol {
     case updateRoute([CLLocation])
   }
   
-  // MARK: Properties
+  // MARK: - Properties
   
   private let outputSubject = PassthroughSubject<Output, Never>()
   private let routeRecorder: RouteRecordUseCase
@@ -42,7 +42,7 @@ final class TravelViewModel: ViewModelProtocol {
   private var cancellables = Set<AnyCancellable>()
   private var routePoints: [CLLocation] = []
   
-  // MARK: Initialization
+  // MARK: - Init
   
   init(routeRecorder: RouteRecordUseCase, locationSearcher: LocationSearchUseCase, pinnedPlaceManager: PinnedPlaceManageUseCase) {
     self.routeRecorder = routeRecorder
@@ -50,7 +50,7 @@ final class TravelViewModel: ViewModelProtocol {
     self.pinnedPlaceManager = pinnedPlaceManager
   }
   
-  // MARK: Methods
+  // MARK: - Methods
   
   func transform(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
     input.sink { [weak self] input in
@@ -105,7 +105,6 @@ final class TravelViewModel: ViewModelProtocol {
     } receiveValue: { [weak self] response in
       self?.outputSubject.send(.updateSearchResult(response))
     }.store(in: &cancellables)
-    
   }
   
 }

@@ -26,12 +26,18 @@ protocol PinnedPlaceManageUseCase {
 
 final class PinnedPlaceManager: PinnedPlaceManageUseCase {
   
+  // MARK: Properties
+  
   private let provider: Requestable
   private var pinnedPlace: [LocationDetail] = []
+  
+  // MARK: Init
   
   init(provider: Requestable) {
     self.provider = provider
   }
+  
+  // MARK: Methods
   
   func deleteRoute() {
     // TODO: complete method

@@ -11,18 +11,18 @@ import Foundation
 /// API 요청을 하는 Provider 입니다.
 public final class APIProvider: Requestable {
   
-  // MARK: Properties
+  // MARK: - Properties
   
   /// HTTP 요청을 수행하기 위한 Session
   private let session: Session
   
-  // MARK: Initialization
+  // MARK: Init
   
   public init(session: Session) {
     self.session = session
   }
   
-  // MARK: Method
+  // MARK: Methods
   
   public func request<Target, Model>(_ target: Target) -> AnyPublisher<Model, NetworkError> where Target : EndPoint, Model: Decodable {
     guard let request = try? target.asURLRequest()

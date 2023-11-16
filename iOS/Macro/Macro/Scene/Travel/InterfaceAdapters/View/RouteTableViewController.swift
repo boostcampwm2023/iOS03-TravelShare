@@ -9,12 +9,17 @@ import Combine
 import UIKit
 
 final class RouteTableViewController: UITableViewController {
+  
+  // MARK: - Properties
+  
   weak var delegate: RouteTableViewControllerDelegate?
   private var routeItems: [LocationDetail] = []
   private let dragIndicator = UIView()
   private var cancellables = Set<AnyCancellable>()
   var viewModel: TravelViewModel
   private let inputSubject: PassthroughSubject<TravelViewModel.Input, Never> = .init()
+  
+  // MARK: - Life Cycles
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -23,6 +28,13 @@ final class RouteTableViewController: UITableViewController {
     tableView.isEditing = true
     bind()
   }
+  
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    updateDragIndicatorPosition()
+  }
+  
+  // MARK: - Init
   
   init(viewModel: TravelViewModel) {
     self.viewModel = viewModel
@@ -33,11 +45,8 @@ final class RouteTableViewController: UITableViewController {
     fatalError("init(coder:) has not been implemented")
   }
   
-  override func viewDidLayoutSubviews() {
-    super.viewDidLayoutSubviews()
-    updateDragIndicatorPosition()
-  }
-
+  // MARK: - Bind
+  
   private func bind() {
     let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
     
@@ -48,8 +57,9 @@ final class RouteTableViewController: UITableViewController {
       default: break
       }
     }.store(in: &cancellables)
-    
   }
+  
+  // MARK: - Methods
   
   private func updatePinnedPlaces(_ places: [LocationDetail]) {
     self.routeItems = places
@@ -68,7 +78,6 @@ final class RouteTableViewController: UITableViewController {
     
     headerView.addSubview(dragIndicator)
     tableView.tableHeaderView = headerView
-    
   }
   
   @objc private func handleDragIndicatorPan(_ gesture: UIPanGestureRecognizer) {
@@ -80,7 +89,10 @@ final class RouteTableViewController: UITableViewController {
   private func updateDragIndicatorPosition() {
     dragIndicator.center.x = tableView.tableHeaderView?.bounds.midX ?? 0
   }
-  
+}
+
+// MARK: - TableView
+extension RouteTableViewController {
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return routeItems.count
   }

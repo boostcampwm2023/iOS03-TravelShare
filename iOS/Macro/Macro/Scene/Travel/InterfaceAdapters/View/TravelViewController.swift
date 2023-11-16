@@ -6,13 +6,30 @@
 //
 
 import Combine
-import NMapsMap
 import MacroDesignSystem
+import NMapsMap
 import UIKit
 
 final class TravelViewController: UIViewController, RouteTableViewControllerDelegate, CLLocationManagerDelegate {
   
-  // MARK: UI Components
+  // MARK: - Properties
+  
+  private let minimizedHeight: CGFloat = 100
+  private let maximizedHeight: CGFloat = UIScreen.main.bounds.height - 200
+  private var isModalViewExpanded = false
+  private var routeTableViewHeightConstraint: NSLayoutConstraint?
+  private var cancellables = Set<AnyCancellable>()
+  private let inputSubject: PassthroughSubject<TravelViewModel.Input, Never> = .init()
+  private let viewModel: TravelViewModel
+  private var routeOverlay: NMFPolylineOverlay?
+  private let locationManager = CLLocationManager()
+  private let routeTableViewController: RouteTableViewController
+  private var isTraveling = false {
+    didSet {
+      updateTravelButton()
+    }
+  }
+  // MARK: - UI Components
   
   private let mapView: NMFMapView = {
     let mapView = NMFMapView()
@@ -30,8 +47,6 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
     return textField
   }()
   
-  private let routeTableViewController: RouteTableViewController
-  
   private let travelButton: UIButton = {
     let button = UIButton()
     button.translatesAutoresizingMaskIntoConstraints = false
@@ -40,37 +55,6 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
     button.setTitle("여행", for: .normal)
     return button
   }()
-  
-  // MARK: Properties
-  
-  private let minimizedHeight: CGFloat = 100
-  private let maximizedHeight: CGFloat = UIScreen.main.bounds.height - 200
-  private var isModalViewExpanded = false
-  private var routeTableViewHeightConstraint: NSLayoutConstraint?
-  private var cancellables = Set<AnyCancellable>()
-  private let inputSubject: PassthroughSubject<TravelViewModel.Input, Never> = .init()
-  private let viewModel: TravelViewModel
-  private var routeOverlay: NMFPolylineOverlay?
-  let locationManager = CLLocationManager()
-  private var isTraveling = false {
-    didSet {
-      updateTravelButton()
-    }
-  }
-  
-  // MARK: Initialization
-  
-  init(viewModel: TravelViewModel) {
-    self.viewModel = viewModel
-    self.routeTableViewController = RouteTableViewController(viewModel: viewModel)
-    super.init(nibName: nil, bundle: nil)
-    searchBar.addTarget(self, action: #selector(searchBarReturnPressed), for: .editingDidEndOnExit)
-  }
-  
-  @available(*, unavailable)
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
   
   // MARK: - Life Cycles
   
@@ -89,13 +73,65 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
     view.bringSubviewToFront(travelButton)
   }
   
-  // MARK: Methods
+  // MARK: - Init
+  
+  init(viewModel: TravelViewModel) {
+    self.viewModel = viewModel
+    self.routeTableViewController = RouteTableViewController(viewModel: viewModel)
+    super.init(nibName: nil, bundle: nil)
+    searchBar.addTarget(self, action: #selector(searchBarReturnPressed), for: .editingDidEndOnExit)
+  }
+  
+  @available(*, unavailable)
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
+  // MARK: - UI Settings
+  
+  private func setUpLayouts() {
+    view.addSubview(mapView)
+    view.addSubview(searchBar)
+    view.addSubview(travelButton)
+  }
+  
+  private func setUpConstraints() {
+    NSLayoutConstraint.activate([
+      mapView.topAnchor.constraint(equalTo: view.topAnchor),
+      mapView.leftAnchor.constraint(equalTo: view.leftAnchor),
+      mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+      mapView.rightAnchor.constraint(equalTo: view.rightAnchor),
+      searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15),
+      searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+      searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+      searchBar.heightAnchor.constraint(equalToConstant: 43),
+      travelButton.widthAnchor.constraint(equalToConstant: 50),
+      travelButton.heightAnchor.constraint(equalToConstant: 50),
+      travelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+      travelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+    ])
+  }
+  
+  private func setupRouteTableViewController() {
+    addChild(routeTableViewController)
+    view.addSubview(routeTableViewController.view)
+    routeTableViewController.view.translatesAutoresizingMaskIntoConstraints = false
+    routeTableViewController.didMove(toParent: self)
+    routeTableViewController.delegate = self
+    routeTableViewHeightConstraint = routeTableViewController.view.heightAnchor.constraint(equalToConstant: minimizedHeight)
+    NSLayoutConstraint.activate([
+      routeTableViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+      routeTableViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+      routeTableViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+      routeTableViewHeightConstraint!
+    ])
+  }
+  
+  // MARK: - Bind
   
   private func bind() {
     
-    // MARK: Input Binding
-    
-    // MARK: Output Binding
+    // MARK: - Output Binding
     
     let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
     
@@ -116,6 +152,8 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
     }.store(in: &cancellables)
     
   }
+  
+  // MARK: - Methods
   
   private func updateMapWithLocation(_ routePoints: [CLLocation]) {
     routeOverlay?.mapView = nil
@@ -165,49 +203,6 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
   @objc private func searchBarReturnPressed() {
     let text = searchBar.text ?? ""
     inputSubject.send(.searchLocation(text))
-  }
-  
-  private func setUpLayouts() {
-    view.addSubview(mapView)
-    view.addSubview(searchBar)
-    view.addSubview(travelButton)
-  }
-  
-  private func setUpConstraints() {
-    NSLayoutConstraint.activate([
-      mapView.topAnchor.constraint(equalTo: view.topAnchor),
-      mapView.leftAnchor.constraint(equalTo: view.leftAnchor),
-      mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-      mapView.rightAnchor.constraint(equalTo: view.rightAnchor),
-      searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15),
-      searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-      searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-      searchBar.heightAnchor.constraint(equalToConstant: 43)
-    ])
-    
-    NSLayoutConstraint.activate([
-      travelButton.widthAnchor.constraint(equalToConstant: 50),
-      travelButton.heightAnchor.constraint(equalToConstant: 50),
-      travelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-      travelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
-    ])
-  }
-  
-  private func setupRouteTableViewController() {
-    addChild(routeTableViewController)
-    view.addSubview(routeTableViewController.view)
-    routeTableViewController.view.translatesAutoresizingMaskIntoConstraints = false // 이 부분을 추가합니다.
-    routeTableViewController.didMove(toParent: self)
-    routeTableViewController.delegate = self
-    
-    routeTableViewHeightConstraint = routeTableViewController.view.heightAnchor.constraint(equalToConstant: minimizedHeight)
-    
-    NSLayoutConstraint.activate([
-      routeTableViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-      routeTableViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-      routeTableViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-      routeTableViewHeightConstraint!
-    ])
   }
   
   func routeTableViewDidDragChange(heightChange: CGFloat) {

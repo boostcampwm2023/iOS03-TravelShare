@@ -15,11 +15,17 @@ protocol LocationSearchUseCase {
 
 final class LocationSearcher: LocationSearchUseCase {
 
+  // MARK: - Properties
+  
   private let provider: Requestable
 
+  // MARK: - Init
+  
   init(provider: Requestable) {
     self.provider = provider
   }
+  
+  // MARK: - Methods
   
   func searchLocation(query: String) -> AnyPublisher<[LocationDetail], Network.NetworkError> {
     return provider.request(TravelEndPoint.search(query))

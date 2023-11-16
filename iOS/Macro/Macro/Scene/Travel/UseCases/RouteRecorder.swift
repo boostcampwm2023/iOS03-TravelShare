@@ -20,17 +20,23 @@ protocol RouteRecordUseCase {
 
 final class RouteRecorder: NSObject, RouteRecordUseCase, CLLocationManagerDelegate {
   
+  // MARK: - Properties
+  
   private let locationManager = CLLocationManager()
   var locationPublisher = PassthroughSubject<CLLocation, Never>()
   private let provider: Requestable
   private var locationUpdateTimer: Timer?
   private let updateInterval: TimeInterval = 3
   
+  // MARK: - Init
+  
   init(provider: Requestable) {
     self.provider = provider
     super.init()
     configureLocationManager()
   }
+  
+  // MARK: - Methods
   
   private func configureLocationManager() {
     locationManager.delegate = self
