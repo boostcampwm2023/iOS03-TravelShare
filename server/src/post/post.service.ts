@@ -101,6 +101,9 @@ export class PostService {
       .relation('likeUsers')
       .of(postId)
       .add(userEmail);
+    return await this.postRepository.update(postId, {
+      likeNum: () => 'like_num + 1',
+    });
   }
 
   @Transactional()
@@ -121,5 +124,8 @@ export class PostService {
       .relation('likeUsers')
       .of(postId)
       .remove(userEmail);
+    return await this.postRepository.update(postId, {
+      likeNum: () => 'like_num - 1',
+    });
   }
 }
