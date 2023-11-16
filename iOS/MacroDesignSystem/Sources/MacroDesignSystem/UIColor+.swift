@@ -52,6 +52,7 @@ public enum ColorAsset {
     
     public enum SpecialColor {
         case opacity30
+        case grabber
     }
 }
 
@@ -108,6 +109,7 @@ public extension UIColor {
     static func appColor(_ name: ColorAsset.SpecialColor) -> UIColor {
         switch name {
         case .opacity30: return UIColor(hexCode: "#242831", alpha: 0.3)
+        case .grabber: return UIColor(hexCode: "#C6C8CB")
         }
     }
 }
