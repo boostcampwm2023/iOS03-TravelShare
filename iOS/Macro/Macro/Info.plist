@@ -2,12 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NMFClientId</key>
+	<string>9wdoztuuak</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>나눔손글씨 배은혜체.ttf</string>
 	</array>
-	<key>NMFClientId</key>
-	<string>9wdoztuuak</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -25,5 +25,21 @@
 			</array>
 		</dict>
 	</dict>
+ <!-- App Transport Security 설정 추가 -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSExceptionDomains</key>
+        <dict>
+            <key>118.67.130.85</key>
+            <dict>
+                <key>NSExceptionAllowsInsecureHTTPLoads</key>
+                <true/>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+            </dict>
+        </dict>
+    </dict>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>이 앱은 여러분의 위치 정보를 사용합니다.</string>
 </dict>
 </plist>
