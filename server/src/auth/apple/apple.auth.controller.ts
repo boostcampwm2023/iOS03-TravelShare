@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AppleClientAuthBody } from './apple.client.auth.body.dto';
 import { AppleClientAuthResponse } from './apple.client.auth.response.dto';
@@ -6,6 +6,7 @@ import { AppleClientRefreshResponse } from './apple.client.refresh.response.dto'
 import { AppleClientRefreshBody } from './apple.client.refresh.body.dto';
 import { AppleAuthService } from './apple.auth.service';
 import { Public } from '../auth.decorators';
+import { plainToInstance } from 'class-transformer';
 
 @Controller('apple')
 export class AppleAuthController {
@@ -19,14 +20,16 @@ export class AppleAuthController {
   @Public()
   @Post('auth')
   async auth(@Body() payload: AppleClientAuthBody) {
-    (await this.appleAuthService.auth(payload)).forEach(console.log);
+    return plainToInstance(
+      AppleClientAuthResponse,
+      await this.appleAuthService.auth(payload),
+    );
   }
 
   @ApiOperation({
-    description:
-      'Apple 로그인 refresh token을 이용해 새로운 access token을 발급받습니다.',
+    description: 'Apple 회원탈퇴를 진행합니다. 미구현',
   })
   @ApiResponse({ type: AppleClientRefreshResponse })
-  @Post('refresh')
+  @Delete('revoke')
   async refresh(@Body() payload: AppleClientRefreshBody) {}
 }

@@ -3,17 +3,21 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AppleClientAuthBody } from './apple.client.auth.body.dto';
 import { ConfigService } from '@nestjs/config';
-import { map, mergeMap } from 'rxjs';
+import { map } from 'rxjs';
 import { plainToInstance } from 'class-transformer';
 import {
   AppleIdentityTokenPublicKey,
   AppleIdentityTokenPublicKeys,
 } from './apple.identity.token.public.keys.response.dto';
 import { AppleIdentityTokenPayload } from './apple.identity.token.payload.dto';
-import { createPublicKey } from 'crypto';
+import { createPublicKey, randomUUID } from 'crypto';
 import { AppleIdentityTokenHeader } from './apple.identity.token.header.dto';
-import { AppleAuthTokenBody } from './apple.auth.token.body.dto';
-import { AppleAuthTokenResponse } from './apple.auth.token.response.dto';
+import { Repository } from 'typeorm';
+import { AppleAuth } from 'src/entities/apple.auth.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/entities/user.entity';
+import { Authentication } from '../authentication.dto';
+import { Transactional } from 'src/utils/transactional.decorator';
 
 /**
  * ### AppleAuthService
@@ -27,14 +31,15 @@ export class AppleAuthService {
     private readonly httpService: HttpService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    @InjectRepository(AppleAuth)
+    private readonly appleAuthRepository: Repository<AppleAuth>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
-  async auth({ identityToken, authorizationCode }: AppleClientAuthBody) {
-    const { tokenRequest, keysRequest } = this.configService.get('apple.auth');
+  async auth({ identityToken }: AppleClientAuthBody) {
+    const { key: keysRequest } = this.configService.get('apple.auth');
     const { alg, kid } = this.extractJwtHeader(identityToken);
-    // 사전에 clientsecret을 생성합니다.
-    const clientSecret = this.jwtService.sign('');
-    const clientId = this.configService.get('apple.client_id');
     return this.httpService.request(keysRequest).pipe(
       /**
        * 1. 우선 https://appleid.apple.com/auth/oauth2/v2/keys로부터
@@ -53,7 +58,7 @@ export class AppleAuthService {
        */
       map((key: AppleIdentityTokenPublicKey & { [key: string]: any }) => {
         return createPublicKey({ key, format: 'jwk' }).export({
-          type: 'pkcs8',
+          type: 'pkcs1',
           format: 'pem',
         });
       }),
@@ -64,27 +69,69 @@ export class AppleAuthService {
       map((publicKey) => {
         return plainToInstance(
           AppleIdentityTokenPayload,
-          this.jwtService.verify(identityToken, { publicKey }),
+          this.jwtService.verify(identityToken, { secret: publicKey }),
         );
       }),
-      /**
-       * 4. https://appleid.apple.com/auth/oauth2/v2/token로 요청을 보내 access token과 refresh token을 가져옵니다.
-       */
-      mergeMap(() => {
-        const form = plainToInstance(AppleAuthTokenBody, {
-          client_secret: clientSecret,
-          client_id: clientId,
-          code: authorizationCode,
-        });
-        return this.httpService.request({
-          ...tokenRequest,
-          data: form.toString(),
-        });
-      }),
-      map(({ data }) => {
-        return plainToInstance(AppleAuthTokenResponse, data);
+      map(async (result) => {
+        if (await this.isUserExists(result)) {
+          return await this.signin(result);
+        } else {
+          return await this.signup(result);
+        }
       }),
     );
+  }
+
+  /**
+   *
+   * @param param0
+   * @returns
+   */
+  private async isUserExists({ sub }: AppleIdentityTokenPayload) {
+    return await this.appleAuthRepository.exist({
+      where: {
+        appleId: sub,
+      },
+    });
+  }
+
+  @Transactional()
+  private async signup({ sub, email }: AppleIdentityTokenPayload) {
+    const user = plainToInstance(
+      Authentication,
+      await this.userRepository.save({
+        email,
+        password: randomUUID(),
+        name: email,
+      }),
+    );
+    await this.appleAuthRepository
+      .createQueryBuilder()
+      .relation('user')
+      .of(sub)
+      .set(email);
+    return this.createToken(user);
+  }
+
+  private async signin({ sub }: AppleIdentityTokenPayload) {
+    const user = plainToInstance(
+      Authentication,
+      (
+        await this.appleAuthRepository.findOneOrFail({
+          where: { appleId: sub },
+        })
+      ).user,
+    );
+    return this.createToken(user);
+  }
+
+  private createToken(user: Authentication) {
+    return {
+      accessToken: this.jwtService.sign(user),
+      expiresIn: this.configService.get(
+        'application.jwt.signOptions.expiresIn',
+      ),
+    };
   }
 
   private extractJwtHeader(token: string): AppleIdentityTokenHeader {

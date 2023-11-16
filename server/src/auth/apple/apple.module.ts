@@ -1,17 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AppleAuthController } from './apple.auth.controller';
 import { AppleAuthService } from './apple.auth.service';
-import { JwtModule } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppleAuth } from 'src/entities/apple.auth.entity';
+import { User } from 'src/entities/user.entity';
 
 @Module({
-  imports: [
-    JwtModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) =>
-        configService.get('apple.client_secret'),
-    }),
-  ],
+  imports: [TypeOrmModule.forFeature([AppleAuth, User])],
   controllers: [AppleAuthController],
   providers: [AppleAuthService],
 })
