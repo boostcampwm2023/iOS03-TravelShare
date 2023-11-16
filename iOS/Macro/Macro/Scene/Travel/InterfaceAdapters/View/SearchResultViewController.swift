@@ -12,7 +12,6 @@ final class SearchResultViewController: UIViewController, UITableViewDataSource,
   
   // MARK: - Properties
   
-  private var locationDetails: [LocationDetail]
   private var tableView: UITableView!
   private let viewModel: TravelViewModel
   private let inputSubject: PassthroughSubject<TravelViewModel.Input, Never> = .init()
@@ -29,8 +28,7 @@ final class SearchResultViewController: UIViewController, UITableViewDataSource,
   
   // MARK: - Init
   
-  init(locationDetails: [LocationDetail], viewModel: TravelViewModel) {
-    self.locationDetails = locationDetails
+  init(viewModel: TravelViewModel) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
@@ -60,17 +58,22 @@ final class SearchResultViewController: UIViewController, UITableViewDataSource,
   // MARK: - Bind
   
   private func bind() {
-    viewModel.transform(with: inputSubject.eraseToAnyPublisher())
-      .sink { _ in
-        // TODO: implements 
-      }
-      .store(in: &cancellables)
+      viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+        .sink { [weak self] output in
+            switch output {
+            case .updateSearchResult:
+                self?.tableView.reloadData()
+            default:
+                break
+            }
+        }
+        .store(in: &cancellables)
   }
   
   // MARK: - Methods
   
   @objc func pinLocation(_ sender: UIButton) {
-    let locationDetail = locationDetails[sender.tag]
+    let locationDetail = viewModel.searchedResult[sender.tag]
     inputSubject.send(.addPinnedLocation(locationDetail))
   }
 }
@@ -79,12 +82,12 @@ final class SearchResultViewController: UIViewController, UITableViewDataSource,
 
 extension SearchResultViewController {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return locationDetails.count
+    return viewModel.searchedResult.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-    let locationDetail = locationDetails[indexPath.row]
+    let locationDetail = viewModel.searchedResult[indexPath.row]
     cell.textLabel?.text = locationDetail.title
     let pinButton = UIButton(type: .custom)
     pinButton.setImage(UIImage(systemName: "pin"), for: .normal)
@@ -92,7 +95,6 @@ extension SearchResultViewController {
     pinButton.addTarget(self, action: #selector(pinLocation(_:)), for: .touchUpInside)
     cell.accessoryView = pinButton
     pinButton.tag = indexPath.row
-    
     return cell
   }
   

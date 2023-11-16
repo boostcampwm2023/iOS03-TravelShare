@@ -196,7 +196,7 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
   }
   
   private func getSearchResult(_ locationDetails: [LocationDetail]) {
-    let searchResultVC = SearchResultViewController(locationDetails: locationDetails, viewModel: viewModel)
+    let searchResultVC = SearchResultViewController(viewModel: viewModel)
     navigationController?.pushViewController(searchResultVC, animated: true)
   }
   

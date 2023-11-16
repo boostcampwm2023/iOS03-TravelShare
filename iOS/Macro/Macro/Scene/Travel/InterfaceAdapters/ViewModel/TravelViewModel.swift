@@ -40,7 +40,8 @@ final class TravelViewModel: ViewModelProtocol {
   private let locationSearcher: LocationSearchUseCase
   private let pinnedPlaceManager: PinnedPlaceManageUseCase
   private var cancellables = Set<AnyCancellable>()
-  private var savedRoute: SavedRoute = SavedRoute()
+  private (set) var savedRoute: SavedRoute = SavedRoute()
+  private (set) var searchedResult: [LocationDetail] = []
   
   // MARK: - Init
   
@@ -105,6 +106,7 @@ final class TravelViewModel: ViewModelProtocol {
         print(error)
       }
     } receiveValue: { [weak self] response in
+      self?.searchedResult = response
       self?.outputSubject.send(.updateSearchResult(response))
     }.store(in: &cancellables)
   }
