@@ -22,6 +22,9 @@ public enum ImageAsset {
     case photo
     case person2Fill
     case chartBarDocHorizontal
+    case pin
+    case pinFill
+    case mappin
 }
 
 @available(iOS 13.0, *)
@@ -56,6 +59,12 @@ public extension UIImage {
             return UIImage(systemName: "person.2.fill")
         case .chartBarDocHorizontal:
             return UIImage(systemName: "chart.bar.doc.horizontal")
+        case .pin:
+            return UIImage(systemName: "pin")
+        case .pinFill:
+            return UIImage(systemName: "pin.fill")
+        case .mappin:
+            return UIImage(systemName: "mappin")
         }
     }
 }
