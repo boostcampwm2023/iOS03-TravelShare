@@ -4,7 +4,7 @@ import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 export class UserSigninBody {
   @ApiProperty({ description: 'id email' })
   @IsEmail()
-  userId: string;
+  email: string;
 
   @ApiProperty({ description: 'password' })
   @IsString()

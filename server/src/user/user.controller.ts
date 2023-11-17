@@ -23,6 +23,9 @@ import { UserProfileQuery } from './user.profile.query.dto';
 import { UserFollowQuery } from './user.follow.query.dto';
 import { UserProfileSimpleResponse } from './user.profile.simple.response.dto';
 import { UserService } from './user.service';
+import { UserDeleteBody } from './user.delete.body.dto';
+import { Public } from 'src/auth/auth.decorators';
+import { plainToInstance } from 'class-transformer';
 
 @Controller('user')
 export class UserController {
@@ -30,13 +33,23 @@ export class UserController {
 
   @ApiOperation({ description: '회원가입' })
   @ApiResponse({ type: UserSigninResponse })
+  @Public()
   @Post('signup')
-  async signup(@Body() user: UserSignupBody) {}
+  async signup(@Body() user: UserSignupBody) {
+    return plainToInstance(UserSigninResponse, {
+      token: await this.userService.signup(user),
+    });
+  }
 
   @ApiOperation({ description: '기본 로그인' })
   @ApiResponse({ type: UserSigninResponse })
+  @Public()
   @Post('signin')
-  async signin(@Body() user: UserSigninBody) {}
+  async signin(@Body() user: UserSigninBody) {
+    return plainToInstance(UserSigninResponse, {
+      token: await this.userService.login(user),
+    });
+  }
 
   @ApiOperation({ description: '로그아웃' })
   @ApiBearerAuth('access-token')
@@ -46,7 +59,9 @@ export class UserController {
   @ApiOperation({ description: '회원탈퇴' })
   @ApiBearerAuth('access-token')
   @Delete('delete')
-  async delete() {}
+  async delete(@Body() user: UserDeleteBody) {
+    return await this.userService.delete(user);
+  }
 
   @ApiOperation({ description: '회원정보 수정' })
   @ApiBearerAuth('access-token')

@@ -1,7 +1,10 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { AxiosResponse } from 'axios';
 import { map } from 'rxjs';
+import { MapSearchResponse } from './map.search.response.dto';
+import { plainToInstance } from 'class-transformer';
 const displayNum = 5;
 
 @Injectable()
@@ -12,7 +15,7 @@ export class MapService {
   ) {}
 
   async search(keyword: string) {
-    return await this.httpService
+    return this.httpService
       .get(
         this.configService.get('naver.search.url') +
           encodeURI(`?query=${keyword}&display=${displayNum}`),
@@ -21,15 +24,8 @@ export class MapService {
         },
       )
       .pipe(
-        map((res, index) => {
-          const body = res.data;
-          return body.items.map((v) => {
-            return {
-              ...v,
-              mapx: parseFloat(v.mapx) / 10000000,
-              mapy: parseFloat(v.mapy) / 10000000,
-            };
-          });
+        map(({ data }: AxiosResponse) => {
+          return plainToInstance(MapSearchResponse, data?.items as any[]);
         }),
       );
   }

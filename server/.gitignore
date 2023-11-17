@@ -36,3 +36,6 @@ lerna-debug.log*
 
 # config
 application.*.yaml
+
+# Secret
+*.p8

@@ -2,7 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsInt,
   IsNumber,
+  IsOptional,
   IsString,
   IsUrl,
   ValidateNested,
@@ -19,14 +21,19 @@ class PostWriteElement {
 
   @ApiProperty({ description: 'x 좌표' })
   @IsNumber()
-  positionX: number;
+  mapx: number;
 
   @ApiProperty({ description: 'y 좌표' })
   @IsNumber()
-  positionY: number;
+  mapy: number;
 }
 
 export class PostWriteBody {
+  @ApiProperty({ description: '게시글 아이디입니다. 업로드 이후에 리턴' })
+  @IsInt()
+  @IsOptional()
+  id?: number;
+
   @ApiProperty({ description: '제목' })
   @IsString()
   title: string;
@@ -35,5 +42,5 @@ export class PostWriteBody {
   @IsArray()
   @ValidateNested()
   @Type(() => PostWriteElement)
-  elements: PostWriteElement[];
+  contents: PostWriteElement[];
 }
