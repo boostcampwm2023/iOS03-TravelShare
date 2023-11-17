@@ -145,8 +145,10 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
         self?.tempMethod()
       case let .updateSearchResult(locationDetails):
         self?.getSearchResult(locationDetails)
-      case let .updatePinnedPlaceInMap(pinnedPlaces):
-        self?.updateMarkers(with: pinnedPlaces)
+      case let .addPinnedPlaceInMap(locationDetail):
+        self?.addMarker(for: locationDetail)
+      case let .removePinnedPlaceInMap(locationDetail):
+        self?.removeMarker(for: locationDetail)
       case let .updateRoute(location):
         self?.updateMapWithLocation(location)
       default: break
@@ -162,6 +164,25 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
     let coords = routePoints.map { NMGLatLng(lat: $0.coordinate.latitude, lng: $0.coordinate.longitude) }
     routeOverlay = NMFPolylineOverlay(coords)
     routeOverlay?.mapView = mapView
+  }
+  
+  private func addMarker(for locationDetail: LocationDetail) {
+    let marker = NMFMarker()
+    let position = NMGLatLng(lat: locationDetail.mapy, lng: locationDetail.mapx)
+    marker.position = position
+    marker.mapView = mapView
+    markers[locationDetail.title] = marker
+    
+    let cameraUpdate = NMFCameraUpdate(scrollTo: position)
+    cameraUpdate.animation = .easeIn
+    mapView.moveCamera(cameraUpdate)
+  }
+  
+  private func removeMarker(for locationDetail: LocationDetail) {
+    if let marker = markers[locationDetail.title] {
+      marker.mapView = nil
+      markers.removeValue(forKey: locationDetail.title)
+    }
   }
   
   private func updateTravelButton() {
@@ -189,19 +210,6 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
   }
   
   private func tempMethod() {
-  }
-  
-  private func updateMarkers(with places: [LocationDetail]) {
-    markers.values.forEach { $0.mapView = nil }
-    markers.removeAll()
-    // 새로운 마커 생성 및 추가
-    for place in places {
-      let marker = NMFMarker()
-      marker.position = NMGLatLng(lat: place.mapy, lng: place.mapx)
-      marker.mapView = mapView
-      markers[place.title] = marker
-    }
-    
   }
   
   private func getSearchResult(_ locationDetails: [LocationDetail]) {

@@ -29,7 +29,8 @@ final class TravelViewModel: ViewModelProtocol {
     case exchangeLocation
     case updateSearchResult([LocationDetail])
     case updatePinnedPlacesTableView([LocationDetail])
-    case updatePinnedPlaceInMap([LocationDetail])
+    case addPinnedPlaceInMap(LocationDetail)
+    case removePinnedPlaceInMap(LocationDetail)
     case updateRoute([CLLocation])
   }
   
@@ -79,7 +80,7 @@ final class TravelViewModel: ViewModelProtocol {
   }
   
   func togglePinnedPlaces(_ locationDetail: LocationDetail) {
-    if let index = savedRoute.pinnedPlaces.firstIndex(where: { $0.title == locationDetail.title }) {
+    if savedRoute.pinnedPlaces.contains(where: { $0.title == locationDetail.title }) {
       removePinnedPlace(locationDetail)
     } else {
       addPinnedPlace(locationDetail)
@@ -112,21 +113,21 @@ final class TravelViewModel: ViewModelProtocol {
   }
   
   func movePinnedPlace(from sourceIndex: Int, to destinationIndex: Int) {
-         savedRoute.pinnedPlaces = pinnedPlaceManager.movePinnedPlace(from: sourceIndex, to: destinationIndex, in: savedRoute.pinnedPlaces)
-         outputSubject.send(.updatePinnedPlacesTableView(savedRoute.pinnedPlaces))
-     }
+    savedRoute.pinnedPlaces = pinnedPlaceManager.movePinnedPlace(from: sourceIndex, to: destinationIndex, in: savedRoute.pinnedPlaces)
+    outputSubject.send(.updatePinnedPlacesTableView(savedRoute.pinnedPlaces))
+  }
   
   func addPinnedPlace(_ locationDetail: LocationDetail) {
     savedRoute.pinnedPlaces.append(locationDetail)
     outputSubject.send(.updatePinnedPlacesTableView(savedRoute.pinnedPlaces))
-    outputSubject.send(.updatePinnedPlaceInMap(savedRoute.pinnedPlaces))
+    outputSubject.send(.addPinnedPlaceInMap(locationDetail))
   }
   
   func removePinnedPlace(_ locationDetail: LocationDetail) {
     if let index = savedRoute.pinnedPlaces.firstIndex(where: { $0.title == locationDetail.title }) {
       savedRoute.pinnedPlaces.remove(at: index)
       outputSubject.send(.updatePinnedPlacesTableView(savedRoute.pinnedPlaces))
-      outputSubject.send(.updatePinnedPlaceInMap(savedRoute.pinnedPlaces))
+      outputSubject.send(.removePinnedPlaceInMap(locationDetail))
     }
   }
   
