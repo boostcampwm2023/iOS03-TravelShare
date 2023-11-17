@@ -65,7 +65,7 @@ final class RouteTableViewController: UITableViewController {
   }
   
   private func setupDragIndicator() {
-    let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 30))
+    let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 60))
     dragIndicator.frame = CGRect(x: (headerView.bounds.width / 2) - 20, y: 8, width: 40, height: 5)
     dragIndicator.backgroundColor = .systemGray4
     dragIndicator.layer.cornerRadius = 2.5
