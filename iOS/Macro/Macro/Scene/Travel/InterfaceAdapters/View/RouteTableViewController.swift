@@ -51,7 +51,7 @@ final class RouteTableViewController: UITableViewController {
     
     outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
       switch output {
-      case let .updatePinnedPlaces(locationDetails):
+      case let .updatePinnedPlacesTableView(locationDetails):
         self?.updatePinnedPlaces(locationDetails)
       default: break
       }
@@ -106,13 +106,14 @@ extension RouteTableViewController {
   }
   
   override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-      viewModel.movePinnedPlace(from: sourceIndexPath.row, to: destinationIndexPath.row)
+    viewModel.movePinnedPlace(from: sourceIndexPath.row, to: destinationIndexPath.row)
   }
-
+  
   override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-      if editingStyle == .delete {
-          viewModel.removePinnedPlace(at: indexPath.row)
-          tableView.deleteRows(at: [indexPath], with: .fade)
-      }
+    if editingStyle == .delete {
+      let locationDetail = viewModel.savedRoute.pinnedPlaces[indexPath.row]
+      viewModel.removePinnedPlace(locationDetail)
+      tableView.deleteRows(at: [indexPath], with: .fade)
+    }
   }
 }

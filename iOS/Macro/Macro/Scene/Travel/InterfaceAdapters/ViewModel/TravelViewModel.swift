@@ -19,7 +19,7 @@ final class TravelViewModel: ViewModelProtocol {
     case searchLocation(String)
     case exchangeLocation
     case deleteLocation
-    case addPinnedLocation(LocationDetail)
+    case togglePinnedPlaces(LocationDetail)
   }
   
   // MARK: - Output
@@ -28,8 +28,8 @@ final class TravelViewModel: ViewModelProtocol {
     case exchangeCell
     case exchangeLocation
     case updateSearchResult([LocationDetail])
-    case updatePinnedPlaces([LocationDetail])
-    case addPinnedPlaceInMap(Double, Double)
+    case updatePinnedPlacesTableView([LocationDetail])
+    case updatePinnedPlaceInMap([LocationDetail])
     case updateRoute([CLLocation])
   }
   
@@ -66,8 +66,8 @@ final class TravelViewModel: ViewModelProtocol {
         self?.tempMethod()
       case .deleteLocation:
         self?.tempMethod()
-      case let .addPinnedLocation(locationDetail):
-        self?.addPinnedLocation(locationDetail: locationDetail)
+      case let .togglePinnedPlaces(locationDetail):
+        self?.togglePinnedPlaces(locationDetail)
       }
     }.store(in: &cancellables)
     
@@ -78,12 +78,12 @@ final class TravelViewModel: ViewModelProtocol {
     print("temp")
   }
   
-  private func addPinnedLocation(locationDetail: LocationDetail) {
-    
-    let newPinnedPlaces = pinnedPlaceManager.addPinnedLocation(locationDetail: locationDetail, to: savedRoute.pinnedPlaces)
-    savedRoute.pinnedPlaces = newPinnedPlaces
-    outputSubject.send(.updatePinnedPlaces(newPinnedPlaces))
-    outputSubject.send(.addPinnedPlaceInMap(locationDetail.mapx, locationDetail.mapy))
+  func togglePinnedPlaces(_ locationDetail: LocationDetail) {
+    if let index = savedRoute.pinnedPlaces.firstIndex(where: { $0.title == locationDetail.title }) {
+      removePinnedPlace(locationDetail)
+    } else {
+      addPinnedPlace(locationDetail)
+    }
   }
   
   private func startRecord() {
@@ -111,13 +111,27 @@ final class TravelViewModel: ViewModelProtocol {
     }.store(in: &cancellables)
   }
   
-   func movePinnedPlace(from sourceIndex: Int, to destinationIndex: Int) {
-      let movedItem = savedRoute.pinnedPlaces.remove(at: sourceIndex)
-      savedRoute.pinnedPlaces.insert(movedItem, at: destinationIndex)
+  func movePinnedPlace(from sourceIndex: Int, to destinationIndex: Int) {
+    let movedItem = savedRoute.pinnedPlaces.remove(at: sourceIndex)
+    savedRoute.pinnedPlaces.insert(movedItem, at: destinationIndex)
   }
-
-  func removePinnedPlace(at index: Int) {
+  
+  func addPinnedPlace(_ locationDetail: LocationDetail) {
+    savedRoute.pinnedPlaces.append(locationDetail)
+    outputSubject.send(.updatePinnedPlacesTableView(savedRoute.pinnedPlaces))
+    outputSubject.send(.updatePinnedPlaceInMap(savedRoute.pinnedPlaces))
+  }
+  
+  func removePinnedPlace(_ locationDetail: LocationDetail) {
+    if let index = savedRoute.pinnedPlaces.firstIndex(where: { $0.title == locationDetail.title }) {
       savedRoute.pinnedPlaces.remove(at: index)
+      outputSubject.send(.updatePinnedPlacesTableView(savedRoute.pinnedPlaces))
+      outputSubject.send(.updatePinnedPlaceInMap(savedRoute.pinnedPlaces))
+    }
+  }
+  
+  func isPinned(_ locationDetail: LocationDetail) -> Bool {
+    return savedRoute.pinnedPlaces.contains(where: { $0.title == locationDetail.title })
   }
   
 }

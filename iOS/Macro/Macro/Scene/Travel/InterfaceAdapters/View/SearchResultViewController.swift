@@ -58,23 +58,26 @@ final class SearchResultViewController: UIViewController, UITableViewDataSource,
   // MARK: - Bind
   
   private func bind() {
-      viewModel.transform(with: inputSubject.eraseToAnyPublisher())
-        .sink { [weak self] output in
-            switch output {
-            case .updateSearchResult:
-                self?.tableView.reloadData()
-            default:
-                break
-            }
+    viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+      .sink { [weak self] output in
+        switch output {
+        case .updateSearchResult:
+          self?.tableView.reloadData()
+        default:
+          break
         }
-        .store(in: &cancellables)
+      }
+      .store(in: &cancellables)
   }
   
   // MARK: - Methods
   
   @objc func pinLocation(_ sender: UIButton) {
-    let locationDetail = viewModel.searchedResult[sender.tag]
-    inputSubject.send(.addPinnedLocation(locationDetail))
+    let location = viewModel.searchedResult[sender.tag]
+    viewModel.togglePinnedPlaces(location)
+    let isPinnedNow = viewModel.isPinned(location)
+    let pinImage = isPinnedNow ? UIImage.appImage(.pinFill) : UIImage.appImage(.pin)
+    sender.setImage(pinImage, for: .normal)
   }
 }
 
@@ -90,7 +93,8 @@ extension SearchResultViewController {
     let locationDetail = viewModel.searchedResult[indexPath.row]
     cell.textLabel?.text = locationDetail.title
     let pinButton = UIButton(type: .custom)
-    pinButton.setImage(UIImage(systemName: "pin"), for: .normal)
+    let pinImage = viewModel.isPinned(locationDetail) ? UIImage.appImage(.pinFill) : UIImage.appImage(.pin)
+    pinButton.setImage(pinImage, for: .normal)
     pinButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
     pinButton.addTarget(self, action: #selector(pinLocation(_:)), for: .touchUpInside)
     cell.accessoryView = pinButton

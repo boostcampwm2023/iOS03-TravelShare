@@ -69,6 +69,8 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
     updateTravelButton()
   }
   
+  private var markers: [String: NMFMarker] = [:]
+  
   override func viewWillLayoutSubviews() {
     view.bringSubviewToFront(travelButton)
   }
@@ -143,8 +145,8 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
         self?.tempMethod()
       case let .updateSearchResult(locationDetails):
         self?.getSearchResult(locationDetails)
-      case let .addPinnedPlaceInMap(mapx, mapy):
-        self?.addPinnedPlace(mapx: mapx, mapy: mapy)
+      case let .updatePinnedPlaceInMap(pinnedPlaces):
+        self?.updateMarkers(with: pinnedPlaces)
       case let .updateRoute(location):
         self?.updateMapWithLocation(location)
       default: break
@@ -189,10 +191,17 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
   private func tempMethod() {
   }
   
-  private func addPinnedPlace(mapx: Double, mapy: Double) {
-    let marker = NMFMarker()
-    marker.position = NMGLatLng(lat: mapy, lng: mapx)
-    marker.mapView = mapView
+  private func updateMarkers(with places: [LocationDetail]) {
+    markers.values.forEach { $0.mapView = nil }
+    markers.removeAll()
+    // 새로운 마커 생성 및 추가
+    for place in places {
+      let marker = NMFMarker()
+      marker.position = NMGLatLng(lat: place.mapy, lng: place.mapx)
+      marker.mapView = mapView
+      markers[place.title] = marker
+    }
+    
   }
   
   private func getSearchResult(_ locationDetails: [LocationDetail]) {
