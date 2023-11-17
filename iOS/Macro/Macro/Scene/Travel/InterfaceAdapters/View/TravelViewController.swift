@@ -155,6 +155,8 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
         self?.removeMarker(for: locationDetail)
       case let .updateRoute(location):
         self?.updateMapWithLocation(location)
+      case let .updateMarkers(pinnedPlaces):
+        self?.updateMarkers(pinnedPlaces)
       default: break
       }
     }.store(in: &cancellables)
@@ -200,16 +202,28 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
   }
   
   private func updateMarkers() {
-      markers.values.forEach { $0.mapView = nil }
-      markers.removeAll()
-
-      for (index, place) in viewModel.savedRoute.pinnedPlaces.enumerated() {
-          let marker = NMFMarker()
-          marker.position = NMGLatLng(lat: place.mapy, lng: place.mapx)
-          marker.captionText = "\(index + 1)"
-          marker.mapView = mapView
-          markers[place.title] = marker
-      }
+    markers.values.forEach { $0.mapView = nil }
+    markers.removeAll()
+    
+    for (index, place) in viewModel.savedRoute.pinnedPlaces.enumerated() {
+      let marker = NMFMarker()
+      marker.position = NMGLatLng(lat: place.mapy, lng: place.mapx)
+      marker.captionText = "\(index + 1)"
+      marker.mapView = mapView
+      markers[place.title] = marker
+    }
+  }
+  private func updateMarkers(_ pinnedPlaces: [LocationDetail]) {
+    markers.values.forEach { $0.mapView = nil }
+    markers.removeAll()
+    
+    for (index, place) in pinnedPlaces.enumerated() {
+      let marker = NMFMarker()
+      marker.position = NMGLatLng(lat: place.mapy, lng: place.mapx)
+      marker.captionText = "\(index + 1)"
+      marker.mapView = mapView
+      markers[place.title] = marker
+    }
   }
   
   private func updateTravelButton() {

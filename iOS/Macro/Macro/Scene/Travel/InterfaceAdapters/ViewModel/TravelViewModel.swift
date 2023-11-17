@@ -32,6 +32,7 @@ final class TravelViewModel: ViewModelProtocol {
     case addPinnedPlaceInMap(LocationDetail)
     case removePinnedPlaceInMap(LocationDetail)
     case updateRoute([CLLocation])
+    case updateMarkers([LocationDetail])
   }
   
   // MARK: - Properties
@@ -115,6 +116,7 @@ final class TravelViewModel: ViewModelProtocol {
   func movePinnedPlace(from sourceIndex: Int, to destinationIndex: Int) {
     savedRoute.pinnedPlaces = pinnedPlaceManager.movePinnedPlace(from: sourceIndex, to: destinationIndex, in: savedRoute.pinnedPlaces)
     outputSubject.send(.updatePinnedPlacesTableView(savedRoute.pinnedPlaces))
+    outputSubject.send(.updateMarkers(savedRoute.pinnedPlaces))
   }
   
   func addPinnedPlace(_ locationDetail: LocationDetail) {
