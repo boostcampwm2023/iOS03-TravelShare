@@ -74,7 +74,7 @@ extension HomeViewController {
             homeCollectionView.topAnchor.constraint(equalTo: homeHeaderView.bottomAnchor, constant: Padding.homeCollectionViewTop),
             homeCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             homeCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            homeCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: Padding.homeCollectionViewBottom)
+            homeCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
     }
     
@@ -126,6 +126,5 @@ private extension HomeViewController {
     enum Padding {
         static let homeHeaderViewTop: CGFloat = 50
         static let homeCollectionViewTop: CGFloat = 10
-        static let homeCollectionViewBottom: CGFloat = -60
     }
 }

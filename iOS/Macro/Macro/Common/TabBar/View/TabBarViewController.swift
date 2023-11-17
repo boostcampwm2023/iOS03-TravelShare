@@ -21,6 +21,7 @@ final class TabbarViewController: UIViewController {
     private let activeTabBarCenterView: TabBarCenterView = TabBarCenterView()
     private let inactiveTabBarCenterView: TabBarCenterView = TabBarCenterView()
     private let tabBarOpacityView: TabBarOpacityView = TabBarOpacityView()
+    private let tabBarBackgroundLineView: TabBarBackgroundLineView = TabBarBackgroundLineView()
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -52,6 +53,7 @@ private extension TabbarViewController {
         tabBarBackgroundSmallCirclceView.translatesAutoresizingMaskIntoConstraints = false
         activeTabBarCenterView.translatesAutoresizingMaskIntoConstraints = false
         inactiveTabBarCenterView.translatesAutoresizingMaskIntoConstraints = false
+        tabBarBackgroundLineView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     func generateSubviewLocation(index: Int) -> TabLocation {
@@ -66,13 +68,16 @@ private extension TabbarViewController {
     }
     
     func addSubviews() {
-        view.addSubview(selectedViewController!.view)
         
+        view.addSubview(selectedViewController!.view)
+        view.addSubview(tabBarBackgroundLineView)
         view.addSubview(tabBarOpacityView)
         view.addSubview(tabBarBackgroundLargeCirclceView)
         view.addSubview(inactiveTabBarCenterView)
         tabBarBackgroundLargeCirclceView.addSubview(tabBarBackgroundSmallCirclceView)
         tabBarBackgroundSmallCirclceView.addSubview(activeTabBarCenterView)
+        
+        
     }
     
     func setLayoutConstraints() {
@@ -82,6 +87,11 @@ private extension TabbarViewController {
             
             inactiveTabBarCenterView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             inactiveTabBarCenterView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -30),
+            
+            tabBarBackgroundLineView.heightAnchor.constraint(equalToConstant: 60),
+            tabBarBackgroundLineView.leadingAnchor.constraint(equalTo: tabBarOpacityView.leadingAnchor),
+            tabBarBackgroundLineView.trailingAnchor.constraint(equalTo: tabBarOpacityView.trailingAnchor),
+            tabBarBackgroundLineView.bottomAnchor.constraint(equalTo: tabBarOpacityView.bottomAnchor),
             
             tabBarBackgroundLargeCirclceView.centerXAnchor.constraint(equalTo: super.view.centerXAnchor),
             tabBarBackgroundLargeCirclceView.bottomAnchor.constraint(equalTo: super.view.bottomAnchor, constant: -30),

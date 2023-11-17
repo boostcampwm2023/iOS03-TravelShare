@@ -65,6 +65,12 @@ extension HomeCollectionView: UICollectionViewDelegateFlowLayout {
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return Padding.collectionViewMiniMumSpacing
     }
+    
+    func collectionView(_ collectionView: UICollectionView, 
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: Padding.collectionViewBottom, right: 0)
+      }
 }
 
 // MARK: - LayoutMetrics
@@ -78,6 +84,6 @@ private extension HomeCollectionView {
     
     enum Padding {
         static let collectionViewMiniMumSpacing: CGFloat = 20
-  
+        static let collectionViewBottom: CGFloat = 80
     }
 }
