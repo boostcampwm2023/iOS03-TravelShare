@@ -56,6 +56,8 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
     return button
   }()
   
+  private var markers: [String: NMFMarker] = [:]
+  
   // MARK: - Life Cycles
   
   override func viewDidLoad() {
@@ -67,9 +69,11 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
     setupRouteTableViewController()
     bind()
     updateTravelButton()
+    
+    locationManager.delegate = self
+    locationManager.requestWhenInUseAuthorization()
+    locationManager.startUpdatingLocation()
   }
-  
-  private var markers: [String: NMFMarker] = [:]
   
   override func viewWillLayoutSubviews() {
     view.bringSubviewToFront(travelButton)
@@ -159,6 +163,14 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
   
   // MARK: - Methods
   
+  func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    if let location = locations.first {
+      let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: location.coordinate.latitude, lng: location.coordinate.longitude))
+      cameraUpdate.animation = .easeIn
+      mapView.moveCamera(cameraUpdate)
+      locationManager.stopUpdatingLocation()
+    }
+  }
   private func updateMapWithLocation(_ routePoints: [CLLocation]) {
     routeOverlay?.mapView = nil
     let coords = routePoints.map { NMGLatLng(lat: $0.coordinate.latitude, lng: $0.coordinate.longitude) }
@@ -176,6 +188,7 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
     let cameraUpdate = NMFCameraUpdate(scrollTo: position)
     cameraUpdate.animation = .easeIn
     mapView.moveCamera(cameraUpdate)
+    updateMarkers()
   }
   
   private func removeMarker(for locationDetail: LocationDetail) {
@@ -183,6 +196,20 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
       marker.mapView = nil
       markers.removeValue(forKey: locationDetail.title)
     }
+    updateMarkers()
+  }
+  
+  private func updateMarkers() {
+      markers.values.forEach { $0.mapView = nil }
+      markers.removeAll()
+
+      for (index, place) in viewModel.savedRoute.pinnedPlaces.enumerated() {
+          let marker = NMFMarker()
+          marker.position = NMGLatLng(lat: place.mapy, lng: place.mapx)
+          marker.captionText = "\(index + 1)"
+          marker.mapView = mapView
+          markers[place.title] = marker
+      }
   }
   
   private func updateTravelButton() {
