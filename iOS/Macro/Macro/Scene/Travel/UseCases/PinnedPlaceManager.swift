@@ -11,15 +11,13 @@ import Network
 /// 사용자가 핀으로 고정한 장소를 관리하는 UseCase
 protocol PinnedPlaceManageUseCase {
   
-  /// 핀으로 지정한 장소의 순서를 바꾸는 함수
-  func exchangeRoute()
-  
   /// 핀으로 특정 장소를 추가하는 함수
   func addPinnedLocation(locationDetail: LocationDetail, to places: [LocationDetail]) -> [LocationDetail]
   
   func deletePinnedLocation(locationDetail: LocationDetail, to places: [LocationDetail]) -> [LocationDetail]
   
-}
+  func movePinnedPlace(from sourceIndex: Int, to destinationIndex: Int, in places: [LocationDetail]) -> [LocationDetail]
+ }
 
 final class PinnedPlaceManager: PinnedPlaceManageUseCase {
   
@@ -35,10 +33,6 @@ final class PinnedPlaceManager: PinnedPlaceManageUseCase {
   
   // MARK: Methods
   
-  func exchangeRoute() {
-    // TODO: complete method
-  }
-  
   func addPinnedLocation(locationDetail: LocationDetail, to places: [LocationDetail]) -> [LocationDetail] {
     var newPlaces = places
     newPlaces.append(locationDetail)
@@ -51,5 +45,12 @@ final class PinnedPlaceManager: PinnedPlaceManageUseCase {
       newPlaces.remove(at: index)
     }
     return newPlaces
+  }
+  
+  func movePinnedPlace(from sourceIndex: Int, to destinationIndex: Int, in places: [LocationDetail]) -> [LocationDetail] {
+    var updatedPlaces = places
+           let movedItem = updatedPlaces.remove(at: sourceIndex)
+           updatedPlaces.insert(movedItem, at: destinationIndex)
+           return updatedPlaces
   }
 }

@@ -112,9 +112,9 @@ final class TravelViewModel: ViewModelProtocol {
   }
   
   func movePinnedPlace(from sourceIndex: Int, to destinationIndex: Int) {
-    let movedItem = savedRoute.pinnedPlaces.remove(at: sourceIndex)
-    savedRoute.pinnedPlaces.insert(movedItem, at: destinationIndex)
-  }
+         savedRoute.pinnedPlaces = pinnedPlaceManager.movePinnedPlace(from: sourceIndex, to: destinationIndex, in: savedRoute.pinnedPlaces)
+         outputSubject.send(.updatePinnedPlacesTableView(savedRoute.pinnedPlaces))
+     }
   
   func addPinnedPlace(_ locationDetail: LocationDetail) {
     savedRoute.pinnedPlaces.append(locationDetail)
