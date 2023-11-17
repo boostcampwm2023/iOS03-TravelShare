@@ -1,0 +1,10 @@
+version: "1"
+services:
+  node:
+    image: "node:20.5.1"
+    user: "root"
+    working_dir: "/node"
+    volumes:
+      - ./:/node
+    ports:
+      - 3000:3000
