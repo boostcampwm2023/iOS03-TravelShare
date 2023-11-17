@@ -13,7 +13,7 @@ final class HomeViewController: UIViewController {
     
     // MARK: - UI Components
     
-    let homeHeaderView: HomeHeaderView = HomeHeaderView()
+    private let homeHeaderView: HomeHeaderView = HomeHeaderView()
     lazy var homeCollectionView: HomeCollectionView = HomeCollectionView(frame: .zero, collectionViewLayout: homeCollectionViewLayout)
     
     // MARK: - Properties
@@ -49,18 +49,22 @@ final class HomeViewController: UIViewController {
         setUpLayout()
     }
     
-    // MARK: UI Settings
-    
-    private func setTranslatesAutoresizingMaskIntoConstraints() {
+}
+
+// MARK: UI Settings
+
+extension HomeViewController {
+
+    func setTranslatesAutoresizingMaskIntoConstraints() {
         homeHeaderView.translatesAutoresizingMaskIntoConstraints = false
         homeCollectionView.translatesAutoresizingMaskIntoConstraints = false
     }
-    private func addsubviews() {
+    func addsubviews() {
         self.view.addSubview(homeHeaderView)
         self.view.addSubview(homeCollectionView)
     }
     
-    private func setLayoutConstraints() {
+    func setLayoutConstraints() {
         NSLayoutConstraint.activate([
             homeHeaderView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: Padding.homeHeaderViewTop),
             homeHeaderView.heightAnchor.constraint(equalToConstant: Metrics.homeHeaderViewHeight),
@@ -74,21 +78,29 @@ final class HomeViewController: UIViewController {
         ])
     }
     
-    private func setUpLayout() {
+}
+
+extension HomeViewController {
+    
+    func setUpLayout() {
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
         homeHeaderView.setUpLayout()
     }
     
-    // MARK: - Methods
+}
+
+// MARK: - Methods
+
+private extension HomeViewController {
     
-    private func updateSearchResult(_ result: [PostResponse]) {
+    func updateSearchResult(_ result: [PostResponse]) {
         homeCollectionView.posts = result
         homeCollectionView.reloadData()
     }
     
-    private func bind() {
+    func bind() {
         let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
         
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
@@ -100,11 +112,12 @@ final class HomeViewController: UIViewController {
         }.store(in: &cancellables)
         
     }
+    
 }
 
 // MARK: - LayoutMetrics
 
-extension HomeViewController {
+private extension HomeViewController {
     
     enum Metrics {
         static let homeHeaderViewHeight: CGFloat = 60

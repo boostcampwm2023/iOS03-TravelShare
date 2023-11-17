@@ -7,25 +7,25 @@
 
 import UIKit
 
-class PostProfileView: UIView {
+final class PostProfileView: UIView {
     
     // MARK: - UI Components
     
-    let viewCountLabel: UILabel = {
+    private let viewCountLabel: UILabel = {
         let label: UILabel = UILabel()
         label.textColor = UIColor.appColor(.purple5)
         label.font = UIFont.appFont(.baeEunBody)
         return label
     }()
     
-    let userNameLabel: UILabel = {
+    private let userNameLabel: UILabel = {
         let label: UILabel = UILabel()
         label.textColor = UIColor.appColor(.purple5)
         label.font = UIFont.appFont(.baeEunBody)
         return label
     }()
     
-    let likeImageView: UIImageView = {
+    private let likeImageView: UIImageView = {
         let image: UIImage? = UIImage.appImage(.handThumbsup)
         let imageView: UIImageView = UIImageView()
         imageView.image = image
@@ -33,14 +33,14 @@ class PostProfileView: UIView {
         return imageView
     }()
     
-    let likeCountLabel: UILabel = {
+    private let likeCountLabel: UILabel = {
         let label: UILabel = UILabel()
         label.textColor = UIColor.appColor(.purple5)
         label.font = UIFont.appFont(.baeEunBody)
         return label
     }()
     
-    let viewImageView: UIImageView = {
+    private let viewImageView: UIImageView = {
         let image: UIImage? = UIImage.appImage(.eyes)
         let imageView: UIImageView = UIImageView()
         imageView.image = image
@@ -48,7 +48,7 @@ class PostProfileView: UIView {
         return imageView
     }()
     
-    let profileImageView: UIImageView = {
+    private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -150,7 +150,7 @@ extension PostProfileView {
 
 // MARK: - LayoutMetrics
 
-extension PostProfileView {
+private extension PostProfileView {
     
     enum Metrics {
         static let profileImageViewWidth: CGFloat = 36
@@ -172,7 +172,7 @@ extension PostProfileView {
 }
 
 // TODO: 현재 Network 모듈이 잘 이해되지 않아 작성한 코드입니다. 차후 옮기는 작업이 필요합니다.
-extension PostProfileView {
+private extension PostProfileView {
     
     func loadImage(profileImageStringURL: String, completion: @escaping (UIImage?) -> Void) {
         guard let url = URL(string: profileImageStringURL) else { return }

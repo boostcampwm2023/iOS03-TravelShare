@@ -66,6 +66,7 @@ private extension PostCollectionViewCell {
 // MARK: - Methods
 
 extension PostCollectionViewCell {
+    
     func configure(item: PostResponse) {
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
@@ -76,7 +77,7 @@ extension PostCollectionViewCell {
 
 // MARK: - LayoutMetrics
 
-extension PostCollectionViewCell {
+private extension PostCollectionViewCell {
     
     enum Metrics {
         static let postContentViewHeight: CGFloat = 200

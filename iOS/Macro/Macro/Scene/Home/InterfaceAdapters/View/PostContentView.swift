@@ -7,11 +7,11 @@
 
 import UIKit
 
-class PostContentView: UIView {
+final class PostContentView: UIView {
     
     // MARK: - UI Components
     
-    let mainImageView: UIImageView = {
+    private let mainImageView: UIImageView = {
         let imageView: UIImageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -19,21 +19,21 @@ class PostContentView: UIView {
         return imageView
     }()
     
-    let opcityView: UIView = {
+    private let opcityView: UIView = {
         let view: UIView = UIView()
         view.backgroundColor = UIColor.appColor(.opacity30)
         view.layer.cornerRadius = ConerRadius.mainImageView
         return view
     }()
     
-    let title: UILabel = {
+    private let title: UILabel = {
         let label: UILabel = UILabel()
         label.textColor = UIColor.appColor(.blue1)
         label.font = UIFont.appFont(.baeEunTitle1)
         return label
     }()
     
-    let summary: UILabel = {
+    private let summary: UILabel = {
         let label: UILabel = UILabel()
         label.textColor = UIColor.appColor(.blue1)
         label.font = UIFont.appFont(.baeEunBody)
@@ -116,7 +116,7 @@ extension PostContentView {
 
 // MARK: - LayoutMetrics
 
-extension PostContentView {
+private extension PostContentView {
     
     enum Metrics {
         static let mainImageViewHeight: CGFloat = 200
@@ -135,7 +135,7 @@ extension PostContentView {
 
 // TODO: 현재 Network 모듈이 잘 이해되지 않아 작성한 코드입니다. 차후 옮기는 작업이 필요합니다.
 
-extension PostContentView {
+private extension PostContentView {
     
     func loadImage(profileImageStringURL: String, completion: @escaping (UIImage?) -> Void) {
         guard let url = URL(string: profileImageStringURL) else { return }

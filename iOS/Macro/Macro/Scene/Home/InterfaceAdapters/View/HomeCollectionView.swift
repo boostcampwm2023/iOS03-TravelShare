@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HomeCollectionView: UICollectionView {
+final class HomeCollectionView: UICollectionView {
     
     // MARK: - Properties
     
@@ -69,7 +69,7 @@ extension HomeCollectionView: UICollectionViewDelegateFlowLayout {
 
 // MARK: - LayoutMetrics
 
-extension HomeCollectionView {
+private extension HomeCollectionView {
     
     enum Metrics {
         static let cellWidth: CGFloat = UIScreen.width - 20

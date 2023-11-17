@@ -37,7 +37,7 @@ final class HomeHeaderView: UIView {
 
 // MARK: UI Settings
 
-extension HomeHeaderView {
+private extension HomeHeaderView {
     
     private func setupTranslatesAutoresizingMaskIntoConstraints() {
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -60,7 +60,9 @@ extension HomeHeaderView {
             titleLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor)
         ])
     }
-    
+}
+
+extension HomeHeaderView {
     func setUpLayout() {
         setupTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
@@ -70,7 +72,7 @@ extension HomeHeaderView {
 
 // MARK: - LayoutMetrics
 
-extension HomeHeaderView {
+private extension HomeHeaderView {
     
     enum Metrics {
         static let logoImageViewWidth: CGFloat = 40
