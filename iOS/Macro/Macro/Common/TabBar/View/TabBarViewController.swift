@@ -25,6 +25,7 @@ final class TabbarViewController: UIViewController {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         selectedViewController = HomeViewController()
+        self.view.backgroundColor = UIColor.appColor(.blue1)
         self.addChild(selectedViewController!)
         setUpLayout()
         bind()
