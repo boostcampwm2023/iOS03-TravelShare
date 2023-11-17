@@ -12,6 +12,7 @@ final class TabbarViewController: UIViewController {
     
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
+    private var selectedViewController: UIViewController?
     private let viewModel: TabBarViewModel
     
     // MARK: - UI Components
@@ -23,6 +24,8 @@ final class TabbarViewController: UIViewController {
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
+        selectedViewController = HomeViewController()
+        self.addChild(selectedViewController!)
         setUpLayout()
         bind()
         manageTabBarStatus(active: viewModel.isTabBarActive)
@@ -62,6 +65,8 @@ private extension TabbarViewController {
     }
     
     func addSubviews() {
+        view.addSubview(selectedViewController!.view)
+        
         view.addSubview(tabBarOpacityView)
         view.addSubview(tabBarBackgroundLargeCirclceView)
         view.addSubview(inactiveTabBarCenterView)
@@ -90,10 +95,14 @@ private extension TabbarViewController {
     
     func addTapGesture() {
         let inactiveCenterTapGesture = UITapGestureRecognizer(target: self, action: #selector(inactiveCenterHandleTapGesture(_:)))
-        inactiveTabBarCenterView.addGestureRecognizer(inactiveCenterTapGesture)
+        activeTabBarCenterView.addGestureRecognizer(inactiveCenterTapGesture)
+        
+        let inactiveOpacityViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(inactiveCenterHandleTapGesture(_:)))
+        tabBarOpacityView.addGestureRecognizer(inactiveOpacityViewTapGesture)
         
         let activCenterTapGesture = UITapGestureRecognizer(target: self, action: #selector(activeCenterHandleTapGesture(_:)))
-        activeTabBarCenterView.addGestureRecognizer(activCenterTapGesture)
+        inactiveTabBarCenterView.addGestureRecognizer(activCenterTapGesture)
+        
     }
     
     func setUpLayout() {
@@ -170,14 +179,14 @@ private extension TabbarViewController {
 private extension TabbarViewController {
     
     /// 타이머가 활성화되어 있지 않은 경우, 사라지는 이벤트를 처리합니다.
-    @objc func activeCenterHandleTapGesture(_ sender: UITapGestureRecognizer) {
+    @objc func inactiveCenterHandleTapGesture(_ sender: UITapGestureRecognizer) {
         guard viewModel.timer == nil else { return }
         self.viewModel.isTabBarActive = false
         disAppearEvent()
     }
     
     /// 타이머가 활성화되어 있지 않은 경우, 비활성 탭 바 센터 뷰를 숨기고 탭 바 큰 원형 뷰를 나타내는 이벤트를 처리합니다.
-    @objc func inactiveCenterHandleTapGesture(_ sender: UITapGestureRecognizer) {
+    @objc func activeCenterHandleTapGesture(_ sender: UITapGestureRecognizer) {
         guard viewModel.timer == nil else { return }
         self.viewModel.isTabBarActive = true
         appearEvent()
