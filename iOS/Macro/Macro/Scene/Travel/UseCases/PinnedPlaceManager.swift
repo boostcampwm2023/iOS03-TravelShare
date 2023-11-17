@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Network
+import MacroNetwork
 
 /// 사용자가 핀으로 고정한 장소를 관리하는 UseCase
 protocol PinnedPlaceManageUseCase {
