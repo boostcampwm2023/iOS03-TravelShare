@@ -81,7 +81,7 @@ final class TravelViewModel: ViewModelProtocol {
   }
   
   func togglePinnedPlaces(_ locationDetail: LocationDetail) {
-    if savedRoute.pinnedPlaces.contains(where: { $0.title == locationDetail.title }) {
+    if savedRoute.pinnedPlaces.contains(where: { $0.placeName == locationDetail.placeName }) {
       removePinnedPlace(locationDetail)
     } else {
       addPinnedPlace(locationDetail)
@@ -126,7 +126,7 @@ final class TravelViewModel: ViewModelProtocol {
   }
   
   func removePinnedPlace(_ locationDetail: LocationDetail) {
-    if let index = savedRoute.pinnedPlaces.firstIndex(where: { $0.title == locationDetail.title }) {
+    if let index = savedRoute.pinnedPlaces.firstIndex(where: { $0.placeName == locationDetail.placeName }) {
       savedRoute.pinnedPlaces.remove(at: index)
       outputSubject.send(.updatePinnedPlacesTableView(savedRoute.pinnedPlaces))
       outputSubject.send(.removePinnedPlaceInMap(locationDetail))
@@ -134,7 +134,7 @@ final class TravelViewModel: ViewModelProtocol {
   }
   
   func isPinned(_ locationDetail: LocationDetail) -> Bool {
-    return savedRoute.pinnedPlaces.contains(where: { $0.title == locationDetail.title })
+    return savedRoute.pinnedPlaces.contains(where: { $0.placeName == locationDetail.placeName })
   }
   
 }

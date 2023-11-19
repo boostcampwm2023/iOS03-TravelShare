@@ -8,13 +8,31 @@
 import Foundation
 
 struct LocationDetail: Codable {
-  let title: String
-  let link: String
-  let category: String
-  let description: String?
-  let telephone: String?
-  let address: String
-  let roadAddress: String
-  let mapx: Double
-  let mapy: Double
+  let addressName: String
+  let categoryGroupCode: String
+  let categoryGroupName: String
+  let categoryName: String
+  let distance: String
+  let id: String
+  let phone: String?
+  let placeName: String
+  let placeUrl: String
+  let roadAddressName: String
+  let mapx: String
+  let mapy: String
+
+  enum CodingKeys: String, CodingKey {
+    case addressName = "address_name"
+    case categoryGroupCode = "category_group_code"
+    case categoryGroupName = "category_group_name"
+    case categoryName = "category_name"
+    case distance
+    case id
+    case phone
+    case placeName = "place_name"
+    case placeUrl = "place_url"
+    case roadAddressName = "road_address_name"
+    case mapx = "x"
+    case mapy = "y"
+  }
 }

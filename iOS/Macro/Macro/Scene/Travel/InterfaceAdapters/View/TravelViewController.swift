@@ -182,10 +182,10 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
   
   private func addMarker(for locationDetail: LocationDetail) {
     let marker = NMFMarker()
-    let position = NMGLatLng(lat: locationDetail.mapy, lng: locationDetail.mapx)
+    let position = NMGLatLng(lat: Double(locationDetail.mapy) ?? 0.0, lng: Double(locationDetail.mapx) ?? 0.0 )
     marker.position = position
     marker.mapView = mapView
-    markers[locationDetail.title] = marker
+    markers[locationDetail.placeName] = marker
     
     let cameraUpdate = NMFCameraUpdate(scrollTo: position)
     cameraUpdate.animation = .easeIn
@@ -194,9 +194,9 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
   }
   
   private func removeMarker(for locationDetail: LocationDetail) {
-    if let marker = markers[locationDetail.title] {
+    if let marker = markers[locationDetail.placeName] {
       marker.mapView = nil
-      markers.removeValue(forKey: locationDetail.title)
+      markers.removeValue(forKey: locationDetail.placeName)
     }
     updateMarkers()
   }
@@ -207,10 +207,10 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
     
     for (index, place) in viewModel.savedRoute.pinnedPlaces.enumerated() {
       let marker = NMFMarker()
-      marker.position = NMGLatLng(lat: place.mapy, lng: place.mapx)
+      marker.position = NMGLatLng(lat: Double(place.mapy) ?? 0.0 , lng: Double(place.mapx) ?? 0.0 )
       marker.captionText = "\(index + 1)"
       marker.mapView = mapView
-      markers[place.title] = marker
+      markers[place.placeName] = marker
     }
   }
   private func updateMarkers(_ pinnedPlaces: [LocationDetail]) {
@@ -219,10 +219,10 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
     
     for (index, place) in pinnedPlaces.enumerated() {
       let marker = NMFMarker()
-      marker.position = NMGLatLng(lat: place.mapy, lng: place.mapx)
+      marker.position = NMGLatLng(lat: Double(place.mapy) ?? 0.0, lng: Double(place.mapx) ?? 0.0)
       marker.captionText = "\(index + 1)"
       marker.mapView = mapView
-      markers[place.title] = marker
+      markers[place.placeName] = marker
     }
   }
   

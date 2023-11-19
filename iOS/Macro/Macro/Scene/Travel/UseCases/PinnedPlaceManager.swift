@@ -41,7 +41,7 @@ final class PinnedPlaceManager: PinnedPlaceManageUseCase {
   
   func deletePinnedLocation(locationDetail: LocationDetail, to places: [LocationDetail]) -> [LocationDetail] {
     var newPlaces = places
-    if let index = newPlaces.firstIndex(where: { $0.title == locationDetail.title }) {
+    if let index = newPlaces.firstIndex(where: { $0.placeName == locationDetail.placeName }) {
       newPlaces.remove(at: index)
     }
     return newPlaces

@@ -15,7 +15,7 @@ enum TravelEndPoint {
 extension TravelEndPoint: EndPoint {
   
   var baseURL: String {
-    return "http://118.67.130.85:3000"
+    return "https://jijihuny.store"
   }
   
   var headers: MacroNetwork.HTTPHeaders {
@@ -37,6 +37,6 @@ extension TravelEndPoint: EndPoint {
   }
   
   var path: String {
-    return "map/search"
+    return "map/v2/searchByAccuracy"
   }
 }
