@@ -20,24 +20,29 @@ final class LoginViewController: UIViewController {
     // MARK: - UI Componenets
     private let appleLoginButton = ASAuthorizationAppleIDButton(type: .continue, style: .black)
     
-    private let bigIdeaLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.appFont(.baeEunTitle1)
-        label.text = "여행으로 여행을 만든다."
-        return label
+    private let loginImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "LoginImage")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.appFont(.baeEunTitle1)
-        label.text = "어디갈래"
+        label.font = UIFont.appFont(.baeEunLargeTitle)
+        label.text = "어디갈래?"
+        label.textColor = UIColor.appColor(.purple3)
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let keywordLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.appFont(.baeEunCaption)
-        label.text = "같이 여행을 떠나볼까요?"
+        label.font = UIFont.appFont(.baeEunTitle1)
+        label.text = "여행으로 여행을 만든다.\n같이 여행을 떠나볼까요?"
+        label.textColor = UIColor.appColor(.purple2)
+        label.numberOfLines = 2
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -63,28 +68,29 @@ final class LoginViewController: UIViewController {
 private extension LoginViewController {
     private func configureUI() {
         view.backgroundColor = .systemBackground
-        [appleLoginButton, bigIdeaLabel, titleLabel, keywordLabel].forEach {
+        [loginImageView, titleLabel, keywordLabel, appleLoginButton].forEach {
             view.addSubview($0)
         }
-        view.addSubview(appleLoginButton)
         
         appleLoginButton.translatesAutoresizingMaskIntoConstraints = false
         appleLoginButton.addTarget(self, action: #selector(loginButtonDidTap), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
+            loginImageView.heightAnchor.constraint(equalToConstant: 235),
+            loginImageView.widthAnchor.constraint(equalToConstant: 360),
+            loginImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 200),
+            loginImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
+            
+            titleLabel.topAnchor.constraint(equalTo: loginImageView.bottomAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: loginImageView.leadingAnchor),
+            
+            keywordLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+            keywordLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            
             appleLoginButton.heightAnchor.constraint(equalToConstant: 50),
             appleLoginButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
             appleLoginButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            appleLoginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -200),
-            
-            bigIdeaLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
-            bigIdeaLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            
-            titleLabel.topAnchor.constraint(equalTo: bigIdeaLabel.bottomAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: bigIdeaLabel.leadingAnchor),
-            
-            keywordLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
-            keywordLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor)
+            appleLoginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -200)
         ])
     }
 }
