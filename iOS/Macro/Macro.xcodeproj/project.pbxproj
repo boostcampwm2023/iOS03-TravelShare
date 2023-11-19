@@ -166,7 +166,13 @@
 				BA6C6DE12B05FFC400563B22 /* Util */,
 				BAA07AE02B02523000884F3C /* Resource */,
 				BAA07ADF2B02521500884F3C /* App */,
+				BAA07AE02B02523000884F3C /* Resource */,
+				AA46C4EF2B0525A400856628 /* DTO */,
+				AA46C4E42B04E49A00856628 /* Infrastructure */,
+				AA46C4DE2B03F87F00856628 /* Data */,
 				BAA07ADE2B0251CF00884F3C /* Scene */,
+				AA46C4DB2B03EBD100856628 /* Macro.entitlements */,
+				AA46C4C52B02304600856628 /* Info.plist */,
 			);
 			path = Macro;
 			sourceTree = "<group>";
@@ -708,9 +714,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Macro/Macro.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = B3PWYBKFUK;
+				DEVELOPMENT_TEAM = W36L2A7H57;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Macro/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "이 앱을 사용하는 동안 위치 정보에 접근하도록 허용하시겠습니까?";
@@ -743,9 +750,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Macro/Macro.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = B3PWYBKFUK;
+				DEVELOPMENT_TEAM = W36L2A7H57;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Macro/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "이 앱을 사용하는 동안 위치 정보에 접근하도록 허용하시겠습니까?";

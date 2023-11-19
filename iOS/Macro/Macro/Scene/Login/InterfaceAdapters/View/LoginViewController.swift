@@ -44,6 +44,7 @@ final class LoginViewController: UIViewController {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        bind()
         configureUI()
     }
     
@@ -98,7 +99,10 @@ private extension LoginViewController {
             .sink { [weak self] output in
                 switch output {
                 case.appleLoginCompleted:
-                    self?.navigationController?.setViewControllers([HomeViewController()], animated: true)
+                    let homeViewController = HomeViewController()
+                    let navigationController = UINavigationController(rootViewController: homeViewController)
+                    navigationController.modalPresentationStyle = .fullScreen
+                    self?.present(navigationController, animated: true)
                 }
             }
             .store(in: &subscriptions)
