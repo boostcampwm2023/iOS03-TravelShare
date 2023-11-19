@@ -53,11 +53,13 @@ export class UserController {
 
   @ApiOperation({ description: '로그아웃' })
   @ApiBearerAuth('access-token')
+  @Public()
   @Post('signout')
   async signout() {}
 
   @ApiOperation({ description: '회원탈퇴' })
   @ApiBearerAuth('access-token')
+  @Public()
   @Delete('delete')
   async delete(@Body() user: UserDeleteBody) {
     return await this.userService.delete(user);
@@ -65,6 +67,7 @@ export class UserController {
 
   @ApiOperation({ description: '회원정보 수정' })
   @ApiBearerAuth('access-token')
+  @Public()
   @Patch('update')
   async update(@Query() user: UserProfileUpdateQuery) {}
 
@@ -73,6 +76,7 @@ export class UserController {
     type: UserProfileResponse,
   })
   @ApiBearerAuth('access-token')
+  @Public()
   @Get('profile')
   async profile(
     @Optional()
@@ -82,23 +86,27 @@ export class UserController {
 
   @ApiOperation({ description: '팔로우' })
   @ApiBearerAuth('access-token')
+  @Public()
   @Patch('follow')
   async follow(@Query() follower: UserFollowQuery) {}
 
   @ApiOperation({ description: '언팔' })
   @ApiBearerAuth('access-token')
+  @Public()
   @Patch('unfollow')
   async unfollow(@Query() follower: UserFollowQuery) {}
 
   @ApiOperation({ description: '팔로워 리스트' })
   @ApiQuery({ description: '유저 id', required: false })
   @ApiResponse({ type: [UserProfileSimpleResponse] })
+  @Public()
   @Get('followers')
   async followers(@Query() user: UserProfileQuery) {}
 
   @ApiOperation({ description: '팔로잉 리스트' })
   @ApiQuery({ description: '유저 id', required: false })
   @ApiResponse({ type: [UserProfileSimpleResponse] })
+  @Public()
   @Get('followings')
   async followings(@Query() user: UserProfileQuery) {}
 }

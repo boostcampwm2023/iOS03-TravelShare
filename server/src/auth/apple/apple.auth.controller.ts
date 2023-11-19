@@ -28,6 +28,7 @@ export class AppleAuthController {
   @ApiOperation({
     description: 'Apple 회원탈퇴를 진행합니다. 테스트필요',
   })
+  @Public()
   @Delete('revoke')
   async refresh(@Body() payload: AppleClientRevokeBody) {
     await this.appleAuthService.revoke(payload);
