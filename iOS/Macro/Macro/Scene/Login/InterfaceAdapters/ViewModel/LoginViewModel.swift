@@ -27,7 +27,7 @@ final class LoginViewModel: ViewModelProtocol {
     }
     
     // MARK: - Output
-    
+
     enum Output {
         case appleLoginCompleted
     }

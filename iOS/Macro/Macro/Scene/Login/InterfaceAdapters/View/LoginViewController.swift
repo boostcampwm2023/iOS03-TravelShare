@@ -7,6 +7,7 @@
 
 import AuthenticationServices
 import Combine
+import MacroDesignSystem
 import UIKit
 
 final class LoginViewController: UIViewController {
@@ -18,6 +19,27 @@ final class LoginViewController: UIViewController {
     
     // MARK: - UI Componenets
     private let appleLoginButton = ASAuthorizationAppleIDButton(type: .continue, style: .black)
+    
+    private let bigIdeaLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.appFont(.baeEunTitle1)
+        label.text = "여행으로 여행을 만든다."
+        return label
+    }()
+    
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.appFont(.baeEunTitle1)
+        label.text = "어디갈래"
+        return label
+    }()
+    
+    private let keywordLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.appFont(.baeEunCaption)
+        label.text = "같이 여행을 떠나볼까요?"
+        return label
+    }()
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -40,6 +62,9 @@ final class LoginViewController: UIViewController {
 private extension LoginViewController {
     private func configureUI() {
         view.backgroundColor = .systemBackground
+        [appleLoginButton, bigIdeaLabel, titleLabel, keywordLabel].forEach {
+            view.addSubview($0)
+        }
         view.addSubview(appleLoginButton)
         
         appleLoginButton.translatesAutoresizingMaskIntoConstraints = false
@@ -49,7 +74,16 @@ private extension LoginViewController {
             appleLoginButton.heightAnchor.constraint(equalToConstant: 50),
             appleLoginButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
             appleLoginButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            appleLoginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -200)
+            appleLoginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -200),
+            
+            bigIdeaLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
+            bigIdeaLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            
+            titleLabel.topAnchor.constraint(equalTo: bigIdeaLabel.bottomAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: bigIdeaLabel.leadingAnchor),
+            
+            keywordLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
+            keywordLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor)
         ])
     }
 }
@@ -71,7 +105,6 @@ private extension LoginViewController {
     }
 }
 
-
 // MARK: - Apple Login
 extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
@@ -85,8 +118,7 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
             if let authorizationCode = appleIDCredential.authorizationCode, 
                 let identityToken = appleIDCredential.identityToken,
                let authCodeString = String(data: authorizationCode, encoding: .utf8),
-               let identifyTokenString = String(data: identityToken, encoding: .utf8)
-            {
+               let identifyTokenString = String(data: identityToken, encoding: .utf8) {
                 inputSubject.send(.appleLogin(
                     identityToken: identifyTokenString,
                     authorizationCode: authCodeString))
