@@ -1,8 +1,9 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MapSearchResponse } from './map.search.response.dto';
 import { MapService } from './map.service';
 
+@ApiTags('Map/v1')
 @Controller('map')
 export class MapController {
   constructor(private readonly mapService: MapService) {}

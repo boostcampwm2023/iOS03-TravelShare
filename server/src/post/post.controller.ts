@@ -5,6 +5,7 @@ import {
   ApiOperation,
   ApiQuery,
   ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { PostFindResponse } from './post.find.response.dto';
 import { PostReadResponse } from './post.read.response.dto';
@@ -20,6 +21,7 @@ import { PostService } from './post.service';
 import { AuthenticatedUser } from 'src/auth/auth.decorators';
 import { Authentication } from 'src/auth/authentication.dto';
 
+@ApiTags('Post')
 @ApiBearerAuth('access-token')
 @Controller('post')
 export class PostController {
