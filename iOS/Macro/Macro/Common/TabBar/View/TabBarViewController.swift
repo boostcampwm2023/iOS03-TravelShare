@@ -12,6 +12,7 @@ final class TabbarViewController: UIViewController {
     
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
+    private var selectedViewController: UIViewController?
     private let viewModel: TabBarViewModel
     
     // MARK: - UI Components
@@ -20,9 +21,13 @@ final class TabbarViewController: UIViewController {
     private let activeTabBarCenterView: TabBarCenterView = TabBarCenterView()
     private let inactiveTabBarCenterView: TabBarCenterView = TabBarCenterView()
     private let tabBarOpacityView: TabBarOpacityView = TabBarOpacityView()
+    private let tabBarBackgroundLineView: TabBarBackgroundLineView = TabBarBackgroundLineView()
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
+        selectedViewController = HomeViewController()
+        self.view.backgroundColor = UIColor.appColor(.blue1)
+        self.addChild(selectedViewController!)
         setUpLayout()
         bind()
         manageTabBarStatus(active: viewModel.isTabBarActive)
@@ -48,6 +53,7 @@ private extension TabbarViewController {
         tabBarBackgroundSmallCirclceView.translatesAutoresizingMaskIntoConstraints = false
         activeTabBarCenterView.translatesAutoresizingMaskIntoConstraints = false
         inactiveTabBarCenterView.translatesAutoresizingMaskIntoConstraints = false
+        tabBarBackgroundLineView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     func generateSubviewLocation(index: Int) -> TabLocation {
@@ -62,11 +68,16 @@ private extension TabbarViewController {
     }
     
     func addSubviews() {
+        
+        view.addSubview(selectedViewController!.view)
+        view.addSubview(tabBarBackgroundLineView)
         view.addSubview(tabBarOpacityView)
         view.addSubview(tabBarBackgroundLargeCirclceView)
         view.addSubview(inactiveTabBarCenterView)
         tabBarBackgroundLargeCirclceView.addSubview(tabBarBackgroundSmallCirclceView)
         tabBarBackgroundSmallCirclceView.addSubview(activeTabBarCenterView)
+        
+        
     }
     
     func setLayoutConstraints() {
@@ -76,6 +87,11 @@ private extension TabbarViewController {
             
             inactiveTabBarCenterView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             inactiveTabBarCenterView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -30),
+            
+            tabBarBackgroundLineView.heightAnchor.constraint(equalToConstant: 60),
+            tabBarBackgroundLineView.leadingAnchor.constraint(equalTo: tabBarOpacityView.leadingAnchor),
+            tabBarBackgroundLineView.trailingAnchor.constraint(equalTo: tabBarOpacityView.trailingAnchor),
+            tabBarBackgroundLineView.bottomAnchor.constraint(equalTo: tabBarOpacityView.bottomAnchor),
             
             tabBarBackgroundLargeCirclceView.centerXAnchor.constraint(equalTo: super.view.centerXAnchor),
             tabBarBackgroundLargeCirclceView.bottomAnchor.constraint(equalTo: super.view.bottomAnchor, constant: -30),
@@ -90,10 +106,14 @@ private extension TabbarViewController {
     
     func addTapGesture() {
         let inactiveCenterTapGesture = UITapGestureRecognizer(target: self, action: #selector(inactiveCenterHandleTapGesture(_:)))
-        inactiveTabBarCenterView.addGestureRecognizer(inactiveCenterTapGesture)
+        activeTabBarCenterView.addGestureRecognizer(inactiveCenterTapGesture)
+        
+        let inactiveOpacityViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(inactiveCenterHandleTapGesture(_:)))
+        tabBarOpacityView.addGestureRecognizer(inactiveOpacityViewTapGesture)
         
         let activCenterTapGesture = UITapGestureRecognizer(target: self, action: #selector(activeCenterHandleTapGesture(_:)))
-        activeTabBarCenterView.addGestureRecognizer(activCenterTapGesture)
+        inactiveTabBarCenterView.addGestureRecognizer(activCenterTapGesture)
+        
     }
     
     func setUpLayout() {
@@ -170,14 +190,14 @@ private extension TabbarViewController {
 private extension TabbarViewController {
     
     /// 타이머가 활성화되어 있지 않은 경우, 사라지는 이벤트를 처리합니다.
-    @objc func activeCenterHandleTapGesture(_ sender: UITapGestureRecognizer) {
+    @objc func inactiveCenterHandleTapGesture(_ sender: UITapGestureRecognizer) {
         guard viewModel.timer == nil else { return }
         self.viewModel.isTabBarActive = false
         disAppearEvent()
     }
     
     /// 타이머가 활성화되어 있지 않은 경우, 비활성 탭 바 센터 뷰를 숨기고 탭 바 큰 원형 뷰를 나타내는 이벤트를 처리합니다.
-    @objc func inactiveCenterHandleTapGesture(_ sender: UITapGestureRecognizer) {
+    @objc func activeCenterHandleTapGesture(_ sender: UITapGestureRecognizer) {
         guard viewModel.timer == nil else { return }
         self.viewModel.isTabBarActive = true
         appearEvent()

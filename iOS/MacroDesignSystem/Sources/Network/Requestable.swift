@@ -11,4 +11,6 @@ import Foundation
 /// EndPoint를 사용해서 HTTP 요청시 구현해야 할 프로토콜
 public protocol Requestable {
   func request<Target, Model>(_ target: Target) -> AnyPublisher<Model, NetworkError> where Target : EndPoint, Model: Decodable
+    
+    func mockRequest<Target, Model>(_ target: Target) -> AnyPublisher<Model, NetworkError> where Target : EndPoint, Model: Decodable
 }
