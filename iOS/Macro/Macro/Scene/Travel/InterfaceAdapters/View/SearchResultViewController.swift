@@ -91,7 +91,7 @@ extension SearchResultViewController {
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
     let locationDetail = viewModel.searchedResult[indexPath.row]
-    cell.textLabel?.text = locationDetail.title
+    cell.textLabel?.text = locationDetail.placeName
     let pinButton = UIButton(type: .custom)
     let pinImage = viewModel.isPinned(locationDetail) ? UIImage.appImage(.pinFill) : UIImage.appImage(.pin)
     pinButton.setImage(pinImage, for: .normal)

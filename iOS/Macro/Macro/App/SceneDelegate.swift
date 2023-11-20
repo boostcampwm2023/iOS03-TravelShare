@@ -16,19 +16,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         
-        let appleIDProvider = ASAuthorizationAppleIDProvider()
-        let token = KeyChainManager.load(key: "RefreshToken") ?? ""
+        let tabbarViewModel = TabBarViewModel()
+        let tabbarViewController = TabbarViewController(viewModel: tabbarViewModel)
         
-        appleIDProvider.getCredentialState(forUserID: token) { (credentialState, error) in
-            switch credentialState {
-            case .authorized:
-                window.rootViewController = LoginViewController(viewModel: LoginViewModel())
-            default:
-                window.rootViewController = HomeViewController()
-            }
-        }
+        window.rootViewController = tabbarViewController
         
-        window.rootViewController = LoginViewController(viewModel: LoginViewModel())
         window.makeKeyAndVisible()
         self.window = window
     }

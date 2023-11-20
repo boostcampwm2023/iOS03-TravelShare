@@ -23,8 +23,11 @@ final class RouteTableViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setupDragIndicator()
+    
     tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     tableView.isEditing = true
+    tableView.layer.cornerRadius = 20
+        tableView.layer.masksToBounds = true
     bind()
   }
   
@@ -65,7 +68,7 @@ final class RouteTableViewController: UITableViewController {
   }
   
   private func setupDragIndicator() {
-    let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 60))
+    let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 20))
     dragIndicator.frame = CGRect(x: (headerView.bounds.width / 2) - 20, y: 8, width: 40, height: 5)
     dragIndicator.backgroundColor = .systemGray4
     dragIndicator.layer.cornerRadius = 2.5
@@ -97,7 +100,7 @@ extension RouteTableViewController {
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-    cell.textLabel?.text = viewModel.savedRoute.pinnedPlaces[indexPath.row].title
+    cell.textLabel?.text = viewModel.savedRoute.pinnedPlaces[indexPath.row].placeName
     return cell
   }
   
@@ -115,5 +118,28 @@ extension RouteTableViewController {
       viewModel.removePinnedPlace(locationDetail)
       tableView.deleteRows(at: [indexPath], with: .fade)
     }
+  }
+  override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    return 40 
+  }
+  
+  override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    let headerView = UIView()
+    headerView.backgroundColor = tableView.backgroundColor
+    
+    let headerLabel = UILabel()
+    headerLabel.text = "경로"
+    headerLabel.font = UIFont.systemFont(ofSize: 16)
+    headerLabel.textColor = .black
+    headerLabel.translatesAutoresizingMaskIntoConstraints = false
+    headerView.addSubview(headerLabel)
+    
+    NSLayoutConstraint.activate([
+      headerLabel.topAnchor.constraint(equalTo: headerView.topAnchor),
+      headerLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
+      headerLabel.trailingAnchor.constraint(lessThanOrEqualTo: headerView.trailingAnchor, constant: -50)
+    ])
+    
+    return headerView
   }
 }
