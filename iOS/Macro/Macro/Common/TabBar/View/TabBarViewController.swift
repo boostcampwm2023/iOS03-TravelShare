@@ -208,7 +208,10 @@ private extension TabbarViewController {
         guard viewModel.timer == nil else { return }
         
         guard let tappedView = sender.view as? TabComponentView else { return }
-        guard let image = UIImage(systemName: tappedView.tabComponent.imageName) else { return }
+        guard let image = tappedView.tabComponent.image else { return }
+        
+        selectedViewController = tappedView.tabComponent.viewController
+        navigationController?.pushViewController(tappedView.tabComponent.viewController, animated: true)
         swap(&tappedView.tabComponent, &viewModel.currentTabComponent.value)
         
         inactiveTabBarCenterView.image = image
@@ -254,7 +257,7 @@ private extension TabbarViewController {
         viewModel.currentTabComponent
             .sink { [weak self] tabComponent in
                 guard let self = self else { return }
-                if let image = UIImage(systemName: tabComponent.imageName) {
+                if let image = tabComponent.image {
                     self.activeTabBarCenterView.image = image
                 }
             }

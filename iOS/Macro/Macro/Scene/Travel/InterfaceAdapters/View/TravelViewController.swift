@@ -14,7 +14,7 @@ protocol RouteTableViewControllerDelegate: AnyObject {
     func routeTableViewDidDragChange(heightChange: CGFloat)
 }
 
-final class TravelViewController: UIViewController, RouteTableViewControllerDelegate, CLLocationManagerDelegate {
+final class TravelViewController: TabViewController, RouteTableViewControllerDelegate, CLLocationManagerDelegate {
   
   // MARK: - Properties
   

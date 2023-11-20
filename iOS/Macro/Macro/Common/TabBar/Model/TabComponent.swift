@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import UIKit
 
 struct TabComponent {
     let index: Int
-    let imageName: String
+    let image: UIImage?
     let text: String
+    let viewController: UIViewController
 }
