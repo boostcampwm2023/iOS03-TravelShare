@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -58,6 +58,8 @@
 		BA8DC40A2B0B5F7800929E01 /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8DC4092B0B5F7800929E01 /* TabViewController.swift */; };
 		BA8DC4132B0B602000929E01 /* WriteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8DC4122B0B602000929E01 /* WriteViewModel.swift */; };
 		BA8DC4152B0B602D00929E01 /* WriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8DC4142B0B602D00929E01 /* WriteViewController.swift */; };
+		BA8DC4182B0B6AD400929E01 /* MacroDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = BA8DC4172B0B6AD400929E01 /* MacroDesignSystem */; };
+		BA8DC41B2B0B6ADD00929E01 /* MacroNetwork in Frameworks */ = {isa = PBXBuildFile; productRef = BA8DC41A2B0B6ADD00929E01 /* MacroNetwork */; };
 		D263CA132B02DD8900B4A144 /* RouteTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA122B02DD8900B4A144 /* RouteTableViewController.swift */; };
 		D263CA1C2B04074D00B4A144 /* LocationDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA1B2B04074D00B4A144 /* LocationDetail.swift */; };
 		D263CA1E2B0407E000B4A144 /* RouteRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA1D2B0407E000B4A144 /* RouteRecorder.swift */; };
@@ -147,7 +149,9 @@
 			files = (
 				BA8DC3F82B0B5D6400929E01 /* MacroNetwork in Frameworks */,
 				BA8DC3F62B0B5D6000929E01 /* MacroDesignSystem in Frameworks */,
+				BA8DC4182B0B6AD400929E01 /* MacroDesignSystem in Frameworks */,
 				9BFF32D7723F20FDFD4D6D37 /* libPods-Macro.a in Frameworks */,
+				BA8DC41B2B0B6ADD00929E01 /* MacroNetwork in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -704,6 +708,8 @@
 			packageProductDependencies = (
 				BA8DC3F52B0B5D6000929E01 /* MacroDesignSystem */,
 				BA8DC3F72B0B5D6400929E01 /* MacroNetwork */,
+				BA8DC4172B0B6AD400929E01 /* MacroDesignSystem */,
+				BA8DC41A2B0B6ADD00929E01 /* MacroNetwork */,
 			);
 			productName = Macro;
 			productReference = AA46C4B42B02304400856628 /* Macro.app */;
@@ -734,6 +740,8 @@
 			);
 			mainGroup = AA46C4AB2B02304400856628;
 			packageReferences = (
+				BA8DC4162B0B6AD400929E01 /* XCLocalSwiftPackageReference "../MacroDesignSystem" */,
+				BA8DC4192B0B6ADD00929E01 /* XCLocalSwiftPackageReference "../MacroNetwork" */,
 			);
 			productRefGroup = AA46C4B52B02304400856628 /* Products */;
 			projectDirPath = "";
@@ -1099,12 +1107,31 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		BA8DC4162B0B6AD400929E01 /* XCLocalSwiftPackageReference "../MacroDesignSystem" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MacroDesignSystem;
+		};
+		BA8DC4192B0B6ADD00929E01 /* XCLocalSwiftPackageReference "../MacroNetwork" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MacroNetwork;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		BA8DC3F52B0B5D6000929E01 /* MacroDesignSystem */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MacroDesignSystem;
 		};
 		BA8DC3F72B0B5D6400929E01 /* MacroNetwork */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MacroNetwork;
+		};
+		BA8DC4172B0B6AD400929E01 /* MacroDesignSystem */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MacroDesignSystem;
+		};
+		BA8DC41A2B0B6ADD00929E01 /* MacroNetwork */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MacroNetwork;
 		};
