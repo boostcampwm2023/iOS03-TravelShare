@@ -3,11 +3,14 @@
 
 ## ✍🏻 서비스 소개
 - **여행 공유 플랫폼**
-- **우리 앱을 이용해서 편하게 자신만의 여행 계획을 세워보세요.**
+- **다른 여행자의 여행을 참고해서 편하게 자신만의 여행 계획을 세워보세요.**
 - **계획한 여행을 기록하고 공유하세요.**
 
+![image](https://github.com/boostcampwm2023/iOS03-Macro/assets/37203016/a1075bce-28ff-4b64-9bea-c68d4c981314)
+
 ## 🏞️ 앱 스크린샷
-TODO - 업로드 예정입니다.
+
+![ezgif com-optimize](https://github.com/boostcampwm2023/iOS03-Macro/assets/37203016/cc6dd4f6-3b11-4deb-9881-571697808e4f)
 
 ## 🙏 Macro 팀 소개 
 |[S002_김경호](https://github.com/ykm989)|[S003_김나훈](https://github.com/KimNahun)|[S017_변진하](https://github.com/Byeonjinha) |[J075_송호선](https://github.com/nossoh98)|[J120_이지훈](https://github.com/jijihuny)|
@@ -46,4 +49,6 @@ TODO - 업로드 예정입니다.
 - SwiftLint
 - NaverMap API
 - KeyChain
-
+- Combine
+- Modularization
+- Clean Architecture + MVVM
