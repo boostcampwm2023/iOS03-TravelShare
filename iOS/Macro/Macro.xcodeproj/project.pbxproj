@@ -39,6 +39,7 @@
 		D263CA2A2B05285C00B4A144 /* Network in Frameworks */ = {isa = PBXBuildFile; productRef = D263CA292B05285C00B4A144 /* Network */; };
 		D263CA2D2B052ECC00B4A144 /* TravelEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA2C2B052ECC00B4A144 /* TravelEndPoint.swift */; };
 		D263CA2F2B054A0E00B4A144 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA2E2B054A0E00B4A144 /* SearchResultViewController.swift */; };
+		D263CA332B06C7B300B4A144 /* SavedRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA322B06C7B300B4A144 /* SavedRoute.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -75,6 +76,7 @@
 		D263CA272B043C6B00B4A144 /* PinnedPlaceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinnedPlaceManager.swift; sourceTree = "<group>"; };
 		D263CA2C2B052ECC00B4A144 /* TravelEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelEndPoint.swift; sourceTree = "<group>"; };
 		D263CA2E2B054A0E00B4A144 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
+		D263CA322B06C7B300B4A144 /* SavedRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedRoute.swift; sourceTree = "<group>"; };
 		EFE56344E8979EDA80D9E782 /* libPods-Macro.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Macro.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE963544592A2BC35C2CD604 /* Pods-Macro.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Macro.release.xcconfig"; path = "Target Support Files/Pods-Macro/Pods-Macro.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -295,6 +297,7 @@
 			isa = PBXGroup;
 			children = (
 				D263CA1B2B04074D00B4A144 /* LocationDetail.swift */,
+				D263CA322B06C7B300B4A144 /* SavedRoute.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -471,6 +474,7 @@
 				BA6C6DF32B05FFC500563B22 /* CAGradientLayer+.swift in Sources */,
 				BA6C6DFE2B05FFC500563B22 /* TabBarOpacityView.swift in Sources */,
 				AA46C4BC2B02304400856628 /* HomeViewController.swift in Sources */,
+				D263CA332B06C7B300B4A144 /* SavedRoute.swift in Sources */,
 				D263CA152B02ED2B00B4A144 /* RouteTableViewControllerDelegate.swift in Sources */,
 				AA46C4B82B02304400856628 /* AppDelegate.swift in Sources */,
 				D263CA202B040BAF00B4A144 /* LocationSearcher.swift in Sources */,

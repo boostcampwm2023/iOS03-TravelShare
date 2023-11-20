@@ -9,21 +9,15 @@ import Combine
 import UIKit
 
 final class SearchResultViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-  private var locationDetails: [LocationDetail]
+  
+  // MARK: - Properties
+  
   private var tableView: UITableView!
   private let viewModel: TravelViewModel
   private let inputSubject: PassthroughSubject<TravelViewModel.Input, Never> = .init()
   private var cancellables = Set<AnyCancellable>()
   
-  init(locationDetails: [LocationDetail], viewModel: TravelViewModel) {
-    self.locationDetails = locationDetails
-    self.viewModel = viewModel
-    super.init(nibName: nil, bundle: nil)
-  }
-  
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+  // MARK: - Life Cycles
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -32,13 +26,18 @@ final class SearchResultViewController: UIViewController, UITableViewDataSource,
     bind()
   }
   
-  private func bind() {
-    viewModel.transform(with: inputSubject.eraseToAnyPublisher())
-      .sink { [weak self] output in
-        // TODO: implements 
-      }
-      .store(in: &cancellables)
+  // MARK: - Init
+  
+  init(viewModel: TravelViewModel) {
+    self.viewModel = viewModel
+    super.init(nibName: nil, bundle: nil)
   }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
+  // MARK: - UI Settings
   
   private func setupTableView() {
     tableView = UITableView()
@@ -56,30 +55,54 @@ final class SearchResultViewController: UIViewController, UITableViewDataSource,
     ])
   }
   
+  // MARK: - Bind
+  
+  private func bind() {
+    viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+      .sink { [weak self] output in
+        switch output {
+        case .updateSearchResult:
+          self?.tableView.reloadData()
+        default:
+          break
+        }
+      }
+      .store(in: &cancellables)
+  }
+  
+  // MARK: - Methods
+  
+  @objc func pinLocation(_ sender: UIButton) {
+    let location = viewModel.searchedResult[sender.tag]
+    viewModel.togglePinnedPlaces(location)
+    let isPinnedNow = viewModel.isPinned(location)
+    let pinImage = isPinnedNow ? UIImage.appImage(.pinFill) : UIImage.appImage(.pin)
+    sender.setImage(pinImage, for: .normal)
+  }
+}
+
+// MARK: - TableView
+
+extension SearchResultViewController {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return locationDetails.count
+    return viewModel.searchedResult.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-    let locationDetail = locationDetails[indexPath.row]
+    let locationDetail = viewModel.searchedResult[indexPath.row]
     cell.textLabel?.text = locationDetail.title
     let pinButton = UIButton(type: .custom)
-    pinButton.setImage(UIImage(systemName: "pin"), for: .normal)
+    let pinImage = viewModel.isPinned(locationDetail) ? UIImage.appImage(.pinFill) : UIImage.appImage(.pin)
+    pinButton.setImage(pinImage, for: .normal)
     pinButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
     pinButton.addTarget(self, action: #selector(pinLocation(_:)), for: .touchUpInside)
     cell.accessoryView = pinButton
     pinButton.tag = indexPath.row
-    
     return cell
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     // TODO: 테이블 뷰가 눌리면, 경로추천 segment 실행
-  }
-  
-  @objc func pinLocation(_ sender: UIButton) {
-    let locationDetail = locationDetails[sender.tag]
-    inputSubject.send(.addPinnedLocation(locationDetail))
   }
 }
