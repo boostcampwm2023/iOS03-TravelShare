@@ -76,8 +76,9 @@ private extension LoginViewController {
         appleLoginButton.addTarget(self, action: #selector(loginButtonDidTap), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
-            loginImageView.heightAnchor.constraint(equalToConstant: 235),
-            loginImageView.widthAnchor.constraint(equalToConstant: 300),
+            loginImageView.heightAnchor.constraint(equalToConstant: 140),
+            loginImageView.widthAnchor.constraint(equalToConstant: 200),
+            loginImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             loginImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 200),
             loginImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
             
@@ -90,7 +91,7 @@ private extension LoginViewController {
             appleLoginButton.heightAnchor.constraint(equalToConstant: 50),
             appleLoginButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
             appleLoginButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            appleLoginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -200)
+            appleLoginButton.topAnchor.constraint(equalTo: keywordLabel.bottomAnchor, constant: 80)
         ])
     }
 }
