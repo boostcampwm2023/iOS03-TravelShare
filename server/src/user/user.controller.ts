@@ -15,55 +15,17 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { UserSigninResponse } from './user.signin.response.dto';
-import { UserSignupBody } from './user.signup.body.dto';
-import { UserSigninBody } from './user.signin.body.dto';
 import { UserProfileUpdateQuery } from './user.profile.update.query.dto';
 import { UserProfileResponse } from './user.profile.response.dto';
 import { UserProfileQuery } from './user.profile.query.dto';
 import { UserFollowQuery } from './user.follow.query.dto';
 import { UserProfileSimpleResponse } from './user.profile.simple.response.dto';
 import { UserService } from './user.service';
-import { UserDeleteBody } from './user.delete.body.dto';
-import { Public } from 'src/auth/auth.decorators';
-import { plainToInstance } from 'class-transformer';
 
 @ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  @ApiOperation({ description: '회원가입' })
-  @ApiResponse({ type: UserSigninResponse })
-  @Public()
-  @Post('signup')
-  async signup(@Body() user: UserSignupBody) {
-    return plainToInstance(UserSigninResponse, {
-      token: await this.userService.signup(user),
-    });
-  }
-
-  @ApiOperation({ description: '기본 로그인' })
-  @ApiResponse({ type: UserSigninResponse })
-  @Public()
-  @Post('signin')
-  async signin(@Body() user: UserSigninBody) {
-    return plainToInstance(UserSigninResponse, {
-      token: await this.userService.login(user),
-    });
-  }
-
-  @ApiOperation({ description: '로그아웃' })
-  @ApiBearerAuth('access-token')
-  @Post('signout')
-  async signout() {}
-
-  @ApiOperation({ description: '회원탈퇴' })
-  @ApiBearerAuth('access-token')
-  @Delete('delete')
-  async delete(@Body() user: UserDeleteBody) {
-    return await this.userService.delete(user);
-  }
 
   @ApiOperation({ description: '회원정보 수정' })
   @ApiBearerAuth('access-token')
