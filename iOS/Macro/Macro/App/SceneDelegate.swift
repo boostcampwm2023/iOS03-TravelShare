@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AuthenticationServices
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -13,11 +14,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-                
-                let window = UIWindow(windowScene: windowScene)
+        let window = UIWindow(windowScene: windowScene)
+        
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let token = KeyChainManager.load(key: "RefreshToken") ?? ""
+        
+        appleIDProvider.getCredentialState(forUserID: token) { (credentialState, error) in
+            switch credentialState {
+            case .authorized:
+                window.rootViewController = LoginViewController(viewModel: LoginViewModel())
+            default:
                 window.rootViewController = HomeViewController()
-                window.makeKeyAndVisible()
-                self.window = window
+            }
+        }
+        
+        window.rootViewController = LoginViewController(viewModel: LoginViewModel())
+        window.makeKeyAndVisible()
+        self.window = window
     }
 }
-
