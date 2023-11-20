@@ -5,6 +5,8 @@ import { plainToInstance } from 'class-transformer';
 import { KakaoMapSearchResponse } from './map.kakao.search.response.dto';
 import { AxiosResponse } from 'axios';
 import { map } from 'rxjs';
+import { KakaoSearchAccuracyQuery } from './map.kakao.search.accuracy.query.dto';
+import { KakaoSearchDistanceQuery } from './map.kakao.search.distance.query.dto';
 
 const sizenum = 15;
 
@@ -15,7 +17,7 @@ export class KakaoMapService {
     private readonly configService: ConfigService,
   ) {}
 
-  async kakaoSearchByAccuracy(keyword: string, pagenum: number) {
+  async kakaoSearchByAccuracy({ keyword, pagenum }: KakaoSearchAccuracyQuery) {
     return this.httpService
       .get(
         this.configService.get('kakao.search.url') +
@@ -36,7 +38,12 @@ export class KakaoMapService {
       );
   }
 
-  async kakaoSearchByDistance(keyword: string, pagenum: number, x: number, y: number) {
+  async kakaoSearchByDistance({
+    keyword,
+    pagenum,
+    x,
+    y,
+  }: KakaoSearchDistanceQuery) {
     return this.httpService
       .get(
         this.configService.get('kakao.search.url') +
