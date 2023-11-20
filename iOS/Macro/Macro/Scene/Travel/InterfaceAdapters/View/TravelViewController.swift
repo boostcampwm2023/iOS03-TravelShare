@@ -10,6 +10,10 @@ import MacroDesignSystem
 import NMapsMap
 import UIKit
 
+protocol RouteTableViewControllerDelegate: AnyObject {
+    func routeTableViewDidDragChange(heightChange: CGFloat)
+}
+
 final class TravelViewController: UIViewController, RouteTableViewControllerDelegate, CLLocationManagerDelegate {
   
   // MARK: - Properties
