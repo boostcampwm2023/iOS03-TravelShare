@@ -83,7 +83,7 @@ public extension UIImage {
   static func appImage(_ name: ImageAsset.CustomImage) -> UIImage? {
     switch name {
     case .appLogo:
-      return UIImage(named: "logoImage")
+      return UIImage(named: "LogoImage")
     }
   }
 }

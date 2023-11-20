@@ -40,6 +40,7 @@
 		BA33AA952B0AFABF0065D1E0 /* MockJson.json in Resources */ = {isa = PBXBuildFile; fileRef = BA33AA942B0AFABF0065D1E0 /* MockJson.json */; };
 		BA33AA992B0B007A0065D1E0 /* MacroNetwork in Frameworks */ = {isa = PBXBuildFile; productRef = BA33AA982B0B007A0065D1E0 /* MacroNetwork */; };
 		BA33AA9C2B0B01AB0065D1E0 /* MacroDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = BA33AA9B2B0B01AB0065D1E0 /* MacroDesignSystem */; };
+		BA4ED7292B0B4CAE000F0B5B /* BaseViewControllerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4ED7282B0B4CAE000F0B5B /* BaseViewControllerProtocol.swift */; };
 		BA6C6DF32B05FFC500563B22 /* CAGradientLayer+.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DE22B05FFC400563B22 /* CAGradientLayer+.swift */; };
 		BA6C6DF42B05FFC500563B22 /* CircularViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DE32B05FFC400563B22 /* CircularViewProtocol.swift */; };
 		BA6C6DF52B05FFC500563B22 /* UIScreen+.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DE42B05FFC400563B22 /* UIScreen+.swift */; };
@@ -53,7 +54,6 @@
 		BA6C6DFD2B05FFC500563B22 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DF12B05FFC500563B22 /* TabBarViewController.swift */; };
 		BA6C6DFE2B05FFC500563B22 /* TabBarOpacityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DF22B05FFC500563B22 /* TabBarOpacityView.swift */; };
 		D263CA132B02DD8900B4A144 /* RouteTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA122B02DD8900B4A144 /* RouteTableViewController.swift */; };
-		D263CA152B02ED2B00B4A144 /* RouteTableViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA142B02ED2B00B4A144 /* RouteTableViewControllerDelegate.swift */; };
 		D263CA1C2B04074D00B4A144 /* LocationDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA1B2B04074D00B4A144 /* LocationDetail.swift */; };
 		D263CA1E2B0407E000B4A144 /* RouteRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA1D2B0407E000B4A144 /* RouteRecorder.swift */; };
 		D263CA202B040BAF00B4A144 /* LocationSearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA1F2B040BAF00B4A144 /* LocationSearcher.swift */; };
@@ -100,6 +100,7 @@
 		BA33AA842B0AF9F20065D1E0 /* PostResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostResponse.swift; sourceTree = "<group>"; };
 		BA33AA922B0AFA580065D1E0 /* 나눔손글씨 배은혜체.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "나눔손글씨 배은혜체.ttf"; sourceTree = "<group>"; };
 		BA33AA942B0AFABF0065D1E0 /* MockJson.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = MockJson.json; sourceTree = "<group>"; };
+		BA4ED7282B0B4CAE000F0B5B /* BaseViewControllerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BaseViewControllerProtocol.swift; path = ../../../../MacroNetwork/BaseViewControllerProtocol.swift; sourceTree = "<group>"; };
 		BA6C6DE22B05FFC400563B22 /* CAGradientLayer+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CAGradientLayer+.swift"; sourceTree = "<group>"; };
 		BA6C6DE32B05FFC400563B22 /* CircularViewProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularViewProtocol.swift; sourceTree = "<group>"; };
 		BA6C6DE42B05FFC400563B22 /* UIScreen+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScreen+.swift"; sourceTree = "<group>"; };
@@ -113,7 +114,6 @@
 		BA6C6DF12B05FFC500563B22 /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		BA6C6DF22B05FFC500563B22 /* TabBarOpacityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarOpacityView.swift; sourceTree = "<group>"; };
 		D263CA122B02DD8900B4A144 /* RouteTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteTableViewController.swift; sourceTree = "<group>"; };
-		D263CA142B02ED2B00B4A144 /* RouteTableViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteTableViewControllerDelegate.swift; sourceTree = "<group>"; };
 		D263CA1B2B04074D00B4A144 /* LocationDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetail.swift; sourceTree = "<group>"; };
 		D263CA1D2B0407E000B4A144 /* RouteRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteRecorder.swift; sourceTree = "<group>"; };
 		D263CA1F2B040BAF00B4A144 /* LocationSearcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearcher.swift; sourceTree = "<group>"; };
@@ -380,11 +380,20 @@
 			path = Entities;
 			sourceTree = "<group>";
 		};
+		BA4ED7272B0B4C52000F0B5B /* CommonProtocol */ = {
+			isa = PBXGroup;
+			children = (
+				D263CA232B04134600B4A144 /* ViewModelProtocol.swift */,
+				BA6C6DE32B05FFC400563B22 /* CircularViewProtocol.swift */,
+				BA4ED7282B0B4CAE000F0B5B /* BaseViewControllerProtocol.swift */,
+			);
+			path = CommonProtocol;
+			sourceTree = "<group>";
+		};
 		BA6C6DE12B05FFC400563B22 /* Util */ = {
 			isa = PBXGroup;
 			children = (
 				BA6C6DE22B05FFC400563B22 /* CAGradientLayer+.swift */,
-				BA6C6DE32B05FFC400563B22 /* CircularViewProtocol.swift */,
 				BA6C6DE42B05FFC400563B22 /* UIScreen+.swift */,
 			);
 			path = Util;
@@ -393,6 +402,7 @@
 		BA6C6DE52B05FFC500563B22 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				BA4ED7272B0B4C52000F0B5B /* CommonProtocol */,
 				BA6C6DE62B05FFC500563B22 /* TabBar */,
 			);
 			path = Common;
@@ -442,7 +452,6 @@
 		BAA07ADE2B0251CF00884F3C /* Scene */ = {
 			isa = PBXGroup;
 			children = (
-				D263CA232B04134600B4A144 /* ViewModelProtocol.swift */,
 				AAD0B2832B0B07EE003B4D5F /* Login */,
 				BA33AA712B0AF9F20065D1E0 /* Home */,
 				D263CA092B02B22D00B4A144 /* Travel */,
@@ -492,7 +501,6 @@
 			isa = PBXGroup;
 			children = (
 				D263CA122B02DD8900B4A144 /* RouteTableViewController.swift */,
-				D263CA142B02ED2B00B4A144 /* RouteTableViewControllerDelegate.swift */,
 				D263CA252B04147E00B4A144 /* TravelViewController.swift */,
 				D263CA2E2B054A0E00B4A144 /* SearchResultViewController.swift */,
 			);
@@ -694,12 +702,12 @@
 				D263CA332B06C7B300B4A144 /* SavedRoute.swift in Sources */,
 				BA33AA8D2B0AF9F30065D1E0 /* PostEndPoint.swift in Sources */,
 				BA33AA8C2B0AF9F30065D1E0 /* HomeHeaderView.swift in Sources */,
-				D263CA152B02ED2B00B4A144 /* RouteTableViewControllerDelegate.swift in Sources */,
 				AA46C4B82B02304400856628 /* AppDelegate.swift in Sources */,
 				D263CA202B040BAF00B4A144 /* LocationSearcher.swift in Sources */,
 				BA6C6DF92B05FFC500563B22 /* TabBarCenterView.swift in Sources */,
 				BA6C6DF42B05FFC500563B22 /* CircularViewProtocol.swift in Sources */,
 				AAD0B2A52B0B0857003B4D5F /* MockLoginRepository.swift in Sources */,
+				BA4ED7292B0B4CAE000F0B5B /* BaseViewControllerProtocol.swift in Sources */,
 				D263CA282B043C6B00B4A144 /* PinnedPlaceManager.swift in Sources */,
 				BA33AA8E2B0AF9F30065D1E0 /* PostSearcher.swift in Sources */,
 				BA33AA702B0AF9DD0065D1E0 /* TaBarBackgroundLineView.swift in Sources */,

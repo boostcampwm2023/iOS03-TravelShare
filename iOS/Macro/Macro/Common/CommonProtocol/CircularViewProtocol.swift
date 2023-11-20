@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  CircularViewProtocol.swift
 //  Macro
 //
 //  Created by Byeon jinha on 11/14/23.
