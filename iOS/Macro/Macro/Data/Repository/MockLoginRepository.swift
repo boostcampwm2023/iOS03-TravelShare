@@ -11,7 +11,7 @@ import Foundation
 class MockLoginRepository: LoginRepository {
     private let mockResponse: ResponseStatus = ResponseStatus.success
     
-    func execute(requestValue: LoginRequestDTO) -> AnyPublisher<ResponseStatus, HTTPError> {
+    func execute(requestValue: LoginRequest) -> AnyPublisher<ResponseStatus, HTTPError> {
         return Just(mockResponse)
             .setFailureType(to: HTTPError.self)
             .eraseToAnyPublisher()

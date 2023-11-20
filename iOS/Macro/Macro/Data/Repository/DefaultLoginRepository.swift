@@ -9,5 +9,5 @@ import Combine
 import Foundation
 
 protocol LoginRepository {
-    func execute(requestValue: LoginRequestDTO) -> AnyPublisher<ResponseStatus, HTTPError>
+    func execute(requestValue: LoginRequest) -> AnyPublisher<ResponseStatus, HTTPError>
 }
