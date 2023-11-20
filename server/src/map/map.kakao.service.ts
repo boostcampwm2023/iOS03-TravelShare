@@ -6,7 +6,6 @@ import { KakaoMapSearchResponse } from './map.kakao.search.response.dto';
 import { AxiosResponse } from 'axios';
 import { map } from 'rxjs';
 
-const pagenum = 1;
 const sizenum = 15;
 
 @Injectable()
@@ -16,7 +15,7 @@ export class KakaoMapService {
     private readonly configService: ConfigService,
   ) {}
 
-  async kakaoSearchByAccuracy(keyword: string) {
+  async kakaoSearchByAccuracy(keyword: string, pagenum: number) {
     return this.httpService
       .get(
         this.configService.get('kakao.search.url') +
@@ -37,7 +36,7 @@ export class KakaoMapService {
       );
   }
 
-  async kakaoSearchByDistance(keyword: string, x: number, y: number) {
+  async kakaoSearchByDistance(keyword: string, pagenum: number, x: number, y: number) {
     return this.httpService
       .get(
         this.configService.get('kakao.search.url') +
