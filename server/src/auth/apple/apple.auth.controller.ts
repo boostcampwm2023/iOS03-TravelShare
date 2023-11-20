@@ -30,7 +30,7 @@ export class AppleAuthController {
     description: 'Apple 회원탈퇴를 진행합니다. 테스트필요',
   })
   @Delete('revoke')
-  async refresh(@Body() payload: AppleClientRevokeBody) {
+  async revoke(@Body() payload: AppleClientRevokeBody) {
     await this.appleAuthService.revoke(payload);
   }
 }
