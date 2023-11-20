@@ -41,7 +41,7 @@ final class TabComponentView: UIView {
     private func setupLayout() {
         removeSubviews()
         
-        guard let image = UIImage(systemName: tabComponent.imageName) else { return }
+        guard let image = tabComponent.image else { return }
         let imageView: UIImageView = {
             let imageView: UIImageView = UIImageView(image: image)
             imageView.tintColor = .clear
