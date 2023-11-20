@@ -205,10 +205,7 @@ export class AppleAuthService {
 
   private createToken(user: Authentication) {
     return {
-      accessToken: this.jwtService.sign(user),
-      expiresIn: this.configService.get(
-        'application.jwt.signOptions.expiresIn',
-      ),
+      accessToken: this.jwtService.sign(user)
     };
   }
 
