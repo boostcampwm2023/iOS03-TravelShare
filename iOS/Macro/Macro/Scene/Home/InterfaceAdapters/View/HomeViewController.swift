@@ -6,7 +6,7 @@
 //
 
 import Combine
-import Network
+import MacroNetwork
 import UIKit
 
 final class HomeViewController: UIViewController {

@@ -7,7 +7,7 @@
 
 import Combine
 import Foundation
-import Network
+import MacroNetwork
 
 protocol PostSearchUseCase {
     func searchPost() -> AnyPublisher<[PostResponse], NetworkError>
@@ -22,11 +22,11 @@ final class PostSearcher: PostSearchUseCase {
         self.provider = provider
     }
     
-    func searchPost() -> AnyPublisher<[PostResponse], Network.NetworkError> {
+    func searchPost() -> AnyPublisher<[PostResponse], MacroNetwork.NetworkError> {
         return provider.request(PostEndPoint.search)
     }
     
-    func searchMockPost() -> AnyPublisher<[PostResponse], Network.NetworkError> {
+    func searchMockPost() -> AnyPublisher<[PostResponse], MacroNetwork.NetworkError> {
         return provider.mockRequest(PostEndPoint.search)
     }
 }
