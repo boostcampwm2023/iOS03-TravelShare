@@ -46,7 +46,7 @@ final class LoginViewModel: ViewModelProtocol {
     }
     
     private func requestToken(identityToken: String, authorizationCode: String) {
-        loginUseCase.execute(requestValue: LoginRequestDTO(identityToken: identityToken, authorizationCode: authorizationCode))
+        loginUseCase.execute(requestValue: LoginRequest(identityToken: identityToken, authorizationCode: authorizationCode))
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {

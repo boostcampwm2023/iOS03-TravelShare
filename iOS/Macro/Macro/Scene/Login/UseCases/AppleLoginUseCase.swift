@@ -14,7 +14,7 @@ enum ResponseStatus {
 }
 
 protocol AppleLoginUseCaseProtocol {
-    func execute(requestValue: LoginRequestDTO) -> AnyPublisher<ResponseStatus, HTTPError>
+    func execute(requestValue: LoginRequest) -> AnyPublisher<ResponseStatus, HTTPError>
 }
 
 struct AppleLoginUseCase: AppleLoginUseCaseProtocol {
@@ -24,7 +24,7 @@ struct AppleLoginUseCase: AppleLoginUseCaseProtocol {
         self.repository = repository
     }
     
-    func execute(requestValue: LoginRequestDTO) -> AnyPublisher<ResponseStatus, HTTPError> {
+    func execute(requestValue: LoginRequest) -> AnyPublisher<ResponseStatus, HTTPError> {
         return repository.execute(requestValue: requestValue)
             .eraseToAnyPublisher()
     }
