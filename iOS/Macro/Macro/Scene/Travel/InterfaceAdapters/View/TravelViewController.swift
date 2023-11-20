@@ -14,7 +14,7 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
   
   // MARK: - Properties
   
-  private let minimizedHeight: CGFloat = 100
+  private let minimizedHeight: CGFloat = 200
   private let maximizedHeight: CGFloat = UIScreen.main.bounds.height - 200
   private var isModalViewExpanded = false
   private var routeTableViewHeightConstraint: NSLayoutConstraint?
@@ -40,19 +40,30 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
   
   private let searchBar: UITextField = {
     let textField = UITextField()
-    textField.placeholder = "🔍 검색"
+    textField.placeholder = "검색"
     textField.backgroundColor = UIColor.appColor(.purple1)
     textField.layer.cornerRadius = 10
     textField.translatesAutoresizingMaskIntoConstraints = false
+    
+    let imageView = UIImageView(image: UIImage.appImage(.magnifyingglass))
+    imageView.tintColor = .gray
+    let iconContainerView = UIView(frame: CGRect(x: 0, y: 0, width: imageView.frame.width + 10, height: imageView.frame.height))
+    imageView.center = iconContainerView.center
+    iconContainerView.addSubview(imageView)
+    
+    textField.leftView = iconContainerView
+    textField.leftViewMode = .always
+    
     return textField
   }()
   
   private let travelButton: UIButton = {
     let button = UIButton()
     button.translatesAutoresizingMaskIntoConstraints = false
-    button.backgroundColor = .systemBlue
-    button.layer.cornerRadius = 25
-    button.setTitle("여행", for: .normal)
+    button.backgroundColor = UIColor.appColor(.statusGreen)
+    let symbolConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .regular, scale: .default)
+    button.setImage(UIImage.appImage(.playCircle)?.withConfiguration(symbolConfig), for: .normal)
+    button.layer.cornerRadius = 30
     return button
   }()
   
@@ -107,12 +118,12 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
       mapView.leftAnchor.constraint(equalTo: view.leftAnchor),
       mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
       mapView.rightAnchor.constraint(equalTo: view.rightAnchor),
-      searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15),
-      searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-      searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-      searchBar.heightAnchor.constraint(equalToConstant: 43),
-      travelButton.widthAnchor.constraint(equalToConstant: 50),
-      travelButton.heightAnchor.constraint(equalToConstant: 50),
+      searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+      searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+      searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+      searchBar.heightAnchor.constraint(equalToConstant: 40),
+      travelButton.widthAnchor.constraint(equalToConstant: 60),
+      travelButton.heightAnchor.constraint(equalToConstant: 60),
       travelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
       travelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
     ])
@@ -173,6 +184,7 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
       locationManager.stopUpdatingLocation()
     }
   }
+  
   private func updateMapWithLocation(_ routePoints: [CLLocation]) {
     routeOverlay?.mapView = nil
     let coords = routePoints.map { NMGLatLng(lat: $0.coordinate.latitude, lng: $0.coordinate.longitude) }
@@ -207,8 +219,8 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
     
     for (index, place) in viewModel.savedRoute.pinnedPlaces.enumerated() {
       let marker = NMFMarker()
-      marker.position = NMGLatLng(lat: Double(place.mapy) ?? 0.0 , lng: Double(place.mapx) ?? 0.0 )
-      marker.captionText = "\(index + 1)"
+      marker.position = NMGLatLng(lat: Double(place.mapy) ?? 0.0, lng: Double(place.mapx) ?? 0.0 )
+      marker.captionText = "\(index + 1). \(place.placeName)"
       marker.mapView = mapView
       markers[place.placeName] = marker
     }
@@ -220,7 +232,7 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
     for (index, place) in pinnedPlaces.enumerated() {
       let marker = NMFMarker()
       marker.position = NMGLatLng(lat: Double(place.mapy) ?? 0.0, lng: Double(place.mapx) ?? 0.0)
-      marker.captionText = "\(index + 1)"
+      marker.captionText = "\(index + 1). \(place.placeName)"
       marker.mapView = mapView
       markers[place.placeName] = marker
     }
@@ -228,13 +240,18 @@ final class TravelViewController: UIViewController, RouteTableViewControllerDele
   
   private func updateTravelButton() {
     if isTraveling {
-      travelButton.setTitle("종료", for: .normal)
-      travelButton.backgroundColor = .systemCyan
+      let symbolConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .regular, scale: .default)
+      travelButton.setImage(UIImage.appImage(.pauseCircle)?.withConfiguration(symbolConfig), for: .normal)
+      travelButton.tintColor = UIColor.appColor(.green4)
       travelButton.removeTarget(self, action: #selector(travelButtonTapped), for: .touchUpInside)
       travelButton.addTarget(self, action: #selector(endTravelButtonTapped), for: .touchUpInside)
     } else {
-      travelButton.setTitle("여행", for: .normal)
-      travelButton.backgroundColor = .systemBlue
+      travelButton.backgroundColor = UIColor.appColor(.statusGreen)
+      travelButton.layer.borderColor = UIColor.appColor(.green3).cgColor
+      travelButton.layer.borderWidth = 2
+      let symbolConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .regular, scale: .default)
+      travelButton.setImage(UIImage.appImage(.playCircle)?.withConfiguration(symbolConfig), for: .normal)
+      travelButton.tintColor = UIColor.appColor(.green4)
       travelButton.removeTarget(self, action: #selector(endTravelButtonTapped), for: .touchUpInside)
       travelButton.addTarget(self, action: #selector(travelButtonTapped), for: .touchUpInside)
     }
