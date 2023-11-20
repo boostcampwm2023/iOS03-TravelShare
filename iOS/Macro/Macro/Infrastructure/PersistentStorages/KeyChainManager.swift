@@ -56,3 +56,10 @@ struct KeyChainManager {
         return nil
     }
 }
+
+extension KeyChainManager {
+    enum Keywords {
+        static let accessToken = "AccessToken"
+        static let refreshToken = "RefreshToken"
+    }
+}
