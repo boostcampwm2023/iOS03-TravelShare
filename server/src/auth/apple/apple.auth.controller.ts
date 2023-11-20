@@ -14,7 +14,7 @@ export class AppleAuthController {
 
   @ApiOperation({
     description:
-      'Apple 로그인 혹은 회원가입을 실행하여 refresh token과 access token을 반환합니다.',
+      'Apple 로그인 혹은 회원가입을 실행하여 access token을 반환합니다.',
   })
   @ApiResponse({ type: AppleClientAuthResponse })
   @Public()
