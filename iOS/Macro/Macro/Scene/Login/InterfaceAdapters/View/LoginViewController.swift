@@ -77,7 +77,7 @@ private extension LoginViewController {
         
         NSLayoutConstraint.activate([
             loginImageView.heightAnchor.constraint(equalToConstant: 235),
-            loginImageView.widthAnchor.constraint(equalToConstant: 360),
+            loginImageView.widthAnchor.constraint(equalToConstant: 300),
             loginImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 200),
             loginImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
             
@@ -105,8 +105,8 @@ private extension LoginViewController {
             .sink { [weak self] output in
                 switch output {
                 case.appleLoginCompleted:
-                    let homeViewController = HomeViewController()
-                    let navigationController = UINavigationController(rootViewController: homeViewController)
+                    let tabbarViewController = TabbarViewController(viewModel: TabBarViewModel())
+                    let navigationController = UINavigationController(rootViewController: tabbarViewController)
                     navigationController.modalPresentationStyle = .fullScreen
                     self?.present(navigationController, animated: true)
                 }
