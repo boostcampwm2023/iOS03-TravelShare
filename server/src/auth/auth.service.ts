@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -33,7 +33,7 @@ export class AuthService {
       select: ['email', 'password', 'role'],
     });
     if (!(await compare(password, userDetail.password))) {
-      throw new BadRequestException('invalid password');
+      throw new UnauthorizedException('invalid password');
     }
     return await this.createAccessToken(
       plainToInstance(Authentication, userDetail),
