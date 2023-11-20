@@ -5,9 +5,12 @@ import { JwtAuthenticationGuard } from './jwt.authentication.gaurd';
 import { RoleAuthorizationGuard } from './role.authorization.gaurd';
 import { ConfigService } from '@nestjs/config';
 import { AppleAuthModule } from './apple/apple.module';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
 
 @Module({
   imports: [AppleAuthModule],
+  controllers: [AuthController],
   providers: [
     {
       provide: APP_GUARD,
@@ -23,6 +26,7 @@ import { AppleAuthModule } from './apple/apple.module';
       useFactory: (configService: ConfigService) =>
         configService.get('application.jwt.secret'),
     },
+    AuthService,
   ],
 })
 export class AuthModule {}

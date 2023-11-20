@@ -205,7 +205,7 @@ export class AppleAuthService {
 
   private createToken(user: Authentication) {
     return {
-      accessToken: this.jwtService.sign(user)
+      accessToken: this.jwtService.sign(user),
     };
   }
 
