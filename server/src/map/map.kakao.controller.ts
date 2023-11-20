@@ -12,19 +12,20 @@ export class KaKaoMapController {
   @ApiResponse({ type: [KakaoMapSearchResponse] })
   @Public()
   @Get('searchByAccuracy')
-  async searchByAccuracy(@Query('keyword') keyword: string) {
-    return await this.kakaoMapService.kakaoSearchByAccuracy(keyword);
+  async searchByAccuracy(@Query('keyword') keyword: string, @Query('pagenum') pagenum: number) {
+    return await this.kakaoMapService.kakaoSearchByAccuracy(keyword,pagenum);
   }
 
   @ApiOperation({ description: '주소나 이름에 따라 위치를 검색합니다.' })
   @ApiResponse({ type: [KakaoMapSearchResponse] })
   @Public()
-  @Get('earchByDistance')
+  @Get('searchByDistance')
   async searchByDistance(
     @Query('keyword') keyword: string,
+    @Query('pagenum') pagenum: number,
     @Query('x') x: number,
     @Query('y') y: number,
   ) {
-    return await this.kakaoMapService.kakaoSearchByDistance(keyword, x, y);
+    return await this.kakaoMapService.kakaoSearchByDistance(keyword, pagenum, x, y);
   }
 }
