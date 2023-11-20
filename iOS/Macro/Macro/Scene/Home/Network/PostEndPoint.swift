@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Network
+import MacroNetwork
 
 enum PostEndPoint {
     case search
@@ -18,18 +18,18 @@ extension PostEndPoint: EndPoint {
         return "http://118.67.130.85:3000"
     }
     
-    var headers: Network.HTTPHeaders {
+    var headers: MacroNetwork.HTTPHeaders {
         return []
     }
     
-    var parameter: Network.HTTPParameter {
+    var parameter: MacroNetwork.HTTPParameter {
         switch self {
         case .search:
             return .query("")
         }
     }
     
-    var method: Network.HTTPMethod {
+    var method: MacroNetwork.HTTPMethod {
         switch self {
         case .search:
             return .get

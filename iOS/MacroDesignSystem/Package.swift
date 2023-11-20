@@ -10,9 +10,6 @@ let package = Package(
         .library(
             name: "MacroDesignSystem",
             targets: ["MacroDesignSystem"]),
-        .library(
-            name: "Network",
-            targets: ["Network"])
     ],
     targets: [
         .target(
@@ -20,10 +17,5 @@ let package = Package(
         .testTarget(
             name: "MacroDesignSystemTests",
             dependencies: ["MacroDesignSystem"]),
-        .target(
-            name: "Network"),
-        .testTarget(
-            name: "NetworkTests",
-            dependencies: ["Network"]),
     ]
 )

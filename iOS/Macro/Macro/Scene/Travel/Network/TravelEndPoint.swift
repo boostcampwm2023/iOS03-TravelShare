@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Network
+import MacroNetwork
 
 enum TravelEndPoint {
   case search(String)
@@ -18,18 +18,18 @@ extension TravelEndPoint: EndPoint {
     return "http://118.67.130.85:3000"
   }
   
-  var headers: Network.HTTPHeaders {
+  var headers: MacroNetwork.HTTPHeaders {
     return []
   }
   
-  var parameter: Network.HTTPParameter {
+  var parameter: MacroNetwork.HTTPParameter {
     switch self {
     case let .search(text):
       return .query(["keyword": text])
     }
   }
   
-  var method: Network.HTTPMethod {
+  var method: MacroNetwork.HTTPMethod {
     switch self {
     case .search:
       return .get

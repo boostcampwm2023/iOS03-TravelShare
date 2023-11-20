@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -12,7 +12,6 @@
 		AA46C4BA2B02304400856628 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA46C4B92B02304400856628 /* SceneDelegate.swift */; };
 		AA46C4C12B02304600856628 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA46C4C02B02304600856628 /* Assets.xcassets */; };
 		AA46C4CD2B02332F00856628 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = AA46C4CC2B02332F00856628 /* .swiftlint.yml */; };
-		AA46C4D02B025BA400856628 /* MacroDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = AA46C4CF2B025BA400856628 /* MacroDesignSystem */; };
 		BA33AA702B0AF9DD0065D1E0 /* TaBarBackgroundLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA6F2B0AF9DD0065D1E0 /* TaBarBackgroundLineView.swift */; };
 		BA33AA852B0AF9F30065D1E0 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA742B0AF9F20065D1E0 /* HomeViewModel.swift */; };
 		BA33AA862B0AF9F30065D1E0 /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = BA33AA752B0AF9F20065D1E0 /* .gitkeep */; };
@@ -29,6 +28,8 @@
 		BA33AA912B0AF9F30065D1E0 /* PostResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA842B0AF9F20065D1E0 /* PostResponse.swift */; };
 		BA33AA932B0AFA580065D1E0 /* 나눔손글씨 배은혜체.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BA33AA922B0AFA580065D1E0 /* 나눔손글씨 배은혜체.ttf */; };
 		BA33AA952B0AFABF0065D1E0 /* MockJson.json in Resources */ = {isa = PBXBuildFile; fileRef = BA33AA942B0AFABF0065D1E0 /* MockJson.json */; };
+		BA33AA992B0B007A0065D1E0 /* MacroNetwork in Frameworks */ = {isa = PBXBuildFile; productRef = BA33AA982B0B007A0065D1E0 /* MacroNetwork */; };
+		BA33AA9C2B0B01AB0065D1E0 /* MacroDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = BA33AA9B2B0B01AB0065D1E0 /* MacroDesignSystem */; };
 		BA6C6DF32B05FFC500563B22 /* CAGradientLayer+.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DE22B05FFC400563B22 /* CAGradientLayer+.swift */; };
 		BA6C6DF42B05FFC500563B22 /* CircularViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DE32B05FFC400563B22 /* CircularViewProtocol.swift */; };
 		BA6C6DF52B05FFC500563B22 /* UIScreen+.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DE42B05FFC400563B22 /* UIScreen+.swift */; };
@@ -50,7 +51,6 @@
 		D263CA242B04134600B4A144 /* ViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA232B04134600B4A144 /* ViewModelProtocol.swift */; };
 		D263CA262B04147E00B4A144 /* TravelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA252B04147E00B4A144 /* TravelViewController.swift */; };
 		D263CA282B043C6B00B4A144 /* PinnedPlaceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA272B043C6B00B4A144 /* PinnedPlaceManager.swift */; };
-		D263CA2A2B05285C00B4A144 /* Network in Frameworks */ = {isa = PBXBuildFile; productRef = D263CA292B05285C00B4A144 /* Network */; };
 		D263CA2D2B052ECC00B4A144 /* TravelEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA2C2B052ECC00B4A144 /* TravelEndPoint.swift */; };
 		D263CA2F2B054A0E00B4A144 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA2E2B054A0E00B4A144 /* SearchResultViewController.swift */; };
 		D263CA332B06C7B300B4A144 /* SavedRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA322B06C7B300B4A144 /* SavedRoute.swift */; };
@@ -64,7 +64,6 @@
 		AA46C4C02B02304600856628 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA46C4C52B02304600856628 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA46C4CC2B02332F00856628 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
-		AA46C4CE2B025AA300856628 /* MacroDesignSystem */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = MacroDesignSystem; path = ../MacroDesignSystem; sourceTree = "<group>"; };
 		BA33AA6F2B0AF9DD0065D1E0 /* TaBarBackgroundLineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaBarBackgroundLineView.swift; sourceTree = "<group>"; };
 		BA33AA742B0AF9F20065D1E0 /* HomeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		BA33AA752B0AF9F20065D1E0 /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
@@ -114,8 +113,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D263CA2A2B05285C00B4A144 /* Network in Frameworks */,
-				AA46C4D02B025BA400856628 /* MacroDesignSystem in Frameworks */,
+				BA33AA9C2B0B01AB0065D1E0 /* MacroDesignSystem in Frameworks */,
+				BA33AA992B0B007A0065D1E0 /* MacroNetwork in Frameworks */,
 				9BFF32D7723F20FDFD4D6D37 /* libPods-Macro.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -143,7 +142,6 @@
 		AA46C4AB2B02304400856628 = {
 			isa = PBXGroup;
 			children = (
-				AA46C4CE2B025AA300856628 /* MacroDesignSystem */,
 				AA46C4CC2B02332F00856628 /* .swiftlint.yml */,
 				AA46C4B62B02304400856628 /* Macro */,
 				AA46C4B52B02304400856628 /* Products */,
@@ -415,8 +413,8 @@
 			);
 			name = Macro;
 			packageProductDependencies = (
-				AA46C4CF2B025BA400856628 /* MacroDesignSystem */,
-				D263CA292B05285C00B4A144 /* Network */,
+				BA33AA982B0B007A0065D1E0 /* MacroNetwork */,
+				BA33AA9B2B0B01AB0065D1E0 /* MacroDesignSystem */,
 			);
 			productName = Macro;
 			productReference = AA46C4B42B02304400856628 /* Macro.app */;
@@ -446,6 +444,10 @@
 				Base,
 			);
 			mainGroup = AA46C4AB2B02304400856628;
+			packageReferences = (
+				BA33AA972B0B007A0065D1E0 /* XCLocalSwiftPackageReference "../MacroNetwork" */,
+				BA33AA9A2B0B01AB0065D1E0 /* XCLocalSwiftPackageReference "../MacroDesignSystem" */,
+			);
 			productRefGroup = AA46C4B52B02304400856628 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -793,14 +795,25 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		BA33AA972B0B007A0065D1E0 /* XCLocalSwiftPackageReference "../MacroNetwork" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MacroNetwork;
+		};
+		BA33AA9A2B0B01AB0065D1E0 /* XCLocalSwiftPackageReference "../MacroDesignSystem" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MacroDesignSystem;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
-		AA46C4CF2B025BA400856628 /* MacroDesignSystem */ = {
+		BA33AA982B0B007A0065D1E0 /* MacroNetwork */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MacroNetwork;
+		};
+		BA33AA9B2B0B01AB0065D1E0 /* MacroDesignSystem */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MacroDesignSystem;
-		};
-		D263CA292B05285C00B4A144 /* Network */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Network;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

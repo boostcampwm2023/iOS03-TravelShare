@@ -8,7 +8,7 @@
 import Combine
 import CoreLocation
 import Foundation
-import Network
+import MacroNetwork
 
 protocol RouteRecordUseCase {
   
