@@ -13,6 +13,7 @@ import {
   ApiOperation,
   ApiQuery,
   ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { UserSigninResponse } from './user.signin.response.dto';
 import { UserSignupBody } from './user.signup.body.dto';
@@ -27,6 +28,7 @@ import { UserDeleteBody } from './user.delete.body.dto';
 import { Public } from 'src/auth/auth.decorators';
 import { plainToInstance } from 'class-transformer';
 
+@ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Post } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AppleClientAuthBody } from './apple.client.auth.body.dto';
 import { AppleClientAuthResponse } from './apple.client.auth.response.dto';
 import { AppleClientRevokeBody } from './apple.client.revoke.body.dto';
@@ -7,6 +7,7 @@ import { AppleAuthService } from './apple.auth.service';
 import { Public } from '../auth.decorators';
 import { plainToInstance } from 'class-transformer';
 
+@ApiTags('Auth/Apple')
 @Controller('apple')
 export class AppleAuthController {
   constructor(private readonly appleAuthService: AppleAuthService) {}
