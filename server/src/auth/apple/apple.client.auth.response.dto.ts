@@ -1,3 +1,3 @@
-import { UserSigninResponse } from 'src/user/user.signin.response.dto';
+import { AuthBasicAuthResponse } from '../auth.basic.auth.response.dto';
 
-export class AppleClientAuthResponse extends UserSigninResponse {}
+export class AppleClientAuthResponse extends AuthBasicAuthResponse {}
