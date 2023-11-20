@@ -8,7 +8,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class UserSignupBody {
+export class AuthBasicSignupBody {
   @ApiProperty({ description: '이메일' })
   @IsEmail()
   email: string;
