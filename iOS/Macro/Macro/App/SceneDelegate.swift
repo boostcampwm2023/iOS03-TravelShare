@@ -20,10 +20,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let window = UIWindow(windowScene: windowScene)
         
-        let tabbarViewModel = TabBarViewModel()
-        let tabbarViewController = TabbarViewController(viewModel: tabbarViewModel)
+        let repository = MockLoginRepository()
+        let useCase = AppleLoginUseCase(repository: repository)
+        let viewModel = LoginViewModel(loginUseCase: useCase)
+        let viewController = LoginViewController(viewModel: viewModel)
         
-        let rootNavigationController = UINavigationController(rootViewController: tabbarViewController)
+        let rootNavigationController = UINavigationController(rootViewController: viewController)
         
         window.rootViewController = rootNavigationController
         
