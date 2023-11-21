@@ -15,6 +15,6 @@ COPY --from=BUILDER /var/app/package.json /var/app/package.json
 COPY --from=BUILDER /var/app/application.yaml /var/app/application.yaml
 COPY --from=BUILDER /var/app/production.sh /var/app/production.sh
 COPY --from=BUILDER /var/app/node_modules /var/app/node_modules
-EXPOSE 80
+EXPOSE 3000
 ENV NODE_ENV=production
 ENTRYPOINT [ "sh", "/var/app/production.sh" ]
