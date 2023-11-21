@@ -25,6 +25,25 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
+        
+        var viewController: UIViewController = UIViewController()
+        
+        if TokenManager.isTokenExpired() {
+            let viewModel = TabBarViewModel()
+            viewController = TabbarViewController(viewModel: viewModel)
+        } else {
+            let provider = APIProvider(session: URLSession.shared)
+            let repository = LoginRepository(provider: provider)
+            let useCase = AppleLoginUseCase(repository: repository)
+            let viewModel = LoginViewModel(loginUseCase: useCase)
+            viewController = LoginViewController(viewModel: viewModel)
+        }
+        
+        let rootNavigationController = UINavigationController(rootViewController: viewController)
+        
+        window.rootViewController = rootNavigationController
+        
+        window.makeKeyAndVisible()
         self.window = window
         
         checkMonitoring()
