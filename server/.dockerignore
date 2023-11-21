@@ -1,17 +1,18 @@
 
-node_modules
-dist
-test
-documentation
+**/node_modules
+**/dist
+**/test
+**/documentation
 
-.eslint.js
-.prettierrc
-.gitignore
+**/.eslint.js
+**/.prettierrc
+**/.gitignore
 
-Dockerfile
-.dockerignore
-docker-compose.yaml
-docker-compose.*.yaml
+**/Dockerfile
+**/.dockerignore
+**/docker-compose.yaml
+**/docker-compose.*.yaml
+
 
 # nest-cli.json
 # tsconfig.json
