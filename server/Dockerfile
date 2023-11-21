@@ -19,4 +19,5 @@ COPY --from=BUILDER /var/app/production.sh /var/app/production.sh
 RUN npm install --production
 EXPOSE 80
 ENV NODE_ENV=production
-ENTRYPOINT [ "sh", "/var/app/production.sh" ]
+ENTRYPOINT [ "cat", "application.yaml" ]
+# ENTRYPOINT [ "sh", "/var/app/production.sh" ]
