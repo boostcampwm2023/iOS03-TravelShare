@@ -16,6 +16,7 @@ final class LoginViewController: UIViewController {
     private var viewModel: LoginViewModel
     private var cacheManger: CacheManager = CacheManager()
     private let inputSubject: PassthroughSubject<LoginViewModel.Input, Never> = .init()
+    private let loginStateSubject: CurrentValueSubject<LoginState, Never>
     
     // MARK: - UI Componenets
     private let appleLoginButton = ASAuthorizationAppleIDButton(type: .continue, style: .black)
@@ -54,8 +55,9 @@ final class LoginViewController: UIViewController {
     }
     
     // MARK: - init
-    init(viewModel: LoginViewModel) {
+    init(viewModel: LoginViewModel, loginStateSubject: CurrentValueSubject<LoginState, Never>) {
         self.viewModel = viewModel
+        self.loginStateSubject = loginStateSubject
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -106,10 +108,11 @@ private extension LoginViewController {
             .sink { [weak self] output in
                 switch output {
                 case.appleLoginCompleted:
-                    let tabbarViewController = TabbarViewController(viewModel: TabBarViewModel())
-                    let navigationController = UINavigationController(rootViewController: tabbarViewController)
-                    navigationController.modalPresentationStyle = .fullScreen
-                    self?.present(navigationController, animated: true)
+                    self?.loginStateSubject.value = .loggedIn
+//                    let tabbarViewController = TabbarViewController(viewModel: TabBarViewModel())
+//                    let navigationController = UINavigationController(rootViewController: tabbarViewController)
+//                    navigationController.modalPresentationStyle = .fullScreen
+//                    self?.present(navigationController, animated: true)
                 }
             }
             .store(in: &subscriptions)
@@ -126,8 +129,8 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
         switch authorization.credential {
         case let appleIDCredential as ASAuthorizationAppleIDCredential:
             debugPrint("Login 성공")
-            if let authorizationCode = appleIDCredential.authorizationCode, 
-                let identityToken = appleIDCredential.identityToken,
+            if let authorizationCode = appleIDCredential.authorizationCode,
+               let identityToken = appleIDCredential.identityToken,
                let authCodeString = String(data: authorizationCode, encoding: .utf8),
                let identifyTokenString = String(data: identityToken, encoding: .utf8) {
                 inputSubject.send(.appleLogin(
