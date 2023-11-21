@@ -3,6 +3,7 @@ FROM node:20.5.1 as BUILDER
 RUN mkdir -p /var/app
 WORKDIR /var/app
 COPY . /var/app/
+RUN echo ls -a
 RUN npm install -g @nestjs/cli
 RUN npm install
 RUN npm run build
