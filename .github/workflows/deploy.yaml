@@ -66,5 +66,5 @@ jobs:
             docker pull ${{ secrets.NCLOUD_CONTAINER_REGISTRY_ENDPOINT }}/${{ env.CONTAINER_IMAGE_TAG_NAME }}
             docker stop $(docker ps -a -q)
             docker rm $(docker ps -a -q)
-            docekr run -d -p ${{ secrets.APPLICATION_PORT }}:3000 ${{ secrets.NCLOUD_CONTAINER_REGISTRY_ENDPOINT }}/${{ env.CONTAINER_IMAGE_TAG_NAME }}
+            docekr run -d -p ${{ secrets.APPLICATION_PORT }}:3000 ${{ secrets.NCLOUD_CONTAINER_REGISTRY_ENDPOINT }}/${{ env.CONTAINER_IMAGE_TAG_NAME }}:latest
             docker image prune -f
