@@ -49,7 +49,11 @@ export class User {
   followings: Promise<User[]>;
 
   @ManyToMany(() => Post)
-  @JoinTable({ name: 'post_ssss' })
+  @JoinTable({
+    name: 'post_likes_users',
+    joinColumn: { name: 'email' },
+    inverseJoinColumn: { name: 'post_id' },
+  })
   likedPosts: Post[];
 
   @CreateDateColumn({ name: 'created_at' })
