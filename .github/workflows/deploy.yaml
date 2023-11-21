@@ -40,7 +40,7 @@ jobs:
         with:
           push: true
           tags: ${{ env.CONTAINER_IMAGE_TAG_NAME }}:latest
-          file: ./server/Dockerfile
+          context: ./server
 
   
   
