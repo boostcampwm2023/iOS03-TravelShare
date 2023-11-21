@@ -40,11 +40,11 @@ export class Post {
   @Column({ nullable: true })
   summary: string;
 
-  // @Column('json')
-  // route: string[];
+  @Column('json')
+  route: string[];
 
-  // @Column('json', { default: null })
-  // hashtag: string[];
+  @Column('json', { default: null })
+  hashtag: string[];
 
   @Column('date', { name: 'start_at' })
   startAt: Date;

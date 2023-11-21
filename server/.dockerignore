@@ -1,0 +1,19 @@
+
+**/node_modules
+**/dist
+**/test
+**/documentation
+
+**/.eslint.js
+**/.prettierrc
+**/.gitignore
+
+**/Dockerfile
+**/.dockerignore
+**/docker-compose.yaml
+**/docker-compose.*.yaml
+
+
+# nest-cli.json
+# tsconfig.json
+# tsconfig.build.json
