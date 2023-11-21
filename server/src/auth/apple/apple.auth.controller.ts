@@ -5,7 +5,6 @@ import { AppleClientAuthResponse } from './apple.client.auth.response.dto';
 import { AppleClientRevokeBody } from './apple.client.revoke.body.dto';
 import { AppleAuthService } from './apple.auth.service';
 import { Public } from '../auth.decorators';
-import { plainToInstance } from 'class-transformer';
 
 @ApiTags('Auth/Apple')
 @Controller('apple')
@@ -20,10 +19,7 @@ export class AppleAuthController {
   @Public()
   @Post('auth')
   async auth(@Body() payload: AppleClientAuthBody) {
-    return plainToInstance(
-      AppleClientAuthResponse,
-      await this.appleAuthService.auth(payload),
-    );
+    return await this.appleAuthService.auth(payload);
   }
 
   @ApiOperation({

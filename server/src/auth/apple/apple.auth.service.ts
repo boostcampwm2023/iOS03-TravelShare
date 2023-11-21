@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AppleClientAuthBody } from './apple.client.auth.body.dto';
 import { ConfigService } from '@nestjs/config';
 import { map, mergeMap } from 'rxjs';
-import { plainToInstance } from 'class-transformer';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 import {
   AppleIdentityTokenPublicKey,
   AppleIdentityTokenPublicKeys,
@@ -22,6 +22,7 @@ import { AppleClientRevokeBody } from './apple.client.revoke.body.dto';
 import { AppleAuthTokenBody } from './apple.auth.token.body.dto';
 import { AppleAuthRevokeBody } from './apple.auth.revoke.body.dto';
 import { AppleAuthTokenResponse } from './apple.auth.token.response.dto';
+import { AppleClientAuthResponse } from './apple.client.auth.response.dto';
 
 /**
  * ### AppleAuthService
@@ -42,7 +43,7 @@ export class AppleAuthService {
   ) {}
 
   async auth({ identityToken }: AppleClientAuthBody) {
-    const { key: keysRequest } = this.configService.get('apple.auth');
+    const { keys: keysRequest } = this.configService.get('apple.auth');
     const { alg, kid } = this.extractJwtHeader(identityToken);
     return this.httpService.request(keysRequest).pipe(
       /**
@@ -167,13 +168,14 @@ export class AppleAuthService {
 
   @Transactional()
   private async signup({ sub, email }: AppleIdentityTokenPayload) {
+    await this.userRepository.insert({
+      email,
+      password: randomUUID(),
+      name: email,
+    });
     const user = plainToInstance(
       Authentication,
-      await this.userRepository.save({
-        email,
-        password: randomUUID(),
-        name: email,
-      }),
+      await this.userRepository.findOneByOrFail({ email }),
     );
     await this.appleAuthRepository
       .createQueryBuilder()
@@ -204,9 +206,9 @@ export class AppleAuthService {
   }
 
   private createToken(user: Authentication) {
-    return {
-      accessToken: this.jwtService.sign(user),
-    };
+    return plainToInstance(AppleClientAuthResponse, {
+      accessToken: this.jwtService.sign(instanceToPlain(user)),
+    });
   }
 
   private extractJwtHeader(token: string): AppleIdentityTokenHeader {
