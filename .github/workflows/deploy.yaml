@@ -16,11 +16,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20.5.1
-
       - name: Setting application.yaml before building app
         env:
           APPLICATIOIN_YAML_BASE64: ${{ secrets.APPLICATION_YAML_BASE64 }}
