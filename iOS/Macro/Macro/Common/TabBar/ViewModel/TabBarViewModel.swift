@@ -7,8 +7,10 @@
 
 import Combine
 import MacroDesignSystem
-import UIKit
 import MacroNetwork
+import Network
+import UIKit
+
 
 final class TabBarViewModel {
     let tabComponentArray = CurrentValueSubject<[TabComponent], Never>([])
