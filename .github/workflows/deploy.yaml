@@ -41,7 +41,7 @@ jobs:
           push: true
           tags: |
             ${{ secrets.NCLOUD_CONTAINER_REGISTRY_ENDPOINT }}/${{ env.CONTAINER_IMAGE_TAG_NAME }}:latest
-            ${{ secrets.NCLOUD_CONTAINER_REGISTRY_ENDPOINT }}/${{ env.CONTAINER_IMAGE_TAG_NAME }}:${{ github.head_ref }}
+            ${{ secrets.NCLOUD_CONTAINER_REGISTRY_ENDPOINT }}/${{ env.CONTAINER_IMAGE_TAG_NAME }}:${{ github.run_number }}
           context: ./server
           
 
