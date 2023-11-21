@@ -10,6 +10,11 @@ import UIKit
 
 final class PostProfileView: UIView {
     
+    // MARK: - Properties
+    private var cancellables = Set<AnyCancellable>()
+    var viewModel: HomeViewModel?
+    private let inputSubject: PassthroughSubject<HomeViewModel.Input, Never> = .init()
+    
     // MARK: - UI Components
     
     private let viewCountLabel: UILabel = {
@@ -121,6 +126,7 @@ private extension PostProfileView {
     }
     
     func addTapGesture() {
+        profileImageView.isUserInteractionEnabled = true
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(profileImageTap(_:)))
         profileImageView.addGestureRecognizer(tapGesture)
     }
@@ -135,6 +141,7 @@ extension PostProfileView {
         setTranslatesAutoresizingMaskIntoConstraints()
         addSubviews()
         setLayoutConstraints()
+        addTapGesture()
     }
     
     func configure(item: PostFindResponse) {
@@ -142,25 +149,33 @@ extension PostProfileView {
             DispatchQueue.main.async { [self] in
                 if let image = profileImage {
                     profileImageView.image = image
-                    profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
                 } else {
-                    // TODO: 이미지가 다운로드되지 않았을 때 처리할 내용 추가
+                    let defaultImage = UIImage.appImage(.ProfileDefaultImage)
+                    profileImageView.image = defaultImage
                 }
+                profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
             }
         }
         userNameLabel.text = item.userInfo.name
         likeCountLabel.text = "\(item.likeNum)"
         viewCountLabel.text = "\(item.viewNum)"
     }
+    
+    func bind(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
+        guard let viewModel = self.viewModel else { return }
+        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+    }
 }
 
 // MARK: - Handdle Gesture
 private extension PostProfileView {
     @objc private func profileImageTap(_ sender: UITapGestureRecognizer) {
-     
+        guard let userId: String = self.userNameLabel.text else { return }
+        inputSubject.send(.searchUser(userId))
     }
 }
-    
+
 // MARK: - LayoutMetrics
 
 private extension PostProfileView {
