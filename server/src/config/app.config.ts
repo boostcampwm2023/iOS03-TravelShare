@@ -3,15 +3,7 @@ import { load } from 'js-yaml';
 import { createSecretKey } from 'crypto';
 
 export default () => {
-  let config: Record<string, any>;
-  switch (process.env.NODE_ENV) {
-    case 'development':
-      config = load(readFileSync('application.development.yaml', 'utf-8'));
-      break;
-    case 'production':
-      config = load(readFileSync('application.production.yaml', 'utf-8'));
-      break;
-  }
+  const config: Record<string, any> = load(readFileSync('application.yaml', 'utf-8'));
   config.application.jwt.secret = createSecretKey(
     config.application.jwt.secret,
   ).export();
