@@ -16,7 +16,6 @@ final class LoginViewController: UIViewController {
     private var viewModel: LoginViewModel
     private var cacheManger: CacheManager = CacheManager()
     private let inputSubject: PassthroughSubject<LoginViewModel.Input, Never> = .init()
-    private let loginStateSubject: CurrentValueSubject<LoginState, Never>
     
     // MARK: - UI Componenets
     private let appleLoginButton = ASAuthorizationAppleIDButton(type: .continue, style: .black)
@@ -55,9 +54,8 @@ final class LoginViewController: UIViewController {
     }
     
     // MARK: - init
-    init(viewModel: LoginViewModel, loginStateSubject: CurrentValueSubject<LoginState, Never>) {
+    init(viewModel: LoginViewModel) {
         self.viewModel = viewModel
-        self.loginStateSubject = loginStateSubject
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -82,6 +80,7 @@ private extension LoginViewController {
             loginImageView.widthAnchor.constraint(equalToConstant: 200),
             loginImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             loginImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 200),
+            loginImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
             
             titleLabel.topAnchor.constraint(equalTo: loginImageView.bottomAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: loginImageView.leadingAnchor),
@@ -90,9 +89,9 @@ private extension LoginViewController {
             keywordLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             
             appleLoginButton.heightAnchor.constraint(equalToConstant: 50),
-            appleLoginButton.widthAnchor.constraint(equalToConstant: UIScreen.width - 150),
+            appleLoginButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
             appleLoginButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            appleLoginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -60)
+            appleLoginButton.topAnchor.constraint(equalTo: keywordLabel.bottomAnchor, constant: 80)
         ])
     }
 }
@@ -107,11 +106,10 @@ private extension LoginViewController {
             .sink { [weak self] output in
                 switch output {
                 case.appleLoginCompleted:
-                    self?.loginStateSubject.value = .loggedIn
-//                    let tabbarViewController = TabbarViewController(viewModel: TabBarViewModel())
-//                    let navigationController = UINavigationController(rootViewController: tabbarViewController)
-//                    navigationController.modalPresentationStyle = .fullScreen
-//                    self?.present(navigationController, animated: true)
+                    let tabbarViewController = TabBarViewController(viewModel: TabBarViewModel())
+                    let navigationController = UINavigationController(rootViewController: tabbarViewController)
+                    navigationController.modalPresentationStyle = .fullScreen
+                    self?.present(navigationController, animated: true)
                 }
             }
             .store(in: &subscriptions)
@@ -127,10 +125,14 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         switch authorization.credential {
         case let appleIDCredential as ASAuthorizationAppleIDCredential:
-            if let identityToken = appleIDCredential.identityToken,
-                let identityTokenString = String(data: identityToken, encoding: .utf8) {
-                inputSubject.send(
-                    .appleLogin(identityToken: identityTokenString))
+            debugPrint("Login 성공")
+            if let authorizationCode = appleIDCredential.authorizationCode, 
+                let identityToken = appleIDCredential.identityToken,
+               let authCodeString = String(data: authorizationCode, encoding: .utf8),
+               let identifyTokenString = String(data: identityToken, encoding: .utf8) {
+                inputSubject.send(.appleLogin(
+                    identityToken: identifyTokenString,
+                    authorizationCode: authCodeString))
             }
         default:
             break
