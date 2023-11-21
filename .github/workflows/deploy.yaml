@@ -2,7 +2,10 @@ name: deploy Project to Server
 
 on:
   push:
-    branches: [ "feature/deploy" ]
+    branches: [ "dev" ]
+    paths:
+      - 'server/**'
+
 
 env:
   CONTAINER_IMAGE_TAG_NAME: backend
