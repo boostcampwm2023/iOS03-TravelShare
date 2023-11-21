@@ -15,8 +15,7 @@ import UIKit
 final class TabBarViewModel {
     let tabComponentArray = CurrentValueSubject<[TabComponent], Never>([])
     
-    let currentTabComponent = CurrentValueSubject<TabComponent, Never>(
-        TabComponent(index: 0, image: UIImage.appImage(.house), text: "홈", viewController: HomeViewController() ))
+    var currentTabComponent: CurrentValueSubject<TabComponent, Never>
     
     var radius: CGFloat = 90
     var rotationAngle: Double = 0
@@ -26,26 +25,19 @@ final class TabBarViewModel {
     var animationStep: Int = 0
     
     init() {
-        setTabComponetArray()
-    }
-    
-    // MARK: - Method
-    
-    private func setTabComponetArray() {
         let provider = APIProvider(session: URLSession.shared)
-        
         let searchViewModel = SearchViewModel()
+        let homeViewModel = HomeViewModel(postSearcher: PostSearcher(provider: provider))
         let writeViewModel = WriteViewModel()
         let travelViewModel = TravelViewModel(
             routeRecorder: RouteRecorder(provider: provider),
             locationSearcher: LocationSearcher(provider: provider),
             pinnedPlaceManager: PinnedPlaceManager(provider: provider))
         let myPageViewModel = MyPageViewModel()
-        
         let setComponentArray = [
-        TabComponent(index: 1, 
+        TabComponent(index: 1,
                      image: UIImage.appImage(.magnifyingglass),
-                     text: "주변 탐색", 
+                     text: "주변 탐색",
                      viewController: SearchViewController(viewModel: searchViewModel)),
         TabComponent(index: 2,
                      image: UIImage.appImage(.personCircle),
@@ -57,10 +49,26 @@ final class TabBarViewModel {
                      viewController: WriteViewController(viewModel: writeViewModel)),
         TabComponent(index: 4,
                      image: UIImage.appImage(.map),
-                     text: "여행", 
+                     text: "여행",
                      viewController: TravelViewController(viewModel: travelViewModel))
         ]
         
         self.tabComponentArray.value = setComponentArray
+        self.currentTabComponent = CurrentValueSubject<TabComponent, Never>(
+            TabComponent(index: 0,
+                         image: UIImage.appImage(.house),
+                         text: "홈",
+                         viewController: HomeViewController(viewModel: homeViewModel)))
+        setTabComponetArray()
+    }
+    
+    // MARK: - Method
+    
+    private func setTabComponetArray() {
+        
+        
+        
+        
+        
     }
 }

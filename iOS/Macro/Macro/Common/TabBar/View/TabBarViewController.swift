@@ -12,7 +12,6 @@ final class TabBarViewController: UIViewController {
     
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
-    private var selectedViewController: UIViewController?
     internal let viewModel: TabBarViewModel
     
     // MARK: - UI Components
@@ -25,9 +24,8 @@ final class TabBarViewController: UIViewController {
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
-        selectedViewController = HomeViewController()
         self.view.backgroundColor = UIColor.appColor(.blue1)
-        self.addChild(selectedViewController!)
+        self.addChild(viewModel.currentTabComponent.value.viewController)
         setUpLayout()
         bind()
         manageTabBarStatus(active: viewModel.isTabBarActive)
@@ -69,14 +67,13 @@ internal extension TabBarViewController {
     
     func addSubviews() {
         
-        view.addSubview(selectedViewController!.view)
+        view.addSubview(viewModel.currentTabComponent.value.viewController.view)
         view.addSubview(tabBarBackgroundLineView)
         view.addSubview(tabBarOpacityView)
         view.addSubview(tabBarBackgroundLargeCirclceView)
         view.addSubview(inactiveTabBarCenterView)
         tabBarBackgroundLargeCirclceView.addSubview(tabBarBackgroundSmallCirclceView)
         tabBarBackgroundSmallCirclceView.addSubview(activeTabBarCenterView)
-        
         
     }
     
@@ -207,16 +204,15 @@ private extension TabBarViewController {
     @objc func tabComponentHandleTapGesture(_ sender: UITapGestureRecognizer) {
         guard viewModel.timer == nil else { return }
         
-        guard let tappedView = sender.view as? TabComponentView else { return }
-        guard let image = tappedView.tabComponent.image else { return }
+        guard let tappedView = sender.view as? TabComponentView,
+        let image = tappedView.tabComponent.image
+        else { return }
         
-        selectedViewController?.view.removeFromSuperview()
-        selectedViewController = tappedView.tabComponent.viewController
-        guard let selectedViewControllerView = selectedViewController?.view else { return }
-        self.view.insertSubview(selectedViewControllerView, belowSubview: tabBarBackgroundLineView)
-//        navigationController?.pushViewController(tappedView.tabComponent.viewController, animated: true)
+        viewModel.currentTabComponent.value.viewController.view.removeFromSuperview()
+        
+        self.view.insertSubview(tappedView.tabComponent.viewController.view, belowSubview: tabBarBackgroundLineView)
         swap(&tappedView.tabComponent, &viewModel.currentTabComponent.value)
-        
+
         inactiveTabBarCenterView.image = image
         self.viewModel.isTabBarActive = false
         disAppearEvent()

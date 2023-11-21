@@ -11,11 +11,12 @@ final class HomeCollectionView: UICollectionView {
     
     // MARK: - Properties
     
-    var posts: [PostFindResponse] = []
+    let viewModel: HomeViewModel
     
     // MARK: - Initialization
     
-    override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
+    init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout, viewModel: HomeViewModel) {
+        self.viewModel = viewModel
         super.init(frame: frame, collectionViewLayout: layout)
         
         self.backgroundColor = UIColor.appColor(.blue1)
@@ -29,13 +30,14 @@ final class HomeCollectionView: UICollectionView {
     }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        fatalError("init(coder:) has not been implemented")
     }
+    
 }
 
 extension HomeCollectionView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.posts.count
+        return viewModel.posts.count
     }
 }
 
@@ -46,8 +48,8 @@ extension HomeCollectionView: UICollectionViewDataSource {
             withReuseIdentifier: PostCollectionViewCell.identifier,
             for: indexPath) as? PostCollectionViewCell else { return UICollectionViewCell()
         }
-        let item: PostFindResponse = self.posts[indexPath.row]
-        cell.configure(item: item)
+        let item: PostResponse = viewModel.posts[indexPath.row]
+        cell.configure(item: item, viewModel: viewModel)
         
         return cell
     }

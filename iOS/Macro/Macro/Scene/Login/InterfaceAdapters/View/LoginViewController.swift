@@ -54,7 +54,7 @@ final class LoginViewController: UIViewController {
     }
     
     // MARK: - init
-    init(viewModel: LoginViewModel) {
+    init(viewModel: LoginViewModel, loginStateSubject: CurrentValueSubject<LoginState, Never>) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
