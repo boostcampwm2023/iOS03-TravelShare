@@ -14,7 +14,8 @@ WORKDIR /var/app
 COPY --from=BUILDER /var/app/dist /var/app/dist
 COPY --from=BUILDER /var/app/package.json /var/app/package.json
 COPY --from=BUILDER /var/app/application.yaml /var/app/application.yaml
+COPY --from=BUILDER /var/app/production.sh /var/app/production.sh
 RUN npm install --production
 EXPOSE 80
 ENV NODE_ENV=production
-ENTRYPOINT [ "sh production.sh" ]
+ENTRYPOINT [ "sh /var/app/production.sh" ]
