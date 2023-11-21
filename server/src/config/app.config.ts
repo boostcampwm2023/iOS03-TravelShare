@@ -9,8 +9,5 @@ export default () => {
   config.application.jwt.secret = createSecretKey(
     config.application.jwt.secret,
   ).export();
-  config.apple.client_secret.secret = readFileSync(
-    config.apple.client_secret.secret,
-  );
   return config;
 };
