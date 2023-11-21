@@ -17,5 +17,4 @@ COPY --from=BUILDER /var/app/production.sh /var/app/production.sh
 COPY --from=BUILDER /var/app/node_modules /var/app/node_modules
 EXPOSE 80
 ENV NODE_ENV=production
-# ENTRYPOINT [ "cat", "application.yaml" ]
-# ENTRYPOINT [ "sh", "/var/app/production.sh" ]
+ENTRYPOINT [ "sh", "/var/app/production.sh" ]
