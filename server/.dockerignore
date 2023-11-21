@@ -13,6 +13,6 @@ Dockerfile
 docker-compose.yaml
 docker-compose.*.yaml
 
-nest-cli.json
-tsconfig.json
-tsconfig.build.json
+# nest-cli.json
+# tsconfig.json
+# tsconfig.build.json
