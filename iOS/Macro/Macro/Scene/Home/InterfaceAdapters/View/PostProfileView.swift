@@ -5,6 +5,7 @@
 //  Created by Byeon jinha on 11/17/23.
 //
 
+import Combine
 import UIKit
 
 final class PostProfileView: UIView {
@@ -119,6 +120,11 @@ private extension PostProfileView {
         ])
     }
     
+    func addTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(profileImageTap(_:)))
+        profileImageView.addGestureRecognizer(tapGesture)
+    }
+    
 }
 
 // MARK: - Method
@@ -148,6 +154,13 @@ extension PostProfileView {
     }
 }
 
+// MARK: - Handdle Gesture
+private extension PostProfileView {
+    @objc private func profileImageTap(_ sender: UITapGestureRecognizer) {
+     
+    }
+}
+    
 // MARK: - LayoutMetrics
 
 private extension PostProfileView {
