@@ -5,5 +5,5 @@ export class UserProfileQuery {
   @ApiProperty({ description: '이메일(아이디).', required: false })
   @IsOptional()
   @IsEmail()
-  userId?: string;
+  email?: string;
 }

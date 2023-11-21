@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Optional,
-  Patch,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Optional, Patch, Query } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -21,6 +12,8 @@ import { UserProfileQuery } from './user.profile.query.dto';
 import { UserFollowQuery } from './user.follow.query.dto';
 import { UserProfileSimpleResponse } from './user.profile.simple.response.dto';
 import { UserService } from './user.service';
+import { AuthenticatedUser } from 'src/auth/auth.decorators';
+import { Authentication } from 'src/auth/authentication.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -30,7 +23,12 @@ export class UserController {
   @ApiOperation({ description: '회원정보 수정' })
   @ApiBearerAuth('access-token')
   @Patch('update')
-  async update(@Query() user: UserProfileUpdateQuery) {}
+  async update(
+    @AuthenticatedUser() user: Authentication,
+    @Query() userInfo: UserProfileUpdateQuery,
+  ) {
+    await this.userService.updateUserInfo(user, userInfo);
+  }
 
   @ApiResponse({
     description: '나의 정보 혹은 다른 유저의 정보를 불러옵니다.',
@@ -41,28 +39,52 @@ export class UserController {
   async profile(
     @Optional()
     @Query()
-    query: UserProfileQuery,
-  ) {}
+    { email }: UserProfileQuery,
+    @AuthenticatedUser()
+    user: Authentication,
+  ) {
+    return this.userService.getUserProfile(email ?? user.email);
+  }
 
   @ApiOperation({ description: '팔로우' })
   @ApiBearerAuth('access-token')
   @Patch('follow')
-  async follow(@Query() follower: UserFollowQuery) {}
+  async follow(
+    @Query() { follower }: UserFollowQuery,
+    @AuthenticatedUser() user: Authentication,
+  ) {
+    await this.userService.follow(user.email, follower);
+  }
 
   @ApiOperation({ description: '언팔' })
   @ApiBearerAuth('access-token')
   @Patch('unfollow')
-  async unfollow(@Query() follower: UserFollowQuery) {}
+  async unfollow(
+    @Query() { follower }: UserFollowQuery,
+    @AuthenticatedUser() user: Authentication,
+  ) {
+    await this.userService.unfollow(user.email, follower);
+  }
 
   @ApiOperation({ description: '팔로워 리스트' })
   @ApiQuery({ description: '유저 id', required: false })
   @ApiResponse({ type: [UserProfileSimpleResponse] })
   @Get('followers')
-  async followers(@Query() user: UserProfileQuery) {}
+  async followers(
+    @Optional() @Query() otherUser: UserProfileQuery,
+    @AuthenticatedUser() user: Authentication,
+  ) {
+    return await this.userService.getFollowers(otherUser ?? user);
+  }
 
   @ApiOperation({ description: '팔로잉 리스트' })
   @ApiQuery({ description: '유저 id', required: false })
   @ApiResponse({ type: [UserProfileSimpleResponse] })
   @Get('followings')
-  async followings(@Query() user: UserProfileQuery) {}
+  async followings(
+    @Optional() @Query() otherUser: UserProfileQuery,
+    @AuthenticatedUser() user: Authentication,
+  ) {
+    return await this.userService.getFollowings(otherUser ?? user);
+  }
 }
