@@ -17,26 +17,25 @@ protocol MonitorProtocol {
     func cancel()
 }
 
-extension NWPathMonitor: MonitorProtocol {
-}
+extension NWPathMonitor: MonitorProtocol { }
 
-class NetworkUnresearchableViewController: UIViewController {
+final class NetworkUnresearchableViewController: UIViewController {
     
     // MARK: - Properties
-    var networkStatusSubject: PassthroughSubject<Bool, Never>
+    private var networkStatusSubject: PassthroughSubject<Bool, Never>
     
-    var monitor: MonitorProtocol
+    private var monitor: MonitorProtocol
     
     // MARK: - UI Componenets
     
-    let networkUnresearchableImageView: UIImageView = {
+    private let networkUnresearchableImageView: UIImageView = {
         let imageView = UIImageView()
         let image = UIImage.appImage(.InternetDisconnectedImage)
         imageView.image = image
         return imageView
     }()
     
-    let networkUnresearchableLabel: UILabel = {
+    private let networkUnresearchableLabel: UILabel = {
         let label = UILabel()
         label.text = Label.networkUnresearchableLabelText
         label.font = UIFont.appFont(.baeEunLargeTitle)
@@ -107,7 +106,8 @@ private extension NetworkUnresearchableViewController {
 }
 
 // MARK: - Methodes
-extension NetworkUnresearchableViewController {
+
+private extension NetworkUnresearchableViewController {
     func startMonitor() {
         monitor.pathUpdateHandler = { [weak self] path in
             let isNetworkAvailable = (path.status == .satisfied)
@@ -129,7 +129,7 @@ extension NetworkUnresearchableViewController {
 
 // MARK: - LayoutMetrics
 
-extension NetworkUnresearchableViewController {
+private extension NetworkUnresearchableViewController {
     
     enum Metrics {
         static let networkUnresearchableImageViewWidth: CGFloat = 200
