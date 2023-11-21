@@ -1,8 +1,0 @@
-version: '1'
-services:
-  node:
-    command: sh -c "npm install && npm run migrations:generate && npm run migrations:run && npm run start"
-    environment:
-      - NODE_ENV=production
-    env_file:
-      - .env.prod
