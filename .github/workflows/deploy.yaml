@@ -23,7 +23,7 @@ jobs:
           echo $APPLICATION_YAML_BASE64 | base64 --decode > appliation.yaml
 
       - name: Login to Registry
-        uses: docker/login-action@/v3
+        uses: docker/login-action/@v3
         with:
           registry: ${{ secrets.NCLOUD_CONTAINER_REGISTRY_ENDPOINT }}
           username: ${{ secrets.NCLOUD_ACCESS_KEY }}
