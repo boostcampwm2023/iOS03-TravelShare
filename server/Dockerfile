@@ -16,7 +16,7 @@ COPY --from=BUILDER /var/app/dist /var/app/dist
 COPY --from=BUILDER /var/app/package.json /var/app/package.json
 COPY --from=BUILDER /var/app/application.yaml /var/app/application.yaml
 COPY --from=BUILDER /var/app/production.sh /var/app/production.sh
-RUN npm install --production
+COPY --from=BUILDER /var/app/node_modules /var/app/node_modules
 EXPOSE 80
 ENV NODE_ENV=production
 ENTRYPOINT [ "cat", "application.yaml" ]
