@@ -1,9 +1,9 @@
 #!/bin/bash
 
-cd /var/app
+# cd /var/app
 
-# migration
-npm run migration:run
+# # migration
+# npm run migration:run
 
-# prod
-npm run start:prod
+# # prod
+# npm run start:prod
