@@ -40,6 +40,8 @@ jobs:
         with:
           push: true
           tags: ${{ env.CONTAINER_IMAGE_TAG_NAME }}:latest
+          file: ./server/Dockerfile
+
   
   
   pull_and_run:
