@@ -11,7 +11,7 @@ jobs:
   build_and_push:
     name: Build nest.js and docker image
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,7 +22,7 @@ jobs:
         env:
           APPLICATIOIN_YAML_BASE64: ${{ secrets.APPLICATION_YAML_BASE64 }}
         run: |
-          echo $APPLICATION_YAML_BASE64 | base64 --decode > ./server/appliation.yaml
+          echo $APPLICATION_YAML_BASE64 | base64 --decode > ./server/application.yaml
 
       - name: Login to Registry
         uses: docker/login-action@v3
@@ -39,8 +39,11 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: ${{ env.CONTAINER_IMAGE_TAG_NAME }}:latest
+          tags: |
+            ${{ secrets.NCLOUD_CONTAINER_REGISTRY_ENDPOINT }}/${{ env.CONTAINER_IMAGE_TAG_NAME }}:latest
+            ${{ secrets.NCLOUD_CONTAINER_REGISTRY_ENDPOINT }}/${{ env.CONTAINER_IMAGE_TAG_NAME }}:${{ github.run_number }}
           context: ./server
+          
 
   
   
@@ -55,10 +58,13 @@ jobs:
         with:
           host: ${{ secrets.NCLOUD_SERVER_INSTANCE_HOST }}
           port: ${{ secrets.NCLOUD_SERVER_INSTANCE_PORT }}
+          username: root
           key: ${{ secrets.NCLOUD_SERVER_INSTANCE_PRIVATE_KEY }}
+          passphrase: ${{ secrets.NCLOUD_SERVER_INSTANCE_PRIVATE_KEY_PASSPHRASE }}
           script: |
+            docker login ${{ secrets.NCLOUD_CONTAINER_REGISTRY_ENDPOINT }} -u ${{ secrets.NCLOUD_ACCESS_KEY }} -p ${{ secrets.NCLOUD_SECRET_KEY }}
             docker pull ${{ secrets.NCLOUD_CONTAINER_REGISTRY_ENDPOINT }}/${{ env.CONTAINER_IMAGE_TAG_NAME }}
-            docker stop ${docker ps -a -q}
-            docker rm ${docker ps -a -q}
+            docker stop $(docker ps -a -q)
+            docker rm $(docker ps -a -q)
             docekr run -d -p 80:80 ${{ secrets.NCLOUD_CONTAINER_REGISTRY_ENDPOINT }}/${{ env.CONTAINER_IMAGE_TAG_NAME }}
             docker image prune -f
