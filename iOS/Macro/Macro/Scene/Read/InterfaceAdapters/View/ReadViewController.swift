@@ -1,16 +1,16 @@
 //
-//  SearchViewController.swift
+//  ReadViewController.swift
 //  Macro
 //
-//  Created by Byeon jinha on 11/20/23.
+//  Created by Byeon jinha on 11/21/23.
 //
 
 import Foundation
 
-final class SearchViewController: TabViewController {
-    let viewModel: SearchViewModel
+final class ReadViewController: TabViewController {
+    let viewModel: ReadViewModel
     
-    init(viewModel: SearchViewModel) {
+    init(viewModel: ReadViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
