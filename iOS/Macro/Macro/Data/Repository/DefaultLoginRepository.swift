@@ -7,7 +7,27 @@
 
 import Combine
 import Foundation
+import MacroNetwork
 
-protocol LoginRepository {
-    func execute(requestValue: LoginRequest) -> AnyPublisher<ResponseStatus, HTTPError>
+protocol LoginRepositoryProtocol {
+    func execute(identityToken: String) -> AnyPublisher<LoginResponse, MacroNetwork.NetworkError>
+}
+
+class LoginRepository: LoginRepositoryProtocol {
+    
+    // MARK: - Properties
+    
+    private let provider: Requestable
+    
+    // MARK: - Init
+    
+    init(provider: Requestable) {
+        self.provider = provider
+    }
+    
+    // MARK: - Methods
+    
+    func execute(identityToken: String) -> AnyPublisher<LoginResponse, MacroNetwork.NetworkError> {
+        return provider.request(LoginEndPoint.login(identityToken: identityToken))
+    }
 }

@@ -23,7 +23,7 @@ final class LoginViewModel: ViewModelProtocol {
     // MARK: - Input
     
     enum Input {
-        case appleLogin(identityToken: String, authorizationCode: String)
+        case appleLogin(identityToken: String)
     }
     
     // MARK: - Output
@@ -37,30 +37,27 @@ final class LoginViewModel: ViewModelProtocol {
         input
             .sink { [weak self] input in
                 switch input {
-                case let .appleLogin(identityToken, authorizationCode):
-                    self?.requestToken(identityToken: identityToken, authorizationCode: authorizationCode)
+                case let .appleLogin(identityToken):
+                    self?.requestToken(identityToken: identityToken)
                 }
             }
             .store(in: &subscriptions)
         return outputSubject.eraseToAnyPublisher()
     }
     
-    private func requestToken(identityToken: String, authorizationCode: String) {
-        loginUseCase.execute(requestValue: LoginRequest(identityToken: identityToken, authorizationCode: authorizationCode))
+    private func requestToken(identityToken: String) {
+        loginUseCase.execute(identityToken: identityToken)
             .receive(on: DispatchQueue.main)
             .sink { completion in
-                switch completion {
-                case .finished:
-                    return
-                case .failure(let error):
-                    debugPrint(#function, "Login Fail : \(error.localizedDescription)")
+                if case let .failure(error) = completion {
+                    debugPrint("Token Get Fail : ", error)
                 }
             } receiveValue: { [weak self] response in
-                switch response {
-                case .success:
+                KeyChainManager.save(key: "AccessToken", token: response.accessToken)
+                if let token = KeyChainManager.load(key: "AccessToken") {
                     self?.outputSubject.send(.appleLoginCompleted)
-                case .failure:
-                    debugPrint(#function, "Token Get Fail")
+                } else {
+                    debugPrint("Access Token 불러오는데 실패했습니다.")
                 }
             }
             .store(in: &subscriptions)
