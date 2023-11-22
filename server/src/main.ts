@@ -10,7 +10,6 @@ async function bootstrap() {
   });
   const config = app.get(ConfigService);
   app.useBodyParser('json', { type: 'application/json' });
-  app.useBodyParser('raw', { type: '*/*', limit: '10MB' });
   app.useLogger(
     config.get('application.log') || ['log', 'warn', 'error', 'fatal'],
   );
