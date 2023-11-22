@@ -21,7 +21,6 @@ class ReadViewModel: ViewModelProtocol {
     // MARK: - Input
     
     enum Input {
-        case temp
     }
     
     // MARK: - Output
@@ -35,15 +34,9 @@ class ReadViewModel: ViewModelProtocol {
         input
             .sink { [weak self] input in
                 switch input {
-                case .temp:
-                    self?.temp()
                 }
             }
             .store(in: &cancellables)
         return outputSubject.eraseToAnyPublisher()
-    }
-    
-    func temp() {
-        
     }
 }
