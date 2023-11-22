@@ -48,7 +48,7 @@ extension HomeCollectionView: UICollectionViewDataSource {
             withReuseIdentifier: PostCollectionViewCell.identifier,
             for: indexPath) as? PostCollectionViewCell else { return UICollectionViewCell()
         }
-        let item: PostResponse = viewModel.posts[indexPath.row]
+        let item: PostFindResponse = viewModel.posts[indexPath.row]
         cell.configure(item: item, viewModel: viewModel)
         
         return cell

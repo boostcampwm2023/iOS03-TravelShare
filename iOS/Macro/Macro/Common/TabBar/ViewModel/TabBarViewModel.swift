@@ -26,12 +26,12 @@ final class TabBarViewModel {
     
     init() {
         let provider = APIProvider(session: URLSession.shared)
-        let searchViewModel = SearchViewModel()
-        let homeViewModel = HomeViewModel(postSearcher: PostSearcher(provider: provider))
+        let searchViewModel = SearchViewModel(postSearcher: Searcher(provider: provider))
+        let homeViewModel = HomeViewModel(postSearcher: Searcher(provider: provider))
         let writeViewModel = WriteViewModel()
         let travelViewModel = TravelViewModel(
             routeRecorder: RouteRecorder(provider: provider),
-            locationSearcher: LocationSearcher(provider: provider),
+            locationSearcher: Searcher(provider: provider),
             pinnedPlaceManager: PinnedPlaceManager(provider: provider))
         let myPageViewModel = MyPageViewModel()
         let setComponentArray = [

@@ -25,17 +25,17 @@ final class HomeViewModel: ViewModelProtocol {
         case exchangeCell
         case navigateToProfileView(String)
         case navigateToReadView(String)
-        case updateSearchResult([PostResponse])
+        case updateSearchResult([PostFindResponse])
     }
     
     // MARK: - Properties
     
     private let outputSubject = PassthroughSubject<Output, Never>()
-    private let postSearcher: PostSearchUseCase
+    private let postSearcher: SearchUseCase
     private var cancellables = Set<AnyCancellable>()
-    var posts: [PostResponse] = []
+    var posts: [PostFindResponse] = []
     
-    init(postSearcher: PostSearchUseCase) {
+    init(postSearcher: SearchUseCase) {
         self.postSearcher = postSearcher
     }
     
@@ -70,7 +70,7 @@ final class HomeViewModel: ViewModelProtocol {
     }
     
     private func searchMockPost() {
-        postSearcher.searchMockPost().sink { completion in
+        postSearcher.searchMockPost(json: "tempJson").sink { completion in
             if case let .failure(error) = completion {
             }
         } receiveValue: { [weak self] response in

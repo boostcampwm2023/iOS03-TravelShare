@@ -114,12 +114,12 @@ extension PostContentView {
         addTapGesture()
     }
     
-    func configure(item: PostResponse) {
-        loadImage(profileImageStringURL: item.routeInfo.image) { image in
+    func configure(item: PostFindResponse) {
+        loadImage(profileImageStringURL: item.imageUrl) { image in
             DispatchQueue.main.async { [self] in
                 mainImageView.image = image
-                title.text = item.routeInfo.title
-                summary.text = item.routeInfo.summary
+                title.text = item.title
+                summary.text = item.summary
                 
             }
         }

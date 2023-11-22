@@ -95,7 +95,7 @@ extension HomeViewController {
 
 private extension HomeViewController {
     
-    func updateSearchResult(_ result: [PostResponse]) {
+    func updateSearchResult(_ result: [PostFindResponse]) {
         homeCollectionView.viewModel.posts = result
         homeCollectionView.reloadData()
     }
