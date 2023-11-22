@@ -14,7 +14,7 @@ protocol RouteTableViewControllerDelegate: AnyObject {
     func routeTableViewDidDragChange(heightChange: CGFloat)
 }
 
-final class TravelViewController: TabViewController, RouteTableViewControllerDelegate, CLLocationManagerDelegate {
+final class TravelViewController: TabViewController, RouteTableViewControllerDelegate, CLLocationManagerDelegate, NMFMapViewDelegate {
     
     // MARK: - Properties
     
@@ -54,7 +54,7 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
         return button
     }()
     
-    private var markers: [String: NMFMarker] = [:]
+    private var markers: [LocationDetail: NMFMarker] = [:]
     
     // MARK: - Life Cycles
     
@@ -67,8 +67,9 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
         setupRouteTableViewController()
         bind()
         updateTravelButton()
-        
+        searchBar.addTarget(self, action: #selector(searchBarReturnPressed), for: .editingDidEndOnExit)
         locationManager.delegate = self
+        mapView.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
     }
@@ -154,6 +155,8 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
                 self?.updateMapWithLocation(location)
             case let .updateMarkers(pinnedPlaces):
                 self?.updateMarkers(pinnedPlaces)
+            case let .showLocationInfo(locationDetail):
+                self?.showLocationInfo(locationDetail)
             default: break
             }
         }.store(in: &cancellables)
@@ -183,7 +186,7 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
         let position = NMGLatLng(lat: Double(locationDetail.mapy) ?? 0.0, lng: Double(locationDetail.mapx) ?? 0.0 )
         marker.position = position
         marker.mapView = mapView
-        markers[locationDetail.placeName] = marker
+        markers[locationDetail] = marker
         
         let cameraUpdate = NMFCameraUpdate(scrollTo: position)
         cameraUpdate.animation = .easeIn
@@ -192,9 +195,9 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
     }
     
     private func removeMarker(for locationDetail: LocationDetail) {
-        if let marker = markers[locationDetail.placeName] {
+        if let marker = markers[locationDetail] {
             marker.mapView = nil
-            markers.removeValue(forKey: locationDetail.placeName)
+            markers.removeValue(forKey: locationDetail)
         }
         updateMarkers()
     }
@@ -208,7 +211,7 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
             marker.position = NMGLatLng(lat: Double(place.mapy) ?? 0.0, lng: Double(place.mapx) ?? 0.0 )
             marker.captionText = "\(index + 1). \(place.placeName)"
             marker.mapView = mapView
-            markers[place.placeName] = marker
+            markers[place] = marker
         }
     }
     private func updateMarkers(_ pinnedPlaces: [LocationDetail]) {
@@ -220,7 +223,7 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
             marker.position = NMGLatLng(lat: Double(place.mapy) ?? 0.0, lng: Double(place.mapx) ?? 0.0)
             marker.captionText = "\(index + 1). \(place.placeName)"
             marker.mapView = mapView
-            markers[place.placeName] = marker
+            markers[place] = marker
         }
     }
     
@@ -307,4 +310,19 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
         }
         isModalViewExpanded = shouldExpand
     }
+    
+    private func mapView(_ mapView: NMFMapView, didTap mapObject: NMFOverlay) -> Bool {
+        if let marker = mapObject as? NMFMarker, let locationDetail = markers.first(where: { $0.value == marker })?.key {
+            inputSubject.send(.selectLocation(locationDetail))
+            return true
+        }
+        return false
+    }
+    
+    private func showLocationInfo(_ locationDetail: LocationDetail) {
+        let locationInfoVC = LocationInfoViewController()
+        locationInfoVC.updateText(locationDetail.placeName)
+        navigationController?.pushViewController(locationInfoVC, animated: true)
+    }
+    
 }

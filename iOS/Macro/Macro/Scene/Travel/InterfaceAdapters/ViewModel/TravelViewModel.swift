@@ -21,6 +21,7 @@ final class TravelViewModel: ViewModelProtocol {
         case exchangeLocation
         case deleteLocation
         case togglePinnedPlaces(LocationDetail)
+        case selectLocation(LocationDetail)
     }
     
     // MARK: - Output
@@ -34,6 +35,7 @@ final class TravelViewModel: ViewModelProtocol {
         case removePinnedPlaceInMap(LocationDetail)
         case updateRoute([CLLocation])
         case updateMarkers([LocationDetail])
+        case showLocationInfo(LocationDetail)
     }
     
     // MARK: - Properties
@@ -72,6 +74,8 @@ final class TravelViewModel: ViewModelProtocol {
                 self?.tempMethod()
             case let .togglePinnedPlaces(locationDetail):
                 self?.togglePinnedPlaces(locationDetail)
+            case let .selectLocation(locationDetail):
+                self?.outputSubject.send(.showLocationInfo(locationDetail))
             }
         }.store(in: &cancellables)
         
@@ -107,14 +111,14 @@ final class TravelViewModel: ViewModelProtocol {
     private func searchPlace(with text: String) {
         locationSearcher.searchLocation(query: text, page: searchPageNum)
             .sink { completion in
-            if case let .failure(error) = completion {
-                print(error)
-            }
-        } receiveValue: { [weak self] response in
-            self?.searchedResult = response
-            self?.outputSubject.send(.updateSearchResult(response))
-            self?.searchPageNum = 1
-        }.store(in: &cancellables)
+                if case let .failure(error) = completion {
+                    print(error)
+                }
+            } receiveValue: { [weak self] response in
+                self?.searchedResult = response
+                self?.outputSubject.send(.updateSearchResult(response))
+                self?.searchPageNum = 1
+            }.store(in: &cancellables)
     }
     
     func movePinnedPlace(from sourceIndex: Int, to destinationIndex: Int) {
