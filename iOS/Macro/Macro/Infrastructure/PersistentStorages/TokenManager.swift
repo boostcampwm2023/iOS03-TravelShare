@@ -21,13 +21,13 @@ struct TokenManager {
         return expiresTimeInterval
     }
     
-    static func isTokenExpired() -> Bool {
+    static func isTokenExpired() -> LoginState {
         guard let token = KeyChainManager.load(key: "AccessToken"), let decodeToken = decodeJWTToken(token: token) else {
-            return false
+            return LoginState.loggedOut
         }
         let currentTimeInterval = Date().timeIntervalSince1970
         
-        return currentTimeInterval < decodeToken
+        return currentTimeInterval < decodeToken ? LoginState.loggedIn : LoginState.loggedOut
     }
 }
 
