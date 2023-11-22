@@ -12,5 +12,5 @@ import Foundation
 public protocol Requestable {
   func request<Target, Model>(_ target: Target) -> AnyPublisher<Model, NetworkError> where Target : EndPoint, Model: Decodable
     
-    func mockRequest<Target, Model>(_ target: Target) -> AnyPublisher<Model, NetworkError> where Target : EndPoint, Model: Decodable
+    func mockRequest<Target, Model>(_ target: Target, url: String) -> AnyPublisher<Model, NetworkError> where Target : EndPoint, Model: Decodable
 }
