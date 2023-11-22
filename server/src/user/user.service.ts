@@ -41,10 +41,7 @@ export class UserService {
     });
     const posts = plainToInstance(
       PostFindResponse,
-      await this.postService.findByUser({
-        email,
-        mode: 'writed',
-      }),
+      await this.postService.find({ email }),
     );
     return plainToInstance(UserProfileResponse, {
       ...user,
