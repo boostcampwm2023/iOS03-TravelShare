@@ -10,11 +10,14 @@ import UIKit
 class MacroCarouselView: UIView {
 
     // MARK: - Properties
+    
     struct Const {
         let itemSize: CGSize
         let itemSpacing: Double
     }
 
+    // MARK: - UI Componenets
+    
     private lazy var collectionViewFlowLayout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -42,35 +45,53 @@ class MacroCarouselView: UIView {
     var items: [UIImage] = []
     private let const: Const
 
-    // MARK: - Initializers
+    // MARK: - Init
+    
     init(items: [UIImage], const: Const) {
         self.items = items
         self.const = const
         super.init(frame: .zero)
-        configureUI()
+        setLayout()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: - UI Configuration
-    private func configureUI() {
-        addSubview(collectionView)
+}
 
+// MARK: - UI Settings
+
+private extension MacroCarouselView {
+    func setLayout() {
+        setTranslatesAutoresizingMaskIntoConstraints()
+        addsubviews()
+        setLayoutConstraints()
+
+        collectionView.dataSource = self
+        collectionView.delegate = self
+    }
+    
+    func setTranslatesAutoresizingMaskIntoConstraints() {
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    func addsubviews() {
+        addSubview(collectionView)
+    }
+    
+    func setLayoutConstraints() {
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
-
-        collectionView.dataSource = self
-        collectionView.delegate = self
     }
 }
 
 // MARK: - UICollectionViewDataSource
+
 extension MacroCarouselView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         items.count
@@ -86,6 +107,7 @@ extension MacroCarouselView: UICollectionViewDataSource {
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
+
 extension MacroCarouselView: UICollectionViewDelegateFlowLayout {
     func scrollViewWillEndDragging(
         _ scrollView: UIScrollView,
