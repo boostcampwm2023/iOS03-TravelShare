@@ -17,21 +17,23 @@ final class LocationInfoViewController: UIViewController {
         let label = UILabel()
         return label
     }()
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
         setUpLayout()
     }
     
     // MARK: - Init
-    
     
 }
 
 // MARK: - UI Settings
 
 extension LocationInfoViewController {
-
+    
     private func setTranslatesAutoresizingMaskIntoConstraints() {
         label.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -66,7 +68,6 @@ extension LocationInfoViewController {
     
 }
 
-
 // MARK: - Methods
 
 extension LocationInfoViewController {
@@ -74,7 +75,6 @@ extension LocationInfoViewController {
         label.text = text
     }
 }
-
 
 // MARK: - LayoutMetrics
 

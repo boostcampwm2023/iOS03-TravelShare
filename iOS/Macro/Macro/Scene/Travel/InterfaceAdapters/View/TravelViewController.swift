@@ -187,7 +187,10 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
         marker.position = position
         marker.mapView = mapView
         markers[locationDetail] = marker
-        
+        marker.touchHandler = { [weak self] _ in
+            self?.handleMarkerTap(marker)
+            return true
+        }
         let cameraUpdate = NMFCameraUpdate(scrollTo: position)
         cameraUpdate.animation = .easeIn
         mapView.moveCamera(cameraUpdate)
@@ -212,6 +215,10 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
             marker.captionText = "\(index + 1). \(place.placeName)"
             marker.mapView = mapView
             markers[place] = marker
+            marker.touchHandler = { [weak self] _ in
+                self?.handleMarkerTap(marker)
+                return true
+            }
         }
     }
     private func updateMarkers(_ pinnedPlaces: [LocationDetail]) {
@@ -324,5 +331,9 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
         locationInfoVC.updateText(locationDetail.placeName)
         navigationController?.pushViewController(locationInfoVC, animated: true)
     }
-    
+    private func handleMarkerTap(_ marker: NMFMarker) {
+        if let locationDetail = markers.first(where: { $0.value == marker })?.key {
+            showLocationInfo(locationDetail)
+        }
+    }
 }
