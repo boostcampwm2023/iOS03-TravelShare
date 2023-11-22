@@ -6,7 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "npx @nestjs/cli build",
+    "build": "nest build",
+    "build:deploy": "npx @nestjs/cli build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -33,6 +34,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.1.15",
     "@nestjs/typeorm": "^10.0.0",
+    "aws-sdk": "^2.1501.0",
     "axios": "^1.6.1",
     "bcrypt": "^5.1.1",
     "js-yaml": "^4.1.0",
