@@ -8,7 +8,7 @@ export class Migration1700669514013 implements MigrationInterface {
             ALTER TABLE \`post_content_element\` CHANGE \`mapx\` \`x\` int NOT NULL
         `);
     await queryRunner.query(`
-            ALTER TABLE \`post_content_element\` DROP COLUMN \`mapy\` \`y\` int NOT NULL
+            ALTER TABLE \`post_content_element\` CHANGE \`mapy\` \`y\` int NOT NULL
         `);
     await queryRunner.query(`
             ALTER TABLE \`post\` DROP FOREIGN KEY \`FK_ac36ed79dc89ca03b3a630baae8\`
