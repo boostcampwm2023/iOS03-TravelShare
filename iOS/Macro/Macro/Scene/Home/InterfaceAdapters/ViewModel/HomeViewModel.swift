@@ -21,16 +21,16 @@ final class HomeViewModel: ViewModelProtocol {
     
     enum Output {
         case exchangeCell
-        case updateSearchResult([PostResponse])
+        case updateSearchResult([PostFindResponse])
     }
     
     // MARK: - Properties
     
     private let outputSubject = PassthroughSubject<Output, Never>()
-    private let postSearcher: PostSearchUseCase
+    private let postSearcher: SearchUseCase
     private var cancellables = Set<AnyCancellable>()
     
-    init(postSearcher: PostSearchUseCase) {
+    init(postSearcher: SearchUseCase) {
         self.postSearcher = postSearcher
     }
     
@@ -61,10 +61,12 @@ final class HomeViewModel: ViewModelProtocol {
     }
     
     private func searchMockPost() {
-        postSearcher.searchMockPost().sink { completion in
+        postSearcher.searchMockPost(json: "tempJson").sink { completion in
             if case let .failure(error) = completion {
+                print(error)
             }
         } receiveValue: { [weak self] response in
+            print(response)
             self?.outputSubject.send(.updateSearchResult(response))
         }.store(in: &cancellables)
         
