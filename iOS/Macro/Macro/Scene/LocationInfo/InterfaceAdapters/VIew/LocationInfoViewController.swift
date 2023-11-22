@@ -71,8 +71,8 @@ extension LocationInfoViewController {
 // MARK: - Methods
 
 extension LocationInfoViewController {
-    func updateText(_ text: String) {
-        label.text = text
+    func updateText(_ model: LocationDetail) {
+        label.text = model.placeName
     }
 }
 

@@ -328,7 +328,7 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
     
     private func showLocationInfo(_ locationDetail: LocationDetail) {
         let locationInfoVC = LocationInfoViewController()
-        locationInfoVC.updateText(locationDetail.placeName)
+        locationInfoVC.updateText(locationDetail)
         navigationController?.pushViewController(locationInfoVC, animated: true)
     }
     private func handleMarkerTap(_ marker: NMFMarker) {
