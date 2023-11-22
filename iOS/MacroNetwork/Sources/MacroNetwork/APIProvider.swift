@@ -10,32 +10,6 @@ import Foundation
 
 /// API 요청을 하는 Provider 입니다.
 public final class APIProvider: Requestable {
-    public func mockRequest<Target, Model>(_ target: Target) -> AnyPublisher<Model, NetworkError> where Target : EndPoint, Model : Decodable {
-        guard let request = try? target.mockRequest()
-        else {
-            return Fail(error: NetworkError.invalidURLRequest).eraseToAnyPublisher()
-        }
-        
-        return session.dataTaskPublisher(for: request)
-            .tryMap { data, response -> Data in
-                return data
-            }
-            .tryMap { data in
-                guard let response = try? JSONDecoder().decode(Model.self, from: data) else {
-                    throw NetworkError.decodingError
-                }
-                return response
-            }
-            .mapError { error -> NetworkError in
-                if let networkError = error as? NetworkError {
-                    return networkError
-                } else {
-                    return NetworkError.unknownError
-                }
-            }
-            .eraseToAnyPublisher()
-    }
-    
     
     // MARK: Properties
     
@@ -84,18 +58,47 @@ public final class APIProvider: Requestable {
             }
             .eraseToAnyPublisher()
     }
+    
+    public func mockRequest<Target, Model>(_ target: Target, url: String) -> AnyPublisher<Model, NetworkError> where Target : EndPoint, Model : Decodable {
+        guard let request = try? target.mockRequest(jsonFileName: url)
+        else {
+            return Fail(error: NetworkError.invalidURLRequest).eraseToAnyPublisher()
+        }
+        
+        return session.dataTaskPublisher(for: request)
+            .tryMap { data, response -> Data in
+                return data
+            }
+            .tryMap { data in
+                guard let response = try? JSONDecoder().decode(Model.self, from: data) else {
+                    throw NetworkError.decodingError
+                }
+                return response
+            }
+            .mapError { error -> NetworkError in
+                if let networkError = error as? NetworkError {
+                    return networkError
+                } else {
+                    return NetworkError.unknownError
+                }
+            }
+            .eraseToAnyPublisher()
+    }
+ 
+    
 }
 
 extension EndPoint {
-    func mockRequest() throws -> URLRequest {
-        guard let url = Bundle.main.url(forResource: "MockJson", withExtension: "json") else {
+    
+    func mockRequest(jsonFileName: String) throws -> URLRequest {
+        guard let url = Bundle.main.url(forResource: jsonFileName, withExtension: "json") else {
             throw NetworkError.invalidURL(url: baseURL)
         }
         
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         request.allHTTPHeaderFields = headers.dictionary
-    
+        
         return request
     }
     

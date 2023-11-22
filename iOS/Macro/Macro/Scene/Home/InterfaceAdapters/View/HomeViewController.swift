@@ -31,7 +31,7 @@ final class HomeViewController: UIViewController {
     // MARK: - Initialization
     
     init() {
-        self.viewModel = HomeViewModel(postSearcher: PostSearcher(provider: provider))
+        self.viewModel = HomeViewModel(postSearcher: Searcher(provider: provider))
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -95,7 +95,7 @@ extension HomeViewController {
 
 private extension HomeViewController {
     
-    func updateSearchResult(_ result: [PostResponse]) {
+    func updateSearchResult(_ result: [PostFindResponse]) {
         homeCollectionView.posts = result
         homeCollectionView.reloadData()
     }

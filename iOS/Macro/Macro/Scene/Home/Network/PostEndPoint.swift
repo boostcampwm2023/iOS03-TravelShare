@@ -2,7 +2,7 @@
 //  PostEndPoint.swift
 //  Macro
 //
-//  Created by Byeon jinha on 11/17/23.
+//  Created by 김나훈 on 11/22/23.
 //
 
 import Foundation
@@ -25,7 +25,7 @@ extension PostEndPoint: EndPoint {
     var parameter: MacroNetwork.HTTPParameter {
         switch self {
         case .search:
-            return .query("")
+            return .plain
         }
     }
     

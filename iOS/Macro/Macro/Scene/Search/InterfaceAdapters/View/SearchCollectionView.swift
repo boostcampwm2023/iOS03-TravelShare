@@ -1,14 +1,14 @@
 //
-//  HomeCollectionView.swift
+//  SearchCollectionView.swift
 //  Macro
 //
-//  Created by Byeon jinha on 11/16/23.
+//  Created by 김나훈 on 11/22/23.
 //
 
 import UIKit
 
-final class HomeCollectionView: UICollectionView {
-    
+final class SearchCollectionView: UICollectionView {
+   
     // MARK: - Properties
     
     var posts: [PostFindResponse] = []
@@ -33,13 +33,13 @@ final class HomeCollectionView: UICollectionView {
     }
 }
 
-extension HomeCollectionView: UICollectionViewDelegate {
+extension SearchCollectionView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.posts.count
     }
 }
 
-extension HomeCollectionView: UICollectionViewDataSource {
+extension SearchCollectionView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
@@ -53,20 +53,20 @@ extension HomeCollectionView: UICollectionViewDataSource {
     }
 }
 
-extension HomeCollectionView: UICollectionViewDelegateFlowLayout {
+extension SearchCollectionView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: Metrics.cellWidth, height: Metrics.cellHeight)
     }
     
-    func collectionView(_ collectionView: UICollectionView, 
+    func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return Padding.collectionViewMiniMumSpacing
     }
     
-    func collectionView(_ collectionView: UICollectionView, 
+    func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 0, bottom: Padding.collectionViewBottom, right: 0)
@@ -75,7 +75,7 @@ extension HomeCollectionView: UICollectionViewDelegateFlowLayout {
 
 // MARK: - LayoutMetrics
 
-private extension HomeCollectionView {
+private extension SearchCollectionView {
     
     enum Metrics {
         static let cellWidth: CGFloat = UIScreen.width - 20

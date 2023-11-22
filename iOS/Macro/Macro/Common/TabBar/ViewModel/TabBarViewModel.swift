@@ -8,9 +8,7 @@
 import Combine
 import MacroDesignSystem
 import MacroNetwork
-import Network
 import UIKit
-
 
 final class TabBarViewModel {
     let tabComponentArray = CurrentValueSubject<[TabComponent], Never>([])
@@ -34,22 +32,22 @@ final class TabBarViewModel {
     private func setTabComponetArray() {
         let provider = APIProvider(session: URLSession.shared)
         
-        let searchViewModel = SearchViewModel()
+        let searchViewModel = SearchViewModel(postSearcher: Searcher(provider: provider))
         let writeViewModel = WriteViewModel()
         let travelViewModel = TravelViewModel(
             routeRecorder: RouteRecorder(provider: provider),
-            locationSearcher: LocationSearcher(provider: provider),
+            locationSearcher: Searcher(provider: provider),
             pinnedPlaceManager: PinnedPlaceManager(provider: provider))
  
         let setComponentArray = [
         TabComponent(index: 1, 
                      image: UIImage.appImage(.magnifyingglass),
                      text: "주변 탐색", 
-                     viewController: SearchViewController()),
+                     viewController: SearchViewController(viewModel: searchViewModel)),
         TabComponent(index: 2,
                      image: UIImage.appImage(.personCircle),
                      text: "내 정보",
-                     viewController: SearchViewController()),
+                     viewController: SearchViewController(viewModel: searchViewModel)),
         TabComponent(index: 3,
                      image: UIImage.appImage(.squareAndPencil),
                      text: "일지 작성",

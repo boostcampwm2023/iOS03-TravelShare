@@ -1,18 +1,18 @@
 //
-//  TravelEndPoint.swift
+//  PostFindEndPoint.swift
 //  Macro
 //
-//  Created by 김나훈 on 11/16/23.
+//  Created by 김나훈 on 11/22/23.
 //
 
 import Foundation
 import MacroNetwork
 
-enum TravelEndPoint {
-    case search(String, Int)
+enum PostFindEndPoint {
+    case search(String)
 }
 
-extension TravelEndPoint: EndPoint {
+extension PostFindEndPoint: EndPoint {
     
     var baseURL: String {
         return "https://jijihuny.store"
@@ -24,8 +24,8 @@ extension TravelEndPoint: EndPoint {
     
     var parameter: MacroNetwork.HTTPParameter {
         switch self {
-        case let .search(text, page):
-            return .query(["keyword": text, "pagenum": String(page)])
+        case let .search(text):
+            return .query(["post": text])
         }
     }
     
@@ -37,6 +37,6 @@ extension TravelEndPoint: EndPoint {
     }
     
     var path: String {
-        return "map/v2/searchByAccuracy"
+        return ""
     }
 }
