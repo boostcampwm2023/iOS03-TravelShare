@@ -5,6 +5,7 @@ on:
     branches: [ "dev" ]
     paths:
       - 'server/**'
+      - '.git/workflows/**'
 
 
 env:
@@ -19,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: 'feature/deploy'
+          ref: 'dev'
 
       - name: Setting application.yaml before building app
         env:
