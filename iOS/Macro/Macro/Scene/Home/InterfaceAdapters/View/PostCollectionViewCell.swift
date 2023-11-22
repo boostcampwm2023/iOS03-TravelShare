@@ -15,6 +15,7 @@ final class PostCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Properties
     static let identifier = "PostCollectionViewCell"
+    var homeViewModel: HomeViewModel?
     
     // MARK: - Initialization
     override init(frame: CGRect) {
@@ -54,12 +55,18 @@ private extension PostCollectionViewCell {
         ])
     }
     
-    func componetConfigure(item: PostFindResponse) {
-        postContentView.setLayout()
-        postContentView.configure(item: item)
+    func componetConfigure(item: PostFindResponse, viewModel: HomeViewModel) {
+        if postContentView.viewModel == nil {
+            postContentView.setLayout()
+            postContentView.configure(item: item)
+            postContentView.bind(viewModel: viewModel)
+            }
+        if postProfileView.viewModel == nil {
+            postProfileView.setLayout()
+            postProfileView.configure(item: item)
+            postProfileView.bind(viewModel: viewModel)
+           }
         
-        postProfileView.setLayout()
-        postProfileView.configure(item: item)
     }
 }
 
@@ -67,11 +74,11 @@ private extension PostCollectionViewCell {
 
 extension PostCollectionViewCell {
     
-    func configure(item: PostFindResponse) {
+    func configure(item: PostFindResponse, viewModel: HomeViewModel) {
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
-        componetConfigure(item: item)
+        componetConfigure(item: item, viewModel: viewModel)
     }
 }
 

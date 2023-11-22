@@ -1,14 +1,14 @@
 //
-//  WriteViewModel.swift
+//  MyPageViewModel.swift
 //  Macro
 //
-//  Created by Byeon jinha on 11/20/23.
+//  Created by Byeon jinha on 11/21/23.
 //
 
 import Combine
 import Foundation
 
-class WriteViewModel: ViewModelProtocol {
+class MyPageViewModel: ViewModelProtocol {
     
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
@@ -21,6 +21,7 @@ class WriteViewModel: ViewModelProtocol {
     // MARK: - Input
     
     enum Input {
+        
     }
     
     // MARK: - Output
@@ -34,9 +35,11 @@ class WriteViewModel: ViewModelProtocol {
         input
             .sink { [weak self] input in
                 switch input {
+     
                 }
             }
             .store(in: &cancellables)
         return outputSubject.eraseToAnyPublisher()
     }
+    
 }

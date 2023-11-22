@@ -13,14 +13,18 @@ final class HomeViewModel: ViewModelProtocol {
     // MARK: - Input
     
     enum Input {
-        case searchPost
+        case searchPosts
         case searchMockPost
+        case searchUser(String)
+        case searchPost(String)
     }
     
     // MARK: - Output
     
     enum Output {
         case exchangeCell
+        case navigateToProfileView(String)
+        case navigateToReadView(String)
         case updateSearchResult([PostFindResponse])
     }
     
@@ -29,6 +33,7 @@ final class HomeViewModel: ViewModelProtocol {
     private let outputSubject = PassthroughSubject<Output, Never>()
     private let postSearcher: SearchUseCase
     private var cancellables = Set<AnyCancellable>()
+    var posts: [PostFindResponse] = []
     
     init(postSearcher: SearchUseCase) {
         self.postSearcher = postSearcher
@@ -39,17 +44,21 @@ final class HomeViewModel: ViewModelProtocol {
     func transform(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         input.sink { [weak self] input in
             switch input {
-            case .searchPost:
-              self?.searchPost()
+            case .searchPosts:
+              self?.searchPosts()
             case .searchMockPost:
                 self?.searchMockPost()
+            case let .searchUser(userId):
+                self?.searchUser(id: userId)
+            case let .searchPost(postId):
+                self?.searchPost(postId: postId)
             }
         }.store(in: &cancellables)
         
         return outputSubject.eraseToAnyPublisher()
     }
     
-    private func searchPost() {
+    private func searchPosts() {
         postSearcher.searchPost().sink { completion in
             if case let .failure(error) = completion {
                
@@ -63,12 +72,18 @@ final class HomeViewModel: ViewModelProtocol {
     private func searchMockPost() {
         postSearcher.searchMockPost(json: "tempJson").sink { completion in
             if case let .failure(error) = completion {
-                print(error)
             }
         } receiveValue: { [weak self] response in
-            print(response)
             self?.outputSubject.send(.updateSearchResult(response))
         }.store(in: &cancellables)
         
+    }
+    
+    private func searchUser(id: String) {
+        self.outputSubject.send(.navigateToProfileView(id))
+    }
+    
+    private func searchPost(postId: String) {
+        self.outputSubject.send(.navigateToReadView(postId))
     }
 }

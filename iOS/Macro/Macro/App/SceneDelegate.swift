@@ -44,7 +44,7 @@ private extension SceneDelegate {
         switch loginState {
         case .loggedIn:
             let tabbarViewModel = TabBarViewModel()
-            let tabbarViewController = TabbarViewController(viewModel: tabbarViewModel)
+            let tabbarViewController = TabBarViewController(viewModel: tabbarViewModel)
             self.navigationController = UINavigationController(rootViewController: tabbarViewController)
             self.window?.rootViewController = self.navigationController
         case .loggedOut:

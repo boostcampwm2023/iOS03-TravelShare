@@ -5,9 +5,15 @@
 //  Created by Byeon jinha on 11/17/23.
 //
 
+import Combine
 import UIKit
 
 final class PostContentView: UIView {
+    
+    // MARK: - Properties
+    private var cancellables = Set<AnyCancellable>()
+    var viewModel: HomeViewModel?
+    private let inputSubject: PassthroughSubject<HomeViewModel.Input, Never> = .init()
     
     // MARK: - UI Components
     
@@ -90,6 +96,11 @@ private extension PostContentView {
         ])
     }
     
+    func addTapGesture() {
+        mainImageView.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(contentTap(_:)))
+        mainImageView.addGestureRecognizer(tapGesture)
+    }
 }
 
 // MARK: - Methods
@@ -100,6 +111,7 @@ extension PostContentView {
         setTranslatesAutoresizingMaskIntoConstraints()
         addSubviews()
         setLayoutConstraints()
+        addTapGesture()
     }
     
     func configure(item: PostFindResponse) {
@@ -111,6 +123,20 @@ extension PostContentView {
                 
             }
         }
+    }
+    
+    func bind(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
+        guard let viewModel = self.viewModel else { return }
+        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+    }
+}
+
+// MARK: - Handdle Gesture
+private extension PostContentView {
+    @objc private func contentTap(_ sender: UITapGestureRecognizer) {
+        guard let postId: String = self.title.text else { return }
+        inputSubject.send(.searchPost(postId))
     }
 }
 

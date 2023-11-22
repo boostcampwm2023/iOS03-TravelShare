@@ -1,16 +1,16 @@
 //
-//  SearchViewController.swift
+//  MyPageViewController.swift
 //  Macro
 //
-//  Created by Byeon jinha on 11/20/23.
+//  Created by Byeon jinha on 11/21/23.
 //
 
 import Foundation
 
-final class SearchViewController: TabViewController {
-    let viewModel: SearchViewModel
+final class MyPageViewController: TabViewController {
+    let viewModel: MyPageViewModel
     
-    init(viewModel: SearchViewModel) {
+    init(viewModel: MyPageViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }

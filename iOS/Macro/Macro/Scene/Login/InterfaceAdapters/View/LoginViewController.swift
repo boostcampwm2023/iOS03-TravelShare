@@ -108,10 +108,6 @@ private extension LoginViewController {
                 switch output {
                 case.appleLoginCompleted:
                     self?.loginStateSubject.value = .loggedIn
-//                    let tabbarViewController = TabbarViewController(viewModel: TabBarViewModel())
-//                    let navigationController = UINavigationController(rootViewController: tabbarViewController)
-//                    navigationController.modalPresentationStyle = .fullScreen
-//                    self?.present(navigationController, animated: true)
                 }
             }
             .store(in: &subscriptions)

@@ -14,7 +14,7 @@ final class HomeViewController: UIViewController {
     // MARK: - UI Components
     
     private let homeHeaderView: HomeHeaderView = HomeHeaderView()
-    lazy var homeCollectionView: HomeCollectionView = HomeCollectionView(frame: .zero, collectionViewLayout: homeCollectionViewLayout)
+    lazy var homeCollectionView: HomeCollectionView = HomeCollectionView(frame: .zero, collectionViewLayout: homeCollectionViewLayout, viewModel: viewModel)
     
     // MARK: - Properties
     
@@ -30,8 +30,8 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Initialization
     
-    init() {
-        self.viewModel = HomeViewModel(postSearcher: Searcher(provider: provider))
+    init(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -96,8 +96,22 @@ extension HomeViewController {
 private extension HomeViewController {
     
     func updateSearchResult(_ result: [PostFindResponse]) {
-        homeCollectionView.posts = result
+        homeCollectionView.viewModel.posts = result
         homeCollectionView.reloadData()
+    }
+    
+    func navigateToProfileView(_ userId: String) {
+        let userInfoViewModel = UserInfoViewModel()
+        let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: userId)
+
+        navigationController?.pushViewController(userInfoViewController, animated: true)
+    }
+    
+    func navigateToReadView(_ postId: String) {
+        let readViewModel = ReadViewModel()
+        let readViewController = ReadViewController(viewModel: readViewModel, postInfo: postId)
+
+        navigationController?.pushViewController(readViewController, animated: true)
     }
     
     func bind() {
@@ -107,6 +121,10 @@ private extension HomeViewController {
             switch output {
             case let .updateSearchResult(result):
                 self?.updateSearchResult(result)
+            case let .navigateToProfileView(userId):
+                self?.navigateToProfileView(userId)
+            case let .navigateToReadView(postId):
+                self?.navigateToReadView(postId)
             default: break
             }
         }.store(in: &cancellables)

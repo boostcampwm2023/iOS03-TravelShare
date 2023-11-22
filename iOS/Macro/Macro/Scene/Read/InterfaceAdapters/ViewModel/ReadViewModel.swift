@@ -1,14 +1,14 @@
 //
-//  WriteViewModel.swift
+//  ReadViewModel.swift
 //  Macro
 //
-//  Created by Byeon jinha on 11/20/23.
+//  Created by Byeon jinha on 11/21/23.
 //
 
 import Combine
 import Foundation
 
-class WriteViewModel: ViewModelProtocol {
+class ReadViewModel: ViewModelProtocol {
     
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
