@@ -87,3 +87,4 @@ private extension HomeHeaderView {
         static let logoImageViewLeading: CGFloat = 30
     }
 }
+

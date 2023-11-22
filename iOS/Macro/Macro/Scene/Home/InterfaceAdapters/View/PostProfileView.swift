@@ -131,8 +131,8 @@ extension PostProfileView {
         setLayoutConstraints()
     }
     
-    func configure(item: PostResponse) {
-        loadImage(profileImageStringURL: item.userInfo.profile) { profileImage in
+    func configure(item: PostFindResponse) {
+        loadImage(profileImageStringURL: item.userInfo.name) { profileImage in
             DispatchQueue.main.async { [self] in
                 if let image = profileImage {
                     profileImageView.image = image
@@ -142,9 +142,9 @@ extension PostProfileView {
                 }
             }
         }
-        userNameLabel.text = item.userInfo.username
-        likeCountLabel.text = "\(item.routeInfo.likes)"
-        viewCountLabel.text = "\(item.routeInfo.view)"
+        userNameLabel.text = item.userInfo.name
+        likeCountLabel.text = "\(item.likeNum)"
+        viewCountLabel.text = "\(item.viewNum)"
     }
 }
 

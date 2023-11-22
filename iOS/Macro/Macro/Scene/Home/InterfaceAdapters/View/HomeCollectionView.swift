@@ -11,7 +11,7 @@ final class HomeCollectionView: UICollectionView {
     
     // MARK: - Properties
     
-    var posts: [PostResponse] = []
+    var posts: [PostFindResponse] = []
     
     // MARK: - Initialization
     
@@ -46,7 +46,7 @@ extension HomeCollectionView: UICollectionViewDataSource {
             withReuseIdentifier: PostCollectionViewCell.identifier,
             for: indexPath) as? PostCollectionViewCell else { return UICollectionViewCell()
         }
-        let item: PostResponse = self.posts[indexPath.row]
+        let item: PostFindResponse = self.posts[indexPath.row]
         cell.configure(item: item)
         
         return cell

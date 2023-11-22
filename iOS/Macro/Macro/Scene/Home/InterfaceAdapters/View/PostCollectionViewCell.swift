@@ -54,7 +54,7 @@ private extension PostCollectionViewCell {
         ])
     }
     
-    func componetConfigure(item: PostResponse) {
+    func componetConfigure(item: PostFindResponse) {
         postContentView.setLayout()
         postContentView.configure(item: item)
         
@@ -67,7 +67,7 @@ private extension PostCollectionViewCell {
 
 extension PostCollectionViewCell {
     
-    func configure(item: PostResponse) {
+    func configure(item: PostFindResponse) {
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
