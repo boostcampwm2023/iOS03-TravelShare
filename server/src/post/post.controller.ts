@@ -10,17 +10,13 @@ import {
 import { PostFindResponse } from './post.find.response.dto';
 import { PostReadResponse } from './post.read.response.dto';
 import { PostWriteBody } from './post.write.body';
-import {
-  PostFindMyLogQuery,
-  PostFindOtherUserLogQuery,
-  PostFindQuery,
-  PostSearchKeywordQuery,
-} from './post.find.query.dto';
+import { PostFindQuery } from './post.find.query.dto';
 import { plainToInstance } from 'class-transformer';
 import { PostService } from './post.service';
 import { AuthenticatedUser } from 'src/auth/auth.decorators';
 import { Authentication } from 'src/auth/authentication.dto';
 import { RestController } from 'src/utils/rest.controller.decorator';
+import { PostHitsQuery } from './post.hist.query.dto';
 
 @ApiTags('Post')
 @ApiBearerAuth('access-token')
@@ -28,34 +24,19 @@ import { RestController } from 'src/utils/rest.controller.decorator';
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
+  @ApiOperation({ description: '인기 게시글을 반환합니다.' })
+  @ApiResponse({ type: [PostFindResponse] })
+  @ApiQuery({ type: PostHitsQuery })
+  @Get('hits')
+  async default(query: PostHitsQuery) {
+    return await this.postService.popularList(query);
+  }
+
   @ApiResponse({ description: '리스트 조회', type: [PostFindResponse] })
-  @ApiQuery({ description: '키워드 검색', type: PostSearchKeywordQuery })
-  @ApiQuery({ description: '기본(메인페이지)', type: PostFindMyLogQuery })
-  @ApiQuery({
-    description: '다른 유저 게시글',
-    type: PostFindOtherUserLogQuery,
-  })
+  @ApiQuery({ description: '제목 검색', type: PostFindQuery })
   @Get('find')
-  async find(
-    @Query() query: PostFindQuery,
-    @AuthenticatedUser() user: Authentication,
-  ) {
-    if ('keyword' in query) {
-      return await this.postService.popularList(
-        plainToInstance(PostSearchKeywordQuery, query),
-      );
-    } else if ('email' in query) {
-      return await this.postService.findByUser(
-        plainToInstance(PostFindOtherUserLogQuery, query),
-      );
-    } else {
-      return await this.postService.findByUser(
-        plainToInstance(PostFindOtherUserLogQuery, {
-          ...query,
-          email: user.email,
-        }),
-      );
-    }
+  async find(@Query() query: PostFindQuery) {
+    return await this.postService.search(query);
   }
 
   @ApiResponse({ description: '상세 조회', type: PostReadResponse })
@@ -80,15 +61,5 @@ export class PostController {
     @AuthenticatedUser() user: Authentication,
   ) {
     await this.postService.like(user.email, id);
-  }
-
-  @ApiOperation({ description: '게시글 좋아요 취소' })
-  @ApiQuery({ description: '게시글 id' })
-  @Patch('unlike')
-  async unlike(
-    @Query('id') id: number,
-    @AuthenticatedUser() user: Authentication,
-  ) {
-    await this.postService.unlike(user.email, id);
   }
 }

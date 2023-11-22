@@ -18,7 +18,7 @@ export class ResponseValidationInterceptor implements NestInterceptor {
         if (!value || typeof value !== 'object') {
           return value;
         }
-        await validateOrReject(value);
+        await validateOrReject(value, { whitelist: true });
         return value;
       }),
     );

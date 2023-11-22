@@ -4,7 +4,6 @@ import {
   IsDate,
   IsInt,
   IsNumber,
-  IsObject,
   IsString,
   IsUrl,
   Min,
@@ -47,11 +46,12 @@ export class PostReadResponse {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => PostReadElement)
-  elements: PostReadElement[];
+  contents: PostReadElement[];
 
   @ApiProperty({ description: '작성자' })
-  @IsObject()
-  user: UserProfileSimpleResponse;
+  @ValidateNested()
+  @Type(() => UserProfileSimpleResponse)
+  writer: UserProfileSimpleResponse;
 
   @ApiProperty({ description: '좋아요개수' })
   @IsInt()

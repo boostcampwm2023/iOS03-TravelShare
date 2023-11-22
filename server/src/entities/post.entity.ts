@@ -18,7 +18,9 @@ export class Post {
   @PrimaryGeneratedColumn({ name: 'post_id' })
   postId: number;
 
-  @ManyToOne(() => User, (user) => user.email)
+  @ManyToOne(() => User, (user) => user.email, {
+    cascade: ['remove', 'soft-remove', 'update', 'recover'],
+  })
   @JoinColumn({ name: 'user_email' })
   writer: User;
 
@@ -27,7 +29,6 @@ export class Post {
 
   @OneToMany(() => PostContentElement, (post) => post.post, {
     cascade: ['insert', 'soft-remove', 'update'],
-    lazy: true,
   })
   contents: PostContentElement[];
 
@@ -41,7 +42,7 @@ export class Post {
   summary: string;
 
   @Column('json')
-  route: string[];
+  route: [number, number][];
 
   @Column('json', { default: null })
   hashtag: string[];
@@ -58,7 +59,7 @@ export class Post {
     joinColumn: { name: 'post_id' },
     inverseJoinColumn: { name: 'email' },
   })
-  likeUsers: Promise<User[]>;
+  likeUsers: User[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
@@ -79,15 +80,15 @@ export class PostContentElement {
   @JoinColumn({ name: 'post_id' })
   post: Post;
 
-  @Column({ name: 'image_url' })
+  @Column({ name: 'image_url', nullable: true })
   imageUrl: string;
 
   @Column()
   description: string;
 
   @Column()
-  mapx: number;
+  x: number;
 
   @Column()
-  mapy: number;
+  y: number;
 }
