@@ -54,7 +54,7 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
         return button
     }()
     
-    private var markers: [String: NMFMarker] = [:]
+    private var markers: [LocationDetail: NMFMarker] = [:]
     
     // MARK: - Life Cycles
     
@@ -183,7 +183,7 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
         let position = NMGLatLng(lat: Double(locationDetail.mapy) ?? 0.0, lng: Double(locationDetail.mapx) ?? 0.0 )
         marker.position = position
         marker.mapView = mapView
-        markers[locationDetail.placeName] = marker
+        markers[locationDetail] = marker
         
         let cameraUpdate = NMFCameraUpdate(scrollTo: position)
         cameraUpdate.animation = .easeIn
@@ -192,9 +192,9 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
     }
     
     private func removeMarker(for locationDetail: LocationDetail) {
-        if let marker = markers[locationDetail.placeName] {
+        if let marker = markers[locationDetail] {
             marker.mapView = nil
-            markers.removeValue(forKey: locationDetail.placeName)
+            markers.removeValue(forKey: locationDetail)
         }
         updateMarkers()
     }
@@ -208,7 +208,7 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
             marker.position = NMGLatLng(lat: Double(place.mapy) ?? 0.0, lng: Double(place.mapx) ?? 0.0 )
             marker.captionText = "\(index + 1). \(place.placeName)"
             marker.mapView = mapView
-            markers[place.placeName] = marker
+            markers[place] = marker
         }
     }
     private func updateMarkers(_ pinnedPlaces: [LocationDetail]) {
@@ -220,7 +220,7 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
             marker.position = NMGLatLng(lat: Double(place.mapy) ?? 0.0, lng: Double(place.mapx) ?? 0.0)
             marker.captionText = "\(index + 1). \(place.placeName)"
             marker.mapView = mapView
-            markers[place.placeName] = marker
+            markers[place] = marker
         }
     }
     
