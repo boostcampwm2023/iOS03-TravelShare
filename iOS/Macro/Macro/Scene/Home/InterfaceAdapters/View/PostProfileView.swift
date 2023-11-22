@@ -132,7 +132,7 @@ extension PostProfileView {
     }
     
     func configure(item: PostFindResponse) {
-        loadImage(profileImageStringURL: item.userInfo.name) { profileImage in
+        loadImage(profileImageStringURL: item.userInfo.imageUrl) { profileImage in
             DispatchQueue.main.async { [self] in
                 if let image = profileImage {
                     profileImageView.image = image
