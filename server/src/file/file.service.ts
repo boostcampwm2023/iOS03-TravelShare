@@ -1,22 +1,33 @@
-import { Inject, Injectable, Scope } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { S3 } from 'aws-sdk';
 import { S3_PROVIDER } from './file.constants';
 import { randomUUID } from 'crypto';
+import { ConfigService } from '@nestjs/config';
+import { plainToInstance } from 'class-transformer';
+import { FileUploadResponse } from './file.upload.response.dto';
 
 @Injectable()
 export class FileService {
-  constructor(@Inject(S3_PROVIDER) private readonly s3: S3) {}
+  constructor(
+    @Inject(S3_PROVIDER) private readonly s3: S3,
+    private readonly configService: ConfigService,
+  ) {}
 
-  async uploadFile(data: Buffer, bucket: string) {
-    const key = randomUUID();
-    await this.s3
-      .putObject({
-        Bucket: bucket,
-        Key: key,
-        Body: data,
-      })
-      .promise();
-    return key;
+  async uploadFile({ file, type, length, bucket }) {
+    const key = this.getRandomEncodedKey();
+    this.s3.putObject({
+      Bucket: bucket,
+      Key: key,
+      Body: file,
+      ContentType: type,
+      ContentLength: length,
+      ACL: 'public-read',
+    });
+    return plainToInstance(FileUploadResponse, {
+      url: `${this.configService.get(
+        'object-storage.options.endpoint',
+      )}/${bucket}/${key}`,
+    });
   }
 
   async downloadFile(key: string, bucket: string) {
@@ -24,8 +35,12 @@ export class FileService {
     return this.s3
       .getObject({
         Bucket: bucket,
-        Key: key,
+        Key: encodeURI(key),
       })
       .createReadStream();
+  }
+
+  private getRandomEncodedKey() {
+    return encodeURI(`static/image/boostcampmacro-${randomUUID()}`);
   }
 }
