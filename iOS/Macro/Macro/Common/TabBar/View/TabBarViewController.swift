@@ -209,10 +209,10 @@ private extension TabBarViewController {
         else { return }
         
         viewModel.currentTabComponent.value.viewController.view.removeFromSuperview()
-        
+        viewModel.currentTabComponent.value.viewController.removeFromParent()
         self.view.insertSubview(tappedView.tabComponent.viewController.view, belowSubview: tabBarBackgroundLineView)
         swap(&tappedView.tabComponent, &viewModel.currentTabComponent.value)
-
+        self.addChild(viewModel.currentTabComponent.value.viewController)
         inactiveTabBarCenterView.image = image
         self.viewModel.isTabBarActive = false
         disAppearEvent()
