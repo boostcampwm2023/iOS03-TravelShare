@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
+import { Body, Get, Patch, Post, Query } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -20,10 +20,11 @@ import { plainToInstance } from 'class-transformer';
 import { PostService } from './post.service';
 import { AuthenticatedUser } from 'src/auth/auth.decorators';
 import { Authentication } from 'src/auth/authentication.dto';
+import { RestController } from 'src/utils/rest.controller.decorator';
 
 @ApiTags('Post')
 @ApiBearerAuth('access-token')
-@Controller('post')
+@RestController('post')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 

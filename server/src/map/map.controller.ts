@@ -1,10 +1,11 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MapSearchResponse } from './map.search.response.dto';
 import { MapService } from './map.service';
+import { RestController } from 'src/utils/rest.controller.decorator';
 
 @ApiTags('Map/v1')
-@Controller('map')
+@RestController('map')
 export class MapController {
   constructor(private readonly mapService: MapService) {}
 

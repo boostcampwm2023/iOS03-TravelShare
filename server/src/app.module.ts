@@ -7,6 +7,7 @@ import { MapModule } from './map/map.module';
 import { AppConfigModule } from './config/app.config.module';
 import { AuthModule } from './auth/auth.module';
 import { UtilsModule } from './utils/utils.module';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { UtilsModule } from './utils/utils.module';
     MapModule,
     AuthModule,
     UtilsModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [AppService],

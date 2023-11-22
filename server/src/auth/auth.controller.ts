@@ -1,4 +1,4 @@
-import { Controller, Post, Put } from '@nestjs/common';
+import { Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { AuthBasicSigninBody } from './auth.basic.signin.body.dto';
@@ -7,9 +7,10 @@ import { AuthBasicAuthResponse } from './auth.basic.auth.response.dto';
 import { AuthBasicSignupBody } from './auth.basic.signup.body.dto';
 import { AuthenticatedUser, Public } from './auth.decorators';
 import { Authentication } from './authentication.dto';
+import { RestController } from 'src/utils/rest.controller.decorator';
 
 @ApiTags('Auth')
-@Controller('auth')
+@RestController('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

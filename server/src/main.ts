@@ -1,19 +1,19 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ResponseValidationInterceptor } from './utils/response.validation.interceptor';
 import { ConfigService } from '@nestjs/config';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    rawBody: true,
+  });
   const config = app.get(ConfigService);
-
+  app.useBodyParser('json', { type: 'application/json' });
+  app.useBodyParser('raw', { type: '*/*', limit: '10MB' });
   app.useLogger(
     config.get('application.log') || ['log', 'warn', 'error', 'fatal'],
   );
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
-  app.useGlobalInterceptors(new ResponseValidationInterceptor());
 
   const documentConfig = new DocumentBuilder()
     .setTitle('어디갈래 api docs')
