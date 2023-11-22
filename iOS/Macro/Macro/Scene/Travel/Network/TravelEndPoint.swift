@@ -9,34 +9,34 @@ import Foundation
 import MacroNetwork
 
 enum TravelEndPoint {
-  case search(String)
+    case search(String, Int)
 }
 
 extension TravelEndPoint: EndPoint {
-  
-  var baseURL: String {
-    return "https://jijihuny.store"
-  }
-  
-  var headers: MacroNetwork.HTTPHeaders {
-    return []
-  }
-  
-  var parameter: MacroNetwork.HTTPParameter {
-    switch self {
-    case let .search(text):
-      return .query(["keyword": text])
+    
+    var baseURL: String {
+        return "https://jijihuny.store"
     }
-  }
-  
-  var method: MacroNetwork.HTTPMethod {
-    switch self {
-    case .search:
-      return .get
+    
+    var headers: MacroNetwork.HTTPHeaders {
+        return []
     }
-  }
-  
-  var path: String {
-    return "map/v2/searchByAccuracy"
-  }
+    
+    var parameter: MacroNetwork.HTTPParameter {
+        switch self {
+        case let .search(text, page):
+            return .query(["keyword": text, "pagenum": String(page)])
+        }
+    }
+    
+    var method: MacroNetwork.HTTPMethod {
+        switch self {
+        case .search:
+            return .get
+        }
+    }
+    
+    var path: String {
+        return "map/v2/searchByAccuracy"
+    }
 }
