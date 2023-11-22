@@ -7,25 +7,27 @@
 
 import Combine
 import Foundation
-
-enum ResponseStatus {
-    case success
-    case failure
-}
+import MacroNetwork
 
 protocol AppleLoginUseCaseProtocol {
-    func execute(requestValue: LoginRequest) -> AnyPublisher<ResponseStatus, HTTPError>
+    func execute(identityToken: String) -> AnyPublisher<LoginResponse, MacroNetwork.NetworkError>
 }
 
 struct AppleLoginUseCase: AppleLoginUseCaseProtocol {
-    private let repository: LoginRepository
     
-    init(repository: LoginRepository) {
+    // MARK: - Properties
+    
+    private let repository: LoginRepositoryProtocol
+    
+    // MARK: - Init
+    
+    init(repository: LoginRepositoryProtocol) {
         self.repository = repository
     }
     
-    func execute(requestValue: LoginRequest) -> AnyPublisher<ResponseStatus, HTTPError> {
-        return repository.execute(requestValue: requestValue)
-            .eraseToAnyPublisher()
+    // MARK: - Methods
+    
+    func execute(identityToken: String) -> AnyPublisher<LoginResponse, MacroNetwork.NetworkError> {
+        return repository.execute(identityToken: identityToken)
     }
 }

@@ -82,7 +82,6 @@ private extension LoginViewController {
             loginImageView.widthAnchor.constraint(equalToConstant: 200),
             loginImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             loginImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 200),
-            loginImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
             
             titleLabel.topAnchor.constraint(equalTo: loginImageView.bottomAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: loginImageView.leadingAnchor),
@@ -91,9 +90,9 @@ private extension LoginViewController {
             keywordLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             
             appleLoginButton.heightAnchor.constraint(equalToConstant: 50),
-            appleLoginButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            appleLoginButton.widthAnchor.constraint(equalToConstant: UIScreen.width - 150),
             appleLoginButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            appleLoginButton.topAnchor.constraint(equalTo: keywordLabel.bottomAnchor, constant: 80)
+            appleLoginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -60)
         ])
     }
 }
@@ -128,14 +127,10 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         switch authorization.credential {
         case let appleIDCredential as ASAuthorizationAppleIDCredential:
-            debugPrint("Login 성공")
-            if let authorizationCode = appleIDCredential.authorizationCode,
-               let identityToken = appleIDCredential.identityToken,
-               let authCodeString = String(data: authorizationCode, encoding: .utf8),
-               let identifyTokenString = String(data: identityToken, encoding: .utf8) {
-                inputSubject.send(.appleLogin(
-                    identityToken: identifyTokenString,
-                    authorizationCode: authCodeString))
+            if let identityToken = appleIDCredential.identityToken,
+                let identityTokenString = String(data: identityToken, encoding: .utf8) {
+                inputSubject.send(
+                    .appleLogin(identityToken: identityTokenString))
             }
         default:
             break
