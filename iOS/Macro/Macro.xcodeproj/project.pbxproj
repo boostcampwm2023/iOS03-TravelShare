@@ -31,6 +31,7 @@
 		BA32E1772B0DC2F900EA0EE2 /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E1752B0DC2F900EA0EE2 /* UserInfoViewController.swift */; };
 		BA32E17E2B0DC3CB00EA0EE2 /* MyPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E17B2B0DC3CB00EA0EE2 /* MyPageViewModel.swift */; };
 		BA32E17F2B0DC3CB00EA0EE2 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E17D2B0DC3CB00EA0EE2 /* MyPageViewController.swift */; };
+		BA32E1952B0DEBC500EA0EE2 /* LocationInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E1942B0DEBC500EA0EE2 /* LocationInfoViewController.swift */; };
 		BA33AA702B0AF9DD0065D1E0 /* TaBarBackgroundLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA6F2B0AF9DD0065D1E0 /* TaBarBackgroundLineView.swift */; };
 		BA33AA852B0AF9F30065D1E0 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA742B0AF9F20065D1E0 /* HomeViewModel.swift */; };
 		BA33AA872B0AF9F30065D1E0 /* HomeCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA772B0AF9F20065D1E0 /* HomeCollectionView.swift */; };
@@ -109,6 +110,7 @@
 		BA32E1752B0DC2F900EA0EE2 /* UserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
 		BA32E17B2B0DC3CB00EA0EE2 /* MyPageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewModel.swift; sourceTree = "<group>"; };
 		BA32E17D2B0DC3CB00EA0EE2 /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
+		BA32E1942B0DEBC500EA0EE2 /* LocationInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationInfoViewController.swift; sourceTree = "<group>"; };
 		BA33AA6F2B0AF9DD0065D1E0 /* TaBarBackgroundLineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaBarBackgroundLineView.swift; sourceTree = "<group>"; };
 		BA33AA742B0AF9F20065D1E0 /* HomeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		BA33AA752B0AF9F20065D1E0 /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
@@ -442,6 +444,30 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		BA32E1912B0DEBC500EA0EE2 /* LocationInfo */ = {
+			isa = PBXGroup;
+			children = (
+				BA32E1922B0DEBC500EA0EE2 /* InterfaceAdapters */,
+			);
+			path = LocationInfo;
+			sourceTree = "<group>";
+		};
+		BA32E1922B0DEBC500EA0EE2 /* InterfaceAdapters */ = {
+			isa = PBXGroup;
+			children = (
+				BA32E1932B0DEBC500EA0EE2 /* VIew */,
+			);
+			path = InterfaceAdapters;
+			sourceTree = "<group>";
+		};
+		BA32E1932B0DEBC500EA0EE2 /* VIew */ = {
+			isa = PBXGroup;
+			children = (
+				BA32E1942B0DEBC500EA0EE2 /* LocationInfoViewController.swift */,
+			);
+			path = VIew;
+			sourceTree = "<group>";
+		};
 		BA33AA712B0AF9F20065D1E0 /* Home */ = {
 			isa = PBXGroup;
 			children = (
@@ -699,6 +725,7 @@
 		BAA07ADE2B0251CF00884F3C /* Scene */ = {
 			isa = PBXGroup;
 			children = (
+				BA32E1912B0DEBC500EA0EE2 /* LocationInfo */,
 				BA32E1782B0DC3CB00EA0EE2 /* MyPage */,
 				BA32E1702B0DC2F900EA0EE2 /* UserInfo */,
 				BA32E1682B0DC29C00EA0EE2 /* Read */,
@@ -1026,6 +1053,7 @@
 				BA8DC4052B0B5EFD00929E01 /* SearchViewModel.swift in Sources */,
 				BA32E0E92B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift in Sources */,
 				BA6C6DF72B05FFC500563B22 /* TabLocation.swift in Sources */,
+				BA32E1952B0DEBC500EA0EE2 /* LocationInfoViewController.swift in Sources */,
 				BA6C6DF82B05FFC500563B22 /* TabComponent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
