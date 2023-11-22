@@ -9,5 +9,11 @@ export default () => {
   config.application.jwt.secret = createSecretKey(
     config.application.jwt.secret,
   ).export();
+  if (process.env.NODE_ENV === 'development') {
+    config.apple.client_secret.secret = readFileSync(
+      config.apple.client_secret.secret,
+      'utf-8',
+    );
+  }
   return config;
 };

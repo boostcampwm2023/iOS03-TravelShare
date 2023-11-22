@@ -78,11 +78,7 @@ export class AppleAuthService {
         );
       }),
       map(async (result) => {
-        if (await this.isUserExists(result)) {
-          return await this.signin(result);
-        } else {
-          return await this.signup(result);
-        }
+        return await this.authInternal(result);
       }),
     );
   }
@@ -153,6 +149,15 @@ export class AppleAuthService {
     );
   }
 
+  @Transactional()
+  private async authInternal(payload: AppleIdentityTokenPayload) {
+    if (!(await this.isUserExists(payload))) {
+      return await this.signup(payload);
+    } else {
+      return await this.signin(payload);
+    }
+  }
+
   /**
    *
    * @param
@@ -166,34 +171,31 @@ export class AppleAuthService {
     });
   }
 
-  @Transactional()
   private async signup({ sub, email }: AppleIdentityTokenPayload) {
-    await this.userRepository.insert({
-      email,
-      password: randomUUID(),
-      name: email,
-    });
-    const user = plainToInstance(
-      Authentication,
-      await this.userRepository.findOneByOrFail({ email }),
+    const user = await this.userRepository.save(
+      {
+        email,
+        password: randomUUID(),
+        name: email,
+      },
+      { transaction: false },
     );
-    await this.appleAuthRepository
-      .createQueryBuilder()
-      .relation('user')
-      .of(sub)
-      .set(email);
+    await this.appleAuthRepository.save(
+      {
+        appleId: sub,
+        user,
+      },
+      { transaction: false },
+    );
     return this.createToken(user);
   }
 
   private async signin({ sub }: AppleIdentityTokenPayload) {
-    const user = plainToInstance(
-      Authentication,
-      (
-        await this.appleAuthRepository.findOneOrFail({
-          where: { appleId: sub },
-        })
-      ).user,
-    );
+    const user = await this.appleAuthRepository
+      .createQueryBuilder()
+      .relation('user')
+      .of(sub)
+      .loadOne();
     return this.createToken(user);
   }
 

@@ -54,8 +54,9 @@ export class Post {
 
   @ManyToMany(() => User, (user) => user.email)
   @JoinTable({
+    name: 'post_likes_users',
     joinColumn: { name: 'post_id' },
-    inverseJoinColumn: { name: 'user_email' },
+    inverseJoinColumn: { name: 'email' },
   })
   likeUsers: Promise<User[]>;
 

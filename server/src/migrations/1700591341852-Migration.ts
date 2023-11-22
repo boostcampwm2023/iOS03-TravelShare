@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Migration1700541570008 implements MigrationInterface {
-  name = 'Migration1700541570008';
+export class Migration1700591341852 implements MigrationInterface {
+  name = 'Migration1700591341852';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
@@ -11,6 +11,8 @@ export class Migration1700541570008 implements MigrationInterface {
                 \`view_num\` int NOT NULL DEFAULT '0',
                 \`like_num\` int NOT NULL DEFAULT '0',
                 \`summary\` varchar(255) NULL,
+                \`route\` json NOT NULL,
+                \`hashtag\` json NULL,
                 \`start_at\` date NOT NULL,
                 \`end_at\` date NOT NULL,
                 \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
@@ -39,6 +41,9 @@ export class Migration1700541570008 implements MigrationInterface {
                 \`password\` varchar(255) NOT NULL,
                 \`profile\` varchar(255) NULL,
                 \`role\` enum ('user', 'admin') NOT NULL DEFAULT 'user',
+                \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+                \`modified_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+                \`deleted_at\` datetime(6) NULL,
                 UNIQUE INDEX \`IDX_e12875dfb3b1d92d7d7c5377e2\` (\`email\`),
                 PRIMARY KEY (\`user_id\`)
             ) ENGINE = InnoDB
@@ -52,12 +57,12 @@ export class Migration1700541570008 implements MigrationInterface {
             ) ENGINE = InnoDB
         `);
     await queryRunner.query(`
-            CREATE TABLE \`post_like_users_user\` (
+            CREATE TABLE \`post_likes_users\` (
                 \`post_id\` int NOT NULL,
-                \`user_email\` varchar(36) NOT NULL,
-                INDEX \`IDX_2eac7a67b6894a42f92cc3f7cb\` (\`post_id\`),
-                INDEX \`IDX_de292e4c8b2344e1a2cbeaec6a\` (\`user_email\`),
-                PRIMARY KEY (\`post_id\`, \`user_email\`)
+                \`email\` varchar(36) NOT NULL,
+                INDEX \`IDX_ffda72142eef274a2f2755a720\` (\`post_id\`),
+                INDEX \`IDX_d95a0b4c2cd94d27476fbabbd3\` (\`email\`),
+                PRIMARY KEY (\`post_id\`, \`email\`)
             ) ENGINE = InnoDB
         `);
     await queryRunner.query(`
@@ -67,15 +72,6 @@ export class Migration1700541570008 implements MigrationInterface {
                 INDEX \`IDX_dca93378123a3be0d10f49d03e\` (\`follower_id\`),
                 INDEX \`IDX_7642e3756290af9092754cda85\` (\`followee_id\`),
                 PRIMARY KEY (\`follower_id\`, \`followee_id\`)
-            ) ENGINE = InnoDB
-        `);
-    await queryRunner.query(`
-            CREATE TABLE \`post_ssss\` (
-                \`userUserId\` varchar(36) NOT NULL,
-                \`postPostId\` int NOT NULL,
-                INDEX \`IDX_f43a5aa94caa7490facc1d7512\` (\`userUserId\`),
-                INDEX \`IDX_918a0e6ab4a9e118699776076a\` (\`postPostId\`),
-                PRIMARY KEY (\`userUserId\`, \`postPostId\`)
             ) ENGINE = InnoDB
         `);
     await queryRunner.query(`
@@ -91,12 +87,12 @@ export class Migration1700541570008 implements MigrationInterface {
             ADD CONSTRAINT \`FK_42f2ee24ee4e6afb73ba904fb6e\` FOREIGN KEY (\`user_id\`) REFERENCES \`user\`(\`user_id\`) ON DELETE NO ACTION ON UPDATE NO ACTION
         `);
     await queryRunner.query(`
-            ALTER TABLE \`post_like_users_user\`
-            ADD CONSTRAINT \`FK_2eac7a67b6894a42f92cc3f7cb7\` FOREIGN KEY (\`post_id\`) REFERENCES \`post\`(\`post_id\`) ON DELETE CASCADE ON UPDATE CASCADE
+            ALTER TABLE \`post_likes_users\`
+            ADD CONSTRAINT \`FK_ffda72142eef274a2f2755a7204\` FOREIGN KEY (\`post_id\`) REFERENCES \`post\`(\`post_id\`) ON DELETE CASCADE ON UPDATE CASCADE
         `);
     await queryRunner.query(`
-            ALTER TABLE \`post_like_users_user\`
-            ADD CONSTRAINT \`FK_de292e4c8b2344e1a2cbeaec6ac\` FOREIGN KEY (\`user_email\`) REFERENCES \`user\`(\`user_id\`) ON DELETE CASCADE ON UPDATE CASCADE
+            ALTER TABLE \`post_likes_users\`
+            ADD CONSTRAINT \`FK_d95a0b4c2cd94d27476fbabbd33\` FOREIGN KEY (\`email\`) REFERENCES \`user\`(\`user_id\`) ON DELETE CASCADE ON UPDATE CASCADE
         `);
     await queryRunner.query(`
             ALTER TABLE \`user_followers_relation\`
@@ -106,23 +102,9 @@ export class Migration1700541570008 implements MigrationInterface {
             ALTER TABLE \`user_followers_relation\`
             ADD CONSTRAINT \`FK_7642e3756290af9092754cda85f\` FOREIGN KEY (\`followee_id\`) REFERENCES \`user\`(\`user_id\`) ON DELETE CASCADE ON UPDATE CASCADE
         `);
-    await queryRunner.query(`
-            ALTER TABLE \`post_ssss\`
-            ADD CONSTRAINT \`FK_f43a5aa94caa7490facc1d75124\` FOREIGN KEY (\`userUserId\`) REFERENCES \`user\`(\`user_id\`) ON DELETE CASCADE ON UPDATE CASCADE
-        `);
-    await queryRunner.query(`
-            ALTER TABLE \`post_ssss\`
-            ADD CONSTRAINT \`FK_918a0e6ab4a9e118699776076a7\` FOREIGN KEY (\`postPostId\`) REFERENCES \`post\`(\`post_id\`) ON DELETE CASCADE ON UPDATE CASCADE
-        `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`
-            ALTER TABLE \`post_ssss\` DROP FOREIGN KEY \`FK_918a0e6ab4a9e118699776076a7\`
-        `);
-    await queryRunner.query(`
-            ALTER TABLE \`post_ssss\` DROP FOREIGN KEY \`FK_f43a5aa94caa7490facc1d75124\`
-        `);
     await queryRunner.query(`
             ALTER TABLE \`user_followers_relation\` DROP FOREIGN KEY \`FK_7642e3756290af9092754cda85f\`
         `);
@@ -130,10 +112,10 @@ export class Migration1700541570008 implements MigrationInterface {
             ALTER TABLE \`user_followers_relation\` DROP FOREIGN KEY \`FK_dca93378123a3be0d10f49d03ed\`
         `);
     await queryRunner.query(`
-            ALTER TABLE \`post_like_users_user\` DROP FOREIGN KEY \`FK_de292e4c8b2344e1a2cbeaec6ac\`
+            ALTER TABLE \`post_likes_users\` DROP FOREIGN KEY \`FK_d95a0b4c2cd94d27476fbabbd33\`
         `);
     await queryRunner.query(`
-            ALTER TABLE \`post_like_users_user\` DROP FOREIGN KEY \`FK_2eac7a67b6894a42f92cc3f7cb7\`
+            ALTER TABLE \`post_likes_users\` DROP FOREIGN KEY \`FK_ffda72142eef274a2f2755a7204\`
         `);
     await queryRunner.query(`
             ALTER TABLE \`apple_auth\` DROP FOREIGN KEY \`FK_42f2ee24ee4e6afb73ba904fb6e\`
@@ -145,15 +127,6 @@ export class Migration1700541570008 implements MigrationInterface {
             ALTER TABLE \`post\` DROP FOREIGN KEY \`FK_ac36ed79dc89ca03b3a630baae8\`
         `);
     await queryRunner.query(`
-            DROP INDEX \`IDX_918a0e6ab4a9e118699776076a\` ON \`post_ssss\`
-        `);
-    await queryRunner.query(`
-            DROP INDEX \`IDX_f43a5aa94caa7490facc1d7512\` ON \`post_ssss\`
-        `);
-    await queryRunner.query(`
-            DROP TABLE \`post_ssss\`
-        `);
-    await queryRunner.query(`
             DROP INDEX \`IDX_7642e3756290af9092754cda85\` ON \`user_followers_relation\`
         `);
     await queryRunner.query(`
@@ -163,13 +136,13 @@ export class Migration1700541570008 implements MigrationInterface {
             DROP TABLE \`user_followers_relation\`
         `);
     await queryRunner.query(`
-            DROP INDEX \`IDX_de292e4c8b2344e1a2cbeaec6a\` ON \`post_like_users_user\`
+            DROP INDEX \`IDX_d95a0b4c2cd94d27476fbabbd3\` ON \`post_likes_users\`
         `);
     await queryRunner.query(`
-            DROP INDEX \`IDX_2eac7a67b6894a42f92cc3f7cb\` ON \`post_like_users_user\`
+            DROP INDEX \`IDX_ffda72142eef274a2f2755a720\` ON \`post_likes_users\`
         `);
     await queryRunner.query(`
-            DROP TABLE \`post_like_users_user\`
+            DROP TABLE \`post_likes_users\`
         `);
     await queryRunner.query(`
             DROP INDEX \`REL_42f2ee24ee4e6afb73ba904fb6\` ON \`apple_auth\`
