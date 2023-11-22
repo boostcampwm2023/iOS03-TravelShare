@@ -1,4 +1,4 @@
-import { Controller, Get, Optional, Patch, Query } from '@nestjs/common';
+import { Get, Optional, Patch, Query } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -14,9 +14,10 @@ import { UserProfileSimpleResponse } from './user.profile.simple.response.dto';
 import { UserService } from './user.service';
 import { AuthenticatedUser } from 'src/auth/auth.decorators';
 import { Authentication } from 'src/auth/authentication.dto';
+import { RestController } from 'src/utils/rest.controller.decorator';
 
 @ApiTags('User')
-@Controller('user')
+@RestController('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
