@@ -15,18 +15,21 @@ export class FileService {
 
   async uploadFile({ file, type, length, bucket }) {
     const key = this.getRandomEncodedKey();
-    this.s3.putObject({
-      Bucket: bucket,
-      Key: key,
-      Body: file,
-      ContentType: type,
-      ContentLength: length,
-      ACL: 'public-read',
-    });
+    const { ETag } = await this.s3
+      .putObject({
+        Bucket: bucket,
+        Key: key,
+        Body: file,
+        ContentType: type,
+        ContentLength: length,
+        ACL: 'public-read',
+      })
+      .promise();
     return plainToInstance(FileUploadResponse, {
       url: `${this.configService.get(
         'object-storage.options.endpoint',
       )}/${bucket}/${key}`,
+      etag: ETag,
     });
   }
 
