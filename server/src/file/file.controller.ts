@@ -6,7 +6,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RestController } from 'src/utils/rest.controller.decorator';
 import { FileUploadResponse } from './file.upload.response.dto';
 
-@ApiTags('Image')
+@ApiTags('image')
 @RestController('file')
 @Public()
 export class FileController {
@@ -27,7 +27,7 @@ export class FileController {
       file: req,
       length,
       type,
-      bucket: 'macro-storage',
+      bucket: 'macro-bucket',
     });
   }
 }
