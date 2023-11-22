@@ -14,7 +14,7 @@ protocol RouteTableViewControllerDelegate: AnyObject {
     func routeTableViewDidDragChange(heightChange: CGFloat)
 }
 
-final class TravelViewController: TabViewController, RouteTableViewControllerDelegate, CLLocationManagerDelegate {
+final class TravelViewController: TabViewController, RouteTableViewControllerDelegate, CLLocationManagerDelegate, NMFMapViewDelegate {
     
     // MARK: - Properties
     
@@ -67,8 +67,9 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
         setupRouteTableViewController()
         bind()
         updateTravelButton()
-        
+        searchBar.addTarget(self, action: #selector(searchBarReturnPressed), for: .editingDidEndOnExit)
         locationManager.delegate = self
+        mapView.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
     }
@@ -154,6 +155,8 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
                 self?.updateMapWithLocation(location)
             case let .updateMarkers(pinnedPlaces):
                 self?.updateMarkers(pinnedPlaces)
+            case let .showLocationInfo(locationDetail):
+                self?.showLocationInfo(locationDetail)
             default: break
             }
         }.store(in: &cancellables)
@@ -307,4 +310,19 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
         }
         isModalViewExpanded = shouldExpand
     }
+    
+    private func mapView(_ mapView: NMFMapView, didTap mapObject: NMFOverlay) -> Bool {
+        if let marker = mapObject as? NMFMarker, let locationDetail = markers.first(where: { $0.value == marker })?.key {
+            inputSubject.send(.selectLocation(locationDetail))
+            return true
+        }
+        return false
+    }
+    
+    private func showLocationInfo(_ locationDetail: LocationDetail) {
+        let locationInfoVC = LocationInfoViewController()
+        locationInfoVC.updateText(locationDetail.placeName)
+        navigationController?.pushViewController(locationInfoVC, animated: true)
+    }
+    
 }
