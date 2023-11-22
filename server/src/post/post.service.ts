@@ -1,13 +1,14 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post, PostContentElement } from 'src/entities/post.entity';
-import { Repository } from 'typeorm';
+import { Like, MoreThan, Repository } from 'typeorm';
 import { PostWriteBody } from './post.write.body';
 import { Transactional } from 'src/utils/transactional.decorator';
-import {
-  PostFindMyLogQuery,
-  PostFindOtherUserLogQuery,
-} from './post.find.query.dto';
+import { PostFindQuery } from './post.find.query.dto';
+import { plainToInstance } from 'class-transformer';
+import { PostFindResponse } from './post.find.response.dto';
+import { PostHitsQuery } from './post.hist.query.dto';
+import { PostReadResponse } from './post.read.response.dto';
 
 @Injectable()
 export class PostService {
@@ -18,52 +19,53 @@ export class PostService {
     private readonly postContentElementRepository: Repository<PostContentElement>,
   ) {}
 
-  async popularList(query: PostFindMyLogQuery) {
-    return await this.postRepository.find({
-      ...query,
-      order: {
-        likeNum: 'DESC',
-        viewNum: 'DESC',
-      },
-    });
+  async popularList(pagination: PostHitsQuery) {
+    return plainToInstance(
+      PostFindResponse,
+      await this.postRepository.find({
+        where: {
+          createdAt: MoreThan(new Date(Date.now() - 1000 * 60 * 60 * 24 * 30)),
+        },
+        ...(pagination ?? { take: 15 }),
+        order: {
+          likeNum: 'DESC',
+          viewNum: 'DESC',
+        },
+      }),
+    );
   }
 
-  async findByUser(query: PostFindOtherUserLogQuery) {
-    const opts = {
-      order: {
-        likeNum: 'DESC' as const,
-        viewNum: 'DESC' as const,
-      },
-      take: query.take ?? 10,
-      skip: query.skip ?? 0,
-    };
-    if (query.mode === 'liked') {
-      return await this.postRepository.find({
-        ...opts,
+  async search({ title, username, ...pagination }: PostFindQuery) {
+    return plainToInstance(
+      PostFindResponse,
+      await this.postRepository.find({
         where: {
-          likeUsers: {
-            email: query.email,
-          },
+          ...(title ? { title: Like(title) } : {}),
+          ...(username ? { writer: { name: username } } : {}),
         },
-      });
-    } else {
-      return await this.postRepository.find({
-        ...opts,
-        where: {
-          writer: {
-            email: query.email,
-          },
-        },
-      });
-    }
+        ...pagination,
+      }),
+    );
+  }
+
+  async find({ email }: { email: string }) {
+    return await this.postRepository.findBy({ writer: { email } });
   }
 
   async detail(id: number) {
-    return await this.postRepository.findOneOrFail({
-      where: {
-        postId: id,
-      },
-    });
+    return plainToInstance(
+      PostReadResponse,
+      await this.postRepository.findOneOrFail({
+        where: {
+          postId: id,
+        },
+        relationLoadStrategy: 'query',
+        relations: {
+          contents: true,
+          writer: true,
+        },
+      }),
+    );
   }
 
   @Transactional()
@@ -85,17 +87,25 @@ export class PostService {
 
   @Transactional()
   async like(userEmail: string, postId: number) {
-    const isLiked = await this.postRepository.exist({
+    const liked = await this.isLiked(userEmail, postId);
+    console.log(liked);
+    if (liked) {
+      return await this.unlikeInternal(userEmail, postId);
+    } else {
+      return await this.likeInternal(userEmail, postId);
+    }
+  }
+
+  private async isLiked(userEmail: string, postId: number) {
+    return await this.postRepository.exist({
       where: {
         postId,
-        likeUsers: {
-          email: userEmail,
-        },
+        likeUsers: { email: userEmail },
       },
     });
-    if (isLiked) {
-      throw new BadRequestException('already liked');
-    }
+  }
+
+  async likeInternal(userEmail: string, postId: number) {
     await this.postRepository
       .createQueryBuilder()
       .relation('likeUsers')
@@ -106,19 +116,7 @@ export class PostService {
     });
   }
 
-  @Transactional()
-  async unlike(userEmail: string, postId: number) {
-    const isLiked = await this.postRepository.exist({
-      where: {
-        postId,
-        likeUsers: {
-          email: userEmail,
-        },
-      },
-    });
-    if (!isLiked) {
-      throw new BadRequestException('already unliked');
-    }
+  async unlikeInternal(userEmail: string, postId: number) {
     await this.postRepository
       .createQueryBuilder()
       .relation('likeUsers')
