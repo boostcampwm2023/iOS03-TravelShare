@@ -5,9 +5,9 @@
 //  Created by Byeon jinha on 11/23/23.
 //
 
-import UIKit
 import Combine
 import CoreLocation
+import UIKit
 
 final class LocationManager: NSObject, CLLocationManagerDelegate {
     

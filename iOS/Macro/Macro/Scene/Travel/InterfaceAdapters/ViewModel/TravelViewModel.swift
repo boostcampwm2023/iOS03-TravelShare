@@ -5,10 +5,10 @@
 //  Created by 김나훈 on 11/15/23.
 //
 
-import Combine
-import CoreLocation
 import Foundation
 import MacroNetwork
+import Combine
+import CoreLocation
 
 final class TravelViewModel: ViewModelProtocol {
     
