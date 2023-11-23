@@ -25,13 +25,13 @@ final class MyPageViewController: TabViewController, UITableViewDelegate, UITabl
         let label = UILabel()
         label.text = "아몰랑"
         label.textColor = UIColor.appColor(.purple5)
-        label.font = UIFont.appFont(.baeEunBody)
+        label.font = UIFont.appFont(.baeEunCallout)
         return label
     }()
     
     private let tableView: UITableView = {
         let tableView = UITableView()
-        
+        tableView.separatorColor = UIColor.appColor(.purple2)
         return tableView
     }()
     
@@ -86,7 +86,7 @@ extension MyPageViewController {
             nameLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: Padding.labelTop),
             nameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             tableView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Padding.tableViewTop),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Padding.tableViewSide),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Padding.tableViewSide),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.tableViewSide),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Padding.tableViewBottom)
         ])
@@ -118,7 +118,7 @@ extension MyPageViewController {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "sectionTableViewCell", for: indexPath)
         cell.backgroundColor = UIColor.appColor(.purple1)
-        
+        cell.textLabel?.font = UIFont.appFont(.baeEunCallout)
         switch indexPath.section {
         case 0: cell.textLabel?.text = "\(viewModel.information[indexPath.row])"
         case 1: cell.textLabel?.text = "\(viewModel.post[indexPath.row])"
