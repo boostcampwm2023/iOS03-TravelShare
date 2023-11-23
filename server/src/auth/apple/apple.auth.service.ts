@@ -209,7 +209,7 @@ export class AppleAuthService {
 
   private createToken(user: Authentication) {
     return plainToInstance(AppleClientAuthResponse, {
-      accessToken: this.jwtService.sign(instanceToPlain(user)),
+      accessToken: this.jwtService.sign({email: user.email, role: user.role}),
     });
   }
 
