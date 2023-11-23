@@ -40,7 +40,7 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.appColor(.blue1)
         bind()
-        inputSubject.send(.searchMockPost)
+        inputSubject.send(.searchPosts)
         setUpLayout()
     }
 

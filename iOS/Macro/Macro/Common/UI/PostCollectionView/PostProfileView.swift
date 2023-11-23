@@ -178,7 +178,7 @@ extension PostProfileView {
     }
     
     func configure(item: PostFindResponse) {
-        viewModel?.loadImage(profileImageStringURL: item.userInfo.imageUrl) { profileImage in
+        viewModel?.loadImage(profileImageStringURL: item.writer.imageUrl ?? "https://user-images.githubusercontent.com/118811606/285184604-1e5983fd-0b07-4bfe-9c17-8b147f237517.png") { profileImage in
             DispatchQueue.main.async { [self] in
                 if let image = profileImage {
                     profileImageView.image = image
@@ -189,7 +189,7 @@ extension PostProfileView {
                 profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
             }
         }
-        userNameLabel.text = item.userInfo.name
+        userNameLabel.text = item.writer.name
         likeCountLabel.text = "\(item.likeNum)"
         viewCountLabel.text = "\(item.viewNum)"
     }

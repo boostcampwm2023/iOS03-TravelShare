@@ -76,7 +76,6 @@ final class HomeViewModel: ViewModelProtocol, PostCollectionViewProtocol {
     private func searchPosts() {
         postSearcher.searchPost().sink { completion in
             if case let .failure(error) = completion {
-               
             }
         } receiveValue: { [weak self] response in
             self?.outputSubject.send(.updateSearchResult(response))
