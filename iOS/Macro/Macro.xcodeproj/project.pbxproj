@@ -26,6 +26,7 @@
 		AAD0B2CB2B0DA399003B4D5F /* tempJson.json in Resources */ = {isa = PBXBuildFile; fileRef = AAD0B2C72B0DA399003B4D5F /* tempJson.json */; };
 		AAD0B2D32B0E03DE003B4D5F /* MacroCarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B2D22B0E03DE003B4D5F /* MacroCarouselView.swift */; };
 		AAD0B2D52B0E04CA003B4D5F /* MacroCarouselViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B2D42B0E04CA003B4D5F /* MacroCarouselViewCell.swift */; };
+		AAD0B2D72B0F3164003B4D5F /* MacroCarouselViewAddImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B2D62B0F3164003B4D5F /* MacroCarouselViewAddImageCell.swift */; };
 		BA32E0E92B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E0E82B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift */; };
 		BA32E16E2B0DC29C00EA0EE2 /* ReadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E16B2B0DC29C00EA0EE2 /* ReadViewModel.swift */; };
 		BA32E16F2B0DC29C00EA0EE2 /* ReadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E16D2B0DC29C00EA0EE2 /* ReadViewController.swift */; };
@@ -109,6 +110,7 @@
 		AAD0B2C72B0DA399003B4D5F /* tempJson.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = tempJson.json; sourceTree = "<group>"; };
 		AAD0B2D22B0E03DE003B4D5F /* MacroCarouselView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacroCarouselView.swift; sourceTree = "<group>"; };
 		AAD0B2D42B0E04CA003B4D5F /* MacroCarouselViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacroCarouselViewCell.swift; sourceTree = "<group>"; };
+		AAD0B2D62B0F3164003B4D5F /* MacroCarouselViewAddImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacroCarouselViewAddImageCell.swift; sourceTree = "<group>"; };
 		BA32E0E82B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TabBarViewController+Animaion.swift"; sourceTree = "<group>"; };
 		BA32E16B2B0DC29C00EA0EE2 /* ReadViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadViewModel.swift; sourceTree = "<group>"; };
 		BA32E16D2B0DC29C00EA0EE2 /* ReadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadViewController.swift; sourceTree = "<group>"; };
@@ -788,6 +790,7 @@
 				D241DC702B0DA0070037DDB6 /* CommonUIComponents.swift */,
 				AAD0B2D22B0E03DE003B4D5F /* MacroCarouselView.swift */,
 				AAD0B2D42B0E04CA003B4D5F /* MacroCarouselViewCell.swift */,
+				AAD0B2D62B0F3164003B4D5F /* MacroCarouselViewAddImageCell.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1077,6 +1080,7 @@
 				BA8DC4052B0B5EFD00929E01 /* SearchViewModel.swift in Sources */,
 				BA32E0E92B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift in Sources */,
 				BA6C6DF72B05FFC500563B22 /* TabLocation.swift in Sources */,
+				AAD0B2D72B0F3164003B4D5F /* MacroCarouselViewAddImageCell.swift in Sources */,
 				BA32E1952B0DEBC500EA0EE2 /* LocationInfoViewController.swift in Sources */,
 				BA6C6DF82B05FFC500563B22 /* TabComponent.swift in Sources */,
 			);

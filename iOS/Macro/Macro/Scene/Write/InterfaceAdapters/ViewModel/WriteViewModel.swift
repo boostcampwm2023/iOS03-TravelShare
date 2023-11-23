@@ -11,11 +11,18 @@ import Foundation
 class WriteViewModel: ViewModelProtocol {
     
     // MARK: - Properties
+    
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
+    var imageDatas: [Data] = [] {
+        didSet{
+            outputSubject.send(.outputImageData(imageDatas))
+        }
+    }
     var isVisibility: Bool = false
     
     // MARK: - init
+    
     init() {
     }
     
@@ -23,22 +30,26 @@ class WriteViewModel: ViewModelProtocol {
     
     enum Input {
         case isVisibilityButtonTouched
+        case addImageData(imageData: Data)
     }
     
     // MARK: - Output
 
     enum Output {
         case isVisibilityToggle(Bool)
+        case outputImageData([Data])
     }
     
     // MARK: - Methods
+    
     func transform(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         input
             .sink { [weak self] input in
                 switch input {
                 case .isVisibilityButtonTouched:
-//                    self?.outputSubject.send(.isVisibilityToggle(true))
                     self?.isVisibilityToggle()
+                case let .addImageData(imageData):
+                    self?.imageDatas.append(imageData)
                 }
             }
             .store(in: &cancellables)
