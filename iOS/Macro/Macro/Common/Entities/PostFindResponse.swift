@@ -11,9 +11,9 @@ struct PostFindResponse: Codable {
     let postId: Int
     let title: String
     let summary: String
-    let imageUrl: String
+    let url: String?
     let likeNum: Int
     let viewNum: Int
-    let userInfo: UserInfo
+    let writer: Writer
     let liked: Bool
 }

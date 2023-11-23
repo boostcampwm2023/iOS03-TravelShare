@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct UserInfo: Codable {
+struct Writer: Codable {
     let email: String
     let name: String
-    let imageUrl: String
+    let imageUrl: String?
 }

@@ -15,11 +15,13 @@ enum PostEndPoint {
 extension PostEndPoint: EndPoint {
     
     var baseURL: String {
-        return "http://118.67.130.85:3000"
+        return "https://jijihuny.store"
     }
     
     var headers: MacroNetwork.HTTPHeaders {
-        return []
+        let token = KeyChainManager.load(key: "AccessToken") ?? ""
+            return ["Authorization": "Bearer \(token)"]
+       
     }
     
     var parameter: MacroNetwork.HTTPParameter {
@@ -37,6 +39,6 @@ extension PostEndPoint: EndPoint {
     }
     
     var path: String {
-        return "map/search"
+        return "post/hits"
     }
 }
