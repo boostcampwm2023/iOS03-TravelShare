@@ -18,7 +18,15 @@ export class ResponseValidationInterceptor implements NestInterceptor {
         if (!value || typeof value !== 'object') {
           return value;
         }
-        await validateOrReject(value, { whitelist: true });
+        if (Array.isArray(value)) {
+          await Promise.all(
+            value.map(async (each) => {
+              await validateOrReject(each, { whitelist: true });
+            }),
+          );
+        } else {
+          await validateOrReject(value, { whitelist: true });
+        }
         return value;
       }),
     );
