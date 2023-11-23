@@ -132,7 +132,7 @@ extension PostContentView {
     }
     
     func configure(item: PostFindResponse) {
-        viewModel?.loadImage(profileImageStringURL: item.url ?? "https://user-images.githubusercontent.com/118811606/285184604-1e5983fd-0b07-4bfe-9c17-8b147f237517.png") { image in
+        viewModel?.loadImage(profileImageStringURL: item.imageUrl ?? "https://user-images.githubusercontent.com/118811606/285184604-1e5983fd-0b07-4bfe-9c17-8b147f237517.png") { image in
             DispatchQueue.main.async { [self] in
                 mainImageView.image = image
                 title.text = item.title
