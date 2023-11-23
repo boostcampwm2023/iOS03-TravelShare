@@ -1,5 +1,11 @@
-import { Post, Put } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Post, Put } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { AuthBasicSigninBody } from './auth.basic.signin.body.dto';
 import { plainToInstance } from 'class-transformer';
@@ -19,9 +25,10 @@ export class AuthController {
       '가장 기본이 되는 회원가입 로직입니다. 이메일 비밀 번호 등을 사용합니다.',
   })
   @ApiResponse({ type: AuthBasicAuthResponse })
+  @ApiBody({ type: AuthBasicSignupBody })
   @Post('signup')
   @Public()
-  async signup(user: AuthBasicSignupBody) {
+  async signup(@Body() user: AuthBasicSignupBody) {
     return plainToInstance(
       AuthBasicAuthResponse,
       await this.authService.createUser(user),
@@ -30,9 +37,10 @@ export class AuthController {
 
   @ApiOperation({ description: '이메일 비밀번호를 통해 로그인합니다.' })
   @ApiResponse({ type: AuthBasicAuthResponse })
+  @ApiBody({ type: AuthBasicSigninBody })
   @Post('signin')
   @Public()
-  async signin(user: AuthBasicSigninBody) {
+  async signin(@Body() user: AuthBasicSigninBody) {
     return plainToInstance(
       AuthBasicAuthResponse,
       await this.authService.login(user),
@@ -43,6 +51,7 @@ export class AuthController {
     description: 'Access Token의 만료기한을 갱신하여 응답합니다.',
   })
   @ApiResponse({ type: AuthBasicAuthResponse })
+  @ApiBearerAuth('access-token')
   @Put('refresh')
   async refresh(@AuthenticatedUser() user: Authentication) {
     return plainToInstance(
