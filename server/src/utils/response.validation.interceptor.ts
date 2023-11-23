@@ -15,10 +15,16 @@ export class ResponseValidationInterceptor implements NestInterceptor {
   ): Observable<any> {
     return next.handle().pipe(
       map(async (value) => {
+        console.log(value);
         if (!value || typeof value !== 'object') {
           return value;
         }
-        if (Array.isArray(value)) {
+        if (value instanceof Promise) {
+          value.then(
+            async (future) =>
+              await validateOrReject(future, { whitelist: true }),
+          );
+        } else if (Array.isArray(value)) {
           await Promise.all(
             value.map(async (each) => {
               await validateOrReject(each, { whitelist: true });

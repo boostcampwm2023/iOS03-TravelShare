@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AppleClientAuthBody } from './apple.client.auth.body.dto';
 import { ConfigService } from '@nestjs/config';
 import { map, mergeMap } from 'rxjs';
-import { instanceToPlain, plainToInstance } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import {
   AppleIdentityTokenPublicKey,
   AppleIdentityTokenPublicKeys,
@@ -209,7 +209,7 @@ export class AppleAuthService {
 
   private createToken(user: Authentication) {
     return plainToInstance(AppleClientAuthResponse, {
-      accessToken: this.jwtService.sign({email: user.email, role: user.role}),
+      accessToken: this.jwtService.sign({ email: user.email, role: user.role }),
     });
   }
 
