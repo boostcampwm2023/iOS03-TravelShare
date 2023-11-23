@@ -15,6 +15,14 @@ class MacroCarouselView: UIView {
         let itemSize: CGSize
         let itemSpacing: Double
     }
+    
+    var items: [UIImage] = []
+    private let const: Const
+    var pageIndex = 0 {
+        didSet {
+            self.pageController.currentPage = pageIndex
+        }
+    }
 
     // MARK: - UI Componenets
     
@@ -34,16 +42,22 @@ class MacroCarouselView: UIView {
         view.showsVerticalScrollIndicator = true
         view.backgroundColor = .clear
         view.clipsToBounds = true
-        view.register(MacroCrouselViewCell.self, forCellWithReuseIdentifier: MacroCrouselViewCell.id)
+        view.register(MacroCarouselViewCell.self, forCellWithReuseIdentifier: MacroCarouselViewCell.id)
         view.isPagingEnabled = false
         view.contentInsetAdjustmentBehavior = .never
         view.decelerationRate = .fast
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-
-    var items: [UIImage] = []
-    private let const: Const
+    
+    private lazy var pageController: UIPageControl = {
+        let pageController = UIPageControl()
+        pageController.numberOfPages = self.items.count
+        pageController.currentPage = pageIndex
+        pageController.pageIndicatorTintColor = UIColor.appColor(.purple1)
+        pageController.currentPageIndicatorTintColor = UIColor.appColor(.purple2)
+        return pageController
+    }()
 
     // MARK: - Init
     
@@ -74,10 +88,12 @@ private extension MacroCarouselView {
     
     func setTranslatesAutoresizingMaskIntoConstraints() {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        pageController.translatesAutoresizingMaskIntoConstraints = false
     }
     
     func addsubviews() {
         addSubview(collectionView)
+        addSubview(pageController)
     }
     
     func setLayoutConstraints() {
@@ -86,6 +102,9 @@ private extension MacroCarouselView {
             collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
+            pageController.topAnchor.constraint(equalTo: collectionView.bottomAnchor),
+            pageController.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor)
         ])
     }
 }
@@ -98,8 +117,8 @@ extension MacroCarouselView: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MacroCrouselViewCell.id, for: indexPath) as? MacroCrouselViewCell else {
-            return MacroCrouselViewCell()
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MacroCarouselViewCell.id, for: indexPath) as? MacroCarouselViewCell else {
+            return MacroCarouselViewCell()
         }
         cell.prepare(image: items[indexPath.item])
         return cell
@@ -116,10 +135,10 @@ extension MacroCarouselView: UICollectionViewDelegateFlowLayout {
     ) {
         let scrolledOffsetX = targetContentOffset.pointee.x + scrollView.contentInset.left
         let cellWidth = const.itemSize.width + const.itemSpacing
-        let index = round(scrolledOffsetX / cellWidth)
-
+        pageIndex = Int(round(scrolledOffsetX / cellWidth))
+        
         // 화면에 나오는 첫 번째 셀의 인덱스를 가져오기
-        let visibleIndex = max(0, Int(index))
+        let visibleIndex = max(0, pageIndex)
 
         // 화면 중앙으로 정렬하는 contentInset 계산
         let centerX = (scrollView.bounds.width - const.itemSize.width) / 2.0
@@ -127,7 +146,6 @@ extension MacroCarouselView: UICollectionViewDelegateFlowLayout {
 
         // contentInset 설정
         scrollView.contentInset = UIEdgeInsets(top: 0, left: insetX, bottom: 0, right: 0)
-
         targetContentOffset.pointee = CGPoint(x: CGFloat(visibleIndex) * cellWidth - scrollView.contentInset.left, y: scrollView.contentInset.top)
     }
 }
