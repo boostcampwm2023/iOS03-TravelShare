@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
+  IsBoolean,
   IsDate,
   IsInt,
   IsNumber,
@@ -12,7 +13,7 @@ import {
 import { Type } from 'class-transformer';
 import { UserProfileSimpleResponse } from 'src/user/user.profile.simple.response.dto';
 
-export class PostReadElement {
+export class PostDetailElement {
   @ApiProperty({ description: '이미지 url' })
   @IsUrl()
   imageUrl: string;
@@ -23,30 +24,23 @@ export class PostReadElement {
 
   @ApiProperty({ description: 'x' })
   @IsNumber()
-  positionX: number;
+  x: number;
 
   @ApiProperty({ description: 'y좌표' })
   @IsNumber()
-  positionY: number;
-
-  @ApiProperty({ description: '장소 이름' })
-  @IsString()
-  locationName: string;
-
-  @ApiProperty({ description: '주소' })
-  locationAddress: string;
+  y: number;
 }
 
-export class PostReadResponse {
+export class PostDetailResponse {
   @ApiProperty({ description: '제목' })
   @IsString()
   title: string;
 
-  @ApiProperty({ description: '내용들', type: [PostReadElement] })
+  @ApiProperty({ description: '내용들', type: [PostDetailElement] })
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => PostReadElement)
-  contents: PostReadElement[];
+  @Type(() => PostDetailElement)
+  contents: PostDetailElement[];
 
   @ApiProperty({ description: '작성자' })
   @ValidateNested()
@@ -70,4 +64,8 @@ export class PostReadResponse {
   @ApiProperty({ description: '수정' })
   @IsDate()
   modifiedAt: Date;
+
+  @ApiProperty({ description: '좋아요 여부' })
+  @IsBoolean()
+  liked: boolean;
 }
