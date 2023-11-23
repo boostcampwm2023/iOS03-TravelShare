@@ -8,15 +8,15 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { PostFindResponse } from './post.find.response.dto';
-import { PostReadResponse } from './post.read.response.dto';
+import { PostDetailElement } from './post.detail.response.dto';
 import { PostWriteBody } from './post.write.body';
 import { PostFindQuery } from './post.find.query.dto';
-import { plainToInstance } from 'class-transformer';
 import { PostService } from './post.service';
 import { AuthenticatedUser } from 'src/auth/auth.decorators';
 import { Authentication } from 'src/auth/authentication.dto';
 import { RestController } from 'src/utils/rest.controller.decorator';
 import { PostHitsQuery } from './post.hist.query.dto';
+import { PostDetailQuery } from './post.detail.query.dto';
 
 @ApiTags('Post')
 @ApiBearerAuth('access-token')
@@ -28,28 +28,37 @@ export class PostController {
   @ApiResponse({ type: [PostFindResponse] })
   @ApiQuery({ type: PostHitsQuery })
   @Get('hits')
-  async default(query: PostHitsQuery) {
-    return await this.postService.popularList(query);
+  async default(
+    query: PostHitsQuery,
+    @AuthenticatedUser() user: Authentication,
+  ) {
+    const a = await this.postService.popularList(query, user);
+    return a;
   }
 
   @ApiResponse({ description: '리스트 조회', type: [PostFindResponse] })
   @ApiQuery({ description: '제목 검색', type: PostFindQuery })
-  @Get('find')
-  async find(@Query() query: PostFindQuery) {
-    return await this.postService.search(query);
+  @Get('search')
+  async search(
+    @Query() query: PostFindQuery,
+    @AuthenticatedUser() user: Authentication,
+  ) {
+    return await this.postService.search(query, user);
   }
 
-  @ApiResponse({ description: '상세 조회', type: PostReadResponse })
+  @ApiResponse({ description: '상세 조회', type: PostDetailElement })
   @ApiQuery({ description: '게시글 id' })
   @Get('detail')
-  async detail(@Query('id') id: number) {
-    return plainToInstance(PostReadResponse, await this.postService.detail(id));
+  async detail(
+    @Query() query: PostDetailQuery,
+    @AuthenticatedUser() user: Authentication,
+  ) {
+    return await this.postService.detail(query, user);
   }
 
   @ApiBody({ description: '업로드', type: PostWriteBody })
   @Post('upload')
   async upload(@Body() post: PostWriteBody) {
-    // return plainToInstance(PostWriteBody, await this.postService.upload(post));
     await this.postService.upload(post);
   }
 
@@ -57,9 +66,9 @@ export class PostController {
   @ApiQuery({ description: '게시글 id' })
   @Patch('like')
   async like(
-    @Query('id') id: number,
+    @Query() query: PostDetailQuery,
     @AuthenticatedUser() user: Authentication,
   ) {
-    await this.postService.like(user.email, id);
+    await this.postService.like(query, user);
   }
 }
