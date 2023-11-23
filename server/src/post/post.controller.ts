@@ -12,7 +12,7 @@ import { PostDetailElement } from './post.detail.response.dto';
 import { PostWriteBody } from './post.write.body';
 import { PostFindQuery } from './post.find.query.dto';
 import { PostService } from './post.service';
-import { AuthenticatedUser } from 'src/auth/auth.decorators';
+import { AuthenticatedUser, Public } from 'src/auth/auth.decorators';
 import { Authentication } from 'src/auth/authentication.dto';
 import { RestController } from 'src/utils/rest.controller.decorator';
 import { PostHitsQuery } from './post.hist.query.dto';
@@ -27,6 +27,7 @@ export class PostController {
   @ApiOperation({ description: '인기 게시글을 반환합니다.' })
   @ApiResponse({ type: [PostFindResponse] })
   @ApiQuery({ type: PostHitsQuery })
+  @Public()
   @Get('hits')
   async default(
     query: PostHitsQuery,
