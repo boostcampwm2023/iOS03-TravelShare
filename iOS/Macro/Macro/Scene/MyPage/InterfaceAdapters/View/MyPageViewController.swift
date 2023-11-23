@@ -18,6 +18,7 @@ final class MyPageViewController: TabViewController, UITableViewDelegate, UITabl
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "person.fill")
+        imageView.backgroundColor = .cyan
         return imageView
     }()
     
@@ -30,7 +31,8 @@ final class MyPageViewController: TabViewController, UITableViewDelegate, UITabl
     }()
     
     private let tableView: UITableView = {
-        let tableView = UITableView()
+        //    let tableView = UITableView()
+        let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.separatorColor = UIColor.appColor(.purple2)
         return tableView
     }()
@@ -55,6 +57,13 @@ final class MyPageViewController: TabViewController, UITableViewDelegate, UITabl
         tableView.dataSource = self
         tableView.delegate = self
         setUpLayout()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        profileImageView.layer.cornerRadius = profileImageView.bounds.width / 2
+        profileImageView.clipsToBounds = true
     }
     
 }
@@ -135,7 +144,35 @@ extension MyPageViewController {
     func numberOfSections(in tableView: UITableView) -> Int {
         return viewModel.sections.count
     }
-    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerLabel = UILabel()
+        
+        headerLabel.text = viewModel.sections[section]
+        headerLabel.font = UIFont.appFont(.baeEunBody)
+        
+        let headerView = UIView()
+        headerView.backgroundColor = .systemBackground
+        headerView.addSubview(headerLabel)
+        
+        headerLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            headerLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
+            headerLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
+            headerLabel.topAnchor.constraint(equalTo: headerView.topAnchor),
+            headerLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor)
+        ])
+        
+        return headerView
+    }
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footerView = UIView()
+        footerView.backgroundColor = .systemBackground
+        return footerView
+    }
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        guard let headerView = view as? UITableViewHeaderFooterView else { return }
+        headerView.contentView.backgroundColor = UIColor.systemBackground
+    }
 }
 
 // MARK: - LayoutMetrics
