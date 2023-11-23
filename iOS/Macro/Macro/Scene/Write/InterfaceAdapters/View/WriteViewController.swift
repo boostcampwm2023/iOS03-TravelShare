@@ -83,6 +83,7 @@ final class WriteViewController: TabViewController {
         button.setImage(image, for: .normal)
         button.backgroundColor = UIColor.appColor(.statusGreen)
         button.layer.cornerRadius = 15
+        button.addTarget(self, action: #selector(writeSubmitButtonTouched), for: .touchUpInside)
         return button
     }()
     
@@ -203,6 +204,9 @@ private extension WriteViewController {
                     }
                     
                     self?.carouselView.updateData(images)
+                case .uploadWrite:
+                    // TODO: - Home화면으로 돌아가
+                    break
                 }
             }
             .store(in: &subscriptions)
@@ -233,6 +237,10 @@ private extension WriteViewController {
     @objc func isisVisibilityButtonTouched() {
         inputSubject.send(.isVisibilityButtonTouched)
     }
+    
+    @objc func writeSubmitButtonTouched() {
+        inputSubject.send(.writeSubmit)
+    }
 }
 
 // MARK: - Image Picker
@@ -257,7 +265,7 @@ extension WriteViewController: PHPickerViewControllerDelegate {
                     debugPrint("Error loading image: \(error.localizedDescription)")
                 }
                 
-                if let image = image as? UIImage, let data = image.pngData() {
+                if let image = image as? UIImage, let data = image.jpegData(compressionQuality: 1.0) {
                     self?.inputSubject.send(.addImageData(imageData: data))
                 }
             }

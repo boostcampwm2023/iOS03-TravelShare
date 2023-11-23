@@ -27,6 +27,11 @@
 		AAD0B2D32B0E03DE003B4D5F /* MacroCarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B2D22B0E03DE003B4D5F /* MacroCarouselView.swift */; };
 		AAD0B2D52B0E04CA003B4D5F /* MacroCarouselViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B2D42B0E04CA003B4D5F /* MacroCarouselViewCell.swift */; };
 		AAD0B2D72B0F3164003B4D5F /* MacroCarouselViewAddImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B2D62B0F3164003B4D5F /* MacroCarouselViewAddImageCell.swift */; };
+		AAD0B2D92B0FB55B003B4D5F /* WriteEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B2D82B0FB55B003B4D5F /* WriteEndPoint.swift */; };
+		AAD0B2DB2B0FB5A5003B4D5F /* ImageUploadEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B2DA2B0FB5A5003B4D5F /* ImageUploadEndPoint.swift */; };
+		AAD0B2DD2B0FB8F0003B4D5F /* WriteRequestDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B2DC2B0FB8F0003B4D5F /* WriteRequestDTO.swift */; };
+		AAD0B2DF2B0FC4A1003B4D5F /* UploadImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B2DE2B0FC4A1003B4D5F /* UploadImage.swift */; };
+		AAD0B2E12B0FD25B003B4D5F /* ImageURLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B2E02B0FD25B003B4D5F /* ImageURLResponse.swift */; };
 		BA32E0E92B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E0E82B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift */; };
 		BA32E16E2B0DC29C00EA0EE2 /* ReadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E16B2B0DC29C00EA0EE2 /* ReadViewModel.swift */; };
 		BA32E16F2B0DC29C00EA0EE2 /* ReadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E16D2B0DC29C00EA0EE2 /* ReadViewController.swift */; };
@@ -111,6 +116,11 @@
 		AAD0B2D22B0E03DE003B4D5F /* MacroCarouselView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacroCarouselView.swift; sourceTree = "<group>"; };
 		AAD0B2D42B0E04CA003B4D5F /* MacroCarouselViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacroCarouselViewCell.swift; sourceTree = "<group>"; };
 		AAD0B2D62B0F3164003B4D5F /* MacroCarouselViewAddImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacroCarouselViewAddImageCell.swift; sourceTree = "<group>"; };
+		AAD0B2D82B0FB55B003B4D5F /* WriteEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteEndPoint.swift; sourceTree = "<group>"; };
+		AAD0B2DA2B0FB5A5003B4D5F /* ImageUploadEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadEndPoint.swift; sourceTree = "<group>"; };
+		AAD0B2DC2B0FB8F0003B4D5F /* WriteRequestDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteRequestDTO.swift; sourceTree = "<group>"; };
+		AAD0B2DE2B0FC4A1003B4D5F /* UploadImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadImage.swift; sourceTree = "<group>"; };
+		AAD0B2E02B0FD25B003B4D5F /* ImageURLResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageURLResponse.swift; sourceTree = "<group>"; };
 		BA32E0E82B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TabBarViewController+Animaion.swift"; sourceTree = "<group>"; };
 		BA32E16B2B0DC29C00EA0EE2 /* ReadViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadViewModel.swift; sourceTree = "<group>"; };
 		BA32E16D2B0DC29C00EA0EE2 /* ReadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadViewController.swift; sourceTree = "<group>"; };
@@ -712,6 +722,8 @@
 		BA8DC40F2B0B5FD200929E01 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				AAD0B2D82B0FB55B003B4D5F /* WriteEndPoint.swift */,
+				AAD0B2DA2B0FB5A5003B4D5F /* ImageUploadEndPoint.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -719,6 +731,8 @@
 		BA8DC4102B0B5FD700929E01 /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				AAD0B2DC2B0FB8F0003B4D5F /* WriteRequestDTO.swift */,
+				AAD0B2E02B0FD25B003B4D5F /* ImageURLResponse.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -726,6 +740,7 @@
 		BA8DC4112B0B5FE300929E01 /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
+				AAD0B2DE2B0FC4A1003B4D5F /* UploadImage.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -1033,6 +1048,7 @@
 				BA6C6DFE2B05FFC500563B22 /* TabBarOpacityView.swift in Sources */,
 				D263CA332B06C7B300B4A144 /* SavedRoute.swift in Sources */,
 				BA8DC3FA2B0B5DD100929E01 /* BaseViewControllerProtocol.swift in Sources */,
+				AAD0B2DB2B0FB5A5003B4D5F /* ImageUploadEndPoint.swift in Sources */,
 				BA33AA8C2B0AF9F30065D1E0 /* HomeHeaderView.swift in Sources */,
 				BA32E1762B0DC2F900EA0EE2 /* UserInfoViewModel.swift in Sources */,
 				BA90CB7E2B0F3BA500365AE2 /* PostCollectionViewProtocol.swift in Sources */,
@@ -1047,13 +1063,17 @@
 				BA33AA702B0AF9DD0065D1E0 /* TaBarBackgroundLineView.swift in Sources */,
 				BA6C6DF52B05FFC500563B22 /* UIScreen+.swift in Sources */,
 				AAD0B2BE2B0DA35B003B4D5F /* LoginViewController.swift in Sources */,
+				AAD0B2DF2B0FC4A1003B4D5F /* UploadImage.swift in Sources */,
 				AAD0B2992B0B0841003B4D5F /* KeyChainManager.swift in Sources */,
 				BA6C6DF62B05FFC500563B22 /* TabBarViewModel.swift in Sources */,
+				AAD0B2D92B0FB55B003B4D5F /* WriteEndPoint.swift in Sources */,
 				BADB1F0C2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift in Sources */,
 				AAD0B2D52B0E04CA003B4D5F /* MacroCarouselViewCell.swift in Sources */,
 				BA90CB842B0F3BF600365AE2 /* PostCollectionViewCell.swift in Sources */,
 				BA6C6DFD2B05FFC500563B22 /* TabBarViewController.swift in Sources */,
+				AAD0B2E12B0FD25B003B4D5F /* ImageURLResponse.swift in Sources */,
 				BA32E17E2B0DC3CB00EA0EE2 /* MyPageViewModel.swift in Sources */,
+				AAD0B2DD2B0FB8F0003B4D5F /* WriteRequestDTO.swift in Sources */,
 				AAD0B2C12B0DA35B003B4D5F /* AppleLoginUseCase.swift in Sources */,
 				D263CA2F2B054A0E00B4A144 /* SearchResultViewController.swift in Sources */,
 				BA32E17F2B0DC3CB00EA0EE2 /* MyPageViewController.swift in Sources */,

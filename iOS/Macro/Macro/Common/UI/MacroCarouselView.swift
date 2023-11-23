@@ -179,7 +179,6 @@ extension MacroCarouselView {
     func updateData(_ newData: [UIImage?]) {
         items = newData
         self.pageController.numberOfPages = items.count + (viewType == .write ? 1 : 0 )
-        debugPrint(items.count + (viewType == .write ? 1 : 0 ))
         
         DispatchQueue.main.async {
             self.collectionView.reloadData()
