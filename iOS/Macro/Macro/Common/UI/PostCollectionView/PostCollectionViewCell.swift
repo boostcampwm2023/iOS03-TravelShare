@@ -7,15 +7,15 @@
 
 import UIKit
 
-final class PostCollectionViewCell: UICollectionViewCell {
+final class PostCollectionViewCell<T: PostCollectionViewProtocol>: UICollectionViewCell {
     
     // MARK: - UI Components
-    let postContentView: PostContentView = PostContentView()
-    let postProfileView: PostProfileView = PostProfileView()
+    let postContentView: PostContentView = PostContentView<T>()
+    let postProfileView: PostProfileView = PostProfileView<T>()
     
     // MARK: - Properties
-    static let identifier = "PostCollectionViewCell"
-    var homeViewModel: HomeViewModel?
+    let identifier = "PostCollectionViewCell"
+    var homeViewModel: T?
     
     // MARK: - Initialization
     override init(frame: CGRect) {
@@ -43,28 +43,28 @@ private extension PostCollectionViewCell {
     func setLayoutConstraints() {
         NSLayoutConstraint.activate([
             postContentView.topAnchor.constraint(equalTo: self.topAnchor),
-            postContentView.heightAnchor.constraint(equalToConstant: Metrics.postContentViewHeight),
+            postContentView.heightAnchor.constraint(equalToConstant: 200),
             postContentView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             postContentView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
-            postProfileView.topAnchor.constraint(equalTo: postContentView.bottomAnchor, constant: Padding.postProfileViewTop),
-            postProfileView.heightAnchor.constraint(equalToConstant: Metrics.postProfileViewHeight),
+            postProfileView.topAnchor.constraint(equalTo: postContentView.bottomAnchor, constant: 10),
+            postProfileView.heightAnchor.constraint(equalToConstant: 40),
             postProfileView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             postProfileView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
             
         ])
     }
     
-    func componetConfigure(item: PostFindResponse, viewModel: HomeViewModel) {
+    func componetConfigure(item: PostFindResponse, viewModel: T) {
         if postContentView.viewModel == nil {
             postContentView.setLayout()
-            postContentView.configure(item: item)
             postContentView.bind(viewModel: viewModel)
+            postContentView.configure(item: item)
             }
         if postProfileView.viewModel == nil {
             postProfileView.setLayout()
-            postProfileView.configure(item: item)
             postProfileView.bind(viewModel: viewModel)
+            postProfileView.configure(item: item)
            }
         
     }
@@ -74,24 +74,10 @@ private extension PostCollectionViewCell {
 
 extension PostCollectionViewCell {
     
-    func configure(item: PostFindResponse, viewModel: HomeViewModel) {
+    func configure(item: PostFindResponse, viewModel: T) {
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
         componetConfigure(item: item, viewModel: viewModel)
-    }
-}
-
-// MARK: - LayoutMetrics
-
-private extension PostCollectionViewCell {
-    
-    enum Metrics {
-        static let postContentViewHeight: CGFloat = 200
-        static let postProfileViewHeight: CGFloat = 40
-    }
-    
-    enum Padding {
-        static let postProfileViewTop: CGFloat = 10
     }
 }
