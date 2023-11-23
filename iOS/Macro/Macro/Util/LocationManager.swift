@@ -9,11 +9,15 @@ import UIKit
 import Combine
 import CoreLocation
 
-class LocationManager: NSObject, CLLocationManagerDelegate {
-    let locationManager = CLLocationManager()
+final class LocationManager: NSObject, CLLocationManagerDelegate {
+    
+    // MARK: - Properties
+    private let locationManager = CLLocationManager()
+    private var timer: Timer?
+    
     var locationPublisher = CurrentValueSubject<[CLLocation], Never>([])
-    var timer: Timer?
 
+    // MARK: - Init
     override init() {
         super.init()
         self.locationManager.delegate = self
@@ -24,16 +28,18 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         self.timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(updateLocation), userInfo: nil, repeats: true)
     }
 
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        self.locationPublisher.value = locations
-    }
-
-    @objc func updateLocation() {
-        self.locationManager.startUpdatingLocation()
-    }
-    
     deinit {
         self.timer?.invalidate()
         self.timer = nil
     }
+    
+    // MARK: - Methods
+    internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        self.locationPublisher.value = locations
+    }
+
+    @objc private func updateLocation() {
+        self.locationManager.startUpdatingLocation()
+    }
+    
 }
