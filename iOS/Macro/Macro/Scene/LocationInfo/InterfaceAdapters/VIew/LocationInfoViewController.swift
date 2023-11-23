@@ -13,39 +13,72 @@ final class LocationInfoViewController: UIViewController {
     
     // MARK: - UI Components
     
-    private let label: UILabel = {
+    private let placeNameLabel: UILabel = {
         let label = UILabel()
         return label
     }()
+    
+    private let addressLabel: UILabel = {
+        let label = UILabel()
+        return label
+    }()
+    
+    private let categoryNameLabel: UILabel = {
+        let label = UILabel()
+        return label
+    }()
+    
+    private let categoryGroupLabel: UILabel = {
+        let label = UILabel()
+        return label
+    }()
+    
+    private let phoneLabel: UILabel = {
+        let label = UILabel()
+        return label
+    }()
+
+    private let verticalStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.spacing = 10
+        stackView.axis = .vertical
+        return stackView
+    }()
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        
         setUpLayout()
     }
     
     // MARK: - Init
-    
     
 }
 
 // MARK: - UI Settings
 
 extension LocationInfoViewController {
-
+    
     private func setTranslatesAutoresizingMaskIntoConstraints() {
-        label.translatesAutoresizingMaskIntoConstraints = false
+        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
     }
     private func addsubviews() {
-        view.addSubview(label)
+        view.addSubview(verticalStackView)
+        [placeNameLabel, addressLabel, categoryNameLabel, categoryGroupLabel, phoneLabel].forEach {
+            verticalStackView.addArrangedSubview($0)
+        }
     }
     
     private func setLayoutConstraints() {
         NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-            label.heightAnchor.constraint(equalToConstant: 40),
+            verticalStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 25),
+            verticalStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 32),
+            verticalStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -32)
         ])
+        
     }
     
 }
@@ -66,15 +99,17 @@ extension LocationInfoViewController {
     
 }
 
-
 // MARK: - Methods
 
 extension LocationInfoViewController {
-    func updateText(_ text: String) {
-        label.text = text
+    func updateText(_ model: LocationDetail) {
+        placeNameLabel.text = "가게 정보: " + model.placeName
+        addressLabel.text = "주소: " + model.addressName
+        categoryNameLabel.text = "종류: " + model.categoryName
+        categoryGroupLabel.text = "분류: " + model.categoryGroupName
+        phoneLabel.text = "전화번호: " + (model.phone?.isEmpty == true ? "-" : (model.phone ?? "-"))
     }
 }
-
 
 // MARK: - LayoutMetrics
 
