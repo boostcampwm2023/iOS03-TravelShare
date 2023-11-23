@@ -21,7 +21,7 @@ export class Post {
   @ManyToOne(() => User, (user) => user.email, {
     cascade: ['remove', 'soft-remove', 'update', 'recover'],
   })
-  @JoinColumn({ name: 'user_email' })
+  @JoinColumn({ name: 'user_id' })
   writer: User;
 
   @Column()
