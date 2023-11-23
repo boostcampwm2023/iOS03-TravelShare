@@ -12,7 +12,7 @@ import {
 } from 'class-validator';
 
 class PostWriteElement {
-  @ApiProperty({ description: '이미지 url' })
+  @ApiProperty({ description: '이미지 url', required: false })
   @IsUrl()
   @IsOptional()
   imageUrl?: string;
@@ -51,6 +51,8 @@ export class PostWriteBody {
 
   @ApiProperty({ description: '해시태그' })
   @IsArray()
+  @ValidateNested()
+  @Type(() => String)
   hashtag: string[] = [];
 
   @ApiProperty({ description: '사진과 글', type: [PostWriteElement] })
