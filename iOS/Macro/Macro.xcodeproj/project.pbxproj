@@ -36,11 +36,7 @@
 		BA32E1952B0DEBC500EA0EE2 /* LocationInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E1942B0DEBC500EA0EE2 /* LocationInfoViewController.swift */; };
 		BA33AA702B0AF9DD0065D1E0 /* TaBarBackgroundLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA6F2B0AF9DD0065D1E0 /* TaBarBackgroundLineView.swift */; };
 		BA33AA852B0AF9F30065D1E0 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA742B0AF9F20065D1E0 /* HomeViewModel.swift */; };
-		BA33AA872B0AF9F30065D1E0 /* HomeCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA772B0AF9F20065D1E0 /* HomeCollectionView.swift */; };
-		BA33AA882B0AF9F30065D1E0 /* PostCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA782B0AF9F20065D1E0 /* PostCollectionViewCell.swift */; };
 		BA33AA892B0AF9F30065D1E0 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA792B0AF9F20065D1E0 /* HomeViewController.swift */; };
-		BA33AA8A2B0AF9F30065D1E0 /* PostProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA7A2B0AF9F20065D1E0 /* PostProfileView.swift */; };
-		BA33AA8B2B0AF9F30065D1E0 /* PostContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA7B2B0AF9F20065D1E0 /* PostContentView.swift */; };
 		BA33AA8C2B0AF9F30065D1E0 /* HomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA7C2B0AF9F20065D1E0 /* HomeHeaderView.swift */; };
 		BA6C6DF32B05FFC500563B22 /* CAGradientLayer+.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DE22B05FFC400563B22 /* CAGradientLayer+.swift */; };
 		BA6C6DF42B05FFC500563B22 /* CircularViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DE32B05FFC400563B22 /* CircularViewProtocol.swift */; };
@@ -65,6 +61,11 @@
 		BA8DC4182B0B6AD400929E01 /* MacroDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = BA8DC4172B0B6AD400929E01 /* MacroDesignSystem */; };
 		BA8DC41B2B0B6ADD00929E01 /* MacroNetwork in Frameworks */ = {isa = PBXBuildFile; productRef = BA8DC41A2B0B6ADD00929E01 /* MacroNetwork */; };
 		BA90CB3B2B0EF88700365AE2 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CB3A2B0EF88700365AE2 /* LocationManager.swift */; };
+		BA90CB7E2B0F3BA500365AE2 /* PostCollectionViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CB7D2B0F3BA500365AE2 /* PostCollectionViewProtocol.swift */; };
+		BA90CB842B0F3BF600365AE2 /* PostCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CB802B0F3BF600365AE2 /* PostCollectionViewCell.swift */; };
+		BA90CB852B0F3BF600365AE2 /* PostProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CB812B0F3BF600365AE2 /* PostProfileView.swift */; };
+		BA90CB862B0F3BF600365AE2 /* PostContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CB822B0F3BF600365AE2 /* PostContentView.swift */; };
+		BA90CB872B0F3BF600365AE2 /* PostCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CB832B0F3BF600365AE2 /* PostCollectionView.swift */; };
 		BADB1F0C2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADB1F0B2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift */; };
 		D241DC6E2B0D9FFE0037DDB6 /* SearchUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC6D2B0D9FFE0037DDB6 /* SearchUseCase.swift */; };
 		D241DC712B0DA0070037DDB6 /* CommonUIComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC702B0DA0070037DDB6 /* CommonUIComponents.swift */; };
@@ -119,11 +120,7 @@
 		BA33AA6F2B0AF9DD0065D1E0 /* TaBarBackgroundLineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaBarBackgroundLineView.swift; sourceTree = "<group>"; };
 		BA33AA742B0AF9F20065D1E0 /* HomeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		BA33AA752B0AF9F20065D1E0 /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
-		BA33AA772B0AF9F20065D1E0 /* HomeCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeCollectionView.swift; sourceTree = "<group>"; };
-		BA33AA782B0AF9F20065D1E0 /* PostCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCollectionViewCell.swift; sourceTree = "<group>"; };
 		BA33AA792B0AF9F20065D1E0 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
-		BA33AA7A2B0AF9F20065D1E0 /* PostProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostProfileView.swift; sourceTree = "<group>"; };
-		BA33AA7B2B0AF9F20065D1E0 /* PostContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostContentView.swift; sourceTree = "<group>"; };
 		BA33AA7C2B0AF9F20065D1E0 /* HomeHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeHeaderView.swift; sourceTree = "<group>"; };
 		BA6C6DE22B05FFC400563B22 /* CAGradientLayer+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CAGradientLayer+.swift"; sourceTree = "<group>"; };
 		BA6C6DE32B05FFC400563B22 /* CircularViewProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularViewProtocol.swift; sourceTree = "<group>"; };
@@ -146,6 +143,11 @@
 		BA8DC4122B0B602000929E01 /* WriteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteViewModel.swift; sourceTree = "<group>"; };
 		BA8DC4142B0B602D00929E01 /* WriteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteViewController.swift; sourceTree = "<group>"; };
 		BA90CB3A2B0EF88700365AE2 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		BA90CB7D2B0F3BA500365AE2 /* PostCollectionViewProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCollectionViewProtocol.swift; sourceTree = "<group>"; };
+		BA90CB802B0F3BF600365AE2 /* PostCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCollectionViewCell.swift; sourceTree = "<group>"; };
+		BA90CB812B0F3BF600365AE2 /* PostProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostProfileView.swift; sourceTree = "<group>"; };
+		BA90CB822B0F3BF600365AE2 /* PostContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostContentView.swift; sourceTree = "<group>"; };
+		BA90CB832B0F3BF600365AE2 /* PostCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCollectionView.swift; sourceTree = "<group>"; };
 		BADB1F0B2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUnresearchableViewController.swift; sourceTree = "<group>"; };
 		D241DC6D2B0D9FFE0037DDB6 /* SearchUseCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUseCase.swift; sourceTree = "<group>"; };
 		D241DC702B0DA0070037DDB6 /* CommonUIComponents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonUIComponents.swift; sourceTree = "<group>"; };
@@ -505,11 +507,7 @@
 		BA33AA762B0AF9F20065D1E0 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				BA33AA772B0AF9F20065D1E0 /* HomeCollectionView.swift */,
-				BA33AA782B0AF9F20065D1E0 /* PostCollectionViewCell.swift */,
 				BA33AA792B0AF9F20065D1E0 /* HomeViewController.swift */,
-				BA33AA7A2B0AF9F20065D1E0 /* PostProfileView.swift */,
-				BA33AA7B2B0AF9F20065D1E0 /* PostContentView.swift */,
 				BA33AA7C2B0AF9F20065D1E0 /* HomeHeaderView.swift */,
 			);
 			path = View;
@@ -533,6 +531,7 @@
 		BA4ED7272B0B4C52000F0B5B /* CommonProtocol */ = {
 			isa = PBXGroup;
 			children = (
+				BA90CB7D2B0F3BA500365AE2 /* PostCollectionViewProtocol.swift */,
 				BA8DC3F92B0B5DD100929E01 /* BaseViewControllerProtocol.swift */,
 				D263CA232B04134600B4A144 /* ViewModelProtocol.swift */,
 				BA6C6DE32B05FFC400563B22 /* CircularViewProtocol.swift */,
@@ -729,6 +728,17 @@
 			path = UseCases;
 			sourceTree = "<group>";
 		};
+		BA90CB7F2B0F3BF500365AE2 /* PostCollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				BA90CB802B0F3BF600365AE2 /* PostCollectionViewCell.swift */,
+				BA90CB812B0F3BF600365AE2 /* PostProfileView.swift */,
+				BA90CB822B0F3BF600365AE2 /* PostContentView.swift */,
+				BA90CB832B0F3BF600365AE2 /* PostCollectionView.swift */,
+			);
+			path = PostCollectionView;
+			sourceTree = "<group>";
+		};
 		BAA07ADE2B0251CF00884F3C /* Scene */ = {
 			isa = PBXGroup;
 			children = (
@@ -774,6 +784,7 @@
 		D241DC6F2B0DA0070037DDB6 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				BA90CB7F2B0F3BF500365AE2 /* PostCollectionView */,
 				D241DC702B0DA0070037DDB6 /* CommonUIComponents.swift */,
 				AAD0B2D22B0E03DE003B4D5F /* MacroCarouselView.swift */,
 				AAD0B2D42B0E04CA003B4D5F /* MacroCarouselViewCell.swift */,
@@ -1009,9 +1020,10 @@
 				D241DC762B0DA00F0037DDB6 /* PostFindResponse.swift in Sources */,
 				AAD0B2C22B0DA35B003B4D5F /* LoginResponse.swift in Sources */,
 				D241DC7A2B0DA0C00037DDB6 /* PostEndPoint.swift in Sources */,
-				BA33AA8A2B0AF9F30065D1E0 /* PostProfileView.swift in Sources */,
+				BA90CB862B0F3BF600365AE2 /* PostContentView.swift in Sources */,
 				D241DC752B0DA00F0037DDB6 /* UserInfo.swift in Sources */,
 				BA33AA892B0AF9F30065D1E0 /* HomeViewController.swift in Sources */,
+				BA90CB872B0F3BF600365AE2 /* PostCollectionView.swift in Sources */,
 				D263CA132B02DD8900B4A144 /* RouteTableViewController.swift in Sources */,
 				BA90CB3B2B0EF88700365AE2 /* LocationManager.swift in Sources */,
 				BA6C6DF32B05FFC500563B22 /* CAGradientLayer+.swift in Sources */,
@@ -1020,6 +1032,7 @@
 				BA8DC3FA2B0B5DD100929E01 /* BaseViewControllerProtocol.swift in Sources */,
 				BA33AA8C2B0AF9F30065D1E0 /* HomeHeaderView.swift in Sources */,
 				BA32E1762B0DC2F900EA0EE2 /* UserInfoViewModel.swift in Sources */,
+				BA90CB7E2B0F3BA500365AE2 /* PostCollectionViewProtocol.swift in Sources */,
 				BA8DC4132B0B602000929E01 /* WriteViewModel.swift in Sources */,
 				AA46C4B82B02304400856628 /* AppDelegate.swift in Sources */,
 				BA6C6DF92B05FFC500563B22 /* TabBarCenterView.swift in Sources */,
@@ -1035,9 +1048,9 @@
 				BA6C6DF62B05FFC500563B22 /* TabBarViewModel.swift in Sources */,
 				BADB1F0C2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift in Sources */,
 				AAD0B2D52B0E04CA003B4D5F /* MacroCarouselViewCell.swift in Sources */,
+				BA90CB842B0F3BF600365AE2 /* PostCollectionViewCell.swift in Sources */,
 				BA6C6DFD2B05FFC500563B22 /* TabBarViewController.swift in Sources */,
 				BA32E17E2B0DC3CB00EA0EE2 /* MyPageViewModel.swift in Sources */,
-				BA33AA872B0AF9F30065D1E0 /* HomeCollectionView.swift in Sources */,
 				AAD0B2C12B0DA35B003B4D5F /* AppleLoginUseCase.swift in Sources */,
 				D263CA2F2B054A0E00B4A144 /* SearchResultViewController.swift in Sources */,
 				BA32E17F2B0DC3CB00EA0EE2 /* MyPageViewController.swift in Sources */,
@@ -1045,9 +1058,7 @@
 				D263CA262B04147E00B4A144 /* TravelViewController.swift in Sources */,
 				BA32E1772B0DC2F900EA0EE2 /* UserInfoViewController.swift in Sources */,
 				AAD0B2982B0B0841003B4D5F /* CacheManager.swift in Sources */,
-				BA33AA882B0AF9F30065D1E0 /* PostCollectionViewCell.swift in Sources */,
 				D263CA242B04134600B4A144 /* ViewModelProtocol.swift in Sources */,
-				BA33AA8B2B0AF9F30065D1E0 /* PostContentView.swift in Sources */,
 				D241DC782B0DA07E0037DDB6 /* PostFindEndPoint.swift in Sources */,
 				D263CA2D2B052ECC00B4A144 /* TravelEndPoint.swift in Sources */,
 				AAD0B2A42B0B0857003B4D5F /* DefaultLoginRepository.swift in Sources */,
@@ -1056,6 +1067,7 @@
 				AAD0B2C02B0DA35B003B4D5F /* LoginEndPoint.swift in Sources */,
 				D241DC712B0DA0070037DDB6 /* CommonUIComponents.swift in Sources */,
 				BA8DC4072B0B5F0600929E01 /* SearchViewController.swift in Sources */,
+				BA90CB852B0F3BF600365AE2 /* PostProfileView.swift in Sources */,
 				BA6C6DFB2B05FFC500563B22 /* TabBarBackgroundLargeCirclceView.swift in Sources */,
 				BA33AA852B0AF9F30065D1E0 /* HomeViewModel.swift in Sources */,
 				AAD0B2BD2B0DA35B003B4D5F /* LoginViewModel.swift in Sources */,

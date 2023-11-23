@@ -11,22 +11,17 @@ import UIKit
 
 final class HomeViewController: UIViewController {
     
-    // MARK: - UI Components
-    
-    private let homeHeaderView: HomeHeaderView = HomeHeaderView()
-    lazy var homeCollectionView: HomeCollectionView = HomeCollectionView(frame: .zero, collectionViewLayout: homeCollectionViewLayout, viewModel: viewModel)
-    
     // MARK: - Properties
     
     private let viewModel: HomeViewModel
     private let inputSubject: PassthroughSubject<HomeViewModel.Input, Never> = .init()
     private let provider = APIProvider(session: URLSession.shared)
     private var cancellables = Set<AnyCancellable>()
-    private var homeCollectionViewLayout: UICollectionViewFlowLayout {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        return layout
-    }
+    
+    // MARK: - UI Components
+    
+    private let homeHeaderView: HomeHeaderView = HomeHeaderView()
+    lazy var homeCollectionView: PostCollectionView = PostCollectionView(frame: .zero, viewModel: viewModel)
     
     // MARK: - Initialization
     
@@ -48,7 +43,7 @@ final class HomeViewController: UIViewController {
         inputSubject.send(.searchMockPost)
         setUpLayout()
     }
-    
+
 }
 
 // MARK: UI Settings
@@ -101,7 +96,7 @@ private extension HomeViewController {
     }
     
     func navigateToProfileView(_ userId: String) {
-        let userInfoViewModel = UserInfoViewModel()
+        let userInfoViewModel = UserInfoViewModel(postSearcher: viewModel.postSearcher)
         let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: userId)
 
         navigationController?.pushViewController(userInfoViewController, animated: true)

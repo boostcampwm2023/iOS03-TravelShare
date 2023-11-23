@@ -7,21 +7,25 @@
 
 import UIKit
 
-final class HomeCollectionView: UICollectionView {
+final class PostCollectionView<T: PostCollectionViewProtocol>: UICollectionView,
+                                                               UICollectionViewDelegate,
+                                                               UICollectionViewDataSource,
+                                                               UICollectionViewDelegateFlowLayout {
     
     // MARK: - Properties
     
-    let viewModel: HomeViewModel
+    let viewModel: T
     
     // MARK: - Initialization
     
-    init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout, viewModel: HomeViewModel) {
+    init(frame: CGRect, viewModel: T) {
         self.viewModel = viewModel
+        let layout = UICollectionViewFlowLayout()
         super.init(frame: frame, collectionViewLayout: layout)
         
         self.backgroundColor = UIColor.appColor(.blue1)
         
-        self.register(PostCollectionViewCell.self, forCellWithReuseIdentifier: PostCollectionViewCell.identifier)
+        self.register(PostCollectionViewCell<T>.self, forCellWithReuseIdentifier: "PostCollectionViewCell")
         
         self.showsVerticalScrollIndicator = false
         
@@ -33,59 +37,39 @@ final class HomeCollectionView: UICollectionView {
         fatalError("init(coder:) has not been implemented")
     }
     
-}
-
-extension HomeCollectionView: UICollectionViewDelegate {
+    // MARK: - Methods
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.posts.count
     }
-}
-
-extension HomeCollectionView: UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: PostCollectionViewCell.identifier,
-            for: indexPath) as? PostCollectionViewCell else { return UICollectionViewCell()
+            withReuseIdentifier: "PostCollectionViewCell",
+            for: indexPath) as? PostCollectionViewCell<T> else { return UICollectionViewCell()
         }
         let item: PostFindResponse = viewModel.posts[indexPath.row]
         cell.configure(item: item, viewModel: viewModel)
         
         return cell
     }
-}
-
-extension HomeCollectionView: UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: Metrics.cellWidth, height: Metrics.cellHeight)
+        return CGSize(width: UIScreen.width - 20, height: 250)
     }
     
-    func collectionView(_ collectionView: UICollectionView, 
+    func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return Padding.collectionViewMiniMumSpacing
+        return 20
     }
     
-    func collectionView(_ collectionView: UICollectionView, 
+    func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 0, bottom: Padding.collectionViewBottom, right: 0)
+        return UIEdgeInsets(top: 0, left: 0, bottom: 80, right: 0)
       }
-}
-
-// MARK: - LayoutMetrics
-
-private extension HomeCollectionView {
-    
-    enum Metrics {
-        static let cellWidth: CGFloat = UIScreen.width - 20
-        static let cellHeight: CGFloat = 250
-    }
-    
-    enum Padding {
-        static let collectionViewMiniMumSpacing: CGFloat = 20
-        static let collectionViewBottom: CGFloat = 80
-    }
 }

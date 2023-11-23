@@ -8,15 +8,34 @@
 import Combine
 import Foundation
 
-final class HomeViewModel: ViewModelProtocol {
+final class HomeViewModel: ViewModelProtocol, PostCollectionViewProtocol {
+    
+    func navigateToReadView(postId: String) {
+        self.outputSubject.send(.navigateToReadView(postId))
+    }
+    
+    func navigateToProfileView(userId: String) {
+        self.outputSubject.send(.navigateToProfileView(userId))
+    }
+
+    func searchUser(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
+        input.sink { [weak self] input in
+            switch input {
+            case .searchPosts:
+              self?.searchPosts()
+            case .searchMockPost:
+                self?.searchMockPost()
+            }
+        }.store(in: &cancellables)
+        
+        return outputSubject.eraseToAnyPublisher()
+    }
     
     // MARK: - Input
     
     enum Input {
         case searchPosts
         case searchMockPost
-        case searchUser(String)
-        case searchPost(String)
     }
     
     // MARK: - Output
@@ -31,7 +50,7 @@ final class HomeViewModel: ViewModelProtocol {
     // MARK: - Properties
     
     private let outputSubject = PassthroughSubject<Output, Never>()
-    private let postSearcher: SearchUseCase
+    let postSearcher: SearchUseCase
     private var cancellables = Set<AnyCancellable>()
     var posts: [PostFindResponse] = []
     
@@ -48,10 +67,6 @@ final class HomeViewModel: ViewModelProtocol {
               self?.searchPosts()
             case .searchMockPost:
                 self?.searchMockPost()
-            case let .searchUser(userId):
-                self?.searchUser(id: userId)
-            case let .searchPost(postId):
-                self?.searchPost(postId: postId)
             }
         }.store(in: &cancellables)
         
@@ -77,10 +92,6 @@ final class HomeViewModel: ViewModelProtocol {
             self?.outputSubject.send(.updateSearchResult(response))
         }.store(in: &cancellables)
         
-    }
-    
-    private func searchUser(id: String) {
-        self.outputSubject.send(.navigateToProfileView(id))
     }
     
     private func searchPost(postId: String) {

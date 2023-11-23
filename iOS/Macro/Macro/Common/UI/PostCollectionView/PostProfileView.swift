@@ -8,12 +8,11 @@
 import Combine
 import UIKit
 
-final class PostProfileView: UIView {
+final class PostProfileView<T: PostCollectionViewProtocol>: UIView {
     
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
-    var viewModel: HomeViewModel?
-    private let inputSubject: PassthroughSubject<HomeViewModel.Input, Never> = .init()
+    var viewModel: T?
     
     // MARK: - UI Components
     
@@ -71,6 +70,28 @@ final class PostProfileView: UIView {
         super.init(coder: coder)
     }
     
+    // MARK: - Handle Gesture
+    
+    @objc private func profileImageTap(_ sender: UITapGestureRecognizer) {
+        guard let userId: String = self.userNameLabel.text else { return }
+        viewModel?.navigateToProfileView(userId: userId)
+    }
+    
+    @objc private func likeImageViewTap(_ sender: UITapGestureRecognizer) {
+        guard let likeCount: Int = Int(self.likeCountLabel.text ?? "0") else { return }
+        viewModel?.touchLike(postId: "") { isLike in
+            DispatchQueue.main.async { [weak self] in
+                if isLike {
+                    self?.likeImageView.image = UIImage.appImage(.handThumbsupFill)
+                    self?.likeCountLabel.text = "\(likeCount + 1)"
+                } else {
+                    self?.likeImageView.image = UIImage.appImage(.handThumbsup)
+                    self?.likeCountLabel.text = "\(likeCount - 1)"
+                }
+            }
+        }
+    }
+    
 }
 
 // MARK: - UI Settings
@@ -99,38 +120,50 @@ private extension PostProfileView {
         
         NSLayoutConstraint.activate([
             profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            profileImageView.widthAnchor.constraint(equalToConstant: Metrics.profileImageViewWidth),
-            profileImageView.heightAnchor.constraint(equalToConstant: Metrics.profileImageViewHeight),
-            profileImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Padding.profileImageViewLeading),
+            profileImageView.widthAnchor.constraint(equalToConstant: 36),
+            profileImageView.heightAnchor.constraint(equalToConstant: 36),
+            profileImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
             
-            userNameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: Padding.userNameLabelLeading),
+            userNameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 10),
             userNameLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             userNameLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             
-            viewCountLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: Padding.viewCountLabelTrailing),
+            viewCountLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
             viewCountLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             
-            viewImageView.trailingAnchor.constraint(equalTo: viewCountLabel.leadingAnchor, constant: Padding.viewImageViewTrailing),
+            viewImageView.trailingAnchor.constraint(equalTo: viewCountLabel.leadingAnchor, constant: -10),
             viewImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            viewImageView.widthAnchor.constraint(equalToConstant: Metrics.viewImageViewWidth),
-            viewImageView.heightAnchor.constraint(equalToConstant: Metrics.viewImageViewHeight),
+            viewImageView.widthAnchor.constraint(equalToConstant: 16),
+            viewImageView.heightAnchor.constraint(equalToConstant: 16),
             
-            likeCountLabel.trailingAnchor.constraint(equalTo: viewImageView.leadingAnchor, constant: Padding.likeCountLabelTrailing),
+            likeCountLabel.trailingAnchor.constraint(equalTo: viewImageView.leadingAnchor, constant: -20),
             likeCountLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             
-            likeImageView.trailingAnchor.constraint(equalTo: likeCountLabel.leadingAnchor, constant: Padding.likeImageViewTrailing),
-            likeImageView.widthAnchor.constraint(equalToConstant: Metrics.likeImageViewWidth),
-            likeImageView.heightAnchor.constraint(equalToConstant: Metrics.likeImageViewHieght),
+            likeImageView.trailingAnchor.constraint(equalTo: likeCountLabel.leadingAnchor, constant: -10),
+            likeImageView.widthAnchor.constraint(equalToConstant: 16),
+            likeImageView.heightAnchor.constraint(equalToConstant: 16),
             likeImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor)
         ])
     }
     
     func addTapGesture() {
         profileImageView.isUserInteractionEnabled = true
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(profileImageTap(_:)))
-        profileImageView.addGestureRecognizer(tapGesture)
+        let profileImageViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(profileImageTap(_:)))
+        profileImageView.addGestureRecognizer(profileImageViewTapGesture)
+        
+        likeImageView.isUserInteractionEnabled = true
+        let likeImageViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(likeImageViewTap(_:)))
+        likeImageView.addGestureRecognizer(likeImageViewTapGesture)
     }
     
+}
+
+// MARK: - Bind
+
+extension PostProfileView {
+    func bind(viewModel: T) {
+        self.viewModel = viewModel
+    }
 }
 
 // MARK: - Method
@@ -145,7 +178,7 @@ extension PostProfileView {
     }
     
     func configure(item: PostFindResponse) {
-        loadImage(profileImageStringURL: item.userInfo.imageUrl) { profileImage in
+        viewModel?.loadImage(profileImageStringURL: item.userInfo.imageUrl) { profileImage in
             DispatchQueue.main.async { [self] in
                 if let image = profileImage {
                     profileImageView.image = image
@@ -159,60 +192,6 @@ extension PostProfileView {
         userNameLabel.text = item.userInfo.name
         likeCountLabel.text = "\(item.likeNum)"
         viewCountLabel.text = "\(item.viewNum)"
-    }
-    
-    func bind(viewModel: HomeViewModel) {
-        self.viewModel = viewModel
-        guard let viewModel = self.viewModel else { return }
-        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
-    }
-}
-
-// MARK: - Handdle Gesture
-private extension PostProfileView {
-    @objc private func profileImageTap(_ sender: UITapGestureRecognizer) {
-        guard let userId: String = self.userNameLabel.text else { return }
-        inputSubject.send(.searchUser(userId))
-    }
-}
-
-// MARK: - LayoutMetrics
-
-private extension PostProfileView {
-    
-    enum Metrics {
-        static let profileImageViewWidth: CGFloat = 36
-        static let profileImageViewHeight: CGFloat = 36
-        static let viewImageViewWidth: CGFloat = 16
-        static let viewImageViewHeight: CGFloat = 16
-        static let likeImageViewWidth: CGFloat = 16
-        static let likeImageViewHieght: CGFloat = 16
-    }
-
-    enum Padding {
-        static let profileImageViewLeading: CGFloat = 10
-        static let userNameLabelLeading: CGFloat = 10
-        static let viewCountLabelTrailing: CGFloat = -10
-        static let viewImageViewTrailing: CGFloat = -10
-        static let likeCountLabelTrailing: CGFloat = -20
-        static let likeImageViewTrailing: CGFloat = -10
-    }
-}
-
-// TODO: 현재 Network 모듈이 잘 이해되지 않아 작성한 코드입니다. 차후 옮기는 작업이 필요합니다.
-private extension PostProfileView {
-    
-    func loadImage(profileImageStringURL: String, completion: @escaping (UIImage?) -> Void) {
-        guard let url = URL(string: profileImageStringURL) else { return }
-        URLSession.shared.dataTask(with: url) { data, _, _ in
-            if let data = data, let image = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    completion(image)
-                }
-            } else {
-                completion(nil)
-            }
-        }.resume()
     }
     
 }
