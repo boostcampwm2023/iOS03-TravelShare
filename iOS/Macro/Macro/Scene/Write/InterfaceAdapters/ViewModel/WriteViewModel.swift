@@ -13,6 +13,7 @@ class WriteViewModel: ViewModelProtocol {
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
+    var isVisibility: Bool = false
     
     // MARK: - init
     init() {
@@ -21,12 +22,13 @@ class WriteViewModel: ViewModelProtocol {
     // MARK: - Input
     
     enum Input {
+        case isVisibilityButtonTouched
     }
     
     // MARK: - Output
 
     enum Output {
-        case appleLoginCompleted
+        case isVisibilityToggle(Bool)
     }
     
     // MARK: - Methods
@@ -34,9 +36,18 @@ class WriteViewModel: ViewModelProtocol {
         input
             .sink { [weak self] input in
                 switch input {
+                case .isVisibilityButtonTouched:
+//                    self?.outputSubject.send(.isVisibilityToggle(true))
+                    self?.isVisibilityToggle()
                 }
             }
             .store(in: &cancellables)
+        
         return outputSubject.eraseToAnyPublisher()
+    }
+    
+    private func isVisibilityToggle() {
+        isVisibility.toggle()
+        outputSubject.send(.isVisibilityToggle(isVisibility))
     }
 }
