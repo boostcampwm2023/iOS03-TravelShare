@@ -64,6 +64,7 @@
 		BA8DC4152B0B602D00929E01 /* WriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8DC4142B0B602D00929E01 /* WriteViewController.swift */; };
 		BA8DC4182B0B6AD400929E01 /* MacroDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = BA8DC4172B0B6AD400929E01 /* MacroDesignSystem */; };
 		BA8DC41B2B0B6ADD00929E01 /* MacroNetwork in Frameworks */ = {isa = PBXBuildFile; productRef = BA8DC41A2B0B6ADD00929E01 /* MacroNetwork */; };
+		BA90CB3B2B0EF88700365AE2 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CB3A2B0EF88700365AE2 /* LocationManager.swift */; };
 		BADB1F0C2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADB1F0B2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift */; };
 		D241DC6E2B0D9FFE0037DDB6 /* SearchUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC6D2B0D9FFE0037DDB6 /* SearchUseCase.swift */; };
 		D241DC712B0DA0070037DDB6 /* CommonUIComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC702B0DA0070037DDB6 /* CommonUIComponents.swift */; };
@@ -144,6 +145,7 @@
 		BA8DC4092B0B5F7800929E01 /* TabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
 		BA8DC4122B0B602000929E01 /* WriteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteViewModel.swift; sourceTree = "<group>"; };
 		BA8DC4142B0B602D00929E01 /* WriteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteViewController.swift; sourceTree = "<group>"; };
+		BA90CB3A2B0EF88700365AE2 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		BADB1F0B2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUnresearchableViewController.swift; sourceTree = "<group>"; };
 		D241DC6D2B0D9FFE0037DDB6 /* SearchUseCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUseCase.swift; sourceTree = "<group>"; };
 		D241DC702B0DA0070037DDB6 /* CommonUIComponents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonUIComponents.swift; sourceTree = "<group>"; };
@@ -543,6 +545,7 @@
 			children = (
 				BA6C6DE22B05FFC400563B22 /* CAGradientLayer+.swift */,
 				BA6C6DE42B05FFC400563B22 /* UIScreen+.swift */,
+				BA90CB3A2B0EF88700365AE2 /* LocationManager.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -1010,6 +1013,7 @@
 				D241DC752B0DA00F0037DDB6 /* UserInfo.swift in Sources */,
 				BA33AA892B0AF9F30065D1E0 /* HomeViewController.swift in Sources */,
 				D263CA132B02DD8900B4A144 /* RouteTableViewController.swift in Sources */,
+				BA90CB3B2B0EF88700365AE2 /* LocationManager.swift in Sources */,
 				BA6C6DF32B05FFC500563B22 /* CAGradientLayer+.swift in Sources */,
 				BA6C6DFE2B05FFC500563B22 /* TabBarOpacityView.swift in Sources */,
 				D263CA332B06C7B300B4A144 /* SavedRoute.swift in Sources */,
