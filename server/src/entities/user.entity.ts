@@ -26,7 +26,7 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ name: 'image_url',nullable: true })
+  @Column({ name: 'image_url', nullable: true })
   imageUrl: string;
 
   @Column('enum', { default: 'user', enum: ['user', 'admin'] })
