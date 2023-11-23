@@ -21,7 +21,7 @@ export class Post {
   @ManyToOne(() => User, (user) => user.email, {
     cascade: ['remove', 'soft-remove', 'update', 'recover'],
   })
-  @JoinColumn({ name: 'user_id' })
+  @JoinColumn({ name: 'user_email', referencedColumnName: 'email' })
   writer: User;
 
   @Column()
@@ -57,7 +57,7 @@ export class Post {
   @JoinTable({
     name: 'post_likes_users',
     joinColumn: { name: 'post_id' },
-    inverseJoinColumn: { name: 'email' },
+    inverseJoinColumn: { name: 'email', referencedColumnName: 'email' },
   })
   likeUsers: User[];
 
