@@ -58,8 +58,11 @@ export class PostController {
 
   @ApiBody({ description: '업로드', type: PostWriteBody })
   @Post('upload')
-  async upload(@Body() post: PostWriteBody) {
-    await this.postService.upload(post);
+  async upload(
+    @Body() post: PostWriteBody,
+    @AuthenticatedUser() user: Authentication,
+  ) {
+    await this.postService.upload(post, user);
   }
 
   @ApiOperation({ description: '게시글 좋아요' })

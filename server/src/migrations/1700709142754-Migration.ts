@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Migration1700591341852 implements MigrationInterface {
-  name = 'Migration1700591341852';
+export class Migration1700709142754 implements MigrationInterface {
+  name = 'Migration1700709142754';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
@@ -18,17 +18,17 @@ export class Migration1700591341852 implements MigrationInterface {
                 \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
                 \`modified_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
                 \`deleted_at\` datetime(6) NULL,
-                \`user_email\` varchar(36) NULL,
+                \`user_email\` varchar(255) NULL,
                 PRIMARY KEY (\`post_id\`)
             ) ENGINE = InnoDB
         `);
     await queryRunner.query(`
             CREATE TABLE \`post_content_element\` (
                 \`post_content_element_id\` int NOT NULL AUTO_INCREMENT,
-                \`image_url\` varchar(255) NOT NULL,
+                \`image_url\` varchar(255) NULL,
                 \`description\` varchar(255) NOT NULL,
-                \`mapx\` int NOT NULL,
-                \`mapy\` int NOT NULL,
+                \`x\` int NOT NULL,
+                \`y\` int NOT NULL,
                 \`post_id\` int NULL,
                 PRIMARY KEY (\`post_content_element_id\`)
             ) ENGINE = InnoDB
@@ -39,7 +39,7 @@ export class Migration1700591341852 implements MigrationInterface {
                 \`email\` varchar(255) NOT NULL,
                 \`name\` varchar(255) NOT NULL,
                 \`password\` varchar(255) NOT NULL,
-                \`profile\` varchar(255) NULL,
+                \`image_url\` varchar(255) NULL,
                 \`role\` enum ('user', 'admin') NOT NULL DEFAULT 'user',
                 \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
                 \`modified_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
@@ -59,7 +59,7 @@ export class Migration1700591341852 implements MigrationInterface {
     await queryRunner.query(`
             CREATE TABLE \`post_likes_users\` (
                 \`post_id\` int NOT NULL,
-                \`email\` varchar(36) NOT NULL,
+                \`email\` varchar(255) NOT NULL,
                 INDEX \`IDX_ffda72142eef274a2f2755a720\` (\`post_id\`),
                 INDEX \`IDX_d95a0b4c2cd94d27476fbabbd3\` (\`email\`),
                 PRIMARY KEY (\`post_id\`, \`email\`)
@@ -75,8 +75,35 @@ export class Migration1700591341852 implements MigrationInterface {
             ) ENGINE = InnoDB
         `);
     await queryRunner.query(`
+            ALTER TABLE \`post_likes_users\` DROP PRIMARY KEY
+        `);
+    await queryRunner.query(`
+            ALTER TABLE \`post_likes_users\`
+            ADD PRIMARY KEY (\`post_id\`)
+        `);
+    await queryRunner.query(`
+            DROP INDEX \`IDX_d95a0b4c2cd94d27476fbabbd3\` ON \`post_likes_users\`
+        `);
+    await queryRunner.query(`
+            ALTER TABLE \`post_likes_users\` DROP COLUMN \`email\`
+        `);
+    await queryRunner.query(`
+            ALTER TABLE \`post_likes_users\`
+            ADD \`email\` varchar(36) NOT NULL
+        `);
+    await queryRunner.query(`
+            ALTER TABLE \`post_likes_users\` DROP PRIMARY KEY
+        `);
+    await queryRunner.query(`
+            ALTER TABLE \`post_likes_users\`
+            ADD PRIMARY KEY (\`post_id\`, \`email\`)
+        `);
+    await queryRunner.query(`
+            CREATE INDEX \`IDX_d95a0b4c2cd94d27476fbabbd3\` ON \`post_likes_users\` (\`email\`)
+        `);
+    await queryRunner.query(`
             ALTER TABLE \`post\`
-            ADD CONSTRAINT \`FK_ac36ed79dc89ca03b3a630baae8\` FOREIGN KEY (\`user_email\`) REFERENCES \`user\`(\`user_id\`) ON DELETE NO ACTION ON UPDATE NO ACTION
+            ADD CONSTRAINT \`FK_ac36ed79dc89ca03b3a630baae8\` FOREIGN KEY (\`user_email\`) REFERENCES \`user\`(\`email\`) ON DELETE NO ACTION ON UPDATE NO ACTION
         `);
     await queryRunner.query(`
             ALTER TABLE \`post_content_element\`
@@ -92,7 +119,7 @@ export class Migration1700591341852 implements MigrationInterface {
         `);
     await queryRunner.query(`
             ALTER TABLE \`post_likes_users\`
-            ADD CONSTRAINT \`FK_d95a0b4c2cd94d27476fbabbd33\` FOREIGN KEY (\`email\`) REFERENCES \`user\`(\`user_id\`) ON DELETE CASCADE ON UPDATE CASCADE
+            ADD CONSTRAINT \`FK_d95a0b4c2cd94d27476fbabbd33\` FOREIGN KEY (\`email\`) REFERENCES \`user\`(\`email\`) ON DELETE CASCADE ON UPDATE CASCADE
         `);
     await queryRunner.query(`
             ALTER TABLE \`user_followers_relation\`
@@ -125,6 +152,33 @@ export class Migration1700591341852 implements MigrationInterface {
         `);
     await queryRunner.query(`
             ALTER TABLE \`post\` DROP FOREIGN KEY \`FK_ac36ed79dc89ca03b3a630baae8\`
+        `);
+    await queryRunner.query(`
+            DROP INDEX \`IDX_d95a0b4c2cd94d27476fbabbd3\` ON \`post_likes_users\`
+        `);
+    await queryRunner.query(`
+            ALTER TABLE \`post_likes_users\` DROP PRIMARY KEY
+        `);
+    await queryRunner.query(`
+            ALTER TABLE \`post_likes_users\`
+            ADD PRIMARY KEY (\`post_id\`)
+        `);
+    await queryRunner.query(`
+            ALTER TABLE \`post_likes_users\` DROP COLUMN \`email\`
+        `);
+    await queryRunner.query(`
+            ALTER TABLE \`post_likes_users\`
+            ADD \`email\` varchar(255) NOT NULL
+        `);
+    await queryRunner.query(`
+            CREATE INDEX \`IDX_d95a0b4c2cd94d27476fbabbd3\` ON \`post_likes_users\` (\`email\`)
+        `);
+    await queryRunner.query(`
+            ALTER TABLE \`post_likes_users\` DROP PRIMARY KEY
+        `);
+    await queryRunner.query(`
+            ALTER TABLE \`post_likes_users\`
+            ADD PRIMARY KEY (\`post_id\`, \`email\`)
         `);
     await queryRunner.query(`
             DROP INDEX \`IDX_7642e3756290af9092754cda85\` ON \`user_followers_relation\`

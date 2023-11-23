@@ -52,13 +52,6 @@ export class PostService {
     { title, username, ...pagination }: PostFindQuery,
     { email }: Authentication,
   ) {
-    console.log(
-      await this.postRepository.find({
-        where: {
-          title: Like(`%${title}%`),
-        },
-      }),
-    );
     const posts = await this.postRepository.find({
       where: {
         ...(title ? { title: Like(`%${title}%`) } : {}),
@@ -69,7 +62,6 @@ export class PostService {
         writer: true,
       },
     });
-    console.log(posts);
     return plainToInstance(
       PostFindResponse,
       await Promise.all(
@@ -105,7 +97,7 @@ export class PostService {
   }
 
   @Transactional()
-  async upload(post: PostWriteBody) {
+  async upload(post: PostWriteBody, { email }: Authentication) {
     const result = await this.postRepository.insert(post);
     const contents = await this.postContentElementRepository.insert(
       post.contents,
@@ -119,6 +111,11 @@ export class PostService {
           ({ postContentElemntId }) => postContentElemntId,
         ),
       );
+    await this.postRepository
+      .createQueryBuilder()
+      .relation('writer')
+      .of(result.identifiers[0].postId)
+      .set(email);
   }
 
   @Transactional()
