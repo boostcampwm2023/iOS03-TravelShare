@@ -8,7 +8,9 @@ import { PostFindQuery } from './post.find.query.dto';
 import { plainToInstance } from 'class-transformer';
 import { PostFindResponse } from './post.find.response.dto';
 import { PostHitsQuery } from './post.hist.query.dto';
-import { PostReadResponse } from './post.read.response.dto';
+import { PostDetailResponse } from './post.detail.response.dto';
+import { Authentication } from 'src/auth/authentication.dto';
+import { PostDetailQuery } from './post.detail.query.dto';
 
 @Injectable()
 export class PostService {
@@ -19,32 +21,65 @@ export class PostService {
     private readonly postContentElementRepository: Repository<PostContentElement>,
   ) {}
 
-  async popularList(pagination: PostHitsQuery) {
+  async popularList(pagination: PostHitsQuery, { email }: Authentication) {
+    const posts = await this.postRepository.find({
+      where: {
+        createdAt: MoreThan(new Date(Date.now() - 1000 * 60 * 60 * 24 * 30)),
+      },
+      ...(pagination ?? { take: 10 }),
+      order: {
+        likeNum: 'DESC',
+        viewNum: 'DESC',
+      },
+      relations: {
+        writer: true,
+      },
+    });
     return plainToInstance(
       PostFindResponse,
-      await this.postRepository.find({
-        where: {
-          createdAt: MoreThan(new Date(Date.now() - 1000 * 60 * 60 * 24 * 30)),
-        },
-        ...(pagination ?? { take: 15 }),
-        order: {
-          likeNum: 'DESC',
-          viewNum: 'DESC',
-        },
-      }),
+      await Promise.all(
+        posts.map(async (post) => ({
+          ...post,
+          liked: await this.postRepository.exist({
+            where: { likeUsers: { email } },
+          }),
+        })),
+      ),
     );
   }
 
-  async search({ title, username, ...pagination }: PostFindQuery) {
-    return plainToInstance(
-      PostFindResponse,
+  async search(
+    { title, username, ...pagination }: PostFindQuery,
+    { email }: Authentication,
+  ) {
+    console.log(
       await this.postRepository.find({
         where: {
-          ...(title ? { title: Like(title) } : {}),
-          ...(username ? { writer: { name: username } } : {}),
+          title: Like(`%${title}%`),
         },
-        ...pagination,
       }),
+    );
+    const posts = await this.postRepository.find({
+      where: {
+        ...(title ? { title: Like(`%${title}%`) } : {}),
+        ...(username ? { writer: { name: username } } : {}),
+      },
+      ...pagination,
+      relations: {
+        writer: true,
+      },
+    });
+    console.log(posts);
+    return plainToInstance(
+      PostFindResponse,
+      await Promise.all(
+        posts.map(async (post) => ({
+          ...post,
+          liked: await this.postRepository.exist({
+            where: { likeUsers: { email } },
+          }),
+        })),
+      ),
     );
   }
 
@@ -52,20 +87,21 @@ export class PostService {
     return await this.postRepository.findBy({ writer: { email } });
   }
 
-  async detail(id: number) {
-    return plainToInstance(
-      PostReadResponse,
-      await this.postRepository.findOneOrFail({
-        where: {
-          postId: id,
-        },
-        relationLoadStrategy: 'query',
-        relations: {
-          contents: true,
-          writer: true,
-        },
+  async detail({ postId }: PostDetailQuery, { email }: Authentication) {
+    const post = await this.postRepository.findOneOrFail({
+      where: { postId },
+      relationLoadStrategy: 'query',
+      relations: {
+        contents: true,
+        writer: true,
+      },
+    });
+    return plainToInstance(PostDetailResponse, {
+      ...post,
+      liked: await this.postRepository.exist({
+        where: { likeUsers: { email } },
       }),
-    );
+    });
   }
 
   @Transactional()
@@ -86,42 +122,41 @@ export class PostService {
   }
 
   @Transactional()
-  async like(userEmail: string, postId: number) {
-    const liked = await this.isLiked(userEmail, postId);
-    console.log(liked);
+  async like({ postId }: PostDetailQuery, { email }: Authentication) {
+    const liked = await this.isLiked(postId, email);
     if (liked) {
-      return await this.unlikeInternal(userEmail, postId);
+      return await this.unlikeInternal(postId, email);
     } else {
-      return await this.likeInternal(userEmail, postId);
+      return await this.likeInternal(postId, email);
     }
   }
 
-  private async isLiked(userEmail: string, postId: number) {
+  private async isLiked(postId: number, email: string) {
     return await this.postRepository.exist({
       where: {
         postId,
-        likeUsers: { email: userEmail },
+        likeUsers: { email },
       },
     });
   }
 
-  async likeInternal(userEmail: string, postId: number) {
+  private async likeInternal(postId: number, email: string) {
     await this.postRepository
       .createQueryBuilder()
       .relation('likeUsers')
       .of(postId)
-      .add(userEmail);
+      .add(email);
     return await this.postRepository.update(postId, {
       likeNum: () => 'like_num + 1',
     });
   }
 
-  async unlikeInternal(userEmail: string, postId: number) {
+  private async unlikeInternal(postId: number, email: string) {
     await this.postRepository
       .createQueryBuilder()
       .relation('likeUsers')
       .of(postId)
-      .remove(userEmail);
+      .remove(email);
     return await this.postRepository.update(postId, {
       likeNum: () => 'like_num - 1',
     });
