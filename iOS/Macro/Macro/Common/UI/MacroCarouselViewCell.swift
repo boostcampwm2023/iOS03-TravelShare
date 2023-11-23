@@ -1,5 +1,5 @@
 //
-//  MacroCrouselViewCell.swift
+//  MacroCarouselViewCell.swift
 //  Macro
 //
 //  Created by 김경호 on 11/22/23.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MacroCrouselViewCell: UICollectionViewCell {
+class MacroCarouselViewCell: UICollectionViewCell {
     static let id = "MacroCrouselViewCell"
 
     // MARK: UI
