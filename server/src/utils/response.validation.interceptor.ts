@@ -15,7 +15,6 @@ export class ResponseValidationInterceptor implements NestInterceptor {
   ): Observable<any> {
     return next.handle().pipe(
       map(async (value) => {
-        console.log(value);
         if (!value || typeof value !== 'object') {
           return value;
         }
