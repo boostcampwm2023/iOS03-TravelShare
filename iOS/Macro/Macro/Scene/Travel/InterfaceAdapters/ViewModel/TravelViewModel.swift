@@ -40,6 +40,7 @@ final class TravelViewModel: ViewModelProtocol {
     
     // MARK: - Properties
     
+    private var locationManager: LocationManager?
     private let outputSubject = PassthroughSubject<Output, Never>()
     private let routeRecorder: RouteRecordUseCase
     private let locationSearcher: SearchUseCase
@@ -95,10 +96,15 @@ final class TravelViewModel: ViewModelProtocol {
     }
     
     private func startRecord() {
+        /* TODO: - background 에서 돌아가게 하려고 corelocation에서 위도 경도를 받아오고 있습니다. 논의가 필요해요 :)
         routeRecorder.startRecording()
         routeRecorder.locationPublisher
+        */
+        locationManager = LocationManager()
+        
+        locationManager?.locationPublisher
             .sink { [weak self] location in
-                self?.savedRoute.routePoints.append(location)
+                self?.savedRoute.routePoints.append(contentsOf: location)
                 self?.outputSubject.send(.updateRoute(self?.savedRoute.routePoints ?? []))
             }
             .store(in: &cancellables)
@@ -106,6 +112,8 @@ final class TravelViewModel: ViewModelProtocol {
     
     private func stopRecord() {
         routeRecorder.stopRecording()
+        
+        locationManager = nil
     }
     
     private func searchPlace(with text: String) {
