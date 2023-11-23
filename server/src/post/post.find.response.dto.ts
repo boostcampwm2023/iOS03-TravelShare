@@ -1,11 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsInt,
   IsObject,
+  IsOptional,
   IsString,
   IsUrl,
   Min,
+  ValidateNested,
 } from 'class-validator';
 import { UserProfileSimpleResponse } from 'src/user/user.profile.simple.response.dto';
 
@@ -25,7 +28,8 @@ export class PostFindResponse {
 
   @ApiProperty({ description: '이미지 url' })
   @IsUrl()
-  imageUrl: string;
+  @IsOptional()
+  imageUrl?: string;
 
   @ApiProperty({ description: '좋아요 개수' })
   @Min(0)
@@ -39,7 +43,9 @@ export class PostFindResponse {
 
   @ApiProperty({ description: '작성자 정보입니다.' })
   @IsObject()
-  user: UserProfileSimpleResponse;
+  @ValidateNested()
+  @Type(() => UserProfileSimpleResponse)
+  writer: UserProfileSimpleResponse;
 
   @ApiProperty({ description: '좋아요 여부(내가 좋아요 눌렀었나?)' })
   @IsBoolean()
