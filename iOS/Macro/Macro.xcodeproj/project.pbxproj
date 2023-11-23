@@ -1149,6 +1149,7 @@
 				AAD0B2DF2B0FC4A1003B4D5F /* UploadImage.swift in Sources */,
 				AAD0B2992B0B0841003B4D5F /* KeyChainManager.swift in Sources */,
 				BA6C6DF62B05FFC500563B22 /* TabBarViewModel.swift in Sources */,
+				AAD0B2D92B0FB55B003B4D5F /* WriteEndPoint.swift in Sources */,
 				BADB1F0C2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift in Sources */,
 				AAD0B2D52B0E04CA003B4D5F /* MacroCarouselViewCell.swift in Sources */,
 				BA90CB842B0F3BF600365AE2 /* PostCollectionViewCell.swift in Sources */,
