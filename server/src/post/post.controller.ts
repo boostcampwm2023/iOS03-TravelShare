@@ -39,13 +39,11 @@ export class PostController {
     description:
       '응답 데이터에서 liked를 수집하는 방법에 대해 논의가 좀 더 필요한 상황입니다.',
   })
-  @ApiQuery({ type: PostHitsQuery })
   @Get('hits')
   async default(
-    query: PostHitsQuery,
+    @Query() query: PostHitsQuery,
     @AuthenticatedUser() user: Authentication,
   ) {
-    console.log(user);
     return await this.postService.popularList(query, user);
   }
 
