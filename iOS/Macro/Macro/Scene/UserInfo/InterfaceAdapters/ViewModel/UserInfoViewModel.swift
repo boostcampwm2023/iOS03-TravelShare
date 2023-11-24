@@ -12,6 +12,7 @@ class UserInfoViewModel: ViewModelProtocol {
  
     // MARK: - Properties
     
+    var userInfo: UserInfo = UserInfo(name: "진하", follower: 10, introduce: "맛집 투어를 즐기는 돼지 입니다. :)\n 주로 부산 근처에서 도보여행을 합니다.", userImageURL: "https://i.namu.wiki/i/U4Wgc0ttOfAvNkTb_MQLpCKUC2HnJ7H5YZVa4IVaMWuKMpijpX6RJKiLa4Tqb-rxUVwTUXf0hhpoFBDXn-_LZF0KQLGk7MIl6wzul6ZGUGmSum3poaIwEHDzA7WsEUoy6IqyWCDGRgk5-YROnIzF5A.webp")
     var posts: [PostFindResponse] = []
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
@@ -65,6 +66,14 @@ class UserInfoViewModel: ViewModelProtocol {
 
 // MARK: - PostCollectionView Delegate
 extension UserInfoViewModel: PostCollectionViewProtocol {
+    var tmpIsLike: Bool {
+        get {
+            true
+        }
+        set {
+            true
+        }
+    }
     
     func navigateToProfileView(userId: String) {
         self.outputSubject.send(.navigateToProfileView(userId))
