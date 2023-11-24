@@ -8,9 +8,9 @@ import { UserProfileResponse } from './user.profile.response.dto';
 import { PostService } from 'src/post/post.service';
 import { plainToInstance } from 'class-transformer';
 import { PostFindResponse } from 'src/post/post.find.response.dto';
-import { Transactional } from 'src/utils/transactional.decorator';
 import { UserProfileQuery } from './user.profile.query.dto';
 import { UserProfileSimpleResponse } from './user.profile.simple.response.dto';
+import { Transactional } from 'typeorm-transactional';
 
 @Injectable()
 export class UserService {

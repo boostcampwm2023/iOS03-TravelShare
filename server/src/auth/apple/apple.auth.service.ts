@@ -17,12 +17,12 @@ import { AppleAuth } from 'src/entities/apple.auth.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Authentication } from '../authentication.dto';
-import { Transactional } from 'src/utils/transactional.decorator';
 import { AppleClientRevokeBody } from './apple.client.revoke.body.dto';
 import { AppleAuthTokenBody } from './apple.auth.token.body.dto';
 import { AppleAuthRevokeBody } from './apple.auth.revoke.body.dto';
 import { AppleAuthTokenResponse } from './apple.auth.token.response.dto';
 import { AppleClientAuthResponse } from './apple.client.auth.response.dto';
+import { Transactional } from 'typeorm-transactional';
 
 /**
  * ### AppleAuthService
