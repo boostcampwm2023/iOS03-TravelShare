@@ -44,5 +44,7 @@
 	<array>
 		<string>location</string>
 	</array>
+	<key>UILaunchImageFile</key>
+	<string>LoginImage</string>
 </dict>
 </plist>
