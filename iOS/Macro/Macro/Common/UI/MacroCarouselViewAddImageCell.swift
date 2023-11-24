@@ -23,6 +23,7 @@ final class MacroCarouselViewAddImageCell: UICollectionViewCell {
         button.backgroundColor = UIColor.appColor(.purple1)
         button.setTitleColor(UIColor.appColor(.purple4), for: .normal)
         button.setTitle("사진 추가", for: .normal)
+        button.titleLabel?.font = UIFont.appFont(.baeEunBody)
         button.addTarget(self, action: #selector(addImageButtonTouched), for: .touchUpInside)
         button.setImage(
             UIImage.appImage(.photo)?

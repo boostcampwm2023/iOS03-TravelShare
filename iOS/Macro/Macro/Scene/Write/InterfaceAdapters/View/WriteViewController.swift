@@ -79,8 +79,9 @@ final class WriteViewController: TabViewController {
     
     private let writeSubmitButton: UIButton = {
         let button = UIButton()
-        let image = UIImage.appImage(.appLogo)
-        button.setImage(image, for: .normal)
+        button.setTitle("글 올리기", for: .normal)
+        button.titleLabel?.font = UIFont.appFont(.baeEunTitle1)
+        button.setTitleColor(UIColor.black, for: .normal)
         button.backgroundColor = UIColor.appColor(.statusGreen)
         button.layer.cornerRadius = 15
         button.addTarget(self, action: #selector(writeSubmitButtonTouched), for: .touchUpInside)
