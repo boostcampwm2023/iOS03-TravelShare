@@ -19,11 +19,7 @@ final class UserInfoViewController: UIViewController {
     // MARK: - UI Components
     lazy var homeCollectionView: PostCollectionView = PostCollectionView(frame: .zero, viewModel: viewModel)
     
-    let label: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.appFont(.baeEunBody)
-        return label
-    }()
+    let userInfoHeaderView: UserInfoHeaderView = UserInfoHeaderView()
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -39,7 +35,7 @@ final class UserInfoViewController: UIViewController {
     init(viewModel: UserInfoViewModel, userInfo: String) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        label.text = userInfo
+    
         
     }
     
@@ -53,21 +49,23 @@ final class UserInfoViewController: UIViewController {
 private extension UserInfoViewController {
     
     func setTranslatesAutoresizingMaskIntoConstraints() {
-        label.translatesAutoresizingMaskIntoConstraints = false
+        userInfoHeaderView.translatesAutoresizingMaskIntoConstraints = false
         homeCollectionView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     func addSubviews() {
-        self.view.addSubview(label)
+        self.view.addSubview(userInfoHeaderView)
         self.view.addSubview(homeCollectionView)
     }
     
     func setLayoutConstraints() {
         NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            userInfoHeaderView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            userInfoHeaderView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            userInfoHeaderView.widthAnchor.constraint(equalToConstant: UIScreen.width - 40),
+            userInfoHeaderView.heightAnchor.constraint(equalToConstant: 217),
             
-            homeCollectionView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            homeCollectionView.topAnchor.constraint(equalTo: userInfoHeaderView.bottomAnchor),
             homeCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             homeCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             homeCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
@@ -78,6 +76,7 @@ private extension UserInfoViewController {
         setTranslatesAutoresizingMaskIntoConstraints()
         addSubviews()
         setLayoutConstraints()
+        userInfoHeaderView.setupLayout(userInfo: viewModel.userInfo)
     }
     
 }
