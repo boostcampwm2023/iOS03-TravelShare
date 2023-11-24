@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MacroCarouselViewCell: UICollectionViewCell {
+final class MacroCarouselViewCell: UICollectionViewCell {
     static let id = "MacroCrouselViewCell"
 
     // MARK: UI
@@ -46,3 +46,4 @@ class MacroCarouselViewCell: UICollectionViewCell {
         self.myView.image = image
     }
 }
+

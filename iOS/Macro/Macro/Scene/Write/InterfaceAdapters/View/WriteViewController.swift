@@ -7,6 +7,7 @@
 
 import Combine
 import NMapsMap
+import PhotosUI
 import UIKit
 
 final class WriteViewController: TabViewController {
@@ -15,10 +16,18 @@ final class WriteViewController: TabViewController {
     
     private let viewModel: WriteViewModel
     private let const = MacroCarouselView.Const(itemSize: CGSize(width: 300, height: 340), itemSpacing: 24.0)
+    private let imageAddSbuject: PassthroughSubject<Bool, Never> = .init()
     private let inputSubject: PassthroughSubject<WriteViewModel.Input, Never> = .init()
+    private var photoAuthorizationStatus =  CurrentValueSubject<PHAuthorizationStatus, Never>(.notDetermined)
     private var subscriptions: Set<AnyCancellable> = []
-    let data: [UIImage] = [
-    ]
+    
+    lazy var picker: PHPickerViewController = {
+        var configuration = PHPickerConfiguration()
+        configuration.filter = .images
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = self
+        return picker
+    }()
     
     // MARK: - UI Components
     
@@ -50,7 +59,7 @@ final class WriteViewController: TabViewController {
     }()
     
     private lazy var carouselView: MacroCarouselView = {
-        let view = MacroCarouselView(items: data, const: const)
+        let view = MacroCarouselView(const: const, viewType: .write, outputSubject: imageAddSbuject)
         return view
     }()
     
@@ -70,10 +79,12 @@ final class WriteViewController: TabViewController {
     
     private let writeSubmitButton: UIButton = {
         let button = UIButton()
-        let image = UIImage.appImage(.appLogo)
-        button.setImage(image, for: .normal)
+        button.setTitle("글 올리기", for: .normal)
+        button.titleLabel?.font = UIFont.appFont(.baeEunTitle1)
+        button.setTitleColor(UIColor.black, for: .normal)
         button.backgroundColor = UIColor.appColor(.statusGreen)
         button.layer.cornerRadius = 15
+        button.addTarget(self, action: #selector(writeSubmitButtonTouched), for: .touchUpInside)
         return button
     }()
     
@@ -186,6 +197,35 @@ private extension WriteViewController {
                 case let .isVisibilityToggle(isVisibility):
                     let image = (isVisibility ? UIImage.appImage(.lockOpenFill) : UIImage.appImage(.lockFill))?.withTintColor(isVisibility ? UIColor.appColor(.statusGreen) : UIColor.appColor(.statusRed), renderingMode: .alwaysOriginal)
                     self?.isVisibilityButton.setImage(image, for: .normal)
+                case let .outputImageData(imageDatas):
+                    var images = [UIImage?]()
+                    
+                    imageDatas.forEach {
+                        images.append(UIImage(data: $0))
+                    }
+                    
+                    self?.carouselView.updateData(images)
+                case .uploadWrite:
+                    // TODO: - Home화면으로 돌아가
+                    break
+                }
+            }
+            .store(in: &subscriptions)
+        
+        imageAddSbuject
+            .sink { buttonTouched in
+                self.imageAddButtonTouched()
+            }
+            .store(in: &subscriptions)
+        
+        photoAuthorizationStatus
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                switch state {
+                case .authorized:
+                    self?.addImagePresent()
+                default:
+                    self?.photoAuthorizationRequest()
                 }
             }
             .store(in: &subscriptions)
@@ -197,5 +237,58 @@ private extension WriteViewController {
 private extension WriteViewController {
     @objc func isisVisibilityButtonTouched() {
         inputSubject.send(.isVisibilityButtonTouched)
+    }
+    
+    @objc func writeSubmitButtonTouched() {
+        inputSubject.send(.writeSubmit)
+    }
+}
+
+// MARK: - Image Picker
+
+extension WriteViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+        
+        guard !results.isEmpty else {
+            debugPrint("Image Pick results is Empyt")
+            return
+        }
+        
+        let itemProvider = results.first?.itemProvider
+        
+        var images = [UIImage?]()
+        
+        if let resultItempProvider = results.first?.itemProvider,
+           resultItempProvider.canLoadObject(ofClass: UIImage.self) {
+            resultItempProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
+                if let error {
+                    debugPrint("Error loading image: \(error.localizedDescription)")
+                }
+                
+                if let image = image as? UIImage, let data = image.jpegData(compressionQuality: 1.0) {
+                    self?.inputSubject.send(.addImageData(imageData: data))
+                }
+            }
+        }
+    }
+    
+    func imageAddButtonTouched() {
+        self.photoAuthorizationStatus.value = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+    }
+    
+    /// 사용자에게 라이브러리 접근 권한 요청 Method
+    private func photoAuthorizationRequest() {
+        let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+        PHPhotoLibrary.requestAuthorization(for: .readWrite) { newStatus in
+            self.photoAuthorizationStatus.value = newStatus
+        }
+    }
+    
+    /// Image Picker 나타나게 하는 Method
+    private func addImagePresent() {
+        DispatchQueue.main.async {
+            self.present(self.picker, animated: true)
+        }
     }
 }

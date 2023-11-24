@@ -28,7 +28,7 @@ final class TabBarViewModel {
         let provider = APIProvider(session: URLSession.shared)
         let searchViewModel = SearchViewModel(postSearcher: Searcher(provider: provider))
         let homeViewModel = HomeViewModel(postSearcher: Searcher(provider: provider))
-        let writeViewModel = WriteViewModel()
+        let writeViewModel = WriteViewModel(uploadImageUseCase: UploadImage(provider: provider))
         let travelViewModel = TravelViewModel(
             routeRecorder: RouteRecorder(provider: provider),
             locationSearcher: Searcher(provider: provider),

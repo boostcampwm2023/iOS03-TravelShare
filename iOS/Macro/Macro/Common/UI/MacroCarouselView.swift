@@ -5,6 +5,7 @@
 //  Created by 김경호 on 11/22/23.
 //
 
+import Combine
 import UIKit
 
 class MacroCarouselView: UIView {
@@ -16,14 +17,23 @@ class MacroCarouselView: UIView {
         let itemSpacing: Double
     }
     
-    var items: [UIImage] = []
+    enum ViewType {
+        case read
+        case write
+    }
+    
+    var items: [UIImage?] = []
     private let const: Const
+    private let viewType: ViewType
+    private var subscriptions: Set<AnyCancellable> = []
+    private let outputSubject: PassthroughSubject<Bool, Never>
+    
     var pageIndex = 0 {
         didSet {
             self.pageController.currentPage = pageIndex
         }
     }
-
+    
     // MARK: - UI Componenets
     
     private lazy var collectionViewFlowLayout: UICollectionViewFlowLayout = {
@@ -43,6 +53,7 @@ class MacroCarouselView: UIView {
         view.backgroundColor = .clear
         view.clipsToBounds = true
         view.register(MacroCarouselViewCell.self, forCellWithReuseIdentifier: MacroCarouselViewCell.id)
+        view.register(MacroCarouselViewAddImageCell.self, forCellWithReuseIdentifier: MacroCarouselViewAddImageCell.id)
         view.isPagingEnabled = false
         view.contentInsetAdjustmentBehavior = .never
         view.decelerationRate = .fast
@@ -52,7 +63,7 @@ class MacroCarouselView: UIView {
     
     private lazy var pageController: UIPageControl = {
         let pageController = UIPageControl()
-        pageController.numberOfPages = self.items.count
+        pageController.numberOfPages = self.items.count + (viewType == .write ? 1 : 0 )
         pageController.currentPage = pageIndex
         pageController.pageIndicatorTintColor = UIColor.appColor(.purple1)
         pageController.currentPageIndicatorTintColor = UIColor.appColor(.purple2)
@@ -61,9 +72,10 @@ class MacroCarouselView: UIView {
 
     // MARK: - Init
     
-    init(items: [UIImage], const: Const) {
-        self.items = items
+    init(const: Const, viewType: ViewType, outputSubject: PassthroughSubject<Bool, Never>) {
         self.const = const
+        self.viewType = viewType
+        self.outputSubject = outputSubject
         super.init(frame: .zero)
         setLayout()
     }
@@ -71,7 +83,6 @@ class MacroCarouselView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
 }
 
 // MARK: - UI Settings
@@ -113,15 +124,27 @@ private extension MacroCarouselView {
 
 extension MacroCarouselView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        items.count
+        items.count + (viewType == .write ? 1 : 0 )
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MacroCarouselViewCell.id, for: indexPath) as? MacroCarouselViewCell else {
-            return MacroCarouselViewCell()
+        if viewType == .write, indexPath.row == items.count {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MacroCarouselViewAddImageCell.id, for: indexPath) as? MacroCarouselViewAddImageCell else {
+                let cell = MacroCarouselViewAddImageCell()
+                cell.outputSubject = outputSubject
+                return cell
+            }
+            cell.outputSubject = outputSubject
+            
+            return cell
+        } else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MacroCarouselViewCell.id, for: indexPath) as? MacroCarouselViewCell else {
+                return MacroCarouselViewCell()
+            }
+            
+            cell.prepare(image: items[indexPath.item])
+            return cell
         }
-        cell.prepare(image: items[indexPath.item])
-        return cell
     }
 }
 
@@ -147,5 +170,19 @@ extension MacroCarouselView: UICollectionViewDelegateFlowLayout {
         // contentInset 설정
         scrollView.contentInset = UIEdgeInsets(top: 0, left: insetX, bottom: 0, right: 0)
         targetContentOffset.pointee = CGPoint(x: CGFloat(visibleIndex) * cellWidth - scrollView.contentInset.left, y: scrollView.contentInset.top)
+    }
+}
+
+// MARK: - func
+
+extension MacroCarouselView {
+    func updateData(_ newData: [UIImage?]) {
+        items = newData
+        self.pageController.numberOfPages = items.count + (viewType == .write ? 1 : 0 )
+        
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+            self.pageController.reloadInputViews()
+        }
     }
 }
