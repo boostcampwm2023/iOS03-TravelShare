@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Post, PostContentElement } from 'src/entities/post.entity';
 import { Like, Raw, Repository } from 'typeorm';
 import { PostWriteBody } from './post.write.body';
-import { Transactional } from 'src/utils/transactional.decorator';
 import { PostFindQuery } from './post.find.query.dto';
 import { plainToInstance } from 'class-transformer';
 import { PostFindResponse } from './post.find.response.dto';
@@ -11,6 +10,7 @@ import { PostHitsQuery } from './post.hist.query.dto';
 import { PostDetailResponse } from './post.detail.response.dto';
 import { Authentication } from 'src/auth/authentication.dto';
 import { PostDetailQuery } from './post.detail.query.dto';
+import { Transactional } from 'typeorm-transactional';
 
 @Injectable()
 export class PostService {
@@ -102,7 +102,105 @@ WHERE  EXISTS (SELECT 1
                       AND ( `post`.`deleted_at` IS NULL ))
 LIMIT  1 -- PARAMETERS: ["macro@macrocd.com"]
 
-   * ```       
+   * ```
+   * ```
+SELECT 
+  DISTINCT `distinctAlias`.`Post_post_id` AS `ids_Post_post_id`, 
+  `distinctAlias`.`Post_like_num`, 
+  `distinctAlias`.`Post_view_num` 
+FROM 
+  (
+    SELECT 
+      `Post`.`post_id` AS `Post_post_id`, 
+      `Post`.`title` AS `Post_title`, 
+      `Post`.`view_num` AS `Post_view_num`, 
+      `Post`.`like_num` AS `Post_like_num`, 
+      `Post`.`summary` AS `Post_summary`, 
+      `Post`.`route` AS `Post_route`, 
+      `Post`.`hashtag` AS `Post_hashtag`, 
+      `Post`.`start_at` AS `Post_start_at`, 
+      `Post`.`end_at` AS `Post_end_at`, 
+      `Post`.`created_at` AS `Post_created_at`, 
+      `Post`.`modified_at` AS `Post_modified_at`, 
+      `Post`.`deleted_at` AS `Post_deleted_at`, 
+      `Post`.`user_email` AS `Post_user_email`, 
+      `Post__Post_writer`.`user_id` AS `Post__Post_writer_user_id`, 
+      `Post__Post_writer`.`email` AS `Post__Post_writer_email`, 
+      `Post__Post_writer`.`name` AS `Post__Post_writer_name`, 
+      `Post__Post_writer`.`password` AS `Post__Post_writer_password`, 
+      `Post__Post_writer`.`image_url` AS `Post__Post_writer_image_url`, 
+      `Post__Post_writer`.`role` AS `Post__Post_writer_role`, 
+      `Post__Post_writer`.`created_at` AS `Post__Post_writer_created_at`, 
+      `Post__Post_writer`.`modified_at` AS `Post__Post_writer_modified_at`, 
+      `Post__Post_writer`.`deleted_at` AS `Post__Post_writer_deleted_at` 
+    FROM 
+      `post` `Post` 
+      LEFT JOIN `user` `Post__Post_writer` ON `Post__Post_writer`.`email` = `Post`.`user_email` 
+      AND (
+        `Post__Post_writer`.`deleted_at` IS NULL
+      ) 
+    WHERE 
+      (
+        (
+          DATE_ADD(NOW(), INTERVAL -2 WEEK) <= `Post`.`created_at`
+        )
+      ) 
+      AND (`Post`.`deleted_at` IS NULL)
+  ) `distinctAlias` 
+ORDER BY 
+  `distinctAlias`.`Post_like_num` DESC, 
+  `distinctAlias`.`Post_view_num` DESC, 
+  `Post_post_id` ASC 
+LIMIT 
+  10
+
+
+SELECT 
+  `Post`.`post_id` AS `Post_post_id`, 
+  `Post`.`title` AS `Post_title`, 
+  `Post`.`view_num` AS `Post_view_num`, 
+  `Post`.`like_num` AS `Post_like_num`, 
+  `Post`.`summary` AS `Post_summary`, 
+  `Post`.`route` AS `Post_route`, 
+  `Post`.`hashtag` AS `Post_hashtag`, 
+  `Post`.`start_at` AS `Post_start_at`, 
+  `Post`.`end_at` AS `Post_end_at`, 
+  `Post`.`created_at` AS `Post_created_at`, 
+  `Post`.`modified_at` AS `Post_modified_at`, 
+  `Post`.`deleted_at` AS `Post_deleted_at`, 
+  `Post`.`user_email` AS `Post_user_email`, 
+  `Post__Post_writer`.`user_id` AS `Post__Post_writer_user_id`, 
+  `Post__Post_writer`.`email` AS `Post__Post_writer_email`, 
+  `Post__Post_writer`.`name` AS `Post__Post_writer_name`, 
+  `Post__Post_writer`.`password` AS `Post__Post_writer_password`, 
+  `Post__Post_writer`.`image_url` AS `Post__Post_writer_image_url`, 
+  `Post__Post_writer`.`role` AS `Post__Post_writer_role`, 
+  `Post__Post_writer`.`created_at` AS `Post__Post_writer_created_at`, 
+  `Post__Post_writer`.`modified_at` AS `Post__Post_writer_modified_at`, 
+  `Post__Post_writer`.`deleted_at` AS `Post__Post_writer_deleted_at` 
+FROM 
+  `post` `Post` 
+  LEFT JOIN `user` `Post__Post_writer` ON `Post__Post_writer`.`email` = `Post`.`user_email` 
+  AND (
+    `Post__Post_writer`.`deleted_at` IS NULL
+  ) 
+WHERE 
+  (
+    (
+      DATE_ADD(NOW(), INTERVAL -2 WEEK) <= `Post`.`created_at`
+    )
+  ) 
+  AND (`Post`.`deleted_at` IS NULL) 
+  AND (
+    `Post`.`post_id` IN (3, 5, 8, 11, 14, 15, 2, 6, 9, 12)
+  ) 
+ORDER BY 
+  `Post`.`like_num` DESC, 
+  `Post`.`view_num` DESC
+
+
+
+   * ```
    * @param pagination
    * @param param1
    * @returns
@@ -122,7 +220,7 @@ LIMIT  1 -- PARAMETERS: ["macro@macrocd.com"]
       relations: {
         writer: true,
       },
-      relationLoadStrategy: 'query',
+      relationLoadStrategy: 'join',
     });
 
     return plainToInstance(
@@ -179,7 +277,12 @@ LIMIT  1 -- PARAMETERS: ["macro@macrocd.com"]
         writer: true,
       },
     });
-    await this.postRepository.increment({ postId }, 'viewNum', 1);
+
+    // await this.postRepository.increment({ postId }, 'viewNum', 1);
+    await this.postRepository.update(
+      { postId },
+      { viewNum: () => 'view_num + 1' },
+    );
     return plainToInstance(PostDetailResponse, {
       ...post,
       liked: await this.postRepository.exist({
