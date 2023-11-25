@@ -10,7 +10,7 @@ import { PostDetailResponse } from './post.detail.response.dto';
 import { Authentication } from 'src/auth/authentication.dto';
 import { PostDetailQuery } from './post.detail.query.dto';
 import { Transactional } from 'typeorm-transactional';
-import { PostUploadBody } from './post.upload.body';
+import { PostUploadBody } from './post.upload.body.dto';
 import { PostUploadResponse } from './post.upload.response.dto';
 import { Route } from 'src/entities/route.entity';
 import { PostLikeResponse } from './post.like.response.dto';

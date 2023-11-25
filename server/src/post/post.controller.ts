@@ -23,7 +23,7 @@ import { Authentication } from 'src/auth/authentication.dto';
 import { RestController } from 'src/utils/rest.controller.decorator';
 import { PostHitsQuery } from './post.hist.query.dto';
 import { PostDetailQuery } from './post.detail.query.dto';
-import { PostUploadBody } from './post.upload.body';
+import { PostUploadBody } from './post.upload.body.dto';
 import { PostUploadResponse } from './post.upload.response.dto';
 import { PostLikeQuery } from './post.like.query.dto';
 import { PostLikeResponse } from './post.like.response.dto';
