@@ -13,7 +13,7 @@ final class MacroCarouselViewAddImageCell: UICollectionViewCell {
     // MARK: - Properties
     
     static let id = "MacroCarouselViewAddImageCell"
-    var outputSubject: PassthroughSubject<Bool, Never> = .init()
+    var addImageButtonOutputSubject: PassthroughSubject<Bool, Never> = .init()
     
     // MARK: - UI Componenets
     
@@ -60,6 +60,6 @@ final class MacroCarouselViewAddImageCell: UICollectionViewCell {
 
 extension MacroCarouselViewAddImageCell {
     @objc func addImageButtonTouched() {
-        outputSubject.send(true)
+        addImageButtonOutputSubject.send(true)
     }
 }
