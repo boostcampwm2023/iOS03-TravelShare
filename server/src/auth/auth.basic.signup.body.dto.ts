@@ -1,35 +1,27 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsEmail,
-  IsOptional,
-  IsString,
-  IsUrl,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
+import { AuthBasicSigninBody } from './auth.basic.signin.body.dto';
 
-export class AuthBasicSignupBody {
-  @ApiProperty({ description: '이메일' })
-  @IsEmail()
-  email: string;
-
-  @ApiProperty({ description: '비밀번호' })
-  @IsString()
-  @MinLength(8)
-  @MaxLength(50)
-  password: string;
-
+export class AuthBasicSignupBody extends AuthBasicSigninBody {
   @ApiProperty({ description: '이름' })
   @IsString()
   @MaxLength(30)
   name: string;
 
-  @ApiProperty({ description: '이미지 url', required: false })
+  @ApiProperty({
+    description: '이미지 url',
+    required: false,
+    example: 'https://image.url/here/optional',
+  })
   @IsUrl()
   @IsOptional()
   imageUrl?: string;
 
-  @ApiProperty({ description: '자기소개', required: false })
+  @ApiProperty({
+    description: '자기소개',
+    required: false,
+    example: '자기소개는 옵셔널입니다.',
+  })
   @IsString()
   @IsOptional()
   introduce?: string;
