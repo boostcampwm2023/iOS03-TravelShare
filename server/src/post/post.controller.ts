@@ -1,4 +1,11 @@
-import { BadRequestException, Body, Get, Patch, Post, Query } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Get,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -118,11 +125,10 @@ SELECT ... FROM post ... WHERE title LIKE '%:title%' OR '%:user:%';
     @Body() post: PostUploadBody,
     @AuthenticatedUser() user: Authentication,
   ) {
-    if(
-      !('routeId' in post.route) ||
-      !('coordinates' in post.route)
-    ) {
-      throw new BadRequestException('routeId와 coordinates 중 하나가 반드시 설정되어야 합니다.');
+    if (!('routeId' in post.route) || !('coordinates' in post.route)) {
+      throw new BadRequestException(
+        'routeId와 coordinates 중 하나가 반드시 설정되어야 합니다.',
+      );
     }
     return await this.postService.upload(post, user);
   }
