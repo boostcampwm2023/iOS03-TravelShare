@@ -1,4 +1,4 @@
-import { Body, Get, Patch, Post, Query } from '@nestjs/common';
+import { BadRequestException, Body, Get, Patch, Post, Query } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -84,7 +84,7 @@ SELECT ... FROM post ... WHERE title LIKE '%:title%' OR '%:user:%';
 - route와 hashtag는 각각 2차원, 1차원 배열 형태입니다.
 `,
   })
-  @ApiResponse({ description: '상세 조회', type: PostDetailResponse })
+  @ApiOkResponse({ description: '상세 조회', type: PostDetailResponse })
   @Get('detail')
   async detail(
     @Query() query: PostDetailQuery,
@@ -100,8 +100,11 @@ SELECT ... FROM post ... WHERE title LIKE '%:title%' OR '%:user:%';
 
 - 게시글을 업로드합니다.
 - imageUrl 등은 필수값이 아니므로 잘 확인해주세요.
-- 아직 응답 포맷을 생각하지 않아서 응답값이 없습니다.
-그냥 200 OK이면 업로드 성공한 겁니다.
+- ### 경로는 route를 통해 설정할 수 있습니다.
+###### route.coordinates 혹은 route.routeId를 반드시 설정해야 합니다.
+ 1. 미리 경로를 /route/upload를 통해 업로드했을 경우 반환받은 routeId를 넣으면 됩니다.
+ 2. 혹은 route.coordinates에 직접 경로를 넣어서 곧바로 업로드도 가능합니다.
+- 응답은 게시글 고유 id입니다.
 
 `,
   })
@@ -115,6 +118,12 @@ SELECT ... FROM post ... WHERE title LIKE '%:title%' OR '%:user:%';
     @Body() post: PostUploadBody,
     @AuthenticatedUser() user: Authentication,
   ) {
+    if(
+      !('routeId' in post.route) ||
+      !('coordinates' in post.route)
+    ) {
+      throw new BadRequestException('routeId와 coordinates 중 하나가 반드시 설정되어야 합니다.');
+    }
     return await this.postService.upload(post, user);
   }
 
