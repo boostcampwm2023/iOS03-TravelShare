@@ -5,9 +5,7 @@ import { Repository } from 'typeorm';
 import { UserProfileUpdateQuery } from './user.profile.update.query.dto';
 import { Authentication } from 'src/auth/authentication.dto';
 import { UserProfileResponse } from './user.profile.response.dto';
-import { PostService } from 'src/post/post.service';
 import { plainToInstance } from 'class-transformer';
-import { PostFindResponse } from 'src/post/post.find.response.dto';
 import { UserProfileQuery } from './user.profile.query.dto';
 import { UserProfileSimpleResponse } from './user.profile.simple.response.dto';
 import { Transactional } from 'typeorm-transactional';
@@ -17,7 +15,6 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private readonly postService: PostService,
   ) {}
 
   async updateUserInfo(
@@ -32,6 +29,9 @@ export class UserService {
       where: {
         email,
       },
+      relations: {
+        writedPosts: true,
+      },
     });
     const followersNum = await this.userRepository.countBy({
       followings: { email },
@@ -39,15 +39,10 @@ export class UserService {
     const followingsNum = await this.userRepository.countBy({
       followers: { email },
     });
-    const posts = plainToInstance(
-      PostFindResponse,
-      await this.postService.find({ email }),
-    );
     return plainToInstance(UserProfileResponse, {
       ...user,
       followersNum,
       followingsNum,
-      posts,
     });
   }
 
