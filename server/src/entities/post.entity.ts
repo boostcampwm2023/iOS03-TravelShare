@@ -8,17 +8,19 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
+import { Route } from './route.entity';
 
 @Entity('post')
 export class Post {
   @PrimaryGeneratedColumn({ name: 'post_id' })
   postId: number;
 
-  @ManyToOne(() => User, (user) => user.email, {
+  @ManyToOne(() => User, ({ writedPosts }) => writedPosts, {
     cascade: ['remove', 'soft-remove', 'update', 'recover'],
   })
   @JoinColumn({ name: 'user_email', referencedColumnName: 'email' })
@@ -27,7 +29,7 @@ export class Post {
   @Column()
   title: string;
 
-  @OneToMany(() => PostContentElement, (post) => post.post, {
+  @OneToMany(() => PostContentElement, ({ post }) => post, {
     cascade: ['insert', 'soft-remove', 'update'],
   })
   contents: PostContentElement[];
@@ -41,10 +43,11 @@ export class Post {
   @Column({ nullable: true })
   summary: string;
 
-  @Column('json')
-  route: [number, number][];
+  @OneToOne(() => Route)
+  @JoinColumn({ name: 'route_id', referencedColumnName: 'routeId' })
+  route: Route;
 
-  @Column('json', { default: null })
+  @Column('json')
   hashtag: string[];
 
   @Column('date', { name: 'start_at' })
@@ -53,13 +56,13 @@ export class Post {
   @Column('date', { name: 'end_at' })
   endAt: Date;
 
-  @ManyToMany(() => User, (user) => user.email)
+  @ManyToMany(() => User, (user) => user.likedPosts)
   @JoinTable({
     name: 'post_likes_users',
     joinColumn: { name: 'post_id' },
     inverseJoinColumn: { name: 'email', referencedColumnName: 'email' },
   })
-  likeUsers: User[];
+  likedUsers: User[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
@@ -76,7 +79,7 @@ export class PostContentElement {
   @PrimaryGeneratedColumn({ name: 'post_content_element_id' })
   postContentElemntId?: number;
 
-  @ManyToOne(() => Post)
+  @ManyToOne(() => Post, ({ contents }) => contents)
   @JoinColumn({ name: 'post_id' })
   post: Post;
 
