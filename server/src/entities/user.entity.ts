@@ -5,6 +5,7 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -32,29 +33,27 @@ export class User {
   @Column('enum', { default: 'user', enum: ['user', 'admin'] })
   role: UserRole;
 
-  @ManyToMany(() => User, (user) => user.email)
+  @ManyToMany(() => User, (user) => user.followings)
   @JoinTable({
     name: 'user_followers_relation',
     joinColumn: { name: 'follower_id' },
     inverseJoinColumn: { name: 'followee_id' },
   })
-  followers: Promise<User[]>;
+  followers: User[];
 
-  @ManyToMany(() => User, (user) => user.email)
-  @JoinTable({
-    name: 'user_followers_relation',
-    joinColumn: { name: 'followee_id' },
-    inverseJoinColumn: { name: 'follower_id' },
-  })
-  followings: Promise<User[]>;
+  @ManyToMany(() => User, (user) => user.followers)
+  // @JoinTable({
+  //   name: 'user_followers_relation',
+  //   joinColumn: { name: 'followee_id' },
+  //   inverseJoinColumn: { name: 'follower_id' },
+  // })
+  followings: User[];
 
-  @ManyToMany(() => Post)
-  @JoinTable({
-    name: 'post_likes_users',
-    joinColumn: { name: 'email' },
-    inverseJoinColumn: { name: 'post_id' },
-  })
+  @ManyToMany(() => Post, ({ likedUsers }) => likedUsers)
   likedPosts: Post[];
+
+  @OneToMany(() => Post, (post) => post.writer)
+  writedPosts: Post[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
