@@ -14,6 +14,7 @@ import { PostUploadBody } from './post.upload.body';
 import { PostUploadResponse } from './post.upload.response.dto';
 import { Route } from 'src/entities/route.entity';
 import { PostLikeResponse } from './post.like.response.dto';
+import { RouteCoordinates } from 'src/route/route.coordinates.dto';
 
 @Injectable()
 export class PostService {
@@ -308,10 +309,13 @@ ORDER BY
 
   @Transactional()
   async upload(post: PostUploadBody, { email }: Authentication) {
-    const route = this.routeRepository.create(post.route);
-    const { routeId } = await this.routeRepository.save(route, {
-      transaction: false,
-    });
+    let routeId: number;
+    const { route } = post;
+    if (route.coordinates) {
+      routeId = (await this.saveRouteCoordinates(route)).routeId;
+    } else {
+      routeId = route.routeId;
+    }
     const {
       identifiers: [{ postId }],
     } = await this.postRepository.insert({
@@ -328,6 +332,12 @@ ORDER BY
 
     return plainToInstance(PostUploadResponse, {
       postId,
+    });
+  }
+
+  private async saveRouteCoordinates(route: RouteCoordinates) {
+    return await this.routeRepository.save(this.routeRepository.create(route), {
+      transaction: false,
     });
   }
 
