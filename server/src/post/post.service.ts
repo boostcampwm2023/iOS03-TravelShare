@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post, PostContentElement } from 'src/entities/post.entity';
-import { Like, Raw, Repository } from 'typeorm';
-import { PostWriteBody } from './post.write.body';
+import { In, Like, Raw, Repository } from 'typeorm';
 import { PostFindQuery } from './post.find.query.dto';
 import { plainToInstance } from 'class-transformer';
 import { PostFindResponse } from './post.find.response.dto';
@@ -11,6 +10,10 @@ import { PostDetailResponse } from './post.detail.response.dto';
 import { Authentication } from 'src/auth/authentication.dto';
 import { PostDetailQuery } from './post.detail.query.dto';
 import { Transactional } from 'typeorm-transactional';
+import { PostUploadBody } from './post.upload.body';
+import { PostUploadResponse } from './post.upload.response.dto';
+import { Route } from 'src/entities/route.entity';
+import { PostLikeResponse } from './post.like.response.dto';
 
 @Injectable()
 export class PostService {
@@ -19,6 +22,8 @@ export class PostService {
     private readonly postRepository: Repository<Post>,
     @InjectRepository(PostContentElement)
     private readonly postContentElementRepository: Repository<PostContentElement>,
+    @InjectRepository(Route)
+    private readonly routeRepository: Repository<Route>,
   ) {}
 
   /**
@@ -223,19 +228,26 @@ ORDER BY
       relationLoadStrategy: 'join',
     });
 
+    const isLikedPosts = await this.postRepository.find({
+      where: {
+        postId: In(posts.map(({ postId }) => postId)),
+        likedUsers: { email },
+      },
+      select: {
+        postId: true,
+      },
+    });
+
     return plainToInstance(
       PostFindResponse,
-      await Promise.all(
-        posts.map(async (post) => ({
-          ...post,
-          liked: await this.postRepository.exist({
-            where: { likeUsers: { email } },
-          }),
-        })),
-      ),
+      posts.map((post) => ({
+        ...post,
+        liked: isLikedPosts.map(({ postId }) => postId).includes(post.postId),
+      })),
     );
   }
 
+  @Transactional()
   async search(
     { title, username, ...pagination }: PostFindQuery,
     { email }: Authentication,
@@ -250,16 +262,21 @@ ORDER BY
         writer: true,
       },
     });
+    const isLikedPosts = await this.postRepository.find({
+      where: {
+        postId: In(posts.map(({ postId }) => postId)),
+        likedUsers: { email },
+      },
+      select: {
+        postId: true,
+      },
+    });
     return plainToInstance(
       PostFindResponse,
-      await Promise.all(
-        posts.map(async (post) => ({
-          ...post,
-          liked: await this.postRepository.exist({
-            where: { likeUsers: { email } },
-          }),
-        })),
-      ),
+      posts.map((post) => ({
+        ...post,
+        liked: isLikedPosts.map(({ postId }) => postId).includes(post.postId),
+      })),
     );
   }
 
@@ -275,59 +292,68 @@ ORDER BY
       relations: {
         contents: true,
         writer: true,
+        route: true,
       },
     });
+    console.log(post);
 
-    // await this.postRepository.increment({ postId }, 'viewNum', 1);
-    await this.postRepository.update(
-      { postId },
-      { viewNum: () => 'view_num + 1' },
-    );
+    await this.postRepository.increment({ postId }, 'viewNum', 1);
     return plainToInstance(PostDetailResponse, {
       ...post,
       liked: await this.postRepository.exist({
-        where: { likeUsers: { email } },
+        where: { likedUsers: { email }, postId },
       }),
     });
   }
 
   @Transactional()
-  async upload(post: PostWriteBody, { email }: Authentication) {
-    const result = await this.postRepository.insert(post);
-    const contents = await this.postContentElementRepository.insert(
-      post.contents,
+  async upload(post: PostUploadBody, { email }: Authentication) {
+    const route = this.routeRepository.create(post.route);
+    const { routeId } = await this.routeRepository.save(route, {
+      transaction: false,
+    });
+    const {
+      identifiers: [{ postId }],
+    } = await this.postRepository.insert({
+      ...post,
+      writer: { email },
+      route: { routeId },
+    });
+    await this.postContentElementRepository.insert(
+      post.contents.map((content) => ({
+        ...content,
+        post: { postId },
+      })),
     );
-    await this.postRepository
-      .createQueryBuilder()
-      .relation('contents')
-      .of(result.identifiers[0].postId)
-      .add(
-        contents.identifiers.map(
-          ({ postContentElemntId }) => postContentElemntId,
-        ),
-      );
-    await this.postRepository
-      .createQueryBuilder()
-      .relation('writer')
-      .of(result.identifiers[0].postId)
-      .set(email);
+
+    return plainToInstance(PostUploadResponse, {
+      postId,
+    });
   }
 
   @Transactional()
   async like({ postId }: PostDetailQuery, { email }: Authentication) {
     const liked = await this.isLiked(postId, email);
     if (liked) {
-      return await this.unlikeInternal(postId, email);
+      await this.unlikeInternal(postId, email);
     } else {
-      return await this.likeInternal(postId, email);
+      await this.likeInternal(postId, email);
     }
+    const { likeNum } = await this.postRepository.findOneOrFail({
+      where: {
+        postId,
+      },
+      select: { likeNum: true },
+    });
+
+    return plainToInstance(PostLikeResponse, { likeNum, postId });
   }
 
   private async isLiked(postId: number, email: string) {
     return await this.postRepository.exist({
       where: {
         postId,
-        likeUsers: { email },
+        likedUsers: { email },
       },
     });
   }
@@ -335,10 +361,10 @@ ORDER BY
   private async likeInternal(postId: number, email: string) {
     await this.postRepository
       .createQueryBuilder()
-      .relation('likeUsers')
+      .relation('likedUsers')
       .of(postId)
       .add(email);
-    return await this.postRepository.update(postId, {
+    await this.postRepository.update(postId, {
       likeNum: () => 'like_num + 1',
     });
   }
@@ -346,10 +372,10 @@ ORDER BY
   private async unlikeInternal(postId: number, email: string) {
     await this.postRepository
       .createQueryBuilder()
-      .relation('likeUsers')
+      .relation('likedUsers')
       .of(postId)
       .remove(email);
-    return await this.postRepository.update(postId, {
+    await this.postRepository.update(postId, {
       likeNum: () => 'like_num - 1',
     });
   }
