@@ -17,13 +17,11 @@ struct ReadPostUseCase: ReadPostUseCaseProtocol {
     
     // MARK: - Properties
     
-    private let repository: LoginRepositoryProtocol
     private let provider: Requestable
     
     // MARK: - Init
     
-    init(repository: LoginRepositoryProtocol, provider: Requestable) {
-        self.repository = repository
+    init(provider: Requestable) {
         self.provider = provider
     }
     
