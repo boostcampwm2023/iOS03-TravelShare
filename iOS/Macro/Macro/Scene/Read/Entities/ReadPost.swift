@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ReadPost {
+struct ReadPost: Codable {
     let postId: Int
     let title: String?
     let contents: [PostContent]?
@@ -21,14 +21,14 @@ struct ReadPost {
     let liked: Bool?
 }
 
-struct PostContent {
+struct PostContent: Codable {
     let imageUrl: String?
     let description: String?
 //    let x: Int?
 //    let y: Int?
 }
 
-struct Writer {
+struct Writer: Codable {
     let email: String?
     let name: String?
     let imageUrl: String?

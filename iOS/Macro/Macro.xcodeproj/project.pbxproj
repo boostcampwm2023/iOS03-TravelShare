@@ -412,11 +412,20 @@
 			path = Entities;
 			sourceTree = "<group>";
 		};
+		AAD0B2FC2B12708E003B4D5F /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				AAD0B2FD2B1270AD003B4D5F /* ReadPostUseCase.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
 		BA32E1682B0DC29C00EA0EE2 /* Read */ = {
 			isa = PBXGroup;
 			children = (
 				BA32E1692B0DC29C00EA0EE2 /* InterfaceAdapters */,
 				AAD0B2F62B10B706003B4D5F /* Network */,
+				AAD0B2FC2B12708E003B4D5F /* UseCases */,
 				AAD0B2F72B10B713003B4D5F /* Entities */,
 			);
 			path = Read;
