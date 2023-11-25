@@ -2,14 +2,13 @@ import { Body, Get, Patch, Post, Query } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiOkResponse,
   ApiOperation,
-  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { PostFindResponse } from './post.find.response.dto';
 import { PostDetailResponse } from './post.detail.response.dto';
-import { PostWriteBody } from './post.write.body';
 import { PostFindQuery } from './post.find.query.dto';
 import { PostService } from './post.service';
 import { AuthenticatedUser } from 'src/auth/auth.decorators';
@@ -17,6 +16,10 @@ import { Authentication } from 'src/auth/authentication.dto';
 import { RestController } from 'src/utils/rest.controller.decorator';
 import { PostHitsQuery } from './post.hist.query.dto';
 import { PostDetailQuery } from './post.detail.query.dto';
+import { PostUploadBody } from './post.upload.body';
+import { PostUploadResponse } from './post.upload.response.dto';
+import { PostLikeQuery } from './post.like.query.dto';
+import { PostLikeResponse } from './post.like.response.dto';
 
 @ApiTags('Post')
 @ApiBearerAuth('access-token')
@@ -102,13 +105,17 @@ SELECT ... FROM post ... WHERE title LIKE '%:title%' OR '%:user:%';
 
 `,
   })
-  @ApiBody({ description: '업로드', type: PostWriteBody })
+  @ApiOkResponse({
+    description: '성공 시에 게시글 고유 id를 반환합니다.',
+    type: PostUploadResponse,
+  })
+  @ApiBody({ description: '업로드', type: PostUploadBody })
   @Post('upload')
   async upload(
-    @Body() post: PostWriteBody,
+    @Body() post: PostUploadBody,
     @AuthenticatedUser() user: Authentication,
   ) {
-    await this.postService.upload(post, user);
+    return await this.postService.upload(post, user);
   }
 
   @ApiOperation({
@@ -121,11 +128,15 @@ SELECT ... FROM post ... WHERE title LIKE '%:title%' OR '%:user:%';
 다시 좋아요시키는 식으로 작동합니다.
 `,
   })
+  @ApiOkResponse({
+    description: '요청 성공 시에 해당 게시글 좋아요 수를 반환합니다.',
+    type: PostLikeResponse,
+  })
   @Patch('like')
   async like(
-    @Query() query: PostDetailQuery,
+    @Query() query: PostLikeQuery,
     @AuthenticatedUser() user: Authentication,
   ) {
-    await this.postService.like(query, user);
+    return await this.postService.like(query, user);
   }
 }
