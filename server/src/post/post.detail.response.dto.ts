@@ -10,12 +10,11 @@ import {
   IsString,
   IsUrl,
   Min,
-  Validate,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { UserProfileSimpleResponse } from 'src/user/user.profile.simple.response.dto';
-import { IsRouteArray } from './post.route.validator';
+import { RouteCoordinates } from './route.coordinates.dto';
 
 export class PostDetailElement {
   @ApiProperty({ description: '이미지 url', required: false })
@@ -56,9 +55,13 @@ export class PostDetailResponse {
   @Type(() => UserProfileSimpleResponse)
   writer: UserProfileSimpleResponse;
 
-  @ApiProperty({ description: '이동 경로, 2차원 배열입니다.', type: [[0, 0]] })
-  @Validate(IsRouteArray, { each: true })
-  route: [number, number][];
+  @ApiProperty({
+    description: '이동 경로, 2차원 배열입니다.',
+    type: RouteCoordinates,
+  })
+  @ValidateNested()
+  @Type(() => RouteCoordinates)
+  route: RouteCoordinates;
 
   @ApiProperty({ description: '해시태그' })
   @IsArray()
