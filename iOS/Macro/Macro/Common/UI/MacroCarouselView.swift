@@ -139,7 +139,6 @@ extension MacroCarouselView: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        debugPrint("여기 아니야?")
         if viewType == .write, indexPath.row == items.count {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MacroCarouselViewAddImageCell.id, for: indexPath) as? MacroCarouselViewAddImageCell else {
                 let cell = MacroCarouselViewAddImageCell()
@@ -151,7 +150,6 @@ extension MacroCarouselView: UICollectionViewDataSource {
             return cell
         } else {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MacroCarouselViewCell.id, for: indexPath) as? MacroCarouselViewCell else {
-                debugPrint("여기?")
                 return MacroCarouselViewCell()
             }
             
