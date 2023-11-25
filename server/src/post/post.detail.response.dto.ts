@@ -14,7 +14,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { UserProfileSimpleResponse } from 'src/user/user.profile.simple.response.dto';
-import { RouteCoordinates } from './route.coordinates.dto';
+import { RouteCoordinates } from '../route/route.coordinates.dto';
 
 export class PostDetailElement {
   @ApiProperty({ description: '이미지 url', required: false })
