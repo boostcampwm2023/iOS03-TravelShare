@@ -1,6 +1,4 @@
 import {
-  AfterLoad,
-  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -11,38 +9,37 @@ import {
 const LINESTRING_COORDINATES_EXTRACT_REGEXP =
   /LINESTRING\((([\d\.]+ [\d\.]+,?)+)\)/;
 
+type LineString = [number, number][];
+
+const lineStringToJsonArray = (text: string) => {
+  const extracted = LINESTRING_COORDINATES_EXTRACT_REGEXP.exec(text)?.[1];
+  return extracted
+    .split(',')
+    .map((coordinate) => coordinate.split(/\s+/).map(parseFloat)) as LineString;
+};
+
+const jsonArrayToLineString = (coordinates: LineString) => {
+  return `LINESTRING(${coordinates
+    .map(([lat, long]) => `${lat} ${long}`)
+    .join(',')})`;
+};
+
 @Entity('route')
 export class Route {
   @PrimaryGeneratedColumn({ name: 'route_id' })
   routeId: number;
 
-  @Column('geometry', { spatialFeatureType: 'LineString', srid: 4326 })
+  @Column('geometry', {
+    spatialFeatureType: 'LineString',
+    srid: 4326,
+    transformer: {
+      from: lineStringToJsonArray,
+      to: jsonArrayToLineString,
+    },
+  })
   @Index({ spatial: true })
-  coordinates: string | [[number, number]];
+  coordinates: LineString;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
-
-  @BeforeInsert()
-  serializeRoute() {
-    if (this.coordinates instanceof Array) {
-      this.coordinates = `LINESTRING(${this.coordinates
-        .map(([x, y]) => `${x} ${y}`)
-        .join(',')})`;
-    }
-  }
-
-  @AfterLoad()
-  deserializeRoute() {
-    if (typeof this.coordinates === 'string') {
-      const extract = LINESTRING_COORDINATES_EXTRACT_REGEXP.exec(
-        this.coordinates,
-      )?.[1];
-      this.coordinates = extract
-        .split(',')
-        .map((pair) => pair.trim().split(/\s+/).map(parseFloat)) as [
-        [number, number],
-      ];
-    }
-  }
 }
