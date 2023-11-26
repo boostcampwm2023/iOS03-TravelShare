@@ -64,6 +64,9 @@ export class Post {
   })
   likedUsers: User[];
 
+  @Column({ default: true })
+  public: boolean;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
