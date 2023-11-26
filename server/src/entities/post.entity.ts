@@ -14,6 +14,7 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 import { Route } from './route.entity';
+import { PostContentElement } from './post.content.element.entity';
 
 @Entity('post')
 export class Post {
@@ -75,26 +76,4 @@ export class Post {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;
-}
-
-@Entity('post_content_element')
-export class PostContentElement {
-  @PrimaryGeneratedColumn({ name: 'post_content_element_id' })
-  postContentElemntId?: number;
-
-  @ManyToOne(() => Post, ({ contents }) => contents)
-  @JoinColumn({ name: 'post_id' })
-  post: Post;
-
-  @Column({ name: 'image_url', nullable: true })
-  imageUrl: string;
-
-  @Column()
-  description: string;
-
-  @Column()
-  x: number;
-
-  @Column()
-  y: number;
 }
