@@ -21,7 +21,7 @@ import { PostService } from './post.service';
 import { AuthenticatedUser } from 'src/auth/auth.decorators';
 import { Authentication } from 'src/auth/authentication.dto';
 import { RestController } from 'src/utils/rest.controller.decorator';
-import { PostHitsQuery } from './post.hist.query.dto';
+import { PostHitsQuery } from './post.hits.query.dto';
 import { PostDetailQuery } from './post.detail.query.dto';
 import { PostUploadBody } from './post.upload.body.dto';
 import { PostUploadResponse } from './post.upload.response.dto';

@@ -5,7 +5,7 @@ import { In, Like, Raw, Repository } from 'typeorm';
 import { PostFindQuery } from './post.find.query.dto';
 import { plainToInstance } from 'class-transformer';
 import { PostFindResponse } from './post.find.response.dto';
-import { PostHitsQuery } from './post.hist.query.dto';
+import { PostHitsQuery } from './post.hits.query.dto';
 import { PostDetailResponse } from './post.detail.response.dto';
 import { Authentication } from 'src/auth/authentication.dto';
 import { PostDetailQuery } from './post.detail.query.dto';
