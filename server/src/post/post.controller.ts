@@ -108,7 +108,8 @@ SELECT ... FROM post ... WHERE title LIKE '%:title%' OR '%:user:%';
 - 게시글을 업로드합니다.
 - imageUrl 등은 필수값이 아니므로 잘 확인해주세요.
 - ### 경로는 route를 통해 설정할 수 있습니다.
-###### route.coordinates 혹은 route.routeId를 반드시 설정해야 합니다.
+- public 인자를 통해 게시글 공개여부를 설정할 수 있습니다.
+## route.coordinates 혹은 route.routeId를 반드시 설정해야 합니다.
  1. 미리 경로를 /route/upload를 통해 업로드했을 경우 반환받은 routeId를 넣으면 됩니다.
  2. 혹은 route.coordinates에 직접 경로를 넣어서 곧바로 업로드도 가능합니다.
 - 응답은 게시글 고유 id입니다.
