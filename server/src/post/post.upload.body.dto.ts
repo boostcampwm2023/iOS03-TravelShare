@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
   IsDate,
   IsNumber,
   IsOptional,
@@ -88,6 +89,15 @@ export class PostUploadBody {
   @ValidateNested()
   @Type(() => PostUploadElement)
   contents: PostUploadElement[];
+
+  @ApiProperty({
+    description: '게시글 공개 여부',
+    required: false,
+    default: true,
+  })
+  @IsBoolean()
+  @IsOptional()
+  public: boolean = true;
 
   @ApiProperty({ description: '시작 날짜', type: Date })
   @IsDate()

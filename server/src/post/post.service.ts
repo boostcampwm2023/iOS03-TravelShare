@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post, PostContentElement } from 'src/entities/post.entity';
 import { In, Like, Raw, Repository } from 'typeorm';
@@ -217,6 +217,7 @@ ORDER BY
         createdAt: Raw(
           (alias) => `DATE_ADD(NOW(), INTERVAL -2 WEEK) <= ${alias}`,
         ),
+        public: true,
       },
       ...(pagination ?? { take: 10 }),
       order: {
@@ -255,14 +256,18 @@ ORDER BY
   ) {
     const posts = await this.postRepository.find({
       where: [
-        { ...(title ? { title: Like(`%${title}%`) } : {}) },
-        { ...(username ? { writer: Like(`%${username}%`) } : {}) },
+        { public: true, ...(title ? { title: Like(`%${title}%`) } : {}) },
+        {
+          public: true,
+          ...(username ? { writer: Like(`%${username}%`) } : {}),
+        },
       ],
       ...pagination,
       relations: {
         writer: true,
       },
     });
+
     const isLikedPosts = await this.postRepository.find({
       where: {
         postId: In(posts.map(({ postId }) => postId)),
@@ -272,6 +277,7 @@ ORDER BY
         postId: true,
       },
     });
+
     return plainToInstance(
       PostFindResponse,
       posts.map((post) => ({
@@ -296,7 +302,10 @@ ORDER BY
         route: true,
       },
     });
-    console.log(post);
+
+    if (post.writer.email !== email && !post.public) {
+      throw new BadRequestException('비공개 게시글입니다.');
+    }
 
     await this.postRepository.increment({ postId }, 'viewNum', 1);
     return plainToInstance(PostDetailResponse, {
@@ -356,7 +365,11 @@ ORDER BY
       select: { likeNum: true },
     });
 
-    return plainToInstance(PostLikeResponse, { likeNum, postId });
+    return plainToInstance(PostLikeResponse, {
+      likeNum,
+      postId,
+      liked: !liked,
+    });
   }
 
   private async isLiked(postId: number, email: string) {
