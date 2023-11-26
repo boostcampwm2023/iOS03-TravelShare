@@ -9,7 +9,7 @@ import {
 const LINESTRING_COORDINATES_EXTRACT_REGEXP =
   /LINESTRING\((([\d\.]+ [\d\.]+,?)+)\)/;
 
-type LineString = [number, number][];
+export type LineString = [number, number][];
 
 const lineStringToJsonArray = (text: string) => {
   const extracted = LINESTRING_COORDINATES_EXTRACT_REGEXP.exec(text)?.[1];

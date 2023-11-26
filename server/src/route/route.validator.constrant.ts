@@ -13,8 +13,13 @@ export class IsCoordinate implements ValidatorConstraintInterface {
 
   validate(value: any): boolean | Promise<boolean> {
     this.errors ??= [];
+    if (!value) {
+      this.errors.push(`coordinate must be provided`);
+      return false;
+    }
     if (!Array.isArray(value) || value.length !== 2) {
       this.errors.push(`coordinates ${value} should be a pair [x, y]`);
+      return false;
     }
     const [latitude, longitude] = value;
 
