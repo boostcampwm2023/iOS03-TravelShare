@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -15,26 +16,31 @@ export class Route {
   @PrimaryGeneratedColumn({ name: 'route_id' })
   routeId: number;
 
-  @Column('geometry', { spatialFeatureType: 'LineString' })
-  coordinates: any;
+  @Column('geometry', { spatialFeatureType: 'LineString', srid: 4326 })
+  @Index({spatial: true})
+  coordinates: string | [[number, number]];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
   @BeforeInsert()
   serializeRoute() {
-    this.coordinates = `LINESTRING(${this.coordinates
-      .map(([x, y]) => `${x} ${y}`)
-      .join(',')})`;
+    if(this.coordinates instanceof Array) {
+      this.coordinates = `LINESTRING(${this.coordinates
+        .map(([x, y]) => `${x} ${y}`)
+        .join(',')})`;
+    }
   }
 
   @AfterLoad()
   deserializeRoute() {
-    const extract = LINESTRING_COORDINATES_EXTRACT_REGEXP.exec(
-      this.coordinates,
-    )?.[1];
-    this.coordinates = extract
-      .split(',')
-      .map((pair) => pair.trim().split(/\s+/).map(parseFloat));
-  }
+    if(typeof this.coordinates === 'string') {
+      const extract = LINESTRING_COORDINATES_EXTRACT_REGEXP.exec(
+        this.coordinates,
+      )?.[1];
+      this.coordinates = extract
+        .split(',')
+        .map((pair) => pair.trim().split(/\s+/).map(parseFloat)) as [[number, number]];
+    }
+    } 
 }
