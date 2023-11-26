@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Post, PostContentElement } from 'src/entities/post.entity';
+import { Post } from 'src/entities/post.entity';
 import { In, Like, Raw, Repository } from 'typeorm';
 import { PostFindQuery } from './post.find.query.dto';
 import { plainToInstance } from 'class-transformer';
@@ -14,7 +14,7 @@ import { PostUploadBody } from './post.upload.body.dto';
 import { PostUploadResponse } from './post.upload.response.dto';
 import { Route } from 'src/entities/route.entity';
 import { PostLikeResponse } from './post.like.response.dto';
-import { RouteCoordinates } from 'src/route/route.coordinates.dto';
+import { PostContentElement } from 'src/entities/post.content.element.entity';
 
 @Injectable()
 export class PostService {
@@ -321,7 +321,9 @@ ORDER BY
     let routeId: number;
     const { route } = post;
     if (route.coordinates) {
-      routeId = (await this.saveRouteCoordinates(route)).routeId;
+      routeId = (
+        await this.routeRepository.save(post.route, { transaction: false })
+      ).routeId;
     } else {
       routeId = route.routeId;
     }
@@ -338,15 +340,8 @@ ORDER BY
         post: { postId },
       })),
     );
-
     return plainToInstance(PostUploadResponse, {
       postId,
-    });
-  }
-
-  private async saveRouteCoordinates(route: RouteCoordinates) {
-    return await this.routeRepository.save(this.routeRepository.create(route), {
-      transaction: false,
     });
   }
 
