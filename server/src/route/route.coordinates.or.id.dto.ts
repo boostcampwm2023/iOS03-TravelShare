@@ -6,8 +6,8 @@ export class RouteCoordinatesOrId {
   @ApiProperty({
     description: '좌표 배열입니다.',
     example: [
-      [126, 36],
-      [126.7, 35.6],
+      [36, 122.6],
+      [35.6, 122.2],
     ],
     required: false,
   })

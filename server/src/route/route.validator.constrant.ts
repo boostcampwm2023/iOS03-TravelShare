@@ -16,7 +16,7 @@ export class IsCoordinate implements ValidatorConstraintInterface {
     if (!Array.isArray(value) || value.length !== 2) {
       this.errors.push(`coordinates ${value} should be a pair [x, y]`);
     }
-    const [longitude, latitude] = value;
+    const [latitude, longitude] = value;
 
     if (typeof longitude !== 'number' || typeof latitude !== 'number') {
       this.errors.push(
