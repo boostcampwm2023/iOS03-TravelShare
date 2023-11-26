@@ -20,20 +20,19 @@ extension ReadEndPoint: EndPoint {
     
     var headers: MacroNetwork.HTTPHeaders {
         switch self {
-        case .read(_, _):
+        case let .read(postId, accessToken):
             return [
-                "Host" : "jijihuny.store"
+                "Host" : "jijihuny.store",
+                "postID" : postId,
+                "AccessToken" : accessToken
             ]
         }
     }
     
     var parameter: MacroNetwork.HTTPParameter {
         switch self {
-        case let .read(postId, accessToken):
-            return .body([
-                "postId": postId,
-                "accessToken": accessToken
-            ])
+        case .read(_, _):
+            return .plain
         }
     }
     

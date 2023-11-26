@@ -12,10 +12,12 @@ class ReadViewModel: ViewModelProtocol {
     
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
+    private let useCase: ReadPostUseCaseProtocol
     private let outputSubject = PassthroughSubject<Output, Never>()
     
     // MARK: - init
-    init() {
+    init(useCase: ReadPostUseCaseProtocol) {
+        self.useCase = useCase
     }
     
     // MARK: - Input
@@ -51,11 +53,15 @@ class ReadViewModel: ViewModelProtocol {
 // MARK: - Methods
 private extension ReadViewModel {
     func updateReadViewItems() {
-        let mockPost = ReadPost(postId: 1, title: "김경호의 해피해피 코딩 라이프", contents: [
-            PostContent(imageUrl: "https://mblogthumb-phinf.pstatic.net/MjAxNzA2MTRfMTM5/MDAxNDk3NDMzNzc3NzMz.bYz_7N23reM5QXP_MwApEZ6cMuP7HT0VF_FuE3j4bEYg.Lb1I_8WU9JFipAHpxlkSfHCGVnZ9ssflRaM1xgN2wGEg.JPEG.vazx1234/2017-06-14_18%3B45%3B09.JPG?type=w800", description: "해피해피 라이프"),
-            PostContent(imageUrl: "https://mblogthumb-phinf.pstatic.net/MjAxNzA2MTRfMTM5/MDAxNDk3NDMzNzc3NzMz.bYz_7N23reM5QXP_MwApEZ6cMuP7HT0VF_FuE3j4bEYg.Lb1I_8WU9JFipAHpxlkSfHCGVnZ9ssflRaM1xgN2wGEg.JPEG.vazx1234/2017-06-14_18%3B45%3B09.JPG?type=w800", description: "해피해피 라이프2")
-        ], writer: Writer(email: "ykm989@naver.com", name: "김경호", imageUrl: "https://mblogthumb-phinf.pstatic.net/MjAxNzA2MTRfMTM5/MDAxNDk3NDMzNzc3NzMz.bYz_7N23reM5QXP_MwApEZ6cMuP7HT0VF_FuE3j4bEYg.Lb1I_8WU9JFipAHpxlkSfHCGVnZ9ssflRaM1xgN2wGEg.JPEG.vazx1234/2017-06-14_18%3B45%3B09.JPG?type=w800"), route: [], hashtag: [], likeNum: 0, viewNum: 0, createdAt: nil, modifiedAt: nil, liked: false)
-        outputSubject.send(.updatePost(post: mockPost))
+        useCase.execute(postId: "1")
+            .sink { completion in
+                if case let .failure(error) = completion {
+                    debugPrint("Token Get Fail : ", error)
+                }
+            } receiveValue: { [weak self] readPost in
+                self?.outputSubject.send(.updatePost(post: readPost))
+            }
+            .store(in: &cancellables)
     }
 }
 
