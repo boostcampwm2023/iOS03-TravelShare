@@ -227,7 +227,6 @@ ORDER BY
       relations: {
         writer: true,
       },
-      relationLoadStrategy: 'join',
     });
 
     const isLikedPosts = await this.postRepository.find({
@@ -318,15 +317,7 @@ ORDER BY
 
   @Transactional()
   async upload(post: PostUploadBody, { email }: Authentication) {
-    let routeId: number;
-    const { route } = post;
-    if (route.coordinates) {
-      routeId = (
-        await this.routeRepository.save(post.route, { transaction: false })
-      ).routeId;
-    } else {
-      routeId = route.routeId;
-    }
+    const routeId = await this.saveOrGetRouteId(post);
     const {
       identifiers: [{ postId }],
     } = await this.postRepository.insert({
@@ -343,6 +334,16 @@ ORDER BY
     return plainToInstance(PostUploadResponse, {
       postId,
     });
+  }
+
+  private async saveOrGetRouteId({route}: PostUploadBody): Promise<number> {
+    const {coordinates, routeId} = route;
+    if(coordinates) {
+      const {identifiers: [{routeId}]} = await this.routeRepository.insert({...route, routeId: null});
+      return routeId;
+    } else {
+      return routeId;
+    }
   }
 
   @Transactional()
