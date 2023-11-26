@@ -18,6 +18,7 @@ export class RouteCoordinatesOrId {
   @ApiProperty({
     description: '고유 id입니다.',
     example: 1,
+    required: false,
   })
   @IsNumber()
   @IsOptional()
