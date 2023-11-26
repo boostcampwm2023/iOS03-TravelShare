@@ -4,42 +4,14 @@ import {
   IsArray,
   IsBoolean,
   IsDate,
-  IsNumber,
   IsOptional,
   IsString,
-  IsUrl,
-  Max,
-  Min,
   ValidateNested,
 } from 'class-validator';
 import { RouteCoordinatesOrId } from 'src/route/route.coordinates.or.id.dto';
+import { PostContentElementBase } from './post.content.element.base.dto';
 
-class PostUploadElement {
-  @ApiProperty({
-    description: '이미지 url',
-    required: false,
-    example: 'https://hereis.imageurl/optional',
-  })
-  @IsUrl()
-  @IsOptional()
-  imageUrl?: string;
-
-  @ApiProperty({ description: '설명', example: '이곳에 설명이 들어갑니다.' })
-  @IsString()
-  description: string;
-
-  @ApiProperty({ description: 'x 좌표', example: 128.0 })
-  @IsNumber()
-  @Min(124.5)
-  @Max(132.0)
-  x: number;
-
-  @ApiProperty({ description: 'y 좌표', example: 35.6 })
-  @IsNumber()
-  @Min(33.0)
-  @Max(38.9)
-  y: number;
-}
+class PostUploadElement extends PostContentElementBase {}
 
 export class PostUploadBody {
   @ApiProperty({
