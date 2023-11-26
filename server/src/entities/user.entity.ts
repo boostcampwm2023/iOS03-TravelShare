@@ -33,7 +33,7 @@ export class User {
   @Column('enum', { default: 'user', enum: ['user', 'admin'] })
   role: UserRole;
 
-  @ManyToMany(() => User, (user) => user.followings)
+  @ManyToMany(() => User, ({ followings }) => followings)
   @JoinTable({
     name: 'user_followers_relation',
     joinColumn: { name: 'follower_id' },
@@ -41,18 +41,13 @@ export class User {
   })
   followers: User[];
 
-  @ManyToMany(() => User, (user) => user.followers)
-  // @JoinTable({
-  //   name: 'user_followers_relation',
-  //   joinColumn: { name: 'followee_id' },
-  //   inverseJoinColumn: { name: 'follower_id' },
-  // })
+  @ManyToMany(() => User, ({ followers }) => followers)
   followings: User[];
 
   @ManyToMany(() => Post, ({ likedUsers }) => likedUsers)
   likedPosts: Post[];
 
-  @OneToMany(() => Post, (post) => post.writer)
+  @OneToMany(() => Post, ({ writer }) => writer)
   writedPosts: Post[];
 
   @CreateDateColumn({ name: 'created_at' })

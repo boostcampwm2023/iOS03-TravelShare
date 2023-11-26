@@ -57,7 +57,7 @@ export class Post {
   @Column('date', { name: 'end_at' })
   endAt: Date;
 
-  @ManyToMany(() => User, (user) => user.likedPosts)
+  @ManyToMany(() => User, ({ likedPosts }) => likedPosts)
   @JoinTable({
     name: 'post_likes_users',
     joinColumn: { name: 'post_id' },
