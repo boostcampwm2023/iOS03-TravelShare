@@ -28,7 +28,7 @@ export class Post {
     cascade: ['remove', 'soft-remove', 'update', 'recover'],
   })
   @JoinColumn({ name: 'user_email', referencedColumnName: 'email' })
-  writer: Relation<User>;
+  writer: User;
 
   @Column()
   @Index({ fulltext: true, parser: 'ngram' })
@@ -37,7 +37,7 @@ export class Post {
   @OneToMany(() => PostContentElement, ({ post }) => post, {
     cascade: ['insert', 'soft-remove', 'update'],
   })
-  contents: Relation<PostContentElement[]>;
+  contents: PostContentElement[];
 
   @Column({ name: 'view_num', default: 0 })
   viewNum: number;
@@ -50,7 +50,7 @@ export class Post {
 
   @OneToOne(() => Route)
   @JoinColumn({ name: 'route_id', referencedColumnName: 'routeId' })
-  route: Relation<Route>;
+  route: Route;
 
   @Column('json')
   hashtag: string[];
@@ -79,7 +79,7 @@ export class Post {
     joinColumn: { name: 'post_id' },
     inverseJoinColumn: { name: 'email', referencedColumnName: 'email' },
   })
-  likedUsers: Relation<User[]>;
+  likedUsers: User[];
 
   @Column({ default: true })
   public: boolean;

@@ -19,7 +19,7 @@ export class AppleAuth {
   @JoinColumn({
     name: 'user_id',
   })
-  user: Relation<User>;
+  user: User;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

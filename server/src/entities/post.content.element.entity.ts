@@ -35,7 +35,7 @@ export class PostContentElement {
 
   @ManyToOne(() => Post, ({ contents }) => contents)
   @JoinColumn({ name: 'post_id' })
-  post: Relation<Post>;
+  post: Post;
 
   @Column({ name: 'image_url', nullable: true })
   imageUrl: string;
