@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional, Validate, ValidateIf } from 'class-validator';
+import { IsNumber, Validate, ValidateIf } from 'class-validator';
 import { IsCoordinate } from './route.validator.constrant';
 import { LineString } from 'src/entities/route.entity';
 
@@ -12,7 +12,7 @@ export class RouteCoordinatesOrId {
     ],
     required: false,
   })
-  @ValidateIf(({routeId}: RouteCoordinatesOrId)=> !Boolean(routeId))
+  @ValidateIf(({ routeId }: RouteCoordinatesOrId) => !Boolean(routeId))
   @Validate(IsCoordinate, { each: true })
   coordinates: LineString;
 
@@ -21,7 +21,7 @@ export class RouteCoordinatesOrId {
     example: 1,
     required: false,
   })
-  @ValidateIf(({coordinates}: RouteCoordinatesOrId)=> !Boolean(coordinates))
+  @ValidateIf(({ coordinates }: RouteCoordinatesOrId) => !Boolean(coordinates))
   @IsNumber()
   routeId: number;
 }
