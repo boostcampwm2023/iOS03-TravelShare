@@ -16,7 +16,7 @@ import { PostFindResponse } from 'post/post.find.response.dto';
 export class UserProfileResponse {
   @ApiProperty({ description: '작성자 email' })
   @IsEmail()
-  userId: string;
+  email: string;
 
   @ApiProperty({ description: '작성자 이름' })
   @IsString()
@@ -60,5 +60,5 @@ export class UserProfileResponse {
   @IsArray()
   @ValidateNested()
   @Type(() => PostFindResponse)
-  posts: PostFindResponse[];
+  writedPosts: PostFindResponse[];
 }
