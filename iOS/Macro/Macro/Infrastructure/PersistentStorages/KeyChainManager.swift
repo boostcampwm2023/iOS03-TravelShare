@@ -34,6 +34,16 @@ struct KeyChainManager {
         }
     }
     
+    /// 키체인 데이터 삭제 함수
+    static func delete(key: String) {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: key
+        ]
+
+        SecItemDelete(query as CFDictionary)
+    }
+    
     /// 키체인에서 데이터 검색 함수
     static func load(key: String) -> String? {
         let query: [String: Any] = [

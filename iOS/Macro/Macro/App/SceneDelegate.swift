@@ -43,6 +43,7 @@ private extension SceneDelegate {
         
         switch loginState {
         case .loggedIn:
+            TokenManager.refreshToken(cancellables: &cancellables)
             let tabbarViewModel = TabBarViewModel()
             let tabbarViewController = TabBarViewController(viewModel: tabbarViewModel)
             self.navigationController = UINavigationController(rootViewController: tabbarViewController)

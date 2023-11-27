@@ -40,6 +40,9 @@
 		BA32E17E2B0DC3CB00EA0EE2 /* MyPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E17B2B0DC3CB00EA0EE2 /* MyPageViewModel.swift */; };
 		BA32E17F2B0DC3CB00EA0EE2 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E17D2B0DC3CB00EA0EE2 /* MyPageViewController.swift */; };
 		BA32E1952B0DEBC500EA0EE2 /* LocationInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E1942B0DEBC500EA0EE2 /* LocationInfoViewController.swift */; };
+		AAD0B3002B147CA3003B4D5F /* RefreshTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B2FF2B147CA3003B4D5F /* RefreshTokenResponse.swift */; };
+		AAD0B3022B147CCC003B4D5F /* RefreshTokenEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B3012B147CCC003B4D5F /* RefreshTokenEndPoint.swift */; };
+		AAD0B3042B147CF5003B4D5F /* RefreshTokenUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B3032B147CF5003B4D5F /* RefreshTokenUseCase.swift */; };
 		BA33AA702B0AF9DD0065D1E0 /* TaBarBackgroundLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA6F2B0AF9DD0065D1E0 /* TaBarBackgroundLineView.swift */; };
 		BA33AA852B0AF9F30065D1E0 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA742B0AF9F20065D1E0 /* HomeViewModel.swift */; };
 		BA33AA892B0AF9F30065D1E0 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA792B0AF9F20065D1E0 /* HomeViewController.swift */; };
@@ -130,6 +133,9 @@
 		BA32E17B2B0DC3CB00EA0EE2 /* MyPageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewModel.swift; sourceTree = "<group>"; };
 		BA32E17D2B0DC3CB00EA0EE2 /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
 		BA32E1942B0DEBC500EA0EE2 /* LocationInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationInfoViewController.swift; sourceTree = "<group>"; };
+		AAD0B2FF2B147CA3003B4D5F /* RefreshTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenResponse.swift; sourceTree = "<group>"; };
+		AAD0B3012B147CCC003B4D5F /* RefreshTokenEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenEndPoint.swift; sourceTree = "<group>"; };
+		AAD0B3032B147CF5003B4D5F /* RefreshTokenUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenUseCase.swift; sourceTree = "<group>"; };
 		BA33AA6F2B0AF9DD0065D1E0 /* TaBarBackgroundLineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaBarBackgroundLineView.swift; sourceTree = "<group>"; };
 		BA33AA742B0AF9F20065D1E0 /* HomeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		BA33AA752B0AF9F20065D1E0 /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
@@ -336,6 +342,7 @@
 			children = (
 				AAD0B2B72B0DA35B003B4D5F /* HTTPError.swift */,
 				AAD0B2B82B0DA35B003B4D5F /* LoginEndPoint.swift */,
+				AAD0B3012B147CCC003B4D5F /* RefreshTokenEndPoint.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -344,6 +351,7 @@
 			isa = PBXGroup;
 			children = (
 				AAD0B2BA2B0DA35B003B4D5F /* AppleLoginUseCase.swift */,
+				AAD0B3032B147CF5003B4D5F /* RefreshTokenUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -352,6 +360,7 @@
 			isa = PBXGroup;
 			children = (
 				AAD0B2BC2B0DA35B003B4D5F /* LoginResponse.swift */,
+				AAD0B2FF2B147CA3003B4D5F /* RefreshTokenResponse.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -1046,6 +1055,8 @@
 				D241DC7C2B0DA0DA0037DDB6 /* SearchType.swift in Sources */,
 				BA6C6DFA2B05FFC500563B22 /* TabBarBackgroundSmallView.swift in Sources */,
 				AAD0B2D32B0E03DE003B4D5F /* MacroCarouselView.swift in Sources */,
+				AAD0B3002B147CA3003B4D5F /* RefreshTokenResponse.swift in Sources */,
+				AAD0B3022B147CCC003B4D5F /* RefreshTokenEndPoint.swift in Sources */,
 				D263CA222B040EBE00B4A144 /* TravelViewModel.swift in Sources */,
 				BA8DC40A2B0B5F7800929E01 /* TabViewController.swift in Sources */,
 				D241DC762B0DA00F0037DDB6 /* PostFindResponse.swift in Sources */,
@@ -1101,6 +1112,7 @@
 				BA32E16E2B0DC29C00EA0EE2 /* ReadViewModel.swift in Sources */,
 				AAD0B2C02B0DA35B003B4D5F /* LoginEndPoint.swift in Sources */,
 				D241DC712B0DA0070037DDB6 /* CommonUIComponents.swift in Sources */,
+				AAD0B3042B147CF5003B4D5F /* RefreshTokenUseCase.swift in Sources */,
 				BA8DC4072B0B5F0600929E01 /* SearchViewController.swift in Sources */,
 				BA90CB852B0F3BF600365AE2 /* PostProfileView.swift in Sources */,
 				BA6C6DFB2B05FFC500563B22 /* TabBarBackgroundLargeCirclceView.swift in Sources */,
