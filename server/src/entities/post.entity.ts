@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   JoinColumn,
   JoinTable,
   ManyToMany,
@@ -10,7 +11,9 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  Relation,
   UpdateDateColumn,
+  VirtualColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 import { Route } from './route.entity';
@@ -25,15 +28,16 @@ export class Post {
     cascade: ['remove', 'soft-remove', 'update', 'recover'],
   })
   @JoinColumn({ name: 'user_email', referencedColumnName: 'email' })
-  writer: User;
+  writer: Relation<User>;
 
   @Column()
+  @Index({fulltext: true, parser: 'ngram'})
   title: string;
 
   @OneToMany(() => PostContentElement, ({ post }) => post, {
     cascade: ['insert', 'soft-remove', 'update'],
   })
-  contents: PostContentElement[];
+  contents: Relation<PostContentElement[]>;
 
   @Column({ name: 'view_num', default: 0 })
   viewNum: number;
@@ -46,10 +50,22 @@ export class Post {
 
   @OneToOne(() => Route)
   @JoinColumn({ name: 'route_id', referencedColumnName: 'routeId' })
-  route: Route;
+  route: Relation<Route>;
 
   @Column('json')
   hashtag: string[];
+
+  @VirtualColumn({
+    query: (alias)=> 
+    `
+    SELECT \`contents\`.\`image_url\` as \`imageUrl\`
+    FROM \`post_content_element\` \`contents\`
+    WHERE (\`contents\`.\`post_id\`=${alias}.\`post_id\`)
+    AND (\`contents\`.\`image_url\` IS NOT NULL)
+    LIMIT 1
+    `
+  })
+  imageUrl: string;
 
   @Column('date', { name: 'start_at' })
   startAt: Date;
@@ -63,7 +79,7 @@ export class Post {
     joinColumn: { name: 'post_id' },
     inverseJoinColumn: { name: 'email', referencedColumnName: 'email' },
   })
-  likedUsers: User[];
+  likedUsers: Relation<User[]>;
 
   @Column({ default: true })
   public: boolean;
