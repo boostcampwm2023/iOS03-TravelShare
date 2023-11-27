@@ -8,6 +8,7 @@ import { AppConfigModule } from './config/app.config.module';
 import { AuthModule } from './auth/auth.module';
 import { UtilsModule } from './utils/utils.module';
 import { FileModule } from './file/file.module';
+import { RouteModule } from './route/route.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { FileModule } from './file/file.module';
     UserModule,
     AppConfigModule,
     MapModule,
+    RouteModule,
     AuthModule,
     UtilsModule,
     FileModule,

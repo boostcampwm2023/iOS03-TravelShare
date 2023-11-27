@@ -8,17 +8,20 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
+import { Route } from './route.entity';
+import { PostContentElement } from './post.content.element.entity';
 
 @Entity('post')
 export class Post {
   @PrimaryGeneratedColumn({ name: 'post_id' })
   postId: number;
 
-  @ManyToOne(() => User, (user) => user.email, {
+  @ManyToOne(() => User, ({ writedPosts }) => writedPosts, {
     cascade: ['remove', 'soft-remove', 'update', 'recover'],
   })
   @JoinColumn({ name: 'user_email', referencedColumnName: 'email' })
@@ -27,7 +30,7 @@ export class Post {
   @Column()
   title: string;
 
-  @OneToMany(() => PostContentElement, (post) => post.post, {
+  @OneToMany(() => PostContentElement, ({ post }) => post, {
     cascade: ['insert', 'soft-remove', 'update'],
   })
   contents: PostContentElement[];
@@ -41,10 +44,11 @@ export class Post {
   @Column({ nullable: true })
   summary: string;
 
-  @Column('json')
-  route: [number, number][];
+  @OneToOne(() => Route)
+  @JoinColumn({ name: 'route_id', referencedColumnName: 'routeId' })
+  route: Route;
 
-  @Column('json', { default: null })
+  @Column('json')
   hashtag: string[];
 
   @Column('date', { name: 'start_at' })
@@ -53,13 +57,16 @@ export class Post {
   @Column('date', { name: 'end_at' })
   endAt: Date;
 
-  @ManyToMany(() => User, (user) => user.email)
+  @ManyToMany(() => User, ({ likedPosts }) => likedPosts)
   @JoinTable({
     name: 'post_likes_users',
     joinColumn: { name: 'post_id' },
     inverseJoinColumn: { name: 'email', referencedColumnName: 'email' },
   })
-  likeUsers: User[];
+  likedUsers: User[];
+
+  @Column({ default: true })
+  public: boolean;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
@@ -69,26 +76,4 @@ export class Post {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;
-}
-
-@Entity('post_content_element')
-export class PostContentElement {
-  @PrimaryGeneratedColumn({ name: 'post_content_element_id' })
-  postContentElemntId?: number;
-
-  @ManyToOne(() => Post)
-  @JoinColumn({ name: 'post_id' })
-  post: Post;
-
-  @Column({ name: 'image_url', nullable: true })
-  imageUrl: string;
-
-  @Column()
-  description: string;
-
-  @Column()
-  x: number;
-
-  @Column()
-  y: number;
 }

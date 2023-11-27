@@ -1,16 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Post, PostContentElement } from 'src/entities/post.entity';
-import { Like, Raw, Repository } from 'typeorm';
-import { PostWriteBody } from './post.write.body';
-import { Transactional } from 'src/utils/transactional.decorator';
+import { Post } from 'src/entities/post.entity';
+import { In, Like, Raw, Repository } from 'typeorm';
 import { PostFindQuery } from './post.find.query.dto';
 import { plainToInstance } from 'class-transformer';
 import { PostFindResponse } from './post.find.response.dto';
-import { PostHitsQuery } from './post.hist.query.dto';
+import { PostHitsQuery } from './post.hits.query.dto';
 import { PostDetailResponse } from './post.detail.response.dto';
 import { Authentication } from 'src/auth/authentication.dto';
 import { PostDetailQuery } from './post.detail.query.dto';
+import { Transactional } from 'typeorm-transactional';
+import { PostUploadBody } from './post.upload.body.dto';
+import { PostUploadResponse } from './post.upload.response.dto';
+import { Route } from 'src/entities/route.entity';
+import { PostLikeResponse } from './post.like.response.dto';
+import { PostContentElement } from 'src/entities/post.content.element.entity';
 
 @Injectable()
 export class PostService {
@@ -19,6 +23,8 @@ export class PostService {
     private readonly postRepository: Repository<Post>,
     @InjectRepository(PostContentElement)
     private readonly postContentElementRepository: Repository<PostContentElement>,
+    @InjectRepository(Route)
+    private readonly routeRepository: Repository<Route>,
   ) {}
 
   /**
@@ -102,7 +108,105 @@ WHERE  EXISTS (SELECT 1
                       AND ( `post`.`deleted_at` IS NULL ))
 LIMIT  1 -- PARAMETERS: ["macro@macrocd.com"]
 
-   * ```       
+   * ```
+   * ```
+SELECT 
+  DISTINCT `distinctAlias`.`Post_post_id` AS `ids_Post_post_id`, 
+  `distinctAlias`.`Post_like_num`, 
+  `distinctAlias`.`Post_view_num` 
+FROM 
+  (
+    SELECT 
+      `Post`.`post_id` AS `Post_post_id`, 
+      `Post`.`title` AS `Post_title`, 
+      `Post`.`view_num` AS `Post_view_num`, 
+      `Post`.`like_num` AS `Post_like_num`, 
+      `Post`.`summary` AS `Post_summary`, 
+      `Post`.`route` AS `Post_route`, 
+      `Post`.`hashtag` AS `Post_hashtag`, 
+      `Post`.`start_at` AS `Post_start_at`, 
+      `Post`.`end_at` AS `Post_end_at`, 
+      `Post`.`created_at` AS `Post_created_at`, 
+      `Post`.`modified_at` AS `Post_modified_at`, 
+      `Post`.`deleted_at` AS `Post_deleted_at`, 
+      `Post`.`user_email` AS `Post_user_email`, 
+      `Post__Post_writer`.`user_id` AS `Post__Post_writer_user_id`, 
+      `Post__Post_writer`.`email` AS `Post__Post_writer_email`, 
+      `Post__Post_writer`.`name` AS `Post__Post_writer_name`, 
+      `Post__Post_writer`.`password` AS `Post__Post_writer_password`, 
+      `Post__Post_writer`.`image_url` AS `Post__Post_writer_image_url`, 
+      `Post__Post_writer`.`role` AS `Post__Post_writer_role`, 
+      `Post__Post_writer`.`created_at` AS `Post__Post_writer_created_at`, 
+      `Post__Post_writer`.`modified_at` AS `Post__Post_writer_modified_at`, 
+      `Post__Post_writer`.`deleted_at` AS `Post__Post_writer_deleted_at` 
+    FROM 
+      `post` `Post` 
+      LEFT JOIN `user` `Post__Post_writer` ON `Post__Post_writer`.`email` = `Post`.`user_email` 
+      AND (
+        `Post__Post_writer`.`deleted_at` IS NULL
+      ) 
+    WHERE 
+      (
+        (
+          DATE_ADD(NOW(), INTERVAL -2 WEEK) <= `Post`.`created_at`
+        )
+      ) 
+      AND (`Post`.`deleted_at` IS NULL)
+  ) `distinctAlias` 
+ORDER BY 
+  `distinctAlias`.`Post_like_num` DESC, 
+  `distinctAlias`.`Post_view_num` DESC, 
+  `Post_post_id` ASC 
+LIMIT 
+  10
+
+
+SELECT 
+  `Post`.`post_id` AS `Post_post_id`, 
+  `Post`.`title` AS `Post_title`, 
+  `Post`.`view_num` AS `Post_view_num`, 
+  `Post`.`like_num` AS `Post_like_num`, 
+  `Post`.`summary` AS `Post_summary`, 
+  `Post`.`route` AS `Post_route`, 
+  `Post`.`hashtag` AS `Post_hashtag`, 
+  `Post`.`start_at` AS `Post_start_at`, 
+  `Post`.`end_at` AS `Post_end_at`, 
+  `Post`.`created_at` AS `Post_created_at`, 
+  `Post`.`modified_at` AS `Post_modified_at`, 
+  `Post`.`deleted_at` AS `Post_deleted_at`, 
+  `Post`.`user_email` AS `Post_user_email`, 
+  `Post__Post_writer`.`user_id` AS `Post__Post_writer_user_id`, 
+  `Post__Post_writer`.`email` AS `Post__Post_writer_email`, 
+  `Post__Post_writer`.`name` AS `Post__Post_writer_name`, 
+  `Post__Post_writer`.`password` AS `Post__Post_writer_password`, 
+  `Post__Post_writer`.`image_url` AS `Post__Post_writer_image_url`, 
+  `Post__Post_writer`.`role` AS `Post__Post_writer_role`, 
+  `Post__Post_writer`.`created_at` AS `Post__Post_writer_created_at`, 
+  `Post__Post_writer`.`modified_at` AS `Post__Post_writer_modified_at`, 
+  `Post__Post_writer`.`deleted_at` AS `Post__Post_writer_deleted_at` 
+FROM 
+  `post` `Post` 
+  LEFT JOIN `user` `Post__Post_writer` ON `Post__Post_writer`.`email` = `Post`.`user_email` 
+  AND (
+    `Post__Post_writer`.`deleted_at` IS NULL
+  ) 
+WHERE 
+  (
+    (
+      DATE_ADD(NOW(), INTERVAL -2 WEEK) <= `Post`.`created_at`
+    )
+  ) 
+  AND (`Post`.`deleted_at` IS NULL) 
+  AND (
+    `Post`.`post_id` IN (3, 5, 8, 11, 14, 15, 2, 6, 9, 12)
+  ) 
+ORDER BY 
+  `Post`.`like_num` DESC, 
+  `Post`.`view_num` DESC
+
+
+
+   * ```
    * @param pagination
    * @param param1
    * @returns
@@ -113,6 +217,7 @@ LIMIT  1 -- PARAMETERS: ["macro@macrocd.com"]
         createdAt: Raw(
           (alias) => `DATE_ADD(NOW(), INTERVAL -2 WEEK) <= ${alias}`,
         ),
+        public: true,
       },
       ...(pagination ?? { take: 10 }),
       order: {
@@ -122,46 +227,62 @@ LIMIT  1 -- PARAMETERS: ["macro@macrocd.com"]
       relations: {
         writer: true,
       },
-      relationLoadStrategy: 'query',
+    });
+
+    const isLikedPosts = await this.postRepository.find({
+      where: {
+        postId: In(posts.map(({ postId }) => postId)),
+        likedUsers: { email },
+      },
+      select: {
+        postId: true,
+      },
     });
 
     return plainToInstance(
       PostFindResponse,
-      await Promise.all(
-        posts.map(async (post) => ({
-          ...post,
-          liked: await this.postRepository.exist({
-            where: { likeUsers: { email } },
-          }),
-        })),
-      ),
+      posts.map((post) => ({
+        ...post,
+        liked: isLikedPosts.map(({ postId }) => postId).includes(post.postId),
+      })),
     );
   }
 
+  @Transactional()
   async search(
     { title, username, ...pagination }: PostFindQuery,
     { email }: Authentication,
   ) {
     const posts = await this.postRepository.find({
       where: [
-        { ...(title ? { title: Like(`%${title}%`) } : {}) },
-        { ...(username ? { writer: Like(`%${username}%`) } : {}) },
+        { public: true, ...(title ? { title: Like(`%${title}%`) } : {}) },
+        {
+          public: true,
+          ...(username ? { writer: Like(`%${username}%`) } : {}),
+        },
       ],
       ...pagination,
       relations: {
         writer: true,
       },
     });
+
+    const isLikedPosts = await this.postRepository.find({
+      where: {
+        postId: In(posts.map(({ postId }) => postId)),
+        likedUsers: { email },
+      },
+      select: {
+        postId: true,
+      },
+    });
+
     return plainToInstance(
       PostFindResponse,
-      await Promise.all(
-        posts.map(async (post) => ({
-          ...post,
-          liked: await this.postRepository.exist({
-            where: { likeUsers: { email } },
-          }),
-        })),
-      ),
+      posts.map((post) => ({
+        ...post,
+        liked: isLikedPosts.map(({ postId }) => postId).includes(post.postId),
+      })),
     );
   }
 
@@ -177,54 +298,81 @@ LIMIT  1 -- PARAMETERS: ["macro@macrocd.com"]
       relations: {
         contents: true,
         writer: true,
+        route: true,
       },
     });
+
+    if (post.writer.email !== email && !post.public) {
+      throw new BadRequestException('비공개 게시글입니다.');
+    }
+
     await this.postRepository.increment({ postId }, 'viewNum', 1);
     return plainToInstance(PostDetailResponse, {
       ...post,
       liked: await this.postRepository.exist({
-        where: { likeUsers: { email } },
+        where: { likedUsers: { email }, postId },
       }),
     });
   }
 
   @Transactional()
-  async upload(post: PostWriteBody, { email }: Authentication) {
-    const result = await this.postRepository.insert(post);
-    const contents = await this.postContentElementRepository.insert(
-      post.contents,
+  async upload(post: PostUploadBody, { email }: Authentication) {
+    const routeId = await this.saveOrGetRouteId(post);
+    const {
+      identifiers: [{ postId }],
+    } = await this.postRepository.insert({
+      ...post,
+      writer: { email },
+      route: { routeId },
+    });
+    await this.postContentElementRepository.insert(
+      post.contents.map((content) => ({
+        ...content,
+        post: { postId },
+      })),
     );
-    await this.postRepository
-      .createQueryBuilder()
-      .relation('contents')
-      .of(result.identifiers[0].postId)
-      .add(
-        contents.identifiers.map(
-          ({ postContentElemntId }) => postContentElemntId,
-        ),
-      );
-    await this.postRepository
-      .createQueryBuilder()
-      .relation('writer')
-      .of(result.identifiers[0].postId)
-      .set(email);
+    return plainToInstance(PostUploadResponse, {
+      postId,
+    });
+  }
+
+  private async saveOrGetRouteId({route}: PostUploadBody): Promise<number> {
+    const {coordinates, routeId} = route;
+    if(coordinates) {
+      const {identifiers: [{routeId}]} = await this.routeRepository.insert({...route, routeId: null});
+      return routeId;
+    } else {
+      return routeId;
+    }
   }
 
   @Transactional()
   async like({ postId }: PostDetailQuery, { email }: Authentication) {
     const liked = await this.isLiked(postId, email);
     if (liked) {
-      return await this.unlikeInternal(postId, email);
+      await this.unlikeInternal(postId, email);
     } else {
-      return await this.likeInternal(postId, email);
+      await this.likeInternal(postId, email);
     }
+    const { likeNum } = await this.postRepository.findOneOrFail({
+      where: {
+        postId,
+      },
+      select: { likeNum: true },
+    });
+
+    return plainToInstance(PostLikeResponse, {
+      likeNum,
+      postId,
+      liked: !liked,
+    });
   }
 
   private async isLiked(postId: number, email: string) {
     return await this.postRepository.exist({
       where: {
         postId,
-        likeUsers: { email },
+        likedUsers: { email },
       },
     });
   }
@@ -232,10 +380,10 @@ LIMIT  1 -- PARAMETERS: ["macro@macrocd.com"]
   private async likeInternal(postId: number, email: string) {
     await this.postRepository
       .createQueryBuilder()
-      .relation('likeUsers')
+      .relation('likedUsers')
       .of(postId)
       .add(email);
-    return await this.postRepository.update(postId, {
+    await this.postRepository.update(postId, {
       likeNum: () => 'like_num + 1',
     });
   }
@@ -243,10 +391,10 @@ LIMIT  1 -- PARAMETERS: ["macro@macrocd.com"]
   private async unlikeInternal(postId: number, email: string) {
     await this.postRepository
       .createQueryBuilder()
-      .relation('likeUsers')
+      .relation('likedUsers')
       .of(postId)
       .remove(email);
-    return await this.postRepository.update(postId, {
+    await this.postRepository.update(postId, {
       likeNum: () => 'like_num - 1',
     });
   }

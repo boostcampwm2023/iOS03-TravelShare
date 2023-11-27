@@ -3,6 +3,8 @@ import { HttpModule } from '@nestjs/axios';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
+import { addTransactionalDataSource } from 'typeorm-transactional';
 
 @Global()
 @Module({
@@ -20,6 +22,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) =>
         configService.get('typeorm'),
+      dataSourceFactory: async (options: DataSourceOptions) =>
+        addTransactionalDataSource(new DataSource(options)),
     }),
   ],
   exports: [HttpModule],

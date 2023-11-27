@@ -3,8 +3,15 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import {
+  StorageDriver,
+  initializeTransactionalContext,
+} from 'typeorm-transactional';
 
 async function bootstrap() {
+  initializeTransactionalContext({
+    storageDriver: StorageDriver.ASYNC_LOCAL_STORAGE,
+  });
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     rawBody: true,
   });

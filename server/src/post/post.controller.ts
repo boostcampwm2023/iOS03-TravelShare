@@ -1,22 +1,32 @@
-import { Body, Get, Patch, Post, Query } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Get,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiOkResponse,
   ApiOperation,
-  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { PostFindResponse } from './post.find.response.dto';
 import { PostDetailResponse } from './post.detail.response.dto';
-import { PostWriteBody } from './post.write.body';
 import { PostFindQuery } from './post.find.query.dto';
 import { PostService } from './post.service';
 import { AuthenticatedUser } from 'src/auth/auth.decorators';
 import { Authentication } from 'src/auth/authentication.dto';
 import { RestController } from 'src/utils/rest.controller.decorator';
-import { PostHitsQuery } from './post.hist.query.dto';
+import { PostHitsQuery } from './post.hits.query.dto';
 import { PostDetailQuery } from './post.detail.query.dto';
+import { PostUploadBody } from './post.upload.body.dto';
+import { PostUploadResponse } from './post.upload.response.dto';
+import { PostLikeQuery } from './post.like.query.dto';
+import { PostLikeResponse } from './post.like.response.dto';
 
 @ApiTags('Post')
 @ApiBearerAuth('access-token')
@@ -39,13 +49,11 @@ export class PostController {
     description:
       '응답 데이터에서 liked를 수집하는 방법에 대해 논의가 좀 더 필요한 상황입니다.',
   })
-  @ApiQuery({ type: PostHitsQuery })
   @Get('hits')
   async default(
-    query: PostHitsQuery,
+    @Query() query: PostHitsQuery,
     @AuthenticatedUser() user: Authentication,
   ) {
-    console.log(user);
     return await this.postService.popularList(query, user);
   }
 
@@ -83,7 +91,7 @@ SELECT ... FROM post ... WHERE title LIKE '%:title%' OR '%:user:%';
 - route와 hashtag는 각각 2차원, 1차원 배열 형태입니다.
 `,
   })
-  @ApiResponse({ description: '상세 조회', type: PostDetailResponse })
+  @ApiOkResponse({ description: '상세 조회', type: PostDetailResponse })
   @Get('detail')
   async detail(
     @Query() query: PostDetailQuery,
@@ -99,18 +107,31 @@ SELECT ... FROM post ... WHERE title LIKE '%:title%' OR '%:user:%';
 
 - 게시글을 업로드합니다.
 - imageUrl 등은 필수값이 아니므로 잘 확인해주세요.
-- 아직 응답 포맷을 생각하지 않아서 응답값이 없습니다.
-그냥 200 OK이면 업로드 성공한 겁니다.
+- ### 경로는 route를 통해 설정할 수 있습니다.
+- public 인자를 통해 게시글 공개여부를 설정할 수 있습니다.
+## route.coordinates 혹은 route.routeId를 반드시 설정해야 합니다.
+ 1. 미리 경로를 /route/upload를 통해 업로드했을 경우 반환받은 routeId를 넣으면 됩니다.
+ 2. 혹은 route.coordinates에 직접 경로를 넣어서 곧바로 업로드도 가능합니다.
+- 응답은 게시글 고유 id입니다.
 
 `,
   })
-  @ApiBody({ description: '업로드', type: PostWriteBody })
+  @ApiOkResponse({
+    description: '성공 시에 게시글 고유 id를 반환합니다.',
+    type: PostUploadResponse,
+  })
+  @ApiBody({ description: '업로드', type: PostUploadBody })
   @Post('upload')
   async upload(
-    @Body() post: PostWriteBody,
+    @Body() post: PostUploadBody,
     @AuthenticatedUser() user: Authentication,
   ) {
-    await this.postService.upload(post, user);
+    if (!('routeId' in post.route) || !('coordinates' in post.route)) {
+      throw new BadRequestException(
+        'routeId와 coordinates 중 하나가 반드시 설정되어야 합니다.',
+      );
+    }
+    return await this.postService.upload(post, user);
   }
 
   @ApiOperation({
@@ -123,11 +144,15 @@ SELECT ... FROM post ... WHERE title LIKE '%:title%' OR '%:user:%';
 다시 좋아요시키는 식으로 작동합니다.
 `,
   })
+  @ApiOkResponse({
+    description: '요청 성공 시에 해당 게시글 좋아요 수를 반환합니다.',
+    type: PostLikeResponse,
+  })
   @Patch('like')
   async like(
-    @Query() query: PostDetailQuery,
+    @Query() query: PostLikeQuery,
     @AuthenticatedUser() user: Authentication,
   ) {
-    await this.postService.like(query, user);
+    return await this.postService.like(query, user);
   }
 }

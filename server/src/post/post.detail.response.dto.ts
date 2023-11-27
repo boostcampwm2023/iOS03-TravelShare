@@ -4,37 +4,17 @@ import {
   IsBoolean,
   IsDate,
   IsInt,
-  IsNumber,
-  IsOptional,
   IsPositive,
   IsString,
-  IsUrl,
   Min,
-  Validate,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { UserProfileSimpleResponse } from 'src/user/user.profile.simple.response.dto';
-import { IsRouteArray } from './post.route.validator';
+import { RouteCoordinates } from '../route/route.coordinates.dto';
+import { PostContentElementBase } from './post.content.element.base.dto';
 
-export class PostDetailElement {
-  @ApiProperty({ description: '이미지 url', required: false })
-  @IsUrl()
-  @IsOptional()
-  imageUrl: string;
-
-  @ApiProperty({ description: '내용' })
-  @IsString()
-  description: string;
-
-  @ApiProperty({ description: 'x' })
-  @IsNumber()
-  x: number;
-
-  @ApiProperty({ description: 'y좌표' })
-  @IsNumber()
-  y: number;
-}
+export class PostDetailElement extends PostContentElementBase {}
 
 export class PostDetailResponse {
   @ApiProperty({ description: '게시글 id' })
@@ -56,9 +36,13 @@ export class PostDetailResponse {
   @Type(() => UserProfileSimpleResponse)
   writer: UserProfileSimpleResponse;
 
-  @ApiProperty({ description: '이동 경로, 2차원 배열입니다.', type: [[0, 0]] })
-  @Validate(IsRouteArray, { each: true })
-  route: [number, number][];
+  @ApiProperty({
+    description: '이동 경로, 2차원 배열입니다.',
+    type: RouteCoordinates,
+  })
+  @ValidateNested()
+  @Type(() => RouteCoordinates)
+  route: RouteCoordinates;
 
   @ApiProperty({ description: '해시태그' })
   @IsArray()
