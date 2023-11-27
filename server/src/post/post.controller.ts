@@ -27,12 +27,19 @@ import { PostUploadBody } from './post.upload.body.dto';
 import { PostUploadResponse } from './post.upload.response.dto';
 import { PostLikeQuery } from './post.like.query.dto';
 import { PostLikeResponse } from './post.like.response.dto';
+import { PostKeywordAutoCompleteQuery } from './post.keyword.autocomplete.query.dto';
+import { AutoCompleteService } from 'src/utils/autocomplete.service';
+import { plainToInstance } from 'class-transformer';
+import { PostKeywordAutoCompleteResponse } from './post.keyword.autocomplete.response.dto';
 
 @ApiTags('Post')
 @ApiBearerAuth('access-token')
 @RestController('post')
 export class PostController {
-  constructor(private readonly postService: PostService) {}
+  constructor(
+    private readonly postService: PostService,
+    private readonly autoCompleteService: AutoCompleteService,
+  ) {}
 
   @ApiOperation({
     summary: '인기 게시글 리스트 조회, 테스트 중이지만 사용 가능',
@@ -126,6 +133,7 @@ SELECT ... FROM post ... WHERE title LIKE '%:title%' OR '%:user:%';
     @Body() post: PostUploadBody,
     @AuthenticatedUser() user: Authentication,
   ) {
+    this.autoCompleteService.insert(post.title);
     if (!('routeId' in post.route) || !('coordinates' in post.route)) {
       throw new BadRequestException(
         'routeId와 coordinates 중 하나가 반드시 설정되어야 합니다.',
@@ -154,5 +162,23 @@ SELECT ... FROM post ... WHERE title LIKE '%:title%' OR '%:user:%';
     @AuthenticatedUser() user: Authentication,
   ) {
     return await this.postService.like(query, user);
+  }
+
+  @ApiOperation({
+    summary: '자동 검색어 완성 결과를 응답합니다.',
+    description: `
+  # post/keyword?autocomplete={검색어}
+
+  - 키워드에 따라 검색어를 자동완성시킵니다.
+    `,
+  })
+  @Get('keyword')
+  async keywordAutoComplete(
+    @Query() { keyword }: PostKeywordAutoCompleteQuery,
+  ) {
+    return plainToInstance(
+      PostKeywordAutoCompleteResponse,
+      this.autoCompleteService.search(keyword),
+    );
   }
 }
