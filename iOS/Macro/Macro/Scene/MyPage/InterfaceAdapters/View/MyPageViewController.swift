@@ -31,7 +31,6 @@ final class MyPageViewController: TabViewController, UITableViewDelegate, UITabl
     }()
     
     private let tableView: UITableView = {
-        //    let tableView = UITableView()
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.separatorColor = UIColor.appColor(.purple2)
         return tableView
@@ -172,6 +171,18 @@ extension MyPageViewController {
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         guard let headerView = view as? UITableViewHeaderFooterView else { return }
         headerView.contentView.backgroundColor = UIColor.systemBackground
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        if indexPath.section == 0 { 
+            let myInfoVC = MyInfoViewController(viewModel: viewModel)
+            if #available(iOS 15.0, *) {
+                myInfoVC.sheetPresentationController?.detents = [.large()]
+                myInfoVC.sheetPresentationController?.prefersGrabberVisible = true
+            }
+            present(myInfoVC, animated: true)
+        }
     }
 }
 
