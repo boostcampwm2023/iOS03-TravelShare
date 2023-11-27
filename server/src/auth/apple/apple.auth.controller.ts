@@ -1,5 +1,5 @@
 import { Body, Delete, Post } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AppleClientAuthBody } from './apple.client.auth.body.dto';
 import { AppleClientAuthResponse } from './apple.client.auth.response.dto';
 import { AppleClientRevokeBody } from './apple.client.revoke.body.dto';
@@ -17,6 +17,7 @@ export class AppleAuthController {
       'Apple 로그인 혹은 회원가입을 실행하여 access token을 반환합니다.',
   })
   @ApiResponse({ type: AppleClientAuthResponse })
+  @ApiHeader({ name: 'Authorization', example: 'Bearer {access-token}' })
   @Public()
   @Post('auth')
   async auth(@Body() payload: AppleClientAuthBody) {
