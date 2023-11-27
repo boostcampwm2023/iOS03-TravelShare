@@ -1,20 +1,20 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Post } from 'src/entities/post.entity';
+import { Post } from 'entities/post.entity';
 import { In, Like, Raw, Repository } from 'typeorm';
 import { PostFindQuery } from './post.find.query.dto';
 import { plainToInstance } from 'class-transformer';
 import { PostFindResponse } from './post.find.response.dto';
 import { PostHitsQuery } from './post.hits.query.dto';
 import { PostDetailResponse } from './post.detail.response.dto';
-import { Authentication } from 'src/auth/authentication.dto';
+import { Authentication } from 'auth/authentication.dto';
 import { PostDetailQuery } from './post.detail.query.dto';
 import { Transactional } from 'typeorm-transactional';
 import { PostUploadBody } from './post.upload.body.dto';
 import { PostUploadResponse } from './post.upload.response.dto';
-import { Route } from 'src/entities/route.entity';
+import { Route } from 'entities/route.entity';
 import { PostLikeResponse } from './post.like.response.dto';
-import { PostContentElement } from 'src/entities/post.content.element.entity';
+import { PostContentElement } from 'entities/post.content.element.entity';
 
 @Injectable()
 export class PostService {
@@ -255,10 +255,20 @@ ORDER BY
   ) {
     const posts = await this.postRepository.find({
       where: [
-        { public: true, ...(title ? { title: Like(`%${title}%`) } : {}) },
         {
-          public: true,
-          ...(username ? { writer: Like(`%${username}%`) } : {}),
+          ...(title
+            ? {
+                public: true,
+                title: Raw((alias) => `MATCH(${alias}) AGAINST(:title)`, {
+                  title,
+                }),
+              }
+            : {}),
+        },
+        {
+          ...(username
+            ? { public: true, writer: { name: Like(`%${username}%`) } }
+            : {}),
         },
       ],
       ...pagination,
@@ -294,7 +304,6 @@ ORDER BY
   async detail({ postId }: PostDetailQuery, { email }: Authentication) {
     const post = await this.postRepository.findOneOrFail({
       where: { postId },
-      relationLoadStrategy: 'query',
       relations: {
         contents: true,
         writer: true,
