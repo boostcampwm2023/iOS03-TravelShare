@@ -41,7 +41,9 @@ export class AuthService {
   }
 
   async refreshAccessToken(user: Authentication) {
-    return await this.jwtService.signAsync(user);
+    return {
+      accessToken: await this.jwtService.signAsync(user),
+    };
   }
 
   private async createAccessToken(user: Authentication) {
