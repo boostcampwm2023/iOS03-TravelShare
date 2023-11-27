@@ -1,8 +1,10 @@
-import * as fs from 'fs';
-const rawData = fs.readFileSync('./src/utils/nicknamedata.json', 'utf-8');
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+import './nicknamedata.json';
 
-const data = JSON.parse(rawData);
-
+const data = JSON.parse(
+  readFileSync(resolve('./dist/utils/nicknamedata.json'), 'utf-8'),
+);
 const prenounArray: string[] = data.prenoun;
 const animalArray: string[] = data.animal;
 
