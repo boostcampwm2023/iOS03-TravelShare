@@ -28,6 +28,15 @@ final class MyInfoViewController: UIViewController {
         view.optionLabel.text = viewModel.information[selectedIndex]
         return view
     }()
+    
+    private let saveButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = UIColor.appColor(.purple2)
+        button.setTitle("저장", for: .normal)
+        button.setTitleColor(UIColor.appColor(.blue1), for: .normal)
+        button.titleLabel?.font = UIFont.appFont(.baeEunTitle1)
+        return button
+    }()
 
     // MARK: - Life Cycle
     
@@ -54,10 +63,12 @@ final class MyInfoViewController: UIViewController {
     private func setTranslatesAutoresizingMaskIntoConstraints() {
         guideLabel.translatesAutoresizingMaskIntoConstraints = false
         nameEditView.translatesAutoresizingMaskIntoConstraints = false
+        saveButton.translatesAutoresizingMaskIntoConstraints = false
     }
 
     private func addSubviews() {
         view.addSubview(guideLabel)
+        view.addSubview(saveButton)
         if selectedIndex == 0 {
             view.addSubview(nameEditView)
         }
@@ -66,7 +77,11 @@ final class MyInfoViewController: UIViewController {
     private func setLayoutConstraints() {
         NSLayoutConstraint.activate([
             guideLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Padding.labelTop),
-            guideLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.labelSide)
+            guideLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.labelSide),
+            saveButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            saveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Padding.saveButtonBottom),
+            saveButton.widthAnchor.constraint(equalToConstant: Metrics.saveButtonWidth),
+            saveButton.heightAnchor.constraint(equalToConstant: Metrics.saveButtonHeight)
         ])
 
         if selectedIndex == 0 {
@@ -78,7 +93,7 @@ final class MyInfoViewController: UIViewController {
             ])
         }
     }
-
+    
     private func setUpLayout() {
         setTranslatesAutoresizingMaskIntoConstraints()
         addSubviews()
@@ -100,6 +115,8 @@ final class MyInfoViewController: UIViewController {
 extension MyInfoViewController {
     enum Metrics {
         static let nameViewHeight: CGFloat = 80
+        static let saveButtonHeight: CGFloat = 40
+        static let saveButtonWidth: CGFloat = 300
     }
 
     enum Padding {
@@ -107,5 +124,6 @@ extension MyInfoViewController {
         static let labelSide: CGFloat = 40
         static let nameViewTop: CGFloat = 10
         static let nameViewSide: CGFloat = 38
+        static let saveButtonBottom: CGFloat = 40
     }
 }
