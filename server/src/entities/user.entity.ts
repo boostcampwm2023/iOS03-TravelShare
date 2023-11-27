@@ -34,22 +34,25 @@ export class User {
   @Column('enum', { default: 'user', enum: ['user', 'admin'] })
   role: UserRole;
 
+  @Column({ nullable: true })
+  introduce: string;
+
   @ManyToMany(() => User, ({ followings }) => followings)
   @JoinTable({
     name: 'user_followers_relation',
     joinColumn: { name: 'follower_id' },
     inverseJoinColumn: { name: 'followee_id' },
   })
-  followers: Relation<User[]>;
+  followers: User[];
 
   @ManyToMany(() => User, ({ followers }) => followers)
-  followings: Relation<User[]>;
+  followings: User[];
 
   @ManyToMany(() => Post, ({ likedUsers }) => likedUsers)
-  likedPosts: Relation<Post[]>;
+  likedPosts: Post[];
 
   @OneToMany(() => Post, ({ writer }) => writer)
-  writedPosts: Relation<Post[]>;
+  writedPosts: Post[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
