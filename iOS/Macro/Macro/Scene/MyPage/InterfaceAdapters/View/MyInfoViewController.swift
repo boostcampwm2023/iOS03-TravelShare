@@ -13,7 +13,7 @@ final class MyInfoViewController: UIViewController {
     
     let viewModel: MyPageViewModel
     let selectedIndex: Int
-
+    
     // MARK: - UI Components
     
     lazy var guideLabel: UILabel = {
@@ -22,9 +22,15 @@ final class MyInfoViewController: UIViewController {
         label.text = viewModel.information[selectedIndex]
         return label
     }()
-
+    
     private lazy var nameEditView: NameEditView = {
         let view = NameEditView()
+        view.optionLabel.text = viewModel.information[selectedIndex]
+        return view
+    }()
+    
+    private lazy var introductionEditView: IntroductionEditView = {
+        let view = IntroductionEditView()
         view.optionLabel.text = viewModel.information[selectedIndex]
         return view
     }()
@@ -37,14 +43,15 @@ final class MyInfoViewController: UIViewController {
         button.titleLabel?.font = UIFont.appFont(.baeEunTitle1)
         return button
     }()
-
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpLayout()
+        introductionEditView.introductionTextView.delegate = self
     }
-
+    
     // MARK: - Init
     
     init(viewModel: MyPageViewModel, selectedIndex: Int) {
@@ -53,27 +60,31 @@ final class MyInfoViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         view.backgroundColor = .systemBackground
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     // MARK: - UI Settings
     
     private func setTranslatesAutoresizingMaskIntoConstraints() {
         guideLabel.translatesAutoresizingMaskIntoConstraints = false
         nameEditView.translatesAutoresizingMaskIntoConstraints = false
+        introductionEditView.translatesAutoresizingMaskIntoConstraints = false
         saveButton.translatesAutoresizingMaskIntoConstraints = false
     }
-
+    
     private func addSubviews() {
         view.addSubview(guideLabel)
         view.addSubview(saveButton)
         if selectedIndex == 0 {
             view.addSubview(nameEditView)
         }
+        else if selectedIndex == 2 {
+            view.addSubview(introductionEditView)
+        }
     }
-
+    
     private func setLayoutConstraints() {
         NSLayoutConstraint.activate([
             guideLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Padding.labelTop),
@@ -83,7 +94,7 @@ final class MyInfoViewController: UIViewController {
             saveButton.widthAnchor.constraint(equalToConstant: Metrics.saveButtonWidth),
             saveButton.heightAnchor.constraint(equalToConstant: Metrics.saveButtonHeight)
         ])
-
+        
         if selectedIndex == 0 {
             NSLayoutConstraint.activate([
                 nameEditView.topAnchor.constraint(equalTo: guideLabel.bottomAnchor, constant: Padding.nameViewTop),
@@ -92,6 +103,15 @@ final class MyInfoViewController: UIViewController {
                 nameEditView.heightAnchor.constraint(equalToConstant: Metrics.nameViewHeight)
             ])
         }
+        else if selectedIndex == 2 {
+            NSLayoutConstraint.activate([
+                introductionEditView.topAnchor.constraint(equalTo: guideLabel.bottomAnchor, constant: Padding.nameViewTop),
+                introductionEditView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.nameViewSide),
+                introductionEditView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Padding.nameViewSide),
+                introductionEditView.heightAnchor.constraint(equalToConstant: Metrics.introductionViewHeight)
+            ])
+        }
+        
     }
     
     private func setUpLayout() {
@@ -99,26 +119,35 @@ final class MyInfoViewController: UIViewController {
         addSubviews()
         setLayoutConstraints()
     }
-
+    
     // MARK: - Binding
     
     private func bind() {
-     
+        
     }
-
-    // MARK: - Methods
+    
+    
     
 }
 
+// MARK: - Methods
+
+extension MyInfoViewController: UITextViewDelegate {
+    // TODO: - TextView 3줄 제한
+    func textViewDidChange(_ textView: UITextView) {
+        
+    }
+}
 // MARK: - LayoutMetrics
 
 extension MyInfoViewController {
     enum Metrics {
         static let nameViewHeight: CGFloat = 80
+        static let introductionViewHeight: CGFloat = 150
         static let saveButtonHeight: CGFloat = 40
         static let saveButtonWidth: CGFloat = 300
     }
-
+    
     enum Padding {
         static let labelTop: CGFloat = 94
         static let labelSide: CGFloat = 40
