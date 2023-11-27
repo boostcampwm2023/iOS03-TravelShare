@@ -15,6 +15,6 @@ export function RestController(arg?: any) {
   return applyDecorators(
     Controller(arg),
     UseInterceptors(ResponseValidationInterceptor),
-    UsePipes(new ValidationPipe({ transform: true })),
+    UsePipes(new ValidationPipe({ transform: true, whitelist: true })),
   );
 }
