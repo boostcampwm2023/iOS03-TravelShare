@@ -1,16 +1,40 @@
-import { Validate } from 'class-validator';
-import { IsCoordinate } from './route.validator.constrant';
+import { IsArray, IsNotEmpty, IsNumber, Max, Min, Validate, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 export class RouteCoordinates {
   @ApiProperty({
     description:
       '좌표 배열입니다. [latitude(y), logitude(x)]의 순서로 좌표 쌍을 만들어주세요.',
     example: [
-      [36, 122.6],
-      [35.6, 122.2],
+      {
+        x: 120,
+        y: 33.6
+      },
+      {
+        x: 127.86,
+        y: 35.8
+      }
     ],
   })
-  @Validate(IsCoordinate, { each: true })
-  coordinates: [number, number][];
+  @IsArray()
+  @ValidateNested()
+  @Type(()=> RouteCoordinate)
+  coordinates: RouteCoordinate[];
+}
+
+export class RouteCoordinate {
+  @ApiProperty({description: 'x '})
+  @IsNumber()
+  @Max(180)
+  @Min(-180)
+  @IsNotEmpty()
+  x: number;
+
+  @ApiProperty({description: 'y'})
+  @IsNumber()
+  @Max(90)
+  @Min(-90)
+  @IsNotEmpty()
+  y: number;
 }

@@ -9,18 +9,20 @@ import {
 const LINESTRING_COORDINATES_EXTRACT_REGEXP =
   /LINESTRING\((([\d\.]+ [\d\.]+,?)+)\)/;
 
-export type LineString = [number, number][];
+export type LineString = {x: number, y: number}[];
 
 const lineStringToJsonArray = (text: string) => {
   const extracted = LINESTRING_COORDINATES_EXTRACT_REGEXP.exec(text)?.[1];
   return extracted
     .split(',')
-    .map((coordinate) => coordinate.split(/\s+/).map(parseFloat)) as LineString;
+    .map((coordinate) => coordinate.split(/\s+/).map(parseFloat))
+    .map(([lat, long])=> ({x: long, y: lat}))
 };
 
 const jsonArrayToLineString = (coordinates: LineString) => {
+  console.log(coordinates);
   return `LINESTRING(${coordinates
-    .map(([lat, long]) => `${lat} ${long}`)
+    .map(({x, y}) => `${y} ${x}`)
     .join(',')})`;
 };
 

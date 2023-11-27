@@ -33,6 +33,7 @@ export class PostDetailResponse {
   contents: PostDetailElement[];
 
   @ApiProperty({ description: '작성자' })
+  @ValidateNested()
   @Type(() => UserProfileSimpleResponse)
   writer: UserProfileSimpleResponse;
 
