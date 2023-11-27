@@ -12,21 +12,27 @@ class UserInfoViewModel: ViewModelProtocol {
  
     // MARK: - Properties
     
-    var userInfo: UserInfo = UserInfo(name: "진하", follower: 10, introduce: "맛집 투어를 즐기는 돼지 입니다. :)\n 주로 부산 근처에서 도보여행을 합니다.", userImageURL: "https://i.namu.wiki/i/U4Wgc0ttOfAvNkTb_MQLpCKUC2HnJ7H5YZVa4IVaMWuKMpijpX6RJKiLa4Tqb-rxUVwTUXf0hhpoFBDXn-_LZF0KQLGk7MIl6wzul6ZGUGmSum3poaIwEHDzA7WsEUoy6IqyWCDGRgk5-YROnIzF5A.webp")
     var posts: [PostFindResponse] = []
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
-    let postSearcher: SearchUseCase
+    let searcher: SearchUseCase
+    let followFeature: FollowUseCase
     
     // MARK: - init
     
-    init(postSearcher: SearchUseCase) {
-        self.postSearcher = postSearcher
+    init(postSearcher: SearchUseCase, followFeature: FollowUseCase) {
+        self.searcher = postSearcher
+        self.followFeature = followFeature
     }
     
     // MARK: - Input
     
     enum Input {
+        case searchUserProfile
+        case tapFollowButton(userId: String)
+        
+        // Mock
+        case searchMockUserProfile(userId: String)
         case searchMockPost
     }
     
@@ -37,6 +43,8 @@ class UserInfoViewModel: ViewModelProtocol {
         case updateSearchResult([PostFindResponse])
         case navigateToProfileView(String)
         case navigateToReadView(String)
+        case updateFollowResult(FollowResponse)
+        case updateUserProfile(UserInfoResponse)
     }
     
     // MARK: - Methods
@@ -47,6 +55,12 @@ class UserInfoViewModel: ViewModelProtocol {
                 switch input {
                 case .searchMockPost:
                     self?.searchMockPost()
+                case let .tapFollowButton(userId):
+                    self?.tappedFollowButton(followUserId: userId)
+                case .searchUserProfile:
+                    self?.searchUserProfile()
+                case let .searchMockUserProfile(userId):
+                    self?.searchMockUserProfile(userId: userId)
                 }
             }
             .store(in: &cancellables)
@@ -54,7 +68,7 @@ class UserInfoViewModel: ViewModelProtocol {
     }
     
     private func searchMockPost() {
-        postSearcher.searchMockPost(json: "tempJson").sink { completion in
+        searcher.searchMockPost(json: "tempJson").sink { completion in
             if case let .failure(error) = completion {
             }
         } receiveValue: { [weak self] response in
@@ -62,6 +76,29 @@ class UserInfoViewModel: ViewModelProtocol {
         }.store(in: &cancellables)
     }
 
+    private func tappedFollowButton(followUserId: String) {
+        //TODO: - 통신코드 목파일 수정
+        followFeature.mockFollowUser(userId: "asdf", followUserId: followUserId, json: "FollowMock").sink { completion in
+            if case let .failure(error) = completion {
+            }
+        } receiveValue: { [weak self] response in
+            self?.outputSubject.send(.updateFollowResult(response))
+        }.store(in: &cancellables)
+    }
+    
+    private func searchUserProfile() {
+        
+    }
+    
+    private func searchMockUserProfile(userId: String) {
+        searcher.searchMockUserProfile(query: userId, json: "UserInfoMock").sink {
+            completion in
+            if case let .failure(error) = completion {
+            }
+        } receiveValue: { [weak self] response in
+            self?.outputSubject.send(.updateUserProfile(response))
+        }.store(in: &cancellables)
+    }
 }
 
 // MARK: - PostCollectionView Delegate
@@ -82,4 +119,5 @@ extension UserInfoViewModel: PostCollectionViewProtocol {
     func navigateToReadView(postId: String) {
         self.outputSubject.send(.navigateToReadView(postId))
     }
+    
 }
