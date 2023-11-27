@@ -53,10 +53,13 @@ export class AuthController {
   @ApiResponse({ type: AuthBasicAuthResponse })
   @ApiBearerAuth('access-token')
   @Put('refresh')
-  async refresh(@AuthenticatedUser() user: Authentication) {
+  async refresh(@AuthenticatedUser() { email, role }: Authentication) {
     return plainToInstance(
       AuthBasicAuthResponse,
-      await this.authService.refreshAccessToken(user),
+      await this.authService.refreshAccessToken({
+        email,
+        role,
+      }),
     );
   }
 }
