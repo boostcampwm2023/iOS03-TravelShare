@@ -19,13 +19,14 @@ final class UserInfoViewController: UIViewController {
     // MARK: - UI Components
     lazy var homeCollectionView: PostCollectionView = PostCollectionView(frame: .zero, viewModel: viewModel)
     
-    let userInfoHeaderView: UserInfoHeaderView = UserInfoHeaderView()
+    lazy var userInfoHeaderView: UserInfoHeaderView = UserInfoHeaderView(frame: .zero, inputSubject: inputSubject)
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         self.view.backgroundColor = UIColor.appColor(.blue1)
         bind()
         inputSubject.send(.searchMockPost)
+        inputSubject.send(.searchMockUserProfile(userId: "userId"))
         setUpLayout()
         super.viewDidLoad()
     }
@@ -35,8 +36,7 @@ final class UserInfoViewController: UIViewController {
     init(viewModel: UserInfoViewModel, userInfo: String) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-    
-        
+
     }
     
     required init?(coder: NSCoder) {
@@ -65,7 +65,7 @@ private extension UserInfoViewController {
             userInfoHeaderView.widthAnchor.constraint(equalToConstant: UIScreen.width - 40),
             userInfoHeaderView.heightAnchor.constraint(equalToConstant: 217),
             
-            homeCollectionView.topAnchor.constraint(equalTo: userInfoHeaderView.bottomAnchor),
+            homeCollectionView.topAnchor.constraint(equalTo: userInfoHeaderView.bottomAnchor, constant: 20),
             homeCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             homeCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             homeCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
@@ -76,7 +76,6 @@ private extension UserInfoViewController {
         setTranslatesAutoresizingMaskIntoConstraints()
         addSubviews()
         setLayoutConstraints()
-        userInfoHeaderView.setupLayout(userInfo: viewModel.userInfo)
     }
     
 }
@@ -91,6 +90,10 @@ private extension UserInfoViewController {
             switch output {
             case let .updateSearchResult(result):
                 self?.updateSearchResult(result)
+            case let .updateFollowResult(result):
+                self?.updateFollowResult(result)
+            case let .updateUserProfile(result):
+                self?.updateUserProfile(result)
             default: break
             }
         }.store(in: &cancellables)
@@ -104,5 +107,13 @@ private extension UserInfoViewController {
     func updateSearchResult(_ result: [PostFindResponse]) {
         homeCollectionView.viewModel.posts += result
         homeCollectionView.reloadData()
+    }
+    
+    func updateFollowResult(_ result: FollowResponse) {
+        userInfoHeaderView.updateFollow(item: result)
+    }
+    
+    func updateUserProfile(_ result: UserInfoResponse) {
+        userInfoHeaderView.configure(item: result)
     }
 }
