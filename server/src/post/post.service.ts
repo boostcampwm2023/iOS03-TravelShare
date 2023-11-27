@@ -336,10 +336,12 @@ ORDER BY
     });
   }
 
-  private async saveOrGetRouteId({route}: PostUploadBody): Promise<number> {
-    const {coordinates, routeId} = route;
-    if(coordinates) {
-      const {identifiers: [{routeId}]} = await this.routeRepository.insert({...route, routeId: null});
+  private async saveOrGetRouteId({ route }: PostUploadBody): Promise<number> {
+    const { coordinates, routeId } = route;
+    if (coordinates) {
+      const {
+        identifiers: [{ routeId }],
+      } = await this.routeRepository.insert({ ...route, routeId: null });
       return routeId;
     } else {
       return routeId;
