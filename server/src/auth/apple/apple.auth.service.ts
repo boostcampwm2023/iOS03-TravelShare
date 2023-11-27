@@ -23,6 +23,7 @@ import { AppleAuthRevokeBody } from './apple.auth.revoke.body.dto';
 import { AppleAuthTokenResponse } from './apple.auth.token.response.dto';
 import { AppleClientAuthResponse } from './apple.client.auth.response.dto';
 import { Transactional } from 'typeorm-transactional';
+import { getRandomNickName } from 'src/utils/namemaker';
 
 /**
  * ### AppleAuthService
@@ -176,7 +177,7 @@ export class AppleAuthService {
       {
         email,
         password: randomUUID(),
-        name: email,
+        name: getRandomNickName(),
       },
       { transaction: false },
     );
