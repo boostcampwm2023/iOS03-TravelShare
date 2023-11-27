@@ -49,5 +49,6 @@ export class PostFindResponse {
 
   @ApiProperty({ description: '좋아요 여부(내가 좋아요 눌렀었나?)' })
   @IsBoolean()
+  @IsOptional()
   liked: boolean;
 }

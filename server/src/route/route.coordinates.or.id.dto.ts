@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, ValidateIf, ValidateNested } from 'class-validator';
-import { RouteCoordinate, RouteCoordinates } from './route.coordinates.dto';
+import { RouteCoordinate } from './route.coordinates.dto';
 import { Type } from 'class-transformer';
 
 export class RouteCoordinatesOrId {
