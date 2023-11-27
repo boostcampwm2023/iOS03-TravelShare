@@ -13,7 +13,7 @@ import { AuthBasicAuthResponse } from './auth.basic.auth.response.dto';
 import { AuthBasicSignupBody } from './auth.basic.signup.body.dto';
 import { AuthenticatedUser, Public } from './auth.decorators';
 import { Authentication } from './authentication.dto';
-import { RestController } from 'src/utils/rest.controller.decorator';
+import { RestController } from 'utils/rest.controller.decorator';
 
 @ApiTags('Auth')
 @RestController('auth')

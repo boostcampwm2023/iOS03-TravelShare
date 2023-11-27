@@ -12,9 +12,9 @@ import { UserProfileQuery } from './user.profile.query.dto';
 import { UserFollowQuery } from './user.follow.query.dto';
 import { UserProfileSimpleResponse } from './user.profile.simple.response.dto';
 import { UserService } from './user.service';
-import { AuthenticatedUser } from 'src/auth/auth.decorators';
-import { Authentication } from 'src/auth/authentication.dto';
-import { RestController } from 'src/utils/rest.controller.decorator';
+import { AuthenticatedUser } from 'auth/auth.decorators';
+import { Authentication } from 'auth/authentication.dto';
+import { RestController } from 'utils/rest.controller.decorator';
 
 @ApiTags('User')
 @RestController('user')

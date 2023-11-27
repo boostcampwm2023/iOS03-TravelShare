@@ -1,15 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import {
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUrl,
-  Max,
-  Min,
-  ValidateNested,
-} from 'class-validator';
-import { RouteCoordinate } from 'src/route/route.coordinates.dto';
+import { IsOptional, IsString, IsUrl, ValidateNested } from 'class-validator';
+import { RouteCoordinate } from 'route/route.coordinates.dto';
 
 class PostContentElementPoint extends RouteCoordinate {}
 

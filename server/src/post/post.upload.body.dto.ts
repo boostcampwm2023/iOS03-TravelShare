@@ -8,7 +8,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { RouteCoordinatesOrId } from 'src/route/route.coordinates.or.id.dto';
+import { RouteCoordinatesOrId } from 'route/route.coordinates.or.id.dto';
 import { PostContentElementBase } from './post.content.element.base.dto';
 
 class PostUploadElement extends PostContentElementBase {}

@@ -1,14 +1,14 @@
 import { Headers, Put, Req } from '@nestjs/common';
 import { FileService } from './file.service';
 import { Request } from 'express';
-import { Public } from 'src/auth/auth.decorators';
+import { Public } from 'auth/auth.decorators';
 import {
   ApiHeaders,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { RestController } from 'src/utils/rest.controller.decorator';
+import { RestController } from 'utils/rest.controller.decorator';
 import { FileUploadResponse } from './file.upload.response.dto';
 
 @ApiTags('image')

@@ -31,7 +31,7 @@ export class Post {
   writer: Relation<User>;
 
   @Column()
-  @Index({fulltext: true, parser: 'ngram'})
+  @Index({ fulltext: true, parser: 'ngram' })
   title: string;
 
   @OneToMany(() => PostContentElement, ({ post }) => post, {
@@ -56,14 +56,14 @@ export class Post {
   hashtag: string[];
 
   @VirtualColumn({
-    query: (alias)=> 
-    `
+    query: (alias) =>
+      `
     SELECT \`contents\`.\`image_url\` as \`imageUrl\`
     FROM \`post_content_element\` \`contents\`
     WHERE (\`contents\`.\`post_id\`=${alias}.\`post_id\`)
     AND (\`contents\`.\`image_url\` IS NOT NULL)
     LIMIT 1
-    `
+    `,
   })
   imageUrl: string;
 

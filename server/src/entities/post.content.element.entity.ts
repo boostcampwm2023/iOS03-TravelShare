@@ -41,7 +41,7 @@ export class PostContentElement {
   imageUrl: string;
 
   @Column()
-  @Index({fulltext: true, parser: 'ngram'})
+  @Index({ fulltext: true, parser: 'ngram' })
   description: string;
 
   @Column('geometry', {

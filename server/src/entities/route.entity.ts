@@ -9,21 +9,19 @@ import {
 const LINESTRING_COORDINATES_EXTRACT_REGEXP =
   /LINESTRING\((([\d\.]+ [\d\.]+,?)+)\)/;
 
-export type LineString = {x: number, y: number}[];
+export type LineString = { x: number; y: number }[];
 
 const lineStringToJsonArray = (text: string) => {
   const extracted = LINESTRING_COORDINATES_EXTRACT_REGEXP.exec(text)?.[1];
   return extracted
     .split(',')
     .map((coordinate) => coordinate.split(/\s+/).map(parseFloat))
-    .map(([lat, long])=> ({x: long, y: lat}))
+    .map(([lat, long]) => ({ x: long, y: lat }));
 };
 
 const jsonArrayToLineString = (coordinates: LineString) => {
   console.log(coordinates);
-  return `LINESTRING(${coordinates
-    .map(({x, y}) => `${y} ${x}`)
-    .join(',')})`;
+  return `LINESTRING(${coordinates.map(({ x, y }) => `${y} ${x}`).join(',')})`;
 };
 
 @Entity('route')

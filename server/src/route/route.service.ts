@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Route } from 'src/entities/route.entity';
+import { Route } from 'entities/route.entity';
 import { Repository } from 'typeorm';
 import { RouteUploadBody } from './route.upload.body.dto';
 import { plainToInstance } from 'class-transformer';

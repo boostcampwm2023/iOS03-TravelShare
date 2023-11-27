@@ -18,9 +18,9 @@ import { PostFindResponse } from './post.find.response.dto';
 import { PostDetailResponse } from './post.detail.response.dto';
 import { PostFindQuery } from './post.find.query.dto';
 import { PostService } from './post.service';
-import { AuthenticatedUser } from 'src/auth/auth.decorators';
-import { Authentication } from 'src/auth/authentication.dto';
-import { RestController } from 'src/utils/rest.controller.decorator';
+import { AuthenticatedUser } from 'auth/auth.decorators';
+import { Authentication } from 'auth/authentication.dto';
+import { RestController } from 'utils/rest.controller.decorator';
 import { PostHitsQuery } from './post.hits.query.dto';
 import { PostDetailQuery } from './post.detail.query.dto';
 import { PostUploadBody } from './post.upload.body.dto';
@@ -28,7 +28,7 @@ import { PostUploadResponse } from './post.upload.response.dto';
 import { PostLikeQuery } from './post.like.query.dto';
 import { PostLikeResponse } from './post.like.response.dto';
 import { PostKeywordAutoCompleteQuery } from './post.keyword.autocomplete.query.dto';
-import { AutoCompleteService } from 'src/utils/autocomplete.service';
+import { KeywordAutoCompleteService } from 'utils/keyword.autocomplete.service';
 import { plainToInstance } from 'class-transformer';
 import { PostKeywordAutoCompleteResponse } from './post.keyword.autocomplete.response.dto';
 
@@ -38,7 +38,7 @@ import { PostKeywordAutoCompleteResponse } from './post.keyword.autocomplete.res
 export class PostController {
   constructor(
     private readonly postService: PostService,
-    private readonly autoCompleteService: AutoCompleteService,
+    private readonly autoCompleteService: KeywordAutoCompleteService,
   ) {}
 
   @ApiOperation({
@@ -173,12 +173,10 @@ SELECT ... FROM post ... WHERE title LIKE '%:title%' OR '%:user:%';
     `,
   })
   @Get('keyword')
-  async keywordAutoComplete(
-    @Query() { keyword }: PostKeywordAutoCompleteQuery,
-  ) {
+  async keywordAutoComplete(@Query() { query }: PostKeywordAutoCompleteQuery) {
     return plainToInstance(
       PostKeywordAutoCompleteResponse,
-      this.autoCompleteService.search(keyword),
+      this.autoCompleteService.search(query),
     );
   }
 }

@@ -5,7 +5,7 @@ import { AppleClientAuthResponse } from './apple.client.auth.response.dto';
 import { AppleClientRevokeBody } from './apple.client.revoke.body.dto';
 import { AppleAuthService } from './apple.auth.service';
 import { Public } from '../auth.decorators';
-import { RestController } from 'src/utils/rest.controller.decorator';
+import { RestController } from 'utils/rest.controller.decorator';
 
 @ApiTags('Auth/Apple')
 @RestController('apple')
