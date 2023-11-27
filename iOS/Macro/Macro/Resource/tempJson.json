@@ -6,7 +6,7 @@
         "imageUrl": "https://cdn.pixabay.com/photo/2016/01/20/13/28/woman-1151562_1280.jpg",
         "likeNum": 30,
         "viewNum": 300,
-        "userInfo": {
+        "writer": {
             "email": "www.naver.com",
             "name": "nahun",
             "imageUrl": "https://cdn.pixabay.com/photo/2016/01/20/13/28/woman-1151562_1280.jpg"
@@ -20,7 +20,7 @@
         "imageUrl": "https://cdn.pixabay.com/photo/2016/01/20/13/28/woman-1151562_1280.jpg",
         "likeNum": 300,
         "viewNum": 3000,
-        "userInfo": {
+        "writer": {
             "email": "www.naver.com",
             "name": "gatsby",
             "imageUrl": "https://cdn.pixabay.com/photo/2016/01/20/13/28/woman-1151562_1280.jpg"
