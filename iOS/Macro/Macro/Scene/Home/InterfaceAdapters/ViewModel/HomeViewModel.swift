@@ -51,11 +51,13 @@ final class HomeViewModel: ViewModelProtocol, PostCollectionViewProtocol {
     
     private let outputSubject = PassthroughSubject<Output, Never>()
     let postSearcher: SearchUseCase
+    let followFeatrue: FollowUseCase
     private var cancellables = Set<AnyCancellable>()
     var posts: [PostFindResponse] = []
     
-    init(postSearcher: SearchUseCase) {
+    init(postSearcher: SearchUseCase, followFeature: FollowUseCase) {
         self.postSearcher = postSearcher
+        self.followFeatrue = followFeature
     }
     
     // MARK: - Methods
@@ -74,7 +76,7 @@ final class HomeViewModel: ViewModelProtocol, PostCollectionViewProtocol {
     }
     
     private func searchPosts() {
-        postSearcher.searchPost().sink { completion in
+        postSearcher.fetchHitPost().sink { completion in
             if case let .failure(error) = completion {
             }
         } receiveValue: { [weak self] response in

@@ -13,12 +13,14 @@ protocol SearchUseCase {
     func searchLocation(query: String, page: Int) -> AnyPublisher<[LocationDetail], NetworkError>
     func searchPost(query: String) -> AnyPublisher<[PostFindResponse], NetworkError>
     func searchMockPost(query: String, json: String) -> AnyPublisher<[PostFindResponse], NetworkError>
-    func searchPost() -> AnyPublisher<[PostFindResponse], NetworkError>
+    func fetchHitPost() -> AnyPublisher<[PostFindResponse], NetworkError>
     func searchMockPost(json: String) -> AnyPublisher<[PostFindResponse], NetworkError>
+    func searchUser(query: String) -> AnyPublisher<UserInfoResponse, NetworkError>
+    func searchMockUserProfile(query: String, json: String) -> AnyPublisher<UserInfoResponse, NetworkError>
 }
 
 final class Searcher: SearchUseCase {
-    
+   
     // MARK: - Properties
     
     private let provider: Requestable
@@ -42,11 +44,19 @@ final class Searcher: SearchUseCase {
     func searchMockPost(query: String, json: String) -> AnyPublisher<[PostFindResponse], MacroNetwork.NetworkError> {
         return provider.mockRequest(PostFindEndPoint.search(query), url: json)
     }
-    func searchPost() -> AnyPublisher<[PostFindResponse], MacroNetwork.NetworkError> {
+    func fetchHitPost() -> AnyPublisher<[PostFindResponse], MacroNetwork.NetworkError> {
         return provider.request(PostEndPoint.search)
     }
     
     func searchMockPost(json: String) -> AnyPublisher<[PostFindResponse], MacroNetwork.NetworkError> {
         return provider.mockRequest(PostEndPoint.search, url: json)
+    }
+    
+    func searchUser(query: String) -> AnyPublisher<UserInfoResponse, MacroNetwork.NetworkError> {
+        return provider.request(UserInfoEndPoint.search(query))
+    }
+    
+    func searchMockUserProfile(query: String, json: String) -> AnyPublisher<UserInfoResponse, MacroNetwork.NetworkError> {
+        return provider.mockRequest(UserInfoEndPoint.search(query), url: json)
     }
 }

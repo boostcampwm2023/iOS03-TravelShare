@@ -24,11 +24,12 @@ final class TabBarViewController: UIViewController {
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
-        self.view.backgroundColor = UIColor.appColor(.blue1)
         self.addChild(viewModel.currentTabComponent.value.viewController)
+        configure()
         setUpLayout()
         bind()
         manageTabBarStatus(active: viewModel.isTabBarActive)
+    
         super.viewDidLoad()
     }
     
@@ -45,6 +46,12 @@ final class TabBarViewController: UIViewController {
 
 // MARK: - UI Settings
 internal extension TabBarViewController {
+    
+    func configure() {
+        self.view.backgroundColor = UIColor.appColor(.blue1)
+        self.navigationController?.navigationBar.tintColor = UIColor.appColor(.purple4)
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    }
     
     func setupTranslatesAutoresizingMaskIntoConstraints() {
         tabBarBackgroundLargeCirclceView.translatesAutoresizingMaskIntoConstraints = false
