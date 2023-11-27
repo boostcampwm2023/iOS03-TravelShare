@@ -1,9 +1,11 @@
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Relation,
 } from 'typeorm';
 import { Post } from './post.entity';
 
@@ -33,12 +35,13 @@ export class PostContentElement {
 
   @ManyToOne(() => Post, ({ contents }) => contents)
   @JoinColumn({ name: 'post_id' })
-  post: Post;
+  post: Relation<Post>;
 
   @Column({ name: 'image_url', nullable: true })
   imageUrl: string;
 
   @Column()
+  @Index({fulltext: true, parser: 'ngram'})
   description: string;
 
   @Column('geometry', {
