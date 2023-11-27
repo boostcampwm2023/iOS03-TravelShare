@@ -14,7 +14,7 @@ class MyPageViewModel: ViewModelProtocol {
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
     let sections = ["나의 정보", "글 목록", "계정 관리"]
-    let information = ["사용자 이름", "프로필 사진", "자기소개"]
+    let information = ["이름", "프로필 사진", "자기소개"]
     let post = ["작성한 글", "좋아요한 글"]
     let management = ["팔로우", "알림", "문의하기"]
     

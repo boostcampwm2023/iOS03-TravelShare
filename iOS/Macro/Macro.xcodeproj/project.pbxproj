@@ -86,6 +86,8 @@
 		BA90CBA42B14789800365AE2 /* UserInfoMock.json in Resources */ = {isa = PBXBuildFile; fileRef = BA90CBA32B14789800365AE2 /* UserInfoMock.json */; };
 		BA90CBA82B147E1900365AE2 /* UserInfoEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CBA72B147E1900365AE2 /* UserInfoEndPoint.swift */; };
 		BADB1F0C2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADB1F0B2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift */; };
+		D21B10072B14660600F2F84E /* MyInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B10062B14660600F2F84E /* MyInfoViewController.swift */; };
+		D21B10092B14799C00F2F84E /* NameEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B10082B14799C00F2F84E /* NameEditView.swift */; };
 		D241DC6E2B0D9FFE0037DDB6 /* SearchUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC6D2B0D9FFE0037DDB6 /* SearchUseCase.swift */; };
 		D241DC712B0DA0070037DDB6 /* CommonUIComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC702B0DA0070037DDB6 /* CommonUIComponents.swift */; };
 		D241DC752B0DA00F0037DDB6 /* Writer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC732B0DA00F0037DDB6 /* Writer.swift */; };
@@ -187,6 +189,8 @@
 		BA90CBA32B14789800365AE2 /* UserInfoMock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = UserInfoMock.json; sourceTree = "<group>"; };
 		BA90CBA72B147E1900365AE2 /* UserInfoEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoEndPoint.swift; sourceTree = "<group>"; };
 		BADB1F0B2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUnresearchableViewController.swift; sourceTree = "<group>"; };
+		D21B10062B14660600F2F84E /* MyInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoViewController.swift; sourceTree = "<group>"; };
+		D21B10082B14799C00F2F84E /* NameEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameEditView.swift; sourceTree = "<group>"; };
 		D241DC6D2B0D9FFE0037DDB6 /* SearchUseCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUseCase.swift; sourceTree = "<group>"; };
 		D241DC702B0DA0070037DDB6 /* CommonUIComponents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonUIComponents.swift; sourceTree = "<group>"; };
 		D241DC732B0DA00F0037DDB6 /* Writer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Writer.swift; sourceTree = "<group>"; };
@@ -496,6 +500,8 @@
 			isa = PBXGroup;
 			children = (
 				BA32E17D2B0DC3CB00EA0EE2 /* MyPageViewController.swift */,
+				D21B10062B14660600F2F84E /* MyInfoViewController.swift */,
+				D21B10082B14799C00F2F84E /* NameEditView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1122,6 +1128,7 @@
 				BA33AA892B0AF9F30065D1E0 /* HomeViewController.swift in Sources */,
 				BA90CB872B0F3BF600365AE2 /* PostCollectionView.swift in Sources */,
 				D263CA132B02DD8900B4A144 /* RouteTableViewController.swift in Sources */,
+				D21B10092B14799C00F2F84E /* NameEditView.swift in Sources */,
 				BA90CB3B2B0EF88700365AE2 /* LocationManager.swift in Sources */,
 				BA6C6DF32B05FFC500563B22 /* CAGradientLayer+.swift in Sources */,
 				BA6C6DFE2B05FFC500563B22 /* TabBarOpacityView.swift in Sources */,
@@ -1162,6 +1169,7 @@
 				BA6C6DFC2B05FFC500563B22 /* TabComponentView.swift in Sources */,
 				D263CA262B04147E00B4A144 /* TravelViewController.swift in Sources */,
 				BA90CB932B10997D00365AE2 /* UserInfoHeaderView.swift in Sources */,
+				D21B10072B14660600F2F84E /* MyInfoViewController.swift in Sources */,
 				BA32E1772B0DC2F900EA0EE2 /* UserInfoViewController.swift in Sources */,
 				AAD0B2982B0B0841003B4D5F /* CacheManager.swift in Sources */,
 				D263CA242B04134600B4A144 /* ViewModelProtocol.swift in Sources */,

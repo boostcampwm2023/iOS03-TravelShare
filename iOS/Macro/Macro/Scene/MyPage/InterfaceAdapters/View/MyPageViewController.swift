@@ -175,8 +175,8 @@ extension MyPageViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if indexPath.section == 0 { 
-            let myInfoVC = MyInfoViewController(viewModel: viewModel)
+        if indexPath.section == 0 {
+            let myInfoVC = MyInfoViewController(viewModel: viewModel, selectedIndex: indexPath.row)
             if #available(iOS 15.0, *) {
                 myInfoVC.sheetPresentationController?.detents = [.large()]
                 myInfoVC.sheetPresentationController?.prefersGrabberVisible = true
