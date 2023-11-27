@@ -10,7 +10,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { UserProfileSimpleResponse } from 'src/user/user.profile.simple.response.dto';
+import { UserProfileSimpleResponse } from 'user/user.profile.simple.response.dto';
 import { RouteCoordinates } from '../route/route.coordinates.dto';
 import { PostContentElementBase } from './post.content.element.base.dto';
 

@@ -13,9 +13,9 @@ import { AppleIdentityTokenPayload } from './apple.identity.token.payload.dto';
 import { createPublicKey, randomUUID } from 'crypto';
 import { AppleIdentityTokenHeader } from './apple.identity.token.header.dto';
 import { Repository } from 'typeorm';
-import { AppleAuth } from 'src/entities/apple.auth.entity';
+import { AppleAuth } from 'entities/apple.auth.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/entities/user.entity';
+import { User } from 'entities/user.entity';
 import { Authentication } from '../authentication.dto';
 import { AppleClientRevokeBody } from './apple.client.revoke.body.dto';
 import { AppleAuthTokenBody } from './apple.auth.token.body.dto';
@@ -23,7 +23,7 @@ import { AppleAuthRevokeBody } from './apple.auth.revoke.body.dto';
 import { AppleAuthTokenResponse } from './apple.auth.token.response.dto';
 import { AppleClientAuthResponse } from './apple.client.auth.response.dto';
 import { Transactional } from 'typeorm-transactional';
-import { getRandomNickName } from 'src/utils/namemaker';
+import { getRandomNickName } from 'utils/namemaker';
 
 /**
  * ### AppleAuthService

@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/entities/user.entity';
+import { User } from 'entities/user.entity';
 import { Repository } from 'typeorm';
 import { UserProfileUpdateQuery } from './user.profile.update.query.dto';
-import { Authentication } from 'src/auth/authentication.dto';
+import { Authentication } from 'auth/authentication.dto';
 import { UserProfileResponse } from './user.profile.response.dto';
 import { plainToInstance } from 'class-transformer';
 import { UserProfileQuery } from './user.profile.query.dto';

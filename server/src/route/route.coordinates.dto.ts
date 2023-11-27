@@ -1,4 +1,11 @@
-import { IsArray, IsNotEmpty, IsNumber, Max, Min, Validate, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  Max,
+  Min,
+  ValidateNested,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
@@ -9,29 +16,29 @@ export class RouteCoordinates {
     example: [
       {
         x: 120,
-        y: 33.6
+        y: 33.6,
       },
       {
         x: 127.86,
-        y: 35.8
-      }
+        y: 35.8,
+      },
     ],
   })
   @IsArray()
   @ValidateNested()
-  @Type(()=> RouteCoordinate)
+  @Type(() => RouteCoordinate)
   coordinates: RouteCoordinate[];
 }
 
 export class RouteCoordinate {
-  @ApiProperty({description: 'x '})
+  @ApiProperty({ description: 'x ' })
   @IsNumber()
   @Max(180)
   @Min(-180)
   @IsNotEmpty()
   x: number;
 
-  @ApiProperty({description: 'y'})
+  @ApiProperty({ description: 'y' })
   @IsNumber()
   @Max(90)
   @Min(-90)

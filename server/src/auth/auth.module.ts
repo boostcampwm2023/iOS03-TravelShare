@@ -8,7 +8,7 @@ import { AppleAuthModule } from './apple/apple.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/entities/user.entity';
+import { User } from 'entities/user.entity';
 
 @Module({
   imports: [AppleAuthModule, TypeOrmModule.forFeature([User])],

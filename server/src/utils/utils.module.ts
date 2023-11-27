@@ -5,8 +5,8 @@ import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { addTransactionalDataSource } from 'typeorm-transactional';
-import { AutoCompleteService } from './autocomplete.service';
-import { Post } from 'src/entities/post.entity';
+import { Post } from 'entities/post.entity';
+import { KeywordAutoCompleteService } from './keyword.autocomplete.service';
 
 @Global()
 @Module({
@@ -29,7 +29,7 @@ import { Post } from 'src/entities/post.entity';
     }),
     TypeOrmModule.forFeature([Post]),
   ],
-  providers: [AutoCompleteService],
-  exports: [HttpModule, AutoCompleteService],
+  providers: [KeywordAutoCompleteService],
+  exports: [HttpModule, KeywordAutoCompleteService],
 })
 export class UtilsModule {}

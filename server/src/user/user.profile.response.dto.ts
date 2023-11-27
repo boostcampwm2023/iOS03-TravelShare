@@ -11,7 +11,7 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
-import { PostFindResponse } from 'src/post/post.find.response.dto';
+import { PostFindResponse } from 'post/post.find.response.dto';
 
 export class UserProfileResponse {
   @ApiProperty({ description: '작성자 email' })

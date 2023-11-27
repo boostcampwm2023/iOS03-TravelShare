@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, Validate, ValidateIf, ValidateNested } from 'class-validator';
-import { LineString } from 'src/entities/route.entity';
+import { IsNumber, ValidateIf, ValidateNested } from 'class-validator';
 import { RouteCoordinate, RouteCoordinates } from './route.coordinates.dto';
 import { Type } from 'class-transformer';
 
@@ -10,18 +9,18 @@ export class RouteCoordinatesOrId {
     example: [
       {
         x: 120,
-        y: 33.6
+        y: 33.6,
       },
       {
         x: 127.86,
-        y: 35.8
-      }
+        y: 35.8,
+      },
     ],
     required: false,
   })
   @ValidateIf(({ routeId }: RouteCoordinatesOrId) => !Boolean(routeId))
   @ValidateNested()
-  @Type(()=> RouteCoordinate)
+  @Type(() => RouteCoordinate)
   coordinates: RouteCoordinate[];
 
   @ApiProperty({

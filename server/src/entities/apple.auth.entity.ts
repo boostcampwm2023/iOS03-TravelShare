@@ -5,6 +5,7 @@ import {
   JoinColumn,
   OneToOne,
   PrimaryColumn,
+  Relation,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
@@ -18,7 +19,7 @@ export class AppleAuth {
   @JoinColumn({
     name: 'user_id',
   })
-  user: User;
+  user: Relation<User>;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

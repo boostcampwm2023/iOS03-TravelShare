@@ -2,7 +2,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { KakaoMapSearchResponse } from './map.kakao.search.response.dto';
 import { KakaoMapService } from './map.kakao.service';
 import { Controller, Get, Query } from '@nestjs/common';
-import { Public } from 'src/auth/auth.decorators';
+import { Public } from 'auth/auth.decorators';
 import { KakaoSearchAccuracyQuery } from './map.kakao.search.accuracy.query.dto';
 import { KakaoSearchDistanceQuery } from './map.kakao.search.distance.query.dto';
 

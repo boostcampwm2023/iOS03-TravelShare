@@ -10,7 +10,7 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
-import { UserProfileSimpleResponse } from 'src/user/user.profile.simple.response.dto';
+import { UserProfileSimpleResponse } from 'user/user.profile.simple.response.dto';
 
 export class PostFindResponse {
   @ApiProperty({ description: '게시글 id' })

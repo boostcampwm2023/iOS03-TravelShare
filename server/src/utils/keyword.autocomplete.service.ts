@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Post } from 'src/entities/post.entity';
+import { Post } from 'entities/post.entity';
 import { Repository } from 'typeorm';
 
 // TODO:
@@ -13,8 +13,8 @@ export class TrieNode {
 }
 
 @Injectable()
-export class AutoCompleteService implements OnModuleInit {
-  root: TrieNode = new TrieNode();
+export class KeywordAutoCompleteService implements OnModuleInit {
+  private root: TrieNode = new TrieNode();
 
   constructor(
     @InjectRepository(Post)
@@ -48,7 +48,7 @@ export class AutoCompleteService implements OnModuleInit {
     return returnArray.map(({ word }) => word).slice(0, 10);
   }
 
-  collectWords(node: TrieNode, word: string, returnArray: any[]) {
+  private collectWords(node: TrieNode, word: string, returnArray: any[]) {
     // if (returnArray.length == 10) {
     //   return;
     // }
