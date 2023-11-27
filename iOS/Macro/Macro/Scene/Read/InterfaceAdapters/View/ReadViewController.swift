@@ -115,7 +115,7 @@ final class ReadViewController: UIViewController {
     
     // MARK: - init
     
-    init(viewModel: ReadViewModel, postInfo: String) {
+    init(viewModel: ReadViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -146,7 +146,7 @@ private extension ReadViewController {
         didScrollSubject
             .receive(on: RunLoop.main)
             .sink { [weak self] index in
-                self?.imageDescriptionLabel.text = self?.readPost?.contents?[index].description
+                self?.imageDescriptionLabel.text = self?.readPost?.contents[index].description
             }
             .store(in: &cancellables)
     }
@@ -228,8 +228,7 @@ private extension ReadViewController {
             scrollContentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             scrollContentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             scrollContentView.widthAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.widthAnchor),
-            scrollContentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-//            scrollContentView.heightAnchor.constraint(equalToConstant: 700),
+            scrollContentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
         ])
     }
 
@@ -254,13 +253,16 @@ private extension ReadViewController {
     func updatePost(_ readPost: ReadPost) {
         self.readPost = readPost
         
-        if let writer = readPost.writer {
-            postProfile.updateProfil(writer)
-        }
-        titleLabel.text = readPost.title
-        imageDescriptionLabel.text = readPost.contents?.first?.description
+        likeButton.setTitle("\(readPost.likeNum)", for: .normal)
         
-        let imageURLs = readPost.contents?.compactMap{ $0.imageUrl } ?? []
+        viewButton.setTitle("\(readPost.viewNum)", for: .normal)
+        
+        postProfile.updateProfil(readPost.writer)
+
+        titleLabel.text = readPost.title
+        imageDescriptionLabel.text = readPost.contents.first?.description
+        
+        let imageURLs = readPost.contents.compactMap{ $0.imageURL }
         downloadImages(imageURLs: imageURLs) { [weak self] images in
             self?.carouselView.updateData(images)
         }

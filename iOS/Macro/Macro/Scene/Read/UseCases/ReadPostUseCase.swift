@@ -10,7 +10,7 @@ import Foundation
 import MacroNetwork
 
 protocol ReadPostUseCaseProtocol {
-    func execute(postId: String) -> AnyPublisher<ReadPost, MacroNetwork.NetworkError>
+    func execute(postId: Int) -> AnyPublisher<ReadPost, MacroNetwork.NetworkError>
 }
 
 struct ReadPostUseCase: ReadPostUseCaseProtocol {
@@ -27,7 +27,7 @@ struct ReadPostUseCase: ReadPostUseCaseProtocol {
     
     // MARK: - Methods
     
-    func execute(postId: String) -> AnyPublisher<ReadPost, MacroNetwork.NetworkError> {
+    func execute(postId: Int) -> AnyPublisher<ReadPost, MacroNetwork.NetworkError> {
         let accessToken = KeyChainManager.load(key: KeyChainManager.Keywords.accessToken) ?? ""
         return provider.request(ReadEndPoint.read(postId: postId, accessToken: accessToken))
     }

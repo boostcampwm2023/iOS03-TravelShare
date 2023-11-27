@@ -14,10 +14,12 @@ class ReadViewModel: ViewModelProtocol {
     private var cancellables = Set<AnyCancellable>()
     private let useCase: ReadPostUseCaseProtocol
     private let outputSubject = PassthroughSubject<Output, Never>()
+    private let postId: Int
     
     // MARK: - init
-    init(useCase: ReadPostUseCaseProtocol) {
+    init(useCase: ReadPostUseCaseProtocol, postId: Int) {
         self.useCase = useCase
+        self.postId = postId
     }
     
     // MARK: - Input
@@ -53,7 +55,7 @@ class ReadViewModel: ViewModelProtocol {
 // MARK: - Methods
 private extension ReadViewModel {
     func updateReadViewItems() {
-        useCase.execute(postId: "1")
+        useCase.execute(postId: postId)
             .sink { completion in
                 if case let .failure(error) = completion {
                     debugPrint("Token Get Fail : ", error)

@@ -9,27 +9,46 @@ import Foundation
 
 struct ReadPost: Codable {
     let postId: Int
-    let title: String?
-    let contents: [PostContent]?
-    let writer: Writer?
-    let route: [String]?
-    let hashtag: [String]?
-    let likeNum: Int?
-    let viewNum: Int?
-    let createdAt: Date?
-    let modifiedAt: Date?
-    let liked: Bool?
+    let title: String
+    let viewNum, likeNum: Int
+    let hashtag: [String]
+    let createdAt, modifiedAt: String
+    let contents: [Content]
+    let writer: Writer
+    let route: Route
+    let liked: Bool
 }
 
-struct PostContent: Codable {
-    let imageUrl: String?
+// MARK: - Content
+struct Content: Codable {
+    let imageURL: String
     let description: String?
-//    let x: Int?
-//    let y: Int?
+    let coordinate: Coordinate?
+
+    enum CodingKeys: String, CodingKey {
+        case imageURL = "imageUrl"
+        case description, coordinate
+    }
+}
+
+// MARK: - Coordinate
+struct Coordinate: Codable {
+    let xPosition: Double
+    let yPosition: Double
+    
+    enum CodingKeys: String, CodingKey {
+        case xPosition = "x"
+        case yPosition = "y"
+    }
+}
+
+// MARK: - Route
+struct Route: Codable {
+    let coordinates: [Coordinate]?
 }
 
 struct Writer: Codable {
-    let email: String?
-    let name: String?
+    let email: String
+    let name: String
     let imageUrl: String?
 }

@@ -9,7 +9,7 @@ import Foundation
 import MacroNetwork
 
 enum ReadEndPoint {
-    case read(postId: String, accessToken: String)
+    case read(postId: Int, accessToken: String)
 }
 
 extension ReadEndPoint: EndPoint {
@@ -20,19 +20,18 @@ extension ReadEndPoint: EndPoint {
     
     var headers: MacroNetwork.HTTPHeaders {
         switch self {
-        case let .read(postId, accessToken):
+        case let .read(_, accessToken):
             return [
                 "Host" : "jijihuny.store",
-                "postID" : postId,
-                "AccessToken" : accessToken
+                "Authorization" : "Bearer " + accessToken
             ]
         }
     }
     
     var parameter: MacroNetwork.HTTPParameter {
         switch self {
-        case .read(_, _):
-            return .plain
+        case let .read(postId, _):
+            return .query(["postId" : postId])
         }
     }
     
