@@ -5,7 +5,9 @@
 //  Created by 김경호 on 11/21/23.
 //
 
+import Combine
 import Foundation
+import MacroNetwork
 
 struct TokenManager {
     static func decodeJWTToken(token: String) -> TimeInterval? {
@@ -28,6 +30,22 @@ struct TokenManager {
         let currentTimeInterval = Date().timeIntervalSince1970
         
         return currentTimeInterval < decodeToken ? LoginState.loggedIn : LoginState.loggedOut
+    }
+    
+    static func refreshToken(cancellables: inout Set<AnyCancellable>) {
+        let provider = APIProvider(session: URLSession.shared)
+        let refreshTokenUseCase: RefreshTokenUseCaseProtocol = RefreshTokenUseCase(provider: provider)
+        
+        refreshTokenUseCase.execute()
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                if case let .failure(error) = completion {
+                    debugPrint("Refresh Token Get Fail : ", error)
+                }
+            } receiveValue: { refreshTokenResponse in
+                KeyChainManager.save(key: KeyChainManager.Keywords.accessToken, token: refreshTokenResponse.accessToken)
+            }
+            .store(in: &cancellables)
     }
 }
 
