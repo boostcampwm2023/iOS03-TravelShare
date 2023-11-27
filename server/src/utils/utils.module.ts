@@ -5,6 +5,8 @@ import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { addTransactionalDataSource } from 'typeorm-transactional';
+import { AutoCompleteService } from './autocomplete.service';
+import { Post } from 'src/entities/post.entity';
 
 @Global()
 @Module({
@@ -25,7 +27,9 @@ import { addTransactionalDataSource } from 'typeorm-transactional';
       dataSourceFactory: async (options: DataSourceOptions) =>
         addTransactionalDataSource(new DataSource(options)),
     }),
+    TypeOrmModule.forFeature([Post]),
   ],
-  exports: [HttpModule],
+  providers: [AutoCompleteService],
+  exports: [HttpModule, AutoCompleteService],
 })
 export class UtilsModule {}
