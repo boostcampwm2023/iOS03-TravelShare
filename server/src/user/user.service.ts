@@ -43,6 +43,11 @@ export class UserService {
       ...user,
       followersNum,
       followingsNum,
+      writedPosts: user.writedPosts.map((post) => ({
+        ...post,
+        writer: user,
+        liked: false,
+      })),
     });
   }
 
