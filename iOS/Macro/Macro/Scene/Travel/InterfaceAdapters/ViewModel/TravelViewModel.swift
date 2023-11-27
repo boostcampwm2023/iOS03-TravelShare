@@ -110,9 +110,16 @@ final class TravelViewModel: ViewModelProtocol {
             .store(in: &cancellables)
     }
     
+    private func generateTravel() -> TravelInfo {
+        let transRoute = savedRoute.routePoints.map{[$0.coordinate.latitude, $0.coordinate.longitude]}
+        return TravelInfo(id: UUID().uuidString, recordedLocation: transRoute, recordedPindedLocation: transRoute, sequence: 0)
+    }
+    
     private func stopRecord() {
+        let travel = generateTravel()
+        CoreDataManager.shared.saveTravel(id: travel.id, recordedLocation: travel.recordedLocation, recordedPindedLocation: travel.recordedPindedLocation, sequence: Int(travel.sequence))
         routeRecorder.stopRecording()
-        
+       
         locationManager = nil
     }
     
