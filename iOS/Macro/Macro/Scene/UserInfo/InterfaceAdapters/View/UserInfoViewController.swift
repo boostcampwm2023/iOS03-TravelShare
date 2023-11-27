@@ -12,7 +12,7 @@ final class UserInfoViewController: UIViewController {
     
     // MARK: - Properties
     
-    let viewModel: UserInfoViewModel
+    private let viewModel: UserInfoViewModel
     private let inputSubject: PassthroughSubject<UserInfoViewModel.Input, Never> = .init()
     private var cancellables = Set<AnyCancellable>()
     

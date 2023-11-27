@@ -91,7 +91,6 @@ extension UserInfoHeaderView {
 
 extension UserInfoHeaderView {
     func configure(item: UserInfoResponse) {
-        print(item)
         self.userNameLabel.text = item.name
         userInfoProfileView.configure(item: item)
     }

@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-class UserInfoViewModel: ViewModelProtocol {
+final class UserInfoViewModel: ViewModelProtocol {
  
     // MARK: - Properties
     
@@ -68,19 +68,16 @@ class UserInfoViewModel: ViewModelProtocol {
     }
     
     private func searchMockPost() {
-        searcher.searchMockPost(json: "tempJson").sink { completion in
-            if case let .failure(error) = completion {
-            }
+        searcher.searchMockPost(json: "tempJson").sink { _ in
         } receiveValue: { [weak self] response in
             self?.outputSubject.send(.updateSearchResult(response))
         }.store(in: &cancellables)
     }
 
     private func tappedFollowButton(followUserId: String) {
-        //TODO: - 통신코드 목파일 수정
-        followFeature.mockFollowUser(userId: "asdf", followUserId: followUserId, json: "FollowMock").sink { completion in
-            if case let .failure(error) = completion {
-            }
+        // TODO: - 통신코드 목파일 수정
+        followFeature.mockFollowUser(userId: "asdf", followUserId: followUserId, json: "FollowMock").sink { _ in
+
         } receiveValue: { [weak self] response in
             self?.outputSubject.send(.updateFollowResult(response))
         }.store(in: &cancellables)
@@ -91,10 +88,7 @@ class UserInfoViewModel: ViewModelProtocol {
     }
     
     private func searchMockUserProfile(userId: String) {
-        searcher.searchMockUserProfile(query: userId, json: "UserInfoMock").sink {
-            completion in
-            if case let .failure(error) = completion {
-            }
+        searcher.searchMockUserProfile(query: userId, json: "UserInfoMock").sink { _ in
         } receiveValue: { [weak self] response in
             self?.outputSubject.send(.updateUserProfile(response))
         }.store(in: &cancellables)
@@ -103,14 +97,6 @@ class UserInfoViewModel: ViewModelProtocol {
 
 // MARK: - PostCollectionView Delegate
 extension UserInfoViewModel: PostCollectionViewProtocol {
-    var tmpIsLike: Bool {
-        get {
-            true
-        }
-        set {
-            true
-        }
-    }
     
     func navigateToProfileView(userId: String) {
         self.outputSubject.send(.navigateToProfileView(userId))
