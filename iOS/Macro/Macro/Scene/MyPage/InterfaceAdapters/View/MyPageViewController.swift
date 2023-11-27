@@ -114,6 +114,7 @@ extension MyPageViewController {
 
 // MARK: - Methods
 
+// MARK: - tableView
 extension MyPageViewController {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
@@ -175,7 +176,7 @@ extension MyPageViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if indexPath.section == 0 {
+        if indexPath.section == 0 && (indexPath.row == 0 || indexPath.row == 2) {
             let myInfoVC = MyInfoViewController(viewModel: viewModel, selectedIndex: indexPath.row)
             if #available(iOS 15.0, *) {
                 myInfoVC.sheetPresentationController?.detents = [.large()]
@@ -183,6 +184,33 @@ extension MyPageViewController {
             }
             present(myInfoVC, animated: true)
         }
+        else if indexPath.section == 0 && indexPath.row == 1 {
+            presentImagePickerController()
+        }
+    }
+}
+
+// MARK: - ImagePicker
+
+extension MyPageViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    private func presentImagePickerController() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.delegate = self
+        present(imagePicker, animated: true)
+    }
+    
+    // 사용자가 이미지를 선택했을 때 호출됩니다.
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let selectedImage = info[.originalImage] as? UIImage {
+            profileImageView.image = selectedImage
+        }
+        dismiss(animated: true, completion: nil)
+    }
+    
+    // 사용자가 이미지 선택을 취소했을 때 호출됩니다.
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
 }
 
