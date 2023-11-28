@@ -100,13 +100,14 @@ extension UserInfoProfileView {
 
 // MARK: - Methods
 extension UserInfoProfileView {
-    func configure(item: UserInfoResponse) {
-        loadImage(profileImageStringURL: item.userImageURL) { image in
+    func configure(item: ProfileGetResponse) {
+        loadImage(profileImageStringURL: item.imageUrl) { image in
             self.userProfileImageView.image = image
         }
         
         self.userFollowerCountLabel.text = "\(item.follower)"
         self.userIntroduceLabel.text = item.introduce
+        self.userFollowerCountLabel.text = "\(item.followersNum)"
     }
     
     func updateFollow(item: FollowResponse) {

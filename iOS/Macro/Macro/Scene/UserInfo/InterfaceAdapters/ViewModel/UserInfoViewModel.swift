@@ -28,23 +28,21 @@ final class UserInfoViewModel: ViewModelProtocol {
     // MARK: - Input
     
     enum Input {
-        case searchUserProfile
+        case searchUserProfile(userId: String)
         case tapFollowButton(userId: String)
         
         // Mock
         case searchMockUserProfile(userId: String)
-        case searchMockPost
     }
     
     // MARK: - Output
     
     enum Output {
         case appleLoginCompleted
-        case updateSearchResult([PostFindResponse])
         case navigateToProfileView(String)
-        case navigateToReadView(String)
+        case navigateToReadView(Int)
         case updateFollowResult(FollowResponse)
-        case updateUserProfile(UserInfoResponse)
+        case updateUserProfile(ProfileGetResponse)
     }
     
     // MARK: - Methods
@@ -53,8 +51,6 @@ final class UserInfoViewModel: ViewModelProtocol {
         input
             .sink { [weak self] input in
                 switch input {
-                case .searchMockPost:
-                    self?.searchMockPost()
                 case let .tapFollowButton(userId):
                     self?.tappedFollowButton(followUserId: userId)
                 case .searchUserProfile:
@@ -67,13 +63,6 @@ final class UserInfoViewModel: ViewModelProtocol {
         return outputSubject.eraseToAnyPublisher()
     }
     
-    private func searchMockPost() {
-        searcher.searchMockPost(json: "tempJson").sink { _ in
-        } receiveValue: { [weak self] response in
-            self?.outputSubject.send(.updateSearchResult(response))
-        }.store(in: &cancellables)
-    }
-
     private func tappedFollowButton(followUserId: String) {
         // TODO: - 통신코드 목파일 수정
         followFeature.mockFollowUser(userId: "asdf", followUserId: followUserId, json: "FollowMock").sink { _ in
@@ -102,7 +91,7 @@ extension UserInfoViewModel: PostCollectionViewProtocol {
         self.outputSubject.send(.navigateToProfileView(userId))
     }
     
-    func navigateToReadView(postId: String) {
+    func navigateToReadView(postId: Int) {
         self.outputSubject.send(.navigateToReadView(postId))
     }
     

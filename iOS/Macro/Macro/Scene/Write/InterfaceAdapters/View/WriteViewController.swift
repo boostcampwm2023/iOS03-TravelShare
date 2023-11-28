@@ -19,7 +19,7 @@ final class WriteViewController: TabViewController {
     private let imageAddSubject: PassthroughSubject<Bool, Never> = .init()
     private let didScrollSubject: PassthroughSubject<Int, Never> = .init()
     private let inputSubject: PassthroughSubject<WriteViewModel.Input, Never> = .init()
-    private var photoAuthorizationStatus =  CurrentValueSubject<PHAuthorizationStatus, Never>(.notDetermined)
+    private var photoAuthorizationStatus = CurrentValueSubject<PHAuthorizationStatus, Never>(.notDetermined)
     private var subscriptions: Set<AnyCancellable> = []
     
     lazy var picker: PHPickerViewController = {

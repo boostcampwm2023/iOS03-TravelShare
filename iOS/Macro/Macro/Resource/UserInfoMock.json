@@ -1,7 +1,40 @@
 {
-    "name" : "진하",
-    "follower" : 10,
-    "introduce" : "맛집 투어를 즐기는 돼지 입니다. :)ㅁㄴㅇㄹ미ㅏ너ㅜㅇ리ㅏㅓㅁ누이라ㅓㅜ미아ㅓㅜ리마너우리ㅏㅓㅁ누이라ㅓ문이라ㅓㅜㅁ니아ㅓ륀마어뤼마너우리마ㅓㅇ누리마ㅓㄴ우리ㅏㅓㅜ주로 부산 근처에서 도보여행을 합니다.",
-    "userImageURL": "https://i.namu.wiki/i/U4Wgc0ttOfAvNkTb_MQLpCKUC2HnJ7H5YZVa4IVaMWuKMpijpX6RJKiLa4Tqb-rxUVwTUXf0hhpoFBDXn-_LZF0KQLGk7MIl6wzul6ZGUGmSum3poaIwEHDzA7WsEUoy6IqyWCDGRgk5-YROnIzF5A.webp",
-    "isFollow" : false
+    "userId": "string",
+    "name": "진하",
+    "imageUrl": "https://i.namu.wiki/i/U4Wgc0ttOfAvNkTb_MQLpCKUC2HnJ7H5YZVa4IVaMWuKMpijpX6RJKiLa4Tqb-rxUVwTUXf0hhpoFBDXn-_LZF0KQLGk7MIl6wzul6ZGUGmSum3poaIwEHDzA7WsEUoy6IqyWCDGRgk5-YROnIzF5A.webp",
+    "introduce": "맛집 투어를 즐기는 돼지 입니다. :)ㅁㄴㅇㄹ미ㅏ너ㅜㅇ리ㅏㅓㅁ누이라ㅓㅜ미아ㅓㅜ리마너우리ㅏㅓㅁ누이라ㅓ문이라ㅓㅜㅁ니아ㅓ륀마어뤼마너우리마ㅓㅇ누리마ㅓㄴ우리ㅏㅓㅜ주로 부산 근처에서 도보여행을 합니다.",
+    "following": true,
+    "follower": true,
+    "followersNum": 100,
+    "followingsNum": 10,
+    "posts": [
+        {
+            "postId": 1,
+            "title": "서울여행",
+            "summary": "즐거웠음",
+            "imageUrl": "https://cdn.pixabay.com/photo/2016/01/20/13/28/woman-1151562_1280.jpg",
+            "likeNum": 30,
+            "viewNum": 300,
+            "writer": {
+                "email": "www.naver.com",
+                "name": "nahun",
+                "imageUrl": "https://cdn.pixabay.com/photo/2016/01/20/13/28/woman-1151562_1280.jpg"
+            },
+            "liked": true
+        },
+        {
+            "postId": 2,
+            "title": "부산여행",
+            "summary": "재밌었음",
+            "imageUrl": "https://cdn.pixabay.com/photo/2016/01/20/13/28/woman-1151562_1280.jpg",
+            "likeNum": 300,
+            "viewNum": 3000,
+            "writer": {
+                "email": "www.naver.com",
+                "name": "gatsby",
+                "imageUrl": "https://cdn.pixabay.com/photo/2016/01/20/13/28/woman-1151562_1280.jpg"
+            },
+            "liked": false
+        }
+    ]
 }

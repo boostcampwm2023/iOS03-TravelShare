@@ -15,8 +15,8 @@ protocol SearchUseCase {
     func searchMockPost(query: String, json: String) -> AnyPublisher<[PostFindResponse], NetworkError>
     func fetchHitPost() -> AnyPublisher<[PostFindResponse], NetworkError>
     func searchMockPost(json: String) -> AnyPublisher<[PostFindResponse], NetworkError>
-    func searchUser(query: String) -> AnyPublisher<UserInfoResponse, NetworkError>
-    func searchMockUserProfile(query: String, json: String) -> AnyPublisher<UserInfoResponse, NetworkError>
+    func searchUser(query: String) -> AnyPublisher<ProfileGetResponse, NetworkError>
+    func searchMockUserProfile(query: String, json: String) -> AnyPublisher<ProfileGetResponse, NetworkError>
 }
 
 final class Searcher: SearchUseCase {
@@ -52,11 +52,11 @@ final class Searcher: SearchUseCase {
         return provider.mockRequest(PostEndPoint.search, url: json)
     }
     
-    func searchUser(query: String) -> AnyPublisher<UserInfoResponse, MacroNetwork.NetworkError> {
+    func searchUser(query: String) -> AnyPublisher<ProfileGetResponse, MacroNetwork.NetworkError> {
         return provider.request(UserInfoEndPoint.search(query))
     }
     
-    func searchMockUserProfile(query: String, json: String) -> AnyPublisher<UserInfoResponse, MacroNetwork.NetworkError> {
+    func searchMockUserProfile(query: String, json: String) -> AnyPublisher<ProfileGetResponse, MacroNetwork.NetworkError> {
         return provider.mockRequest(UserInfoEndPoint.search(query), url: json)
     }
 }
