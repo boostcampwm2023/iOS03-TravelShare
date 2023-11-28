@@ -38,7 +38,7 @@ export class UserProfileResponse {
   })
   @IsBoolean()
   @IsOptional()
-  following?: boolean;
+  followee?: boolean;
 
   @ApiProperty({ description: '이 사람이 나를 팔로우하나?' })
   @IsBoolean()
@@ -54,7 +54,7 @@ export class UserProfileResponse {
   @ApiProperty({ description: '팔로잉 수' })
   @IsInt()
   @Min(0)
-  followingsNum: number;
+  followeesNum: number;
 
   @ApiProperty({ description: '작성글', type: [PostFindResponse] })
   @IsArray()
