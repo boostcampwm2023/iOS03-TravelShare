@@ -7,7 +7,6 @@ import {
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
-  Relation,
   UpdateDateColumn,
 } from 'typeorm';
 import { Post } from './post.entity';
@@ -40,18 +39,21 @@ export class User {
   @ManyToMany(() => User, ({ followees }) => followees)
   @JoinTable({
     name: 'user_followers_relation',
-    joinColumn: { name: 'followee_id', referencedColumnName: 'email' },
-    inverseJoinColumn: { name: 'follower_id', referencedColumnName: 'email' },
+    joinColumn: { name: 'followee_email', referencedColumnName: 'email' },
+    inverseJoinColumn: {
+      name: 'follower_email',
+      referencedColumnName: 'email',
+    },
   })
   followers: User[];
 
   @ManyToMany(() => User, ({ followers }) => followers)
   followees: User[];
 
-  @Column('int', {name: 'followers_num', default: 0})
+  @Column('int', { name: 'followers_num', default: 0 })
   followersNum: number;
 
-  @Column('int', {name: 'followees_num', default: 0})
+  @Column('int', { name: 'followees_num', default: 0 })
   followeesNum: number;
 
   @ManyToMany(() => Post, ({ likedUsers }) => likedUsers)
