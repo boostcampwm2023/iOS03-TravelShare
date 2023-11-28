@@ -1,7 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
-  IsArray,
   IsBoolean,
   IsEmail,
   IsInt,
@@ -9,9 +7,7 @@ import {
   IsString,
   IsUrl,
   Min,
-  ValidateNested,
 } from 'class-validator';
-import { PostFindResponse } from 'post/post.find.response.dto';
 
 export class UserProfileResponse {
   @ApiProperty({ description: '작성자 email' })
@@ -55,10 +51,4 @@ export class UserProfileResponse {
   @IsInt()
   @Min(0)
   followeesNum: number;
-
-  @ApiProperty({ description: '작성글', type: [PostFindResponse] })
-  @IsArray()
-  @ValidateNested()
-  @Type(() => PostFindResponse)
-  writedPosts: PostFindResponse[];
 }
