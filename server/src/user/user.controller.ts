@@ -3,7 +3,6 @@ import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiOperation,
-  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -49,34 +48,32 @@ export class UserController {
   }
 
   @ApiOperation({ description: '팔로우 혹은 언팔로우' })
-  @ApiOkResponse({type: UserFollowResponse})
+  @ApiOkResponse({ type: UserFollowResponse })
   @Patch('follow')
   async follow(
     @Query() { followee }: UserFollowQuery,
     @AuthenticatedUser() { email }: Authentication,
   ) {
-    return await this.userService.follow(email, followee)
+    return await this.userService.follow(email, followee);
   }
 
   @ApiOperation({ description: '팔로워 리스트' })
-  @ApiQuery({ description: '유저 id', required: false })
   @ApiResponse({ type: [UserProfileSimpleResponse] })
   @Get('followers')
   async followers(
     @Optional() @Query() otherUser: UserProfileQuery,
     @AuthenticatedUser() user: Authentication,
   ) {
-    return await this.userService.getFollowers(otherUser ?? user);
+    return await this.userService.getFollowers({ ...user, ...otherUser });
   }
 
   @ApiOperation({ description: '팔로잉 리스트' })
-  @ApiQuery({ description: '유저 id', required: false })
   @ApiResponse({ type: [UserProfileSimpleResponse] })
-  @Get('followings')
+  @Get('followees')
   async followings(
     @Optional() @Query() otherUser: UserProfileQuery,
     @AuthenticatedUser() user: Authentication,
   ) {
-    return await this.userService.getFollowings(otherUser ?? user);
+    return await this.userService.getFollowees({ ...user, ...otherUser });
   }
 }
