@@ -8,6 +8,7 @@ import { Authentication } from './authentication.dto';
 import { plainToInstance } from 'class-transformer';
 import { hash, genSalt, compare } from 'bcrypt';
 import { AuthBasicSigninBody } from './auth.basic.signin.body.dto';
+import { getRandomNickName } from 'utils/namemaker';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +21,7 @@ export class AuthService {
   async createUser(user: AuthBasicSignupBody) {
     const userDetail = await this.userRepository.save({
       ...user,
+      ...(user.name ? { name: user.name } : { name: getRandomNickName() }),
       password: await hash(user.password, await genSalt()),
     });
     return await this.createAccessToken(
