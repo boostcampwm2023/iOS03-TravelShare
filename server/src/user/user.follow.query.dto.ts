@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail } from 'class-validator';
 
 export class UserFollowQuery {
-  @ApiProperty({ description: '팔로잉 누른 사람', type: 'email' })
+  @ApiProperty({ description: '팔로잉 누를 사람' })
   @IsEmail()
-  follower: string;
+  followee: string;
 }
