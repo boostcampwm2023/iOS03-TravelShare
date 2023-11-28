@@ -160,7 +160,6 @@ ORDER BY
 LIMIT 
   10
 
-
 SELECT 
   `Post`.`post_id` AS `Post_post_id`, 
   `Post`.`title` AS `Post_title`, 
@@ -203,8 +202,6 @@ WHERE
 ORDER BY 
   `Post`.`like_num` DESC, 
   `Post`.`view_num` DESC
-
-
 
    * ```
    * @param pagination
@@ -268,6 +265,14 @@ ORDER BY
         {
           ...(username
             ? { public: true, writer: { name: Like(`%${username}%`) } }
+            : {}),
+        },
+        {
+          ...(email
+            ? {
+                public: true,
+                writer: { email },
+              }
             : {}),
         },
       ],

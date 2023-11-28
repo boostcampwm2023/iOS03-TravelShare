@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Get,
   Patch,
@@ -134,11 +133,6 @@ SELECT ... FROM post ... WHERE title LIKE '%:title%' OR '%:user:%';
     @AuthenticatedUser() user: Authentication,
   ) {
     this.autoCompleteService.insert(post.title);
-    if (!('routeId' in post.route) || !('coordinates' in post.route)) {
-      throw new BadRequestException(
-        'routeId와 coordinates 중 하나가 반드시 설정되어야 합니다.',
-      );
-    }
     return await this.postService.upload(post, user);
   }
 
