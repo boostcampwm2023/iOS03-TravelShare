@@ -89,6 +89,11 @@
 		BA90CBA22B14620F00365AE2 /* FollowResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CBA12B14620F00365AE2 /* FollowResponse.swift */; };
 		BA90CBA42B14789800365AE2 /* UserInfoMock.json in Resources */ = {isa = PBXBuildFile; fileRef = BA90CBA32B14789800365AE2 /* UserInfoMock.json */; };
 		BA90CBA82B147E1900365AE2 /* UserInfoEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CBA72B147E1900365AE2 /* UserInfoEndPoint.swift */; };
+		BA90CBB22B14988400365AE2 /* Macro.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BA90CBB02B14988400365AE2 /* Macro.xcdatamodeld */; };
+		BA90CBC12B149E1700365AE2 /* TravelInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CBC02B149E1700365AE2 /* TravelInfo.swift */; };
+		BAB24ED72B15D3D7000991A1 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB24ED42B15D3D7000991A1 /* CoreDataManager.swift */; };
+		BAB24ED82B15D3D7000991A1 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB24ED52B15D3D7000991A1 /* CoreDataStack.swift */; };
+		BAB24ED92B15D3D7000991A1 /* Travels+CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB24ED62B15D3D7000991A1 /* Travels+CoreData.swift */; };
 		BADB1F0C2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADB1F0B2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift */; };
 		D21B10072B14660600F2F84E /* MyInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B10062B14660600F2F84E /* MyInfoViewController.swift */; };
 		D21B10092B14799C00F2F84E /* NameEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B10082B14799C00F2F84E /* NameEditView.swift */; };
@@ -197,6 +202,11 @@
 		BA90CBA12B14620F00365AE2 /* FollowResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowResponse.swift; sourceTree = "<group>"; };
 		BA90CBA32B14789800365AE2 /* UserInfoMock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = UserInfoMock.json; sourceTree = "<group>"; };
 		BA90CBA72B147E1900365AE2 /* UserInfoEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoEndPoint.swift; sourceTree = "<group>"; };
+		BA90CBB12B14988400365AE2 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		BA90CBC02B149E1700365AE2 /* TravelInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelInfo.swift; sourceTree = "<group>"; };
+		BAB24ED42B15D3D7000991A1 /* CoreDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		BAB24ED52B15D3D7000991A1 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		BAB24ED62B15D3D7000991A1 /* Travels+CoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Travels+CoreData.swift"; sourceTree = "<group>"; };
 		BADB1F0B2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUnresearchableViewController.swift; sourceTree = "<group>"; };
 		D21B10062B14660600F2F84E /* MyInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoViewController.swift; sourceTree = "<group>"; };
 		D21B10082B14799C00F2F84E /* NameEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameEditView.swift; sourceTree = "<group>"; };
@@ -279,6 +289,7 @@
 		AA46C4B62B02304400856628 /* Macro */ = {
 			isa = PBXGroup;
 			children = (
+				BA90CBB32B1498AF00365AE2 /* CoreData */,
 				AAD0B2A02B0B0857003B4D5F /* Data */,
 				AAD0B2942B0B0841003B4D5F /* Infrastructure */,
 				BA6C6DE52B05FFC500563B22 /* Common */,
@@ -635,6 +646,7 @@
 		BA6C6DE12B05FFC400563B22 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				BAB24ED32B15D3D7000991A1 /* CoreData */,
 				BA6C6DE22B05FFC400563B22 /* CAGradientLayer+.swift */,
 				BA6C6DE42B05FFC400563B22 /* UIScreen+.swift */,
 				BA90CB3A2B0EF88700365AE2 /* LocationManager.swift */,
@@ -871,6 +883,14 @@
 			path = UseCases;
 			sourceTree = "<group>";
 		};
+		BA90CBB32B1498AF00365AE2 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				BA90CBB02B14988400365AE2 /* Macro.xcdatamodeld */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		BAA07ADE2B0251CF00884F3C /* Scene */ = {
 			isa = PBXGroup;
 			children = (
@@ -896,6 +916,16 @@
 				AA46C4B92B02304400856628 /* SceneDelegate.swift */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		BAB24ED32B15D3D7000991A1 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				BAB24ED42B15D3D7000991A1 /* CoreDataManager.swift */,
+				BAB24ED52B15D3D7000991A1 /* CoreDataStack.swift */,
+				BAB24ED62B15D3D7000991A1 /* Travels+CoreData.swift */,
+			);
+			path = CoreData;
 			sourceTree = "<group>";
 		};
 		BADB1F0A2B0B72790001CCD9 /* NetworkUnresearchable */ = {
@@ -969,6 +999,7 @@
 			children = (
 				D263CA1B2B04074D00B4A144 /* LocationDetail.swift */,
 				D263CA322B06C7B300B4A144 /* SavedRoute.swift */,
+				BA90CBC02B149E1700365AE2 /* TravelInfo.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -1164,6 +1195,7 @@
 				AAD0B2C22B0DA35B003B4D5F /* LoginResponse.swift in Sources */,
 				D241DC7A2B0DA0C00037DDB6 /* PostEndPoint.swift in Sources */,
 				BA90CB862B0F3BF600365AE2 /* PostContentView.swift in Sources */,
+				BAB24ED72B15D3D7000991A1 /* CoreDataManager.swift in Sources */,
 				D241DC752B0DA00F0037DDB6 /* Writer.swift in Sources */,
 				BA33AA892B0AF9F30065D1E0 /* HomeViewController.swift in Sources */,
 				BA90CB872B0F3BF600365AE2 /* PostCollectionView.swift in Sources */,
@@ -1192,7 +1224,9 @@
 				D263CA282B043C6B00B4A144 /* PinnedPlaceManager.swift in Sources */,
 				BA33AA702B0AF9DD0065D1E0 /* TaBarBackgroundLineView.swift in Sources */,
 				BA6C6DF52B05FFC500563B22 /* UIScreen+.swift in Sources */,
+				BA90CBB22B14988400365AE2 /* Macro.xcdatamodeld in Sources */,
 				AAD0B2BE2B0DA35B003B4D5F /* LoginViewController.swift in Sources */,
+				BA90CBC12B149E1700365AE2 /* TravelInfo.swift in Sources */,
 				AAD0B2DF2B0FC4A1003B4D5F /* UploadImage.swift in Sources */,
 				AAD0B3152B14E394003B4D5F /* ReadEndPoint.swift in Sources */,
 				AAD0B2992B0B0841003B4D5F /* KeyChainManager.swift in Sources */,
@@ -1209,7 +1243,9 @@
 				BA90CBA02B145D6600365AE2 /* FollowUseCase.swift in Sources */,
 				BA6C6DFC2B05FFC500563B22 /* TabComponentView.swift in Sources */,
 				AAD0B3172B14E394003B4D5F /* ReadPost.swift in Sources */,
+				BAB24ED92B15D3D7000991A1 /* Travels+CoreData.swift in Sources */,
 				D263CA262B04147E00B4A144 /* TravelViewController.swift in Sources */,
+				BAB24ED82B15D3D7000991A1 /* CoreDataStack.swift in Sources */,
 				BA90CB932B10997D00365AE2 /* UserInfoHeaderView.swift in Sources */,
 				D21B100B2B1497E000F2F84E /* IntroductionEditView.swift in Sources */,
 				D21B10072B14660600F2F84E /* MyInfoViewController.swift in Sources */,
@@ -1490,6 +1526,19 @@
 			productName = MacroNetwork;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		BA90CBB02B14988400365AE2 /* Macro.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				BA90CBB12B14988400365AE2 /* Model.xcdatamodel */,
+			);
+			currentVersion = BA90CBB12B14988400365AE2 /* Model.xcdatamodel */;
+			path = Macro.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = AA46C4AC2B02304400856628 /* Project object */;
 }

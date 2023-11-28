@@ -41,6 +41,8 @@ final class TravelViewModel: ViewModelProtocol {
     // MARK: - Properties
     
     private var locationManager: LocationManager?
+    private var currentTravel: TravelInfo?
+    
     private let outputSubject = PassthroughSubject<Output, Never>()
     private let routeRecorder: RouteRecordUseCase
     private let locationSearcher: SearchUseCase
@@ -102,17 +104,47 @@ final class TravelViewModel: ViewModelProtocol {
         */
         locationManager = LocationManager()
         
+        generateTravel()
         locationManager?.locationPublisher
             .sink { [weak self] location in
                 self?.savedRoute.routePoints.append(contentsOf: location)
                 self?.outputSubject.send(.updateRoute(self?.savedRoute.routePoints ?? []))
             }
             .store(in: &cancellables)
+        
+        
+    }
+    
+    private func generateTravel() {
+        let currentTime: Date = Date()
+        self.currentTravel = TravelInfo(id: UUID().uuidString, sequence: 0, startAt: currentTime)
+    }
+    
+    private func completeTravel() {
+        let transRoute = savedRoute.routePoints.map{[$0.coordinate.latitude, $0.coordinate.longitude]}
+        let pinnedTransROUTE = savedRoute.pinnedPlaces.map{[Double($0.mapx), Double($0.mapy)]}
+        self.currentTravel?.recordedLocation = transRoute
+        self.currentTravel?.recordedPindedLocation = transRoute
+        
     }
     
     private func stopRecord() {
-        routeRecorder.stopRecording()
+        let currentTime: Date = Date()
+        guard let travel = self.currentTravel,
+              let recordedLocation = travel.recordedLocation,
+              let recordedPindedLocation = travel.recordedPindedLocation,
+              let startAt = travel.startAt,
+              let endAt = travel.endAt
+        else { return }
         
+        CoreDataManager.shared.saveTravel(id: travel.id,
+                                          recordedLocation: recordedLocation,
+                                          recordedPindedLocation: recordedPindedLocation,
+                                          sequence: Int(travel.sequence),
+                                          startAt: startAt,
+                                          endAt: endAt)
+        routeRecorder.stopRecording()
+       
         locationManager = nil
     }
     
