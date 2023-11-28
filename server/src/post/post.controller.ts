@@ -1,10 +1,4 @@
-import {
-  Body,
-  Get,
-  Patch,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Get, Patch, Post, Query } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
