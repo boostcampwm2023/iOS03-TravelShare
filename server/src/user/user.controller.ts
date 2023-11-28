@@ -1,6 +1,7 @@
 import { Get, Optional, Patch, Query } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiOkResponse,
   ApiOperation,
   ApiQuery,
   ApiResponse,
@@ -15,14 +16,15 @@ import { UserService } from './user.service';
 import { AuthenticatedUser } from 'auth/auth.decorators';
 import { Authentication } from 'auth/authentication.dto';
 import { RestController } from 'utils/rest.controller.decorator';
+import { UserFollowResponse } from './user.follow.response.dto';
 
 @ApiTags('User')
+@ApiBearerAuth('access-token')
 @RestController('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ description: '회원정보 수정' })
-  @ApiBearerAuth('access-token')
   @Patch('update')
   async update(
     @AuthenticatedUser() user: Authentication,
@@ -35,7 +37,6 @@ export class UserController {
     description: '나의 정보 혹은 다른 유저의 정보를 불러옵니다.',
     type: UserProfileResponse,
   })
-  @ApiBearerAuth('access-token')
   @Get('profile')
   async profile(
     @Optional()
@@ -47,24 +48,14 @@ export class UserController {
     return this.userService.getUserProfile(email ?? user.email);
   }
 
-  @ApiOperation({ description: '팔로우' })
-  @ApiBearerAuth('access-token')
+  @ApiOperation({ description: '팔로우 혹은 언팔로우' })
+  @ApiOkResponse({type: UserFollowResponse})
   @Patch('follow')
   async follow(
-    @Query() { follower }: UserFollowQuery,
-    @AuthenticatedUser() user: Authentication,
+    @Query() { followee }: UserFollowQuery,
+    @AuthenticatedUser() { email }: Authentication,
   ) {
-    await this.userService.follow(user.email, follower);
-  }
-
-  @ApiOperation({ description: '언팔' })
-  @ApiBearerAuth('access-token')
-  @Patch('unfollow')
-  async unfollow(
-    @Query() { follower }: UserFollowQuery,
-    @AuthenticatedUser() user: Authentication,
-  ) {
-    await this.userService.unfollow(user.email, follower);
+    return await this.userService.follow(email, followee)
   }
 
   @ApiOperation({ description: '팔로워 리스트' })
