@@ -209,23 +209,23 @@ ORDER BY
    * @returns
    */
   async popularList(pagination: PostHitsQuery, { email }: Authentication) {
-    const posts = await this.postRepository.find({
-      where: {
-        createdAt: Raw(
-          (alias) => `DATE_ADD(NOW(), INTERVAL -2 WEEK) <= ${alias}`,
-        ),
-        public: true,
-      },
-      ...(pagination ?? { take: 10 }),
-      order: {
-        likeNum: 'DESC',
-        viewNum: 'DESC',
-      },
-      relations: {
-        writer: true,
-      },
-    });
-
+    const posts = await this.postRepository
+      .createQueryBuilder('post')
+      .setFindOptions({
+        where: {
+          createdAt: Raw(
+            (alias) => `DATE_ADD(NOW(), INTERVAL -2 WEEK) <= ${alias}`,
+          ),
+          public: true,
+        },
+        ...(pagination ?? { take: 10 }),
+        relations: {
+          writer: true,
+        },
+      })
+      .addSelect(`\`view_num\` * 0.2 + \`like_num\` * 0.8`, 'score')
+      .orderBy('score')
+      .getMany();
     const isLikedPosts = await this.postRepository.find({
       where: {
         postId: In(posts.map(({ postId }) => postId)),
