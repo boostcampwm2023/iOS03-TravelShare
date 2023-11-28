@@ -25,8 +25,7 @@ final class UserInfoViewController: UIViewController {
     override func viewDidLoad() {
         self.view.backgroundColor = UIColor.appColor(.blue1)
         bind()
-        inputSubject.send(.searchMockPost)
-        inputSubject.send(.searchMockUserProfile(userId: "userId"))
+        inputSubject.send(.searchMockUserProfile(userId: "jinhaday@gmail.com"))
         setUpLayout()
         super.viewDidLoad()
     }
@@ -36,7 +35,7 @@ final class UserInfoViewController: UIViewController {
     init(viewModel: UserInfoViewModel, userInfo: String) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-
+        
     }
     
     required init?(coder: NSCoder) {
@@ -88,8 +87,6 @@ private extension UserInfoViewController {
         
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
             switch output {
-            case let .updateSearchResult(result):
-                self?.updateSearchResult(result)
             case let .updateFollowResult(result):
                 self?.updateFollowResult(result)
             case let .updateUserProfile(result):
@@ -113,7 +110,8 @@ private extension UserInfoViewController {
         userInfoHeaderView.updateFollow(item: result)
     }
     
-    func updateUserProfile(_ result: UserInfoResponse) {
+    func updateUserProfile(_ result: ProfileGetResponse) {
         userInfoHeaderView.configure(item: result)
+        updateSearchResult(result.posts)
     }
 }

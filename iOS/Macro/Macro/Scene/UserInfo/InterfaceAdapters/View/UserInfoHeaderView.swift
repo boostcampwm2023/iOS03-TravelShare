@@ -90,7 +90,7 @@ extension UserInfoHeaderView {
 // MARK: - Methods
 
 extension UserInfoHeaderView {
-    func configure(item: UserInfoResponse) {
+    func configure(item: ProfileGetResponse) {
         self.userNameLabel.text = item.name
         userInfoProfileView.configure(item: item)
     }
