@@ -5,6 +5,7 @@
 //  Created by Byeon jinha on 11/21/23.
 //
 
+import MacroNetwork
 import UIKit
 
 final class MyPageViewController: TabViewController {
@@ -109,7 +110,9 @@ extension MyPageViewController {
         addsubviews()
         setLayoutConstraints()
     }
-    
+    @objc func backButtonPressed() {
+        self.dismiss(animated: true, completion: nil)
+    }
 }
 
 // MARK: - Methods
@@ -188,7 +191,16 @@ extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
         else if indexPath.section == 0 && indexPath.row == 1 {
             presentImagePickerController()
         }
-       
+        else if indexPath.section == 1 && indexPath.row == 0 {
+            let provider = APIProvider(session: URLSession.shared)
+            let userInfoViewModel = UserInfoViewModel(postSearcher: Searcher(provider: provider), followFeature: FollowFeature(provider: provider))
+            let userInfoVC = UserInfoViewController(viewModel: userInfoViewModel, userInfo: "SomeUserInfo")
+            self.navigationController?.pushViewController(userInfoVC, animated: true)
+        }
+        else if indexPath.section == 1 && indexPath.row == 1 {
+            
+        }
+        
     }
 }
 
