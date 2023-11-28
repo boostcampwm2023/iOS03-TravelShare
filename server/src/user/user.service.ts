@@ -1,7 +1,7 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'entities/user.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { UserProfileUpdateQuery } from './user.profile.update.query.dto';
 import { Authentication } from 'auth/authentication.dto';
 import { UserProfileResponse } from './user.profile.response.dto';
@@ -9,6 +9,8 @@ import { plainToInstance } from 'class-transformer';
 import { UserProfileQuery } from './user.profile.query.dto';
 import { UserProfileSimpleResponse } from './user.profile.simple.response.dto';
 import { Transactional } from 'typeorm-transactional';
+import { UserProfileUpdateResponse } from './user.profile.update.response.dto';
+import { UserFollowResponse } from './user.follow.response.dto';
 
 @Injectable()
 export class UserService {
@@ -22,6 +24,10 @@ export class UserService {
     userInfo: UserProfileUpdateQuery,
   ) {
     await this.userRepository.update({ email }, userInfo);
+    return plainToInstance(UserProfileUpdateResponse, {
+      ...userInfo,
+      email,
+    });
   }
 
   async getUserProfile(email: string): Promise<UserProfileResponse> {
@@ -29,88 +35,83 @@ export class UserService {
       where: {
         email,
       },
-      relations: {
-        writedPosts: true,
-      },
     });
-    const followersNum = await this.userRepository.countBy({
-      followings: { email },
-    });
-    const followingsNum = await this.userRepository.countBy({
-      followers: { email },
-    });
-    return plainToInstance(UserProfileResponse, {
-      ...user,
-      followersNum,
-      followingsNum,
-      writedPosts: user.writedPosts.map((post) => ({
-        ...post,
-        writer: user,
-        liked: false,
-      })),
-    });
+    return plainToInstance(UserProfileResponse, user);
   }
 
   @Transactional()
   async follow(from: string, to: string) {
-    const isFollowed = await this.userRepository.exist({
-      where: {
-        followings: {
-          email: to,
-        },
-      },
-    });
-    if (isFollowed) {
-      throw new BadRequestException('already followed');
+    const isFollowed = await this.isUserFollowed(from, to);
+    console.log(isFollowed);
+    if (!isFollowed) {
+      await this.followInternal(from, to);
+    } else {
+      await this.unfollowInternal(from, to);
     }
-    await this.userRepository
-      .createQueryBuilder()
-      .relation('followings')
-      .of(from)
-      .add(to);
+    const [followee, follower] = await this.userRepository.find({
+      where: { email: In([from, to]) },
+      select: ['followersNum', 'followeesNum', 'email'],
+    });
+    return plainToInstance(UserFollowResponse, {
+      followee,
+      follower,
+    });
   }
 
-  @Transactional()
-  async unfollow(from: string, to: string) {
-    const isFollowed = await this.userRepository.exist({
+  private async followInternal(from: string, to: string) {
+    await this.userRepository
+      .createQueryBuilder()
+      .relation('followees')
+      .of(from)
+      .add(to);
+    await this.userRepository.increment({ email: from }, 'followeesNum', 1);
+    await this.userRepository.increment({ email: to }, 'followersNum', 1);
+  }
+
+  private async unfollowInternal(from: string, to: string) {
+    await this.userRepository
+      .createQueryBuilder()
+      .relation('followees')
+      .of(from)
+      .remove(to);
+    await this.userRepository.decrement({ email: from }, 'followeesNum', 1);
+    await this.userRepository.decrement({ email: to }, 'followersNum', 1);
+  }
+
+  private async isUserFollowed(from: string, to: string) {
+    return await this.userRepository.exist({
       where: {
-        followings: {
+        email: from,
+        followees: {
           email: to,
         },
       },
     });
-    if (!isFollowed) {
-      throw new BadRequestException('already unfollowed');
-    }
-    await this.userRepository
-      .createQueryBuilder()
-      .relation('followings')
-      .of(from)
-      .remove(to);
   }
 
   async getFollowers({
     email,
   }: UserProfileQuery): Promise<UserProfileSimpleResponse[]> {
+    console.log(email);
     return plainToInstance(
       UserProfileSimpleResponse,
       await this.userRepository
         .createQueryBuilder()
         .relation(User, 'followers')
-        .of(email)
+        .of({ email })
         .loadMany(),
     );
   }
 
-  async getFollowings({
+  async getFollowees({
     email,
   }: UserProfileQuery): Promise<UserProfileSimpleResponse[]> {
     return plainToInstance(
       UserProfileSimpleResponse,
       await this.userRepository
         .createQueryBuilder()
-        .relation(User, 'followings')
-        .of(email)
+        .relation(User, 'followees')
+        .of({ email })
         .loadMany(),
     );
   }
