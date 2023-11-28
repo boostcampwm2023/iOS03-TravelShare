@@ -1,6 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsOptional, IsString, IsUrl } from "class-validator";
-
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class UserProfileUpdateResponse {
   @ApiProperty({ description: '작성자 email' })
