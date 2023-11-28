@@ -9,7 +9,9 @@ import Foundation
 
 struct TravelInfo {
     let id: String
-    let recordedLocation: [[Double]]
-    let recordedPindedLocation: [[Double]]
+    var recordedLocation: [[Double]]?
+    var recordedPindedLocation: [[Double]]?
     let sequence: Int16
+    var startAt: Date?
+    var endAt: Date?
 }
