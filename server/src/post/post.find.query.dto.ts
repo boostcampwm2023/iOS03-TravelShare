@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsOptional, IsString } from 'class-validator';
 import { PostPagenation } from './post.pagenation.dto';
 
 export class PostFindQuery extends PostPagenation {
@@ -12,4 +12,9 @@ export class PostFindQuery extends PostPagenation {
   @IsString()
   @IsOptional()
   username?: string;
+
+  @ApiProperty({ description: '유저 이메일', required: false })
+  @IsEmail()
+  @IsOptional()
+  email: string;
 }
