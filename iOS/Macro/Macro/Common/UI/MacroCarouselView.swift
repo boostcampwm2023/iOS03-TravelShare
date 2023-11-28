@@ -26,11 +26,13 @@ class MacroCarouselView: UIView {
     private let const: Const
     private let viewType: ViewType
     private var subscriptions: Set<AnyCancellable> = []
-    private let outputSubject: PassthroughSubject<Bool, Never>
+    private var addImageOutputSubject: PassthroughSubject<Bool, Never> = .init()
+    private var didScrollOutputSubject: PassthroughSubject<Int, Never> = .init()
     
     var pageIndex = 0 {
         didSet {
             self.pageController.currentPage = pageIndex
+            self.didScrollOutputSubject.send(pageIndex)
         }
     }
     
@@ -63,7 +65,7 @@ class MacroCarouselView: UIView {
     
     private lazy var pageController: UIPageControl = {
         let pageController = UIPageControl()
-        pageController.numberOfPages = self.items.count + (viewType == .write ? 1 : 0 )
+        pageController.numberOfPages = self.items.count + ((viewType == .write || items.isEmpty ) ? 1 : 0 )
         pageController.currentPage = pageIndex
         pageController.pageIndicatorTintColor = UIColor.appColor(.purple1)
         pageController.currentPageIndicatorTintColor = UIColor.appColor(.purple2)
@@ -72,10 +74,19 @@ class MacroCarouselView: UIView {
 
     // MARK: - Init
     
-    init(const: Const, viewType: ViewType, outputSubject: PassthroughSubject<Bool, Never>) {
+    init(const: Const, addImageOutputSubject: PassthroughSubject<Bool, Never>, didScrollOutputSubject : PassthroughSubject<Int, Never>) {
         self.const = const
-        self.viewType = viewType
-        self.outputSubject = outputSubject
+        self.viewType = .write
+        self.addImageOutputSubject = addImageOutputSubject
+        self.didScrollOutputSubject = didScrollOutputSubject
+        super.init(frame: .zero)
+        setLayout()
+    }
+    
+    init(const: Const, didScrollOutputSubject : PassthroughSubject<Int, Never>) {
+        self.const = const
+        self.viewType = .read
+        self.didScrollOutputSubject = didScrollOutputSubject
         super.init(frame: .zero)
         setLayout()
     }
@@ -124,17 +135,17 @@ private extension MacroCarouselView {
 
 extension MacroCarouselView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        items.count + (viewType == .write ? 1 : 0 )
+        items.count + ((viewType == .write || items.isEmpty ) ? 1 : 0 )
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if viewType == .write, indexPath.row == items.count {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MacroCarouselViewAddImageCell.id, for: indexPath) as? MacroCarouselViewAddImageCell else {
                 let cell = MacroCarouselViewAddImageCell()
-                cell.outputSubject = outputSubject
+                cell.addImageButtonOutputSubject = addImageOutputSubject
                 return cell
             }
-            cell.outputSubject = outputSubject
+            cell.addImageButtonOutputSubject = addImageOutputSubject
             
             return cell
         } else {
@@ -142,7 +153,11 @@ extension MacroCarouselView: UICollectionViewDataSource {
                 return MacroCarouselViewCell()
             }
             
-            cell.prepare(image: items[indexPath.item])
+            if items.count > indexPath.item, let image = items[indexPath.item] {
+                cell.prepare(image: image)
+            } else {
+                cell.prepare(image: UIImage.appImage(.photo))
+            }
             return cell
         }
     }
@@ -178,7 +193,7 @@ extension MacroCarouselView: UICollectionViewDelegateFlowLayout {
 extension MacroCarouselView {
     func updateData(_ newData: [UIImage?]) {
         items = newData
-        self.pageController.numberOfPages = items.count + (viewType == .write ? 1 : 0 )
+        self.pageController.numberOfPages = items.count + ((viewType == .write || items.isEmpty ) ? 1 : 0 )
         
         DispatchQueue.main.async {
             self.collectionView.reloadData()

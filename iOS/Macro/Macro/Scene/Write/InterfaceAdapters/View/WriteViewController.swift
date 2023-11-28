@@ -16,7 +16,8 @@ final class WriteViewController: TabViewController {
     
     private let viewModel: WriteViewModel
     private let const = MacroCarouselView.Const(itemSize: CGSize(width: 300, height: 340), itemSpacing: 24.0)
-    private let imageAddSbuject: PassthroughSubject<Bool, Never> = .init()
+    private let imageAddSubject: PassthroughSubject<Bool, Never> = .init()
+    private let didScrollSubject: PassthroughSubject<Int, Never> = .init()
     private let inputSubject: PassthroughSubject<WriteViewModel.Input, Never> = .init()
     private var photoAuthorizationStatus =  CurrentValueSubject<PHAuthorizationStatus, Never>(.notDetermined)
     private var subscriptions: Set<AnyCancellable> = []
@@ -59,7 +60,7 @@ final class WriteViewController: TabViewController {
     }()
     
     private lazy var carouselView: MacroCarouselView = {
-        let view = MacroCarouselView(const: const, viewType: .write, outputSubject: imageAddSbuject)
+        let view = MacroCarouselView(const: const, addImageOutputSubject: imageAddSubject, didScrollOutputSubject: didScrollSubject)
         return view
     }()
     
@@ -212,7 +213,7 @@ private extension WriteViewController {
             }
             .store(in: &subscriptions)
         
-        imageAddSbuject
+        imageAddSubject
             .sink { buttonTouched in
                 self.imageAddButtonTouched()
             }

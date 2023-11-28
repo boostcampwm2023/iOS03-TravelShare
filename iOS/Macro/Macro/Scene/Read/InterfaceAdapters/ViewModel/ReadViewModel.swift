@@ -12,21 +12,28 @@ class ReadViewModel: ViewModelProtocol {
     
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
+    private let useCase: ReadPostUseCaseProtocol
     private let outputSubject = PassthroughSubject<Output, Never>()
+    private let postId: Int
     
     // MARK: - init
-    init() {
+    init(useCase: ReadPostUseCaseProtocol, postId: Int) {
+        self.useCase = useCase
+        self.postId = postId
     }
     
     // MARK: - Input
     
     enum Input {
+        case readPosts
+        case searchUser(String)
     }
     
     // MARK: - Output
 
     enum Output {
-        case appleLoginCompleted
+        case updatePost(post: ReadPost)
+        case navigateToProfileView(String)
     }
     
     // MARK: - Methods
@@ -34,9 +41,35 @@ class ReadViewModel: ViewModelProtocol {
         input
             .sink { [weak self] input in
                 switch input {
+                case .readPosts:
+                    self?.updateReadViewItems()
+                case let .searchUser(userID):
+                    self?.searchUser(id: userID)
                 }
             }
             .store(in: &cancellables)
         return outputSubject.eraseToAnyPublisher()
+    }
+}
+
+// MARK: - Methods
+private extension ReadViewModel {
+    func updateReadViewItems() {
+        useCase.execute(postId: postId)
+            .sink { completion in
+                if case let .failure(error) = completion {
+                    debugPrint("Token Get Fail : ", error)
+                }
+            } receiveValue: { [weak self] readPost in
+                self?.outputSubject.send(.updatePost(post: readPost))
+            }
+            .store(in: &cancellables)
+    }
+}
+
+// MARK: - Metohds
+private extension ReadViewModel {
+    private func searchUser(id: String) {
+        self.outputSubject.send(.navigateToProfileView(id))
     }
 }

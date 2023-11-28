@@ -32,17 +32,21 @@
 		AAD0B2E12B0FD25B003B4D5F /* ImageURLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B2E02B0FD25B003B4D5F /* ImageURLResponse.swift */; };
 		AAD0B2E32B103547003B4D5F /* WriteEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B2E22B103547003B4D5F /* WriteEndPoint.swift */; };
 		AAD0B2E52B103555003B4D5F /* WriteRequestDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B2E42B103555003B4D5F /* WriteRequestDTO.swift */; };
+		AAD0B3002B147CA3003B4D5F /* RefreshTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B2FF2B147CA3003B4D5F /* RefreshTokenResponse.swift */; };
+		AAD0B3022B147CCC003B4D5F /* RefreshTokenEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B3012B147CCC003B4D5F /* RefreshTokenEndPoint.swift */; };
+		AAD0B3042B147CF5003B4D5F /* RefreshTokenUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B3032B147CF5003B4D5F /* RefreshTokenUseCase.swift */; };
+		AAD0B3122B14E394003B4D5F /* ReadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B3082B14E394003B4D5F /* ReadViewModel.swift */; };
+		AAD0B3132B14E394003B4D5F /* ReadProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B30A2B14E394003B4D5F /* ReadProfileView.swift */; };
+		AAD0B3142B14E394003B4D5F /* ReadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B30B2B14E394003B4D5F /* ReadViewController.swift */; };
+		AAD0B3152B14E394003B4D5F /* ReadEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B30D2B14E394003B4D5F /* ReadEndPoint.swift */; };
+		AAD0B3162B14E394003B4D5F /* ReadPostUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B30F2B14E394003B4D5F /* ReadPostUseCase.swift */; };
+		AAD0B3172B14E394003B4D5F /* ReadPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B3112B14E394003B4D5F /* ReadPost.swift */; };
 		BA32E0E92B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E0E82B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift */; };
-		BA32E16E2B0DC29C00EA0EE2 /* ReadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E16B2B0DC29C00EA0EE2 /* ReadViewModel.swift */; };
-		BA32E16F2B0DC29C00EA0EE2 /* ReadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E16D2B0DC29C00EA0EE2 /* ReadViewController.swift */; };
 		BA32E1762B0DC2F900EA0EE2 /* UserInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E1732B0DC2F900EA0EE2 /* UserInfoViewModel.swift */; };
 		BA32E1772B0DC2F900EA0EE2 /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E1752B0DC2F900EA0EE2 /* UserInfoViewController.swift */; };
 		BA32E17E2B0DC3CB00EA0EE2 /* MyPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E17B2B0DC3CB00EA0EE2 /* MyPageViewModel.swift */; };
 		BA32E17F2B0DC3CB00EA0EE2 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E17D2B0DC3CB00EA0EE2 /* MyPageViewController.swift */; };
 		BA32E1952B0DEBC500EA0EE2 /* LocationInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E1942B0DEBC500EA0EE2 /* LocationInfoViewController.swift */; };
-		AAD0B3002B147CA3003B4D5F /* RefreshTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B2FF2B147CA3003B4D5F /* RefreshTokenResponse.swift */; };
-		AAD0B3022B147CCC003B4D5F /* RefreshTokenEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B3012B147CCC003B4D5F /* RefreshTokenEndPoint.swift */; };
-		AAD0B3042B147CF5003B4D5F /* RefreshTokenUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B3032B147CF5003B4D5F /* RefreshTokenUseCase.swift */; };
 		BA33AA702B0AF9DD0065D1E0 /* TaBarBackgroundLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA6F2B0AF9DD0065D1E0 /* TaBarBackgroundLineView.swift */; };
 		BA33AA852B0AF9F30065D1E0 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA742B0AF9F20065D1E0 /* HomeViewModel.swift */; };
 		BA33AA892B0AF9F30065D1E0 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA792B0AF9F20065D1E0 /* HomeViewController.swift */; };
@@ -134,17 +138,21 @@
 		AAD0B2E02B0FD25B003B4D5F /* ImageURLResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageURLResponse.swift; sourceTree = "<group>"; };
 		AAD0B2E22B103547003B4D5F /* WriteEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteEndPoint.swift; sourceTree = "<group>"; };
 		AAD0B2E42B103555003B4D5F /* WriteRequestDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteRequestDTO.swift; sourceTree = "<group>"; };
+		AAD0B2FF2B147CA3003B4D5F /* RefreshTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenResponse.swift; sourceTree = "<group>"; };
+		AAD0B3012B147CCC003B4D5F /* RefreshTokenEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenEndPoint.swift; sourceTree = "<group>"; };
+		AAD0B3032B147CF5003B4D5F /* RefreshTokenUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenUseCase.swift; sourceTree = "<group>"; };
+		AAD0B3082B14E394003B4D5F /* ReadViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadViewModel.swift; sourceTree = "<group>"; };
+		AAD0B30A2B14E394003B4D5F /* ReadProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadProfileView.swift; sourceTree = "<group>"; };
+		AAD0B30B2B14E394003B4D5F /* ReadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadViewController.swift; sourceTree = "<group>"; };
+		AAD0B30D2B14E394003B4D5F /* ReadEndPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadEndPoint.swift; sourceTree = "<group>"; };
+		AAD0B30F2B14E394003B4D5F /* ReadPostUseCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadPostUseCase.swift; sourceTree = "<group>"; };
+		AAD0B3112B14E394003B4D5F /* ReadPost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadPost.swift; sourceTree = "<group>"; };
 		BA32E0E82B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TabBarViewController+Animaion.swift"; sourceTree = "<group>"; };
-		BA32E16B2B0DC29C00EA0EE2 /* ReadViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadViewModel.swift; sourceTree = "<group>"; };
-		BA32E16D2B0DC29C00EA0EE2 /* ReadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadViewController.swift; sourceTree = "<group>"; };
 		BA32E1732B0DC2F900EA0EE2 /* UserInfoViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoViewModel.swift; sourceTree = "<group>"; };
 		BA32E1752B0DC2F900EA0EE2 /* UserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
 		BA32E17B2B0DC3CB00EA0EE2 /* MyPageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewModel.swift; sourceTree = "<group>"; };
 		BA32E17D2B0DC3CB00EA0EE2 /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
 		BA32E1942B0DEBC500EA0EE2 /* LocationInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationInfoViewController.swift; sourceTree = "<group>"; };
-		AAD0B2FF2B147CA3003B4D5F /* RefreshTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenResponse.swift; sourceTree = "<group>"; };
-		AAD0B3012B147CCC003B4D5F /* RefreshTokenEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenEndPoint.swift; sourceTree = "<group>"; };
-		AAD0B3032B147CF5003B4D5F /* RefreshTokenUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenUseCase.swift; sourceTree = "<group>"; };
 		BA33AA6F2B0AF9DD0065D1E0 /* TaBarBackgroundLineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaBarBackgroundLineView.swift; sourceTree = "<group>"; };
 		BA33AA742B0AF9F20065D1E0 /* HomeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		BA33AA752B0AF9F20065D1E0 /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
@@ -396,37 +404,65 @@
 			path = Resource;
 			sourceTree = "<group>";
 		};
-		BA32E1682B0DC29C00EA0EE2 /* Read */ = {
+		AAD0B3052B14E394003B4D5F /* Read */ = {
 			isa = PBXGroup;
 			children = (
-				BA32E1692B0DC29C00EA0EE2 /* InterfaceAdapters */,
+				AAD0B3062B14E394003B4D5F /* InterfaceAdapters */,
+				AAD0B30C2B14E394003B4D5F /* Network */,
+				AAD0B30E2B14E394003B4D5F /* UseCases */,
+				AAD0B3102B14E394003B4D5F /* Entities */,
 			);
 			path = Read;
 			sourceTree = "<group>";
 		};
-		BA32E1692B0DC29C00EA0EE2 /* InterfaceAdapters */ = {
+		AAD0B3062B14E394003B4D5F /* InterfaceAdapters */ = {
 			isa = PBXGroup;
 			children = (
-				BA32E16A2B0DC29C00EA0EE2 /* ViewModel */,
-				BA32E16C2B0DC29C00EA0EE2 /* View */,
+				AAD0B3072B14E394003B4D5F /* ViewModel */,
+				AAD0B3092B14E394003B4D5F /* View */,
 			);
 			path = InterfaceAdapters;
 			sourceTree = "<group>";
 		};
-		BA32E16A2B0DC29C00EA0EE2 /* ViewModel */ = {
+		AAD0B3072B14E394003B4D5F /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				BA32E16B2B0DC29C00EA0EE2 /* ReadViewModel.swift */,
+				AAD0B3082B14E394003B4D5F /* ReadViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
-		BA32E16C2B0DC29C00EA0EE2 /* View */ = {
+		AAD0B3092B14E394003B4D5F /* View */ = {
 			isa = PBXGroup;
 			children = (
-				BA32E16D2B0DC29C00EA0EE2 /* ReadViewController.swift */,
+				AAD0B30A2B14E394003B4D5F /* ReadProfileView.swift */,
+				AAD0B30B2B14E394003B4D5F /* ReadViewController.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		AAD0B30C2B14E394003B4D5F /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				AAD0B30D2B14E394003B4D5F /* ReadEndPoint.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		AAD0B30E2B14E394003B4D5F /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				AAD0B30F2B14E394003B4D5F /* ReadPostUseCase.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		AAD0B3102B14E394003B4D5F /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				AAD0B3112B14E394003B4D5F /* ReadPost.swift */,
+			);
+			path = Entities;
 			sourceTree = "<group>";
 		};
 		BA32E1702B0DC2F900EA0EE2 /* UserInfo */ = {
@@ -833,7 +869,7 @@
 				BA32E1912B0DEBC500EA0EE2 /* LocationInfo */,
 				BA32E1782B0DC3CB00EA0EE2 /* MyPage */,
 				BA32E1702B0DC2F900EA0EE2 /* UserInfo */,
-				BA32E1682B0DC29C00EA0EE2 /* Read */,
+				AAD0B3052B14E394003B4D5F /* Read */,
 				BADB1F0A2B0B72790001CCD9 /* NetworkUnresearchable */,
 				BA8DC40B2B0B5FB500929E01 /* Write */,
 				AAD0B2AF2B0DA35B003B4D5F /* Login */,
@@ -1113,6 +1149,7 @@
 				AAD0B3002B147CA3003B4D5F /* RefreshTokenResponse.swift in Sources */,
 				AAD0B3022B147CCC003B4D5F /* RefreshTokenEndPoint.swift in Sources */,
 				D263CA222B040EBE00B4A144 /* TravelViewModel.swift in Sources */,
+				AAD0B3162B14E394003B4D5F /* ReadPostUseCase.swift in Sources */,
 				BA8DC40A2B0B5F7800929E01 /* TabViewController.swift in Sources */,
 				D241DC762B0DA00F0037DDB6 /* PostFindResponse.swift in Sources */,
 				AAD0B2C22B0DA35B003B4D5F /* LoginResponse.swift in Sources */,
@@ -1127,6 +1164,7 @@
 				BA6C6DFE2B05FFC500563B22 /* TabBarOpacityView.swift in Sources */,
 				D263CA332B06C7B300B4A144 /* SavedRoute.swift in Sources */,
 				BA8DC3FA2B0B5DD100929E01 /* BaseViewControllerProtocol.swift in Sources */,
+				AAD0B3142B14E394003B4D5F /* ReadViewController.swift in Sources */,
 				AAD0B2DB2B0FB5A5003B4D5F /* ImageUploadEndPoint.swift in Sources */,
 				BA33AA8C2B0AF9F30065D1E0 /* HomeHeaderView.swift in Sources */,
 				BA32E1762B0DC2F900EA0EE2 /* UserInfoViewModel.swift in Sources */,
@@ -1138,7 +1176,6 @@
 				BA90CB9E2B145CDE00365AE2 /* FollowEndPoint.swift in Sources */,
 				BA6C6DF42B05FFC500563B22 /* CircularViewProtocol.swift in Sources */,
 				BA90CB982B1450A200365AE2 /* UserInfoProfileView.swift in Sources */,
-				BA32E16F2B0DC29C00EA0EE2 /* ReadViewController.swift in Sources */,
 				BA90CBA22B14620F00365AE2 /* FollowResponse.swift in Sources */,
 				AAD0B2AE2B0CCBD7003B4D5F /* TokenManager.swift in Sources */,
 				AAD0B2BF2B0DA35B003B4D5F /* HTTPError.swift in Sources */,
@@ -1147,6 +1184,7 @@
 				BA6C6DF52B05FFC500563B22 /* UIScreen+.swift in Sources */,
 				AAD0B2BE2B0DA35B003B4D5F /* LoginViewController.swift in Sources */,
 				AAD0B2DF2B0FC4A1003B4D5F /* UploadImage.swift in Sources */,
+				AAD0B3152B14E394003B4D5F /* ReadEndPoint.swift in Sources */,
 				AAD0B2992B0B0841003B4D5F /* KeyChainManager.swift in Sources */,
 				BA6C6DF62B05FFC500563B22 /* TabBarViewModel.swift in Sources */,
 				BADB1F0C2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift in Sources */,
@@ -1160,6 +1198,7 @@
 				BA32E17F2B0DC3CB00EA0EE2 /* MyPageViewController.swift in Sources */,
 				BA90CBA02B145D6600365AE2 /* FollowUseCase.swift in Sources */,
 				BA6C6DFC2B05FFC500563B22 /* TabComponentView.swift in Sources */,
+				AAD0B3172B14E394003B4D5F /* ReadPost.swift in Sources */,
 				D263CA262B04147E00B4A144 /* TravelViewController.swift in Sources */,
 				BA90CB932B10997D00365AE2 /* UserInfoHeaderView.swift in Sources */,
 				BA32E1772B0DC2F900EA0EE2 /* UserInfoViewController.swift in Sources */,
@@ -1167,11 +1206,12 @@
 				D263CA242B04134600B4A144 /* ViewModelProtocol.swift in Sources */,
 				D241DC782B0DA07E0037DDB6 /* PostFindEndPoint.swift in Sources */,
 				D263CA2D2B052ECC00B4A144 /* TravelEndPoint.swift in Sources */,
+				AAD0B3122B14E394003B4D5F /* ReadViewModel.swift in Sources */,
 				AAD0B2A42B0B0857003B4D5F /* DefaultLoginRepository.swift in Sources */,
 				AA46C4BA2B02304400856628 /* SceneDelegate.swift in Sources */,
-				BA32E16E2B0DC29C00EA0EE2 /* ReadViewModel.swift in Sources */,
 				AAD0B2C02B0DA35B003B4D5F /* LoginEndPoint.swift in Sources */,
 				D241DC712B0DA0070037DDB6 /* CommonUIComponents.swift in Sources */,
+				AAD0B3132B14E394003B4D5F /* ReadProfileView.swift in Sources */,
 				AAD0B3042B147CF5003B4D5F /* RefreshTokenUseCase.swift in Sources */,
 				BA8DC4072B0B5F0600929E01 /* SearchViewController.swift in Sources */,
 				BA90CB852B0F3BF600365AE2 /* PostProfileView.swift in Sources */,

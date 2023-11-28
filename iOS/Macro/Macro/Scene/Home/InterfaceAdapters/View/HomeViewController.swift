@@ -103,8 +103,12 @@ private extension HomeViewController {
     }
     
     func navigateToReadView(_ postId: String) {
-        let readViewModel = ReadViewModel()
-        let readViewController = ReadViewController(viewModel: readViewModel, postInfo: postId)
+        let postIdInt = Int(postId) ?? 1
+        
+        let provider = APIProvider(session: URLSession.shared)
+        let readuseCase = ReadPostUseCase(provider: provider)
+        let readViewModel = ReadViewModel(useCase: readuseCase, postId: postIdInt)
+        let readViewController = ReadViewController(viewModel: readViewModel)
 
         navigationController?.pushViewController(readViewController, animated: true)
     }
