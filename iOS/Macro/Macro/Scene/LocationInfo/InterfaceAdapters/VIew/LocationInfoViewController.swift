@@ -153,7 +153,7 @@ extension LocationInfoViewController {
         placeNameLabel.text = model.placeName.isEmpty == true ? "-" : model.placeName
         addressLabel.text = model.addressName.isEmpty == true ? "-" : model.addressName
         categoryNameLabel.text = model.categoryName.isEmpty == true ? "-" : model.categoryName
-        categoryGroupLabel.text = model.categoryGroupName.isEmpty == true ? "-" : model.categoryGroupName
+        categoryGroupLabel.text = model.categoryGroupName.isEmpty == true ? "-" : "(\(model.categoryGroupName))"
         phoneLabel.text = model.phone?.isEmpty == true ? "-" : (model.phone ?? "-")
     }
 }
