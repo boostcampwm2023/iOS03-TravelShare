@@ -3,9 +3,10 @@ import { IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
 import { AuthBasicSigninBody } from './auth.basic.signin.body.dto';
 
 export class AuthBasicSignupBody extends AuthBasicSigninBody {
-  @ApiProperty({ description: '이름' })
+  @ApiProperty({ description: '이름', required: false })
   @IsString()
   @MaxLength(30)
+  @IsOptional()
   name: string;
 
   @ApiProperty({
