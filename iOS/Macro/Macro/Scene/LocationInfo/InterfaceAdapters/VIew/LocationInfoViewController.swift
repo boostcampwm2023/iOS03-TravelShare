@@ -62,6 +62,16 @@ final class LocationInfoViewController: UIViewController {
         return label
     }()
     
+    private let segmentControl: UISegmentedControl = {
+        let control = UISegmentedControl(items: ["포함된 여행", "함께 많이 간 장소"])
+        control.selectedSegmentIndex = 0
+        control.tintColor = UIColor.appColor(.purple2)
+        let font = UIFont.appFont(.baeEunBody)
+        let normalTextColor = UIColor.appColor(.purple5)
+        control.setTitleTextAttributes([.font: font, .foregroundColor: normalTextColor], for: .normal)
+        return control
+    }()
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -86,6 +96,7 @@ extension LocationInfoViewController {
         categoryGroupLabel.translatesAutoresizingMaskIntoConstraints = false
         phoneLabel.translatesAutoresizingMaskIntoConstraints = false
         pinLabel.translatesAutoresizingMaskIntoConstraints = false
+        segmentControl.translatesAutoresizingMaskIntoConstraints = false
     }
     private func addsubviews() {
         view.addSubview(placeNameLabel)
@@ -94,6 +105,7 @@ extension LocationInfoViewController {
         view.addSubview(categoryGroupLabel)
         view.addSubview(phoneLabel)
         view.addSubview(pinLabel)
+        view.addSubview(segmentControl)
     }
     
     private func setLayoutConstraints() {
@@ -109,8 +121,9 @@ extension LocationInfoViewController {
             phoneLabel.topAnchor.constraint(equalTo: categoryGroupLabel.bottomAnchor, constant: Padding.phoneTop),
             phoneLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.labelSide),
             pinLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Padding.pinSide),
-            pinLabel.centerYAnchor.constraint(equalTo: placeNameLabel.centerYAnchor)
-                   
+            pinLabel.centerYAnchor.constraint(equalTo: placeNameLabel.centerYAnchor),
+            segmentControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            segmentControl.topAnchor.constraint(equalTo: phoneLabel.bottomAnchor, constant: Padding.segmentTop)
         ])
         
     }
@@ -142,7 +155,6 @@ extension LocationInfoViewController {
         categoryNameLabel.text = model.categoryName.isEmpty == true ? "-" : model.categoryName
         categoryGroupLabel.text = model.categoryGroupName.isEmpty == true ? "-" : model.categoryGroupName
         phoneLabel.text = model.phone?.isEmpty == true ? "-" : (model.phone ?? "-")
-        print(categoryNameLabel)
     }
 }
 // MARK: - LayoutMetrics
@@ -159,5 +171,6 @@ extension LocationInfoViewController {
         static let phoneTop: CGFloat = 10
         static let labelSide: CGFloat = 50
         static let pinSide: CGFloat = 28
+        static let segmentTop: CGFloat = 18
     }
 }
