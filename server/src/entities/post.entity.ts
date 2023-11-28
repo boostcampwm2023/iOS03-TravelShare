@@ -11,7 +11,6 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-  Relation,
   UpdateDateColumn,
   VirtualColumn,
 } from 'typeorm';
