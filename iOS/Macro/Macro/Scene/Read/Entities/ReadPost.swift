@@ -46,9 +46,3 @@ struct Coordinate: Codable {
 struct Route: Codable {
     let coordinates: [Coordinate]?
 }
-
-struct Writer: Codable {
-    let email: String
-    let name: String
-    let imageUrl: String?
-}

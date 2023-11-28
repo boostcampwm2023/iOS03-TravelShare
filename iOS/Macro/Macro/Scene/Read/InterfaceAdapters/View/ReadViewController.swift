@@ -7,6 +7,7 @@
 
 import Combine
 import NMapsMap
+import MacroNetwork
 import UIKit
 
 final class ReadViewController: UIViewController {
@@ -244,7 +245,10 @@ private extension ReadViewController {
 
 private extension ReadViewController {
     func navigateToProfileView(_ userId: String) {
-        let userInfoViewModel = UserInfoViewModel()
+        let provider = APIProvider(session: URLSession.shared)
+        let searchUseCase = Searcher(provider: provider)
+        let followFeature = FollowFeature(provider: provider)
+        let userInfoViewModel = UserInfoViewModel(postSearcher: searchUseCase, followFeature: followFeature)
         let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: userId)
 
         navigationController?.pushViewController(userInfoViewController, animated: true)
