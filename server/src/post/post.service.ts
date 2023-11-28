@@ -247,8 +247,8 @@ ORDER BY
 
   @Transactional()
   async search(
-    { title, username, ...pagination }: PostFindQuery,
-    { email }: Authentication,
+    { title, username, email, ...pagination }: PostFindQuery,
+    { email: loginUser }: Authentication,
   ) {
     const posts = await this.postRepository.find({
       where: [
@@ -285,7 +285,7 @@ ORDER BY
     const isLikedPosts = await this.postRepository.find({
       where: {
         postId: In(posts.map(({ postId }) => postId)),
-        likedUsers: { email },
+        likedUsers: { email: loginUser },
       },
       select: {
         postId: true,
