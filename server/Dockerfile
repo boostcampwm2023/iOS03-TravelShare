@@ -3,8 +3,8 @@ FROM node:20.5.1 as BUILDER
 RUN mkdir -p /var/app
 WORKDIR /var/app
 COPY . /var/app
-RUN npm install \
-    npm run build:deploy
+RUN npm install 
+RUN npm run build:deploy
 
 FROM node:20.5.1 as DISTRIBUTION
 
