@@ -126,8 +126,6 @@ final class MyInfoViewController: UIViewController {
         
     }
     
-    
-    
 }
 
 // MARK: - Methods

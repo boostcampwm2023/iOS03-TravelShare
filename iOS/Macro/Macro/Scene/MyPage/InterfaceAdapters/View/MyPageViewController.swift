@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class MyPageViewController: TabViewController, UITableViewDelegate, UITableViewDataSource {
+final class MyPageViewController: TabViewController {
     
     // MARK: - Properties
     
@@ -114,8 +114,9 @@ extension MyPageViewController {
 
 // MARK: - Methods
 
-// MARK: - tableView
-extension MyPageViewController {
+// MARK: - TableView
+
+extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: return viewModel.information.count
@@ -187,6 +188,7 @@ extension MyPageViewController {
         else if indexPath.section == 0 && indexPath.row == 1 {
             presentImagePickerController()
         }
+       
     }
 }
 
@@ -200,7 +202,7 @@ extension MyPageViewController: UIImagePickerControllerDelegate, UINavigationCon
         present(imagePicker, animated: true)
     }
     
-    // 사용자가 이미지를 선택했을 때 호출됩니다.
+    /// 사용자가 이미지를 선택했을 때
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let selectedImage = info[.originalImage] as? UIImage {
             profileImageView.image = selectedImage
@@ -208,7 +210,7 @@ extension MyPageViewController: UIImagePickerControllerDelegate, UINavigationCon
         dismiss(animated: true, completion: nil)
     }
     
-    // 사용자가 이미지 선택을 취소했을 때 호출됩니다.
+    /// 사용자가 이미지 선택을 취소했을 때
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
