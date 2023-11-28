@@ -10,7 +10,7 @@ import Foundation
 
 final class HomeViewModel: ViewModelProtocol, PostCollectionViewProtocol {
     
-    func navigateToReadView(postId: String) {
+    func navigateToReadView(postId: Int) {
         self.outputSubject.send(.navigateToReadView(postId))
     }
     
@@ -43,7 +43,7 @@ final class HomeViewModel: ViewModelProtocol, PostCollectionViewProtocol {
     enum Output {
         case exchangeCell
         case navigateToProfileView(String)
-        case navigateToReadView(String)
+        case navigateToReadView(Int)
         case updateSearchResult([PostFindResponse])
     }
     
@@ -95,7 +95,7 @@ final class HomeViewModel: ViewModelProtocol, PostCollectionViewProtocol {
         
     }
     
-    private func searchPost(postId: String) {
+    private func searchPost(postId: Int) {
         self.outputSubject.send(.navigateToReadView(postId))
     }
 }

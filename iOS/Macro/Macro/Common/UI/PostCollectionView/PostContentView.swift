@@ -13,6 +13,7 @@ final class PostContentView<T: PostCollectionViewProtocol>: UIView {
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
     var viewModel: T?
+    var postId: Int?
     
     // MARK: - UI Components
     
@@ -57,7 +58,7 @@ final class PostContentView<T: PostCollectionViewProtocol>: UIView {
     // MARK: - Handle Gesture
     
     @objc private func contentTap(_ sender: UITapGestureRecognizer) {
-        guard let postId: String = self.title.text else { return }
+        guard let postId: Int = self.postId else { return }
         viewModel?.navigateToReadView(postId: postId)
     }
     
@@ -137,7 +138,7 @@ extension PostContentView {
                 mainImageView.image = image
                 title.text = item.title
                 summary.text = item.summary
-                
+                postId = item.postId
             }
         }
     }

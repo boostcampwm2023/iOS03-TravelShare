@@ -42,7 +42,7 @@ final class UserInfoViewModel: ViewModelProtocol {
         case appleLoginCompleted
         case updateSearchResult([PostFindResponse])
         case navigateToProfileView(String)
-        case navigateToReadView(String)
+        case navigateToReadView(Int)
         case updateFollowResult(FollowResponse)
         case updateUserProfile(UserInfoResponse)
     }
@@ -102,7 +102,7 @@ extension UserInfoViewModel: PostCollectionViewProtocol {
         self.outputSubject.send(.navigateToProfileView(userId))
     }
     
-    func navigateToReadView(postId: String) {
+    func navigateToReadView(postId: Int) {
         self.outputSubject.send(.navigateToReadView(postId))
     }
     
