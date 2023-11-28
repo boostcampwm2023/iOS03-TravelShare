@@ -1,9 +1,16 @@
 import { Body, Controller, Put } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { RouteCoordinates } from './route.coordinates.dto';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { RouteService } from './route.service';
+import { RouteUploadResponse } from './route.upload.response.dto';
+import { RouteUploadBody } from './route.upload.body.dto';
 
 @ApiTags('Route')
+@ApiBearerAuth('access-token')
 @Controller('route')
 export class RouteController {
   constructor(private readonly routeService: RouteService) {}
@@ -17,8 +24,11 @@ export class RouteController {
 - 이후 routId를 통해 게시글 업로드에 이용할 수 있습니다.
         `,
   })
+  @ApiOkResponse({
+    type: RouteUploadResponse,
+  })
   @Put('upload')
-  async upload(@Body() route: RouteCoordinates) {
+  async upload(@Body() route: RouteUploadBody) {
     return await this.routeService.upload(route);
   }
 }
