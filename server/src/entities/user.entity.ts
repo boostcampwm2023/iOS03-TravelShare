@@ -37,16 +37,22 @@ export class User {
   @Column({ nullable: true })
   introduce: string;
 
-  @ManyToMany(() => User, ({ followings }) => followings)
+  @ManyToMany(() => User, ({ followees }) => followees)
   @JoinTable({
     name: 'user_followers_relation',
-    joinColumn: { name: 'follower_id' },
-    inverseJoinColumn: { name: 'followee_id' },
+    joinColumn: { name: 'followee_id', referencedColumnName: 'email' },
+    inverseJoinColumn: { name: 'follower_id', referencedColumnName: 'email' },
   })
   followers: User[];
 
   @ManyToMany(() => User, ({ followers }) => followers)
-  followings: User[];
+  followees: User[];
+
+  @Column('int', {name: 'followers_num', default: 0})
+  followersNum: number;
+
+  @Column('int', {name: 'followees_num', default: 0})
+  followeesNum: number;
 
   @ManyToMany(() => Post, ({ likedUsers }) => likedUsers)
   likedPosts: Post[];
