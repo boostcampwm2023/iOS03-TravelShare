@@ -13,6 +13,7 @@ import { Type } from 'class-transformer';
 import { UserProfileSimpleResponse } from 'user/user.profile.simple.response.dto';
 import { RouteCoordinates } from '../route/route.coordinates.dto';
 import { PostContentElementBase } from './post.content.element.base.dto';
+import { PlaceBase } from './place.base.dto';
 
 export class PostDetailElement extends PostContentElementBase {}
 
@@ -45,9 +46,11 @@ export class PostDetailResponse {
   @Type(() => RouteCoordinates)
   route: RouteCoordinates;
 
-  @ApiProperty({ description: '해시태그' })
+  @ApiProperty({ description: '핑 정보를 넣어줍니다.', type: [PlaceBase] })
   @IsArray()
-  hashtag: string[];
+  @ValidateNested({ each: true })
+  @Type(() => PlaceBase)
+  pings: PlaceBase[];
 
   @ApiProperty({ description: '좋아요개수' })
   @IsInt()

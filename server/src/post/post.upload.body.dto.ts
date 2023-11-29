@@ -8,8 +8,9 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { RouteCoordinatesOrId } from 'route/route.coordinates.or.id.dto';
 import { PostContentElementBase } from './post.content.element.base.dto';
+import { RouteCoordinates } from 'route/route.coordinates.dto';
+import { PlaceBase } from './place.base.dto';
 
 class PostUploadElement extends PostContentElementBase {}
 
@@ -33,28 +34,30 @@ export class PostUploadBody {
   @ApiProperty({
     description:
       '경로 좌표입니다. 고유 id 혹은 경로 좌표 배열 중 하나가 포함되어야 합니다.',
-    type: RouteCoordinatesOrId,
+    type: RouteCoordinates,
     examples: [
       {
         coordinates: [
-          [126, 36],
-          [126.2, 33.5],
+          {
+            x: 122,
+            y: 33,
+          },
+          {
+            x: 123.123,
+            y: 33.123,
+          },
         ],
       },
-      { routeId: 1 },
     ],
   })
   @ValidateNested()
-  @Type(() => RouteCoordinatesOrId)
-  route: RouteCoordinatesOrId;
+  @Type(() => RouteCoordinates)
+  route: RouteCoordinates;
 
-  @ApiProperty({
-    description:
-      '경로 고유 id입니다. 미리 경로를 업로드했을 경우 사용할 수 있습니다.',
-  })
-  @ApiProperty({ description: '해시태그' })
-  @IsArray()
-  hashtag: string[] = [];
+  @ApiProperty({ description: '핑 정보를 넣어줍니다.', type: [PlaceBase] })
+  @ValidateNested({ each: true })
+  @Type(() => PlaceBase)
+  pings: PlaceBase[];
 
   @ApiProperty({ description: '사진과 글', type: [PostUploadElement] })
   @IsArray()
