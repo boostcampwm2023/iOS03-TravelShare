@@ -117,29 +117,35 @@ final class TravelViewModel: ViewModelProtocol {
     
     private func generateTravel() {
         let currentTime: Date = Date()
-        self.currentTravel = TravelInfo(id: UUID().uuidString, sequence: 0, startAt: currentTime)
+        do {
+            let sequence = try CoreDataManager.shared.calculateNextSequence()
+            print(sequence)
+            self.currentTravel = TravelInfo(id: UUID().uuidString, sequence: sequence, startAt: currentTime)
+        } catch {
+            
+        }
     }
     
     private func completeTravel() {
         let transRoute = savedRoute.routePoints.map({ [$0.coordinate.latitude, $0.coordinate.longitude] })
-        let pinnedTransRoute = savedRoute.pinnedPlaces.map({ [$0.placeName: [Double($0.mapx), Double($0.mapy)]] })
+        let pinnedTransRoute = savedRoute.pinnedPlaces.map({ [$0.placeName: [Double($0.mapx) ?? 0, Double($0.mapy) ?? 0]] })
         self.currentTravel?.recordedLocation = transRoute
         self.currentTravel?.recordedPindedInfo = pinnedTransRoute
-        
+        let currentTime: Date = Date()
+        self.currentTravel?.endAt = currentTime
     }
     
     private func stopRecord() {
-        let currentTime: Date = Date()
+        completeTravel()
         guard let travel = self.currentTravel,
               let recordedLocation = travel.recordedLocation,
-              let recordedPindedInfo: [[String: [Double?]]] = travel.recordedPindedInfo,
               let startAt = travel.startAt,
               let endAt = travel.endAt
         else { return }
         
         CoreDataManager.shared.saveTravel(id: travel.id,
                                           recordedLocation: recordedLocation,
-                                          recordedPindedLocation: recordedPindedInfo,
+                                          recordedPindedLocation: travel.recordedPindedInfo,
                                           sequence: Int(travel.sequence),
                                           startAt: startAt,
                                           endAt: endAt)

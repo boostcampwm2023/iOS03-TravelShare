@@ -28,7 +28,7 @@ final class TabBarViewModel {
         let provider = APIProvider(session: URLSession.shared)
         let searchViewModel = SearchViewModel(postSearcher: Searcher(provider: provider))
         let homeViewModel = HomeViewModel(postSearcher: Searcher(provider: provider), followFeature: FollowFeature(provider: provider))
-        let writeViewModel = WriteViewModel(uploadImageUseCase: UploadImage(provider: provider))
+        let routeViewModel = RouteViewModel()
         let travelViewModel = TravelViewModel(
             routeRecorder: RouteRecorder(provider: provider),
             locationSearcher: Searcher(provider: provider),
@@ -46,7 +46,7 @@ final class TabBarViewModel {
         TabComponent(index: 3,
                      image: UIImage.appImage(.squareAndPencil),
                      text: "일지 작성",
-                     viewController: WriteViewController(viewModel: writeViewModel)),
+                     viewController: RouteViewController(viewModel: routeViewModel)),
         TabComponent(index: 4,
                      image: UIImage.appImage(.map),
                      text: "여행",
