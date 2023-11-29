@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'entities/user.entity';
 import { Repository } from 'typeorm';
@@ -19,21 +24,29 @@ export class AuthService {
   ) {}
 
   async createUser(user: AuthBasicSignupBody) {
-    const userDetail = await this.userRepository.save({
-      ...user,
-      ...(user.name ? { name: user.name } : { name: getRandomNickName() }),
-      password: await hash(user.password, await genSalt()),
-    });
+    const userDetail = await this.userRepository
+      .save({
+        ...user,
+        ...(user.name ? { name: user.name } : { name: getRandomNickName() }),
+        password: await hash(user.password, await genSalt()),
+      })
+      .catch((err) => {
+        throw new ConflictException('user duplicated', { cause: err });
+      });
     return await this.createAccessToken(
       plainToInstance(Authentication, userDetail),
     );
   }
 
   async login({ email, password }: AuthBasicSigninBody) {
-    const userDetail = await this.userRepository.findOneOrFail({
-      where: { email },
-      select: ['email', 'password', 'role'],
-    });
+    const userDetail = await this.userRepository
+      .findOneOrFail({
+        where: { email },
+        select: ['email', 'password', 'role'],
+      })
+      .catch((err) => {
+        throw new NotFoundException('user not found', { cause: err });
+      });
     if (!(await compare(password, userDetail.password))) {
       throw new UnauthorizedException('invalid password');
     }
