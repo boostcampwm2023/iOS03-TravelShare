@@ -44,7 +44,7 @@ final class UserInfoViewModel: ViewModelProtocol {
         case navigateToProfileView(String)
         case navigateToReadView(Int)
         case updateFollowResult(FollowResponse)
-        case updateUserProfile(ProfileGetResponse)
+        case updateUserProfile(UserProfile)
         case updateUserPost([PostFindResponse])
     }
     
@@ -79,6 +79,7 @@ final class UserInfoViewModel: ViewModelProtocol {
         searcher.searchUserProfile(query: searchUserEmail).sink { _ in
         } receiveValue: { [weak self] response in
             self?.userProfile = response
+            self?.outputSubject.send(.updateUserProfile(response))
         }.store(in: &cancellables)
         
         searcher.searchPost(query: searchUserEmail).sink { _ in
@@ -92,7 +93,7 @@ final class UserInfoViewModel: ViewModelProtocol {
     private func searchMockUserProfile(userId: String) {
         searcher.searchMockUserProfile(query: userId, json: "UserInfoMock").sink { _ in
         } receiveValue: { [weak self] response in
-            self?.outputSubject.send(.updateUserProfile(response))
+           // self?.outputSubject.send(.updateUserProfile(response))
         }.store(in: &cancellables)
     }
 }
