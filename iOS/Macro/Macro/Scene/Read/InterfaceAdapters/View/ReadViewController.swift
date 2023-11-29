@@ -15,7 +15,7 @@ final class ReadViewController: UIViewController {
     // MARK: - Properties
     
     private let viewModel: ReadViewModel
-    private let const = MacroCarouselView.Const(itemSize: CGSize(width: 300, height: 340), itemSpacing: 24.0)
+    private let const = MacroCarouselView.Const(itemSize: CGSize(width: UIScreen.width, height: 340), itemSpacing: 24.0)
     private var readPost: ReadPost?
     private var cancellables = Set<AnyCancellable>()
     private let didScrollSubject: PassthroughSubject<Int, Never> = .init()
