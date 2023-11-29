@@ -25,7 +25,7 @@ final class UserInfoViewController: UIViewController {
     override func viewDidLoad() {
         self.view.backgroundColor = UIColor.appColor(.blue1)
         bind()
-        inputSubject.send(.searchMockUserProfile(userId: "jinhaday@gmail.com"))
+        inputSubject.send(.searchUserProfile(email: viewModel.searchUserEmail))
         setUpLayout()
         super.viewDidLoad()
     }
@@ -34,8 +34,8 @@ final class UserInfoViewController: UIViewController {
     
     init(viewModel: UserInfoViewModel, userInfo: String) {
         self.viewModel = viewModel
+        viewModel.searchUserEmail = userInfo 
         super.init(nibName: nil, bundle: nil)
-        
     }
     
     required init?(coder: NSCoder) {
@@ -91,6 +91,8 @@ private extension UserInfoViewController {
                 self?.updateFollowResult(result)
             case let .updateUserProfile(result):
                 self?.updateUserProfile(result)
+            case let .updateUserPost(result):
+                self?.updateUserPost(result)
             default: break
             }
         }.store(in: &cancellables)
@@ -101,17 +103,17 @@ private extension UserInfoViewController {
 // MARK: - Methods
 
 private extension UserInfoViewController {
-    func updateSearchResult(_ result: [PostFindResponse]) {
-        homeCollectionView.viewModel.posts += result
-        homeCollectionView.reloadData()
-    }
     
     func updateFollowResult(_ result: FollowResponse) {
         userInfoHeaderView.updateFollow(item: result)
     }
     
-    func updateUserProfile(_ result: ProfileGetResponse) {
+    func updateUserProfile(_ result: UserProfile) {
         userInfoHeaderView.configure(item: result)
-        updateSearchResult(result.posts)
+    }
+    
+    func updateUserPost(_ result: [PostFindResponse]) {
+        homeCollectionView.viewModel.posts = result
+        homeCollectionView.reloadData()
     }
 }

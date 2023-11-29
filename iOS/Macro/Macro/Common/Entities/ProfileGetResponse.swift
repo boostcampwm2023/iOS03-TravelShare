@@ -10,8 +10,8 @@ import Foundation
 struct ProfileGetResponse: Codable {
     let userId: String
     let name: String
-    let imageUrl: String
-    let introduce: String
+    let imageUrl: String?
+    let introduce: String?
     let following: Bool
     let follower: Bool
     let followersNum: Int

@@ -74,10 +74,14 @@ private extension PostCollectionViewCell {
 
 extension PostCollectionViewCell {
     
-    func configure(item: PostFindResponse, viewModel: T) {
+    func configure(item: PostFindResponse, viewModel: T, indexPath: IndexPath) {
+        postProfileView.configure(item: item)
+        postContentView.configure(item: item)
+        postProfileView.indexPath = indexPath
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
         componetConfigure(item: item, viewModel: viewModel)
     }
+
 }

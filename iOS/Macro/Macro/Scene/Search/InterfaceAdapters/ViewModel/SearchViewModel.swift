@@ -9,16 +9,18 @@ import Combine
 import Foundation
 import MacroNetwork
 
-final class SearchViewModel: ViewModelProtocol {
+final class SearchViewModel: ViewModelProtocol, PostCollectionViewProtocol {
     
     // MARK: - Properties
+    
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
     private let postSearcher: SearchUseCase
     private var searchType: SearchType = .post
-    private (set) var searchedPostResult: [PostFindResponse] = []
+    var posts: [PostFindResponse] = []
     
-    // MARK: - init
+    // MARK: - Init
+    
     init(postSearcher: SearchUseCase) {
         self.postSearcher = postSearcher
     }
@@ -34,9 +36,14 @@ final class SearchViewModel: ViewModelProtocol {
     
     enum Output {
         case updateSearchResult([PostFindResponse])
+        case navigateToProfileView(String)
+        case navigateToReadView(Int)
     }
     
-    // MARK: - Methods
+}
+
+// MARK: - Methods
+extension SearchViewModel {
     func transform(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         input
             .sink { [weak self] input in
@@ -46,7 +53,7 @@ final class SearchViewModel: ViewModelProtocol {
                 case let .search(text):
                     switch self?.searchType {
                     case .account: self?.searchAccount(text: text)
-                    case .post: self?.searchMockPost(text: text)
+                    case .post: self?.searchPost(text: text)
                     case .none: break
                     }
                 }
@@ -64,31 +71,42 @@ final class SearchViewModel: ViewModelProtocol {
     }
     
     private func searchPost(text: String) {
-        postSearcher.searchPost(query: text)
+        postSearcher.searchPostTitle(query: text)
             .sink { completion in
                 if case let .failure(error) = completion {
                     print(error)
                 }
             } receiveValue: { [weak self] response in
-                self?.searchedPostResult = response
+                self?.posts = response
                 let defaultValue = [PostFindResponse]()
-                self?.outputSubject.send(.updateSearchResult(self?.searchedPostResult ?? defaultValue ))
-                
+                self?.outputSubject.send(.updateSearchResult(self?.posts ?? defaultValue))
             }.store(in: &cancellables)
     }
     
+    func navigateToProfileView(email: String) {
+        outputSubject.send(.navigateToProfileView(email))
+    }
+    
+    func navigateToReadView(postId: Int) {
+        outputSubject.send(.navigateToReadView(postId))
+    }
+}
+
+// MARK: - Mock Methods
+
+extension SearchViewModel {
     private func searchMockPost(text: String) {
         postSearcher.searchMockPost(query: text, json: "tempJson").sink { completion in
             if case let .failure(error) = completion {
                 print(error)
             }
         } receiveValue: { [weak self] response in
-            self?.searchedPostResult = response
-            self?.searchedPostResult.removeAll { post in
+            self?.posts = response
+            self?.posts.removeAll { post in
                 !post.title.contains(text)
             }
             let defaultValue = [PostFindResponse]()
-            self?.outputSubject.send(.updateSearchResult(self?.searchedPostResult ?? defaultValue ))
+            self?.outputSubject.send(.updateSearchResult(self?.posts ?? defaultValue ))
         }.store(in: &cancellables)
     }
 }

@@ -13,7 +13,7 @@ final class PostProfileView<T: PostCollectionViewProtocol>: UIView {
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
     var viewModel: T?
-    
+    var indexPath: IndexPath?
     // MARK: - UI Components
     
     private let viewCountLabel: UILabel = {
@@ -23,7 +23,7 @@ final class PostProfileView<T: PostCollectionViewProtocol>: UIView {
         return label
     }()
     
-    private let userNameLabel: UILabel = {
+    var userNameLabel: UILabel = {
         let label: UILabel = UILabel()
         label.textColor = UIColor.appColor(.purple5)
         label.font = UIFont.appFont(.baeEunBody)
@@ -73,9 +73,14 @@ final class PostProfileView<T: PostCollectionViewProtocol>: UIView {
     // MARK: - Handle Gesture
     
     @objc private func profileImageTap(_ sender: UITapGestureRecognizer) {
-        guard let userId: String = self.userNameLabel.text else { return }
-        viewModel?.navigateToProfileView(userId: userId)
+        if let indexPath = indexPath {
+            guard let email = viewModel?.posts[indexPath.row].writer.email else { return }
+            viewModel?.navigateToProfileView(email: email)
+
+        }
+        
     }
+    
     
     @objc private func likeImageViewTap(_ sender: UITapGestureRecognizer) {
         guard let likeCount: Int = Int(self.likeCountLabel.text ?? "0") else { return }
