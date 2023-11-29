@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNumber,
+  IsNumberString,
   IsOptional,
   IsPhoneNumber,
   IsString,
@@ -13,8 +14,8 @@ export class KakaoMapSearchResponse {
   place_name: string;
 
   @ApiProperty({ description: '매장Id' })
-  @IsString()
-  id: number;
+  @IsNumberString()
+  id: string;
 
   @ApiProperty({ description: '링크' })
   @IsUrl()
