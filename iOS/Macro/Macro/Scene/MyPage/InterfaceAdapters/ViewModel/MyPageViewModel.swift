@@ -13,6 +13,7 @@ class MyPageViewModel: ViewModelProtocol {
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
+    let email = TokenManager.extractEmailFromJWTToken()
     let sections = ["나의 정보", "글 목록", "계정 관리"]
     let information = ["이름", "프로필 사진", "자기소개"]
     let post = ["작성한 글", "좋아요한 글"]

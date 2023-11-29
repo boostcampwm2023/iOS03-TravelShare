@@ -98,7 +98,6 @@ private extension HomeViewController {
     func navigateToProfileView(_ email: String) {
         let userInfoViewModel = UserInfoViewModel(postSearcher: viewModel.postSearcher, followFeature: viewModel.followFeatrue)
         let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: email)
-
         navigationController?.pushViewController(userInfoViewController, animated: true)
     }
     

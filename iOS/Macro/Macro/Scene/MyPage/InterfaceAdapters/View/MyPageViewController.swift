@@ -191,10 +191,13 @@ extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
             presentImagePickerController()
         }
         else if indexPath.section == 1 && indexPath.row == 0 {
+            guard let email = viewModel.email else { return }
             let provider = APIProvider(session: URLSession.shared)
-            let userInfoViewModel = UserInfoViewModel(postSearcher: Searcher(provider: provider), followFeature: FollowFeature(provider: provider))
-            let userInfoVC = UserInfoViewController(viewModel: userInfoViewModel, userInfo: "SomeUserInfo")
-            self.navigationController?.pushViewController(userInfoVC, animated: true)
+            let postSearcher = Searcher(provider: provider)
+            let followFeature = FollowFeature(provider: provider)
+            let userInfoViewModel = UserInfoViewModel(postSearcher: postSearcher, followFeature: followFeature)
+            let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: email)
+            navigationController?.pushViewController(userInfoViewController, animated: true)
         }
         else if indexPath.section == 1 && indexPath.row == 1 {
             
