@@ -36,7 +36,7 @@ class MyPageViewModel: ViewModelProtocol {
     }
     
     // MARK: - Output
-
+    
     enum Output {
         case patchCompleted(Int, String)
         case sendMyUserData(UserProfile)
@@ -54,12 +54,14 @@ class MyPageViewModel: ViewModelProtocol {
                 }
             }
             .store(in: &cancellables)
-        
+            
         return outputSubject.eraseToAnyPublisher()
     }
     
     func modifyInformation(_ cellIndex: Int, _ query: String) {
+       
         patcher.patchUser(cellIndex: cellIndex, query: query).sink { completion in
+            print(completion)
         } receiveValue: { [weak self] response in
             print(response)
             self?.outputSubject.send(.patchCompleted(cellIndex, query))

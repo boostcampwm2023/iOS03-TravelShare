@@ -56,6 +56,7 @@ final class MyInfoViewController: UIViewController {
         setUpLayout()
         introductionEditView.introductionTextView.delegate = self
         saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
+        bind()
     }
     
     // MARK: - Init
@@ -128,13 +129,17 @@ final class MyInfoViewController: UIViewController {
     
     // MARK: - Binding
     
-    
-    
+    func bind() {
+          let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+          
+    }
     @objc private func saveButtonTapped() {
         switch selectedIndex {
         case 0: inputSubject.send(.completeButtonPressed(selectedIndex, nameEditView.nameTextField.text ?? ""))
         default: inputSubject.send(.completeButtonPressed(selectedIndex, introductionEditView.introductionTextView.text ?? ""))
         }
+        print(123)
+        self.dismiss(animated: true, completion: nil)
     }
     
 }
