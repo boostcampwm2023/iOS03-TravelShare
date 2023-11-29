@@ -13,15 +13,16 @@ export class PostContentElementBase {
       'https://kr.object.ncloudstorage.com/macro-bucket/static/image/boostcampmacro-beeae45f-3772-427c-ab71-bf85b663b043',
   })
   @IsUrl()
-  @IsOptional()
-  imageUrl?: string;
+  imageUrl: string;
 
   @ApiProperty({ description: '설명', example: '이곳에 설명이 들어갑니다.' })
   @IsString()
+  @IsOptional()
   description: string;
 
   @ApiProperty({ description: '좌표입니다.' })
   @ValidateNested()
   @Type(() => PostContentElementPoint)
+  @IsOptional()
   coordinate: PostContentElementPoint;
 }
