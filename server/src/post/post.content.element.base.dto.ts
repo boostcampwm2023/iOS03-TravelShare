@@ -9,7 +9,8 @@ export class PostContentElementBase {
   @ApiProperty({
     description: '이미지 url',
     required: false,
-    example: 'https://kr.object.ncloudstorage.com/macro-bucket/static/image/boostcampmacro-beeae45f-3772-427c-ab71-bf85b663b043',
+    example:
+      'https://kr.object.ncloudstorage.com/macro-bucket/static/image/boostcampmacro-beeae45f-3772-427c-ab71-bf85b663b043',
   })
   @IsUrl()
   @IsOptional()
