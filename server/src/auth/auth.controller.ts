@@ -21,7 +21,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiOperation({
-    description:
+    summary:
       '가장 기본이 되는 회원가입 로직입니다. 이메일 비밀 번호 등을 사용합니다.',
   })
   @ApiResponse({ type: AuthBasicAuthResponse })
@@ -35,7 +35,7 @@ export class AuthController {
     );
   }
 
-  @ApiOperation({ description: '이메일 비밀번호를 통해 로그인합니다.' })
+  @ApiOperation({ summary: '이메일 비밀번호를 통해 로그인합니다.' })
   @ApiResponse({ type: AuthBasicAuthResponse })
   @ApiBody({ type: AuthBasicSigninBody })
   @Post('signin')
@@ -48,7 +48,7 @@ export class AuthController {
   }
 
   @ApiOperation({
-    description: 'Access Token의 만료기한을 갱신하여 응답합니다.',
+    summary: 'Access Token의 만료기한을 갱신하여 응답합니다.',
   })
   @ApiResponse({ type: AuthBasicAuthResponse })
   @ApiBearerAuth('access-token')

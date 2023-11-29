@@ -11,7 +11,17 @@ import { KakaoSearchDistanceQuery } from './map.kakao.search.distance.query.dto'
 export class KaKaoMapController {
   constructor(private readonly kakaoMapService: KakaoMapService) {}
 
-  @ApiOperation({ description: '주소나 이름에 따라 위치를 검색합니다.' })
+  @ApiOperation({
+    summary: `검색어와의 유사성을 우선으로 결과를 나타냅니다`,
+    description: `
+  ## Map/v2/searchByAccuracy
+
+  - 검색어에 대한 매장정보를 상세하게 알려줍니다.
+  - 최대 45개까지 제공하고 있습니다.
+  - 한 페이지 당 15개씩 제공하고 있습니다. pagenum 변수를 활용하세요.
+
+    `,
+  })
   @ApiResponse({ type: [KakaoMapSearchResponse] })
   @Public()
   @Get('searchByAccuracy')
@@ -19,7 +29,17 @@ export class KaKaoMapController {
     return await this.kakaoMapService.kakaoSearchByAccuracy(query);
   }
 
-  @ApiOperation({ description: '주소나 이름에 따라 위치를 검색합니다.' })
+  @ApiOperation({
+    summary: '지정된 위치와 가까운 순으로 결과를 나타냅니다.',
+    description: `
+  ## Map/v2/searchByDistance
+
+  - x에 경도, y에 위도 정보를 넣어줍니다.
+  - distance 정보는 미터(m) 단위입니다.
+  - 이외의 정보는 searchByAccuracy와 동일하게 제공됩니다.
+
+    `,
+  })
   @ApiResponse({ type: [KakaoMapSearchResponse] })
   @Public()
   @Get('searchByDistance')

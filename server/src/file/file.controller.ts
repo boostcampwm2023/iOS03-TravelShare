@@ -18,7 +18,7 @@ export class FileController {
   constructor(private fileService: FileService) {}
 
   @ApiOperation({
-    description:
+    summary:
       '이미지를 업로드하고 이미지 id를 반환받습니다. Content-Length, Content-Type이 명시되어야 합니다.',
   })
   @ApiResponse({ type: FileUploadResponse })
