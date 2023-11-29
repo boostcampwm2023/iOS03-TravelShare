@@ -4,6 +4,8 @@ import {
   IsBoolean,
   IsDate,
   IsInt,
+  IsObject,
+  IsOptional,
   IsPositive,
   IsString,
   Min,
@@ -34,6 +36,7 @@ export class PostDetailResponse {
   contents: PostDetailElement[];
 
   @ApiProperty({ description: '작성자' })
+  @IsObject()
   @ValidateNested()
   @Type(() => UserProfileSimpleResponse)
   writer: UserProfileSimpleResponse;
@@ -42,8 +45,10 @@ export class PostDetailResponse {
     description: '이동 경로, 2차원 배열입니다.',
     type: RouteCoordinates,
   })
+  @IsObject()
   @ValidateNested()
   @Type(() => RouteCoordinates)
+  @IsOptional()
   route: RouteCoordinates;
 
   @ApiProperty({ description: '핑 정보를 넣어줍니다.', type: [PlaceBase] })
