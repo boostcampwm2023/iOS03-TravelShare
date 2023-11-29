@@ -138,7 +138,6 @@ final class MyInfoViewController: UIViewController {
         case 0: inputSubject.send(.completeButtonPressed(selectedIndex, nameEditView.nameTextField.text ?? ""))
         default: inputSubject.send(.completeButtonPressed(selectedIndex, introductionEditView.introductionTextView.text ?? ""))
         }
-        print(123)
         self.dismiss(animated: true, completion: nil)
     }
     

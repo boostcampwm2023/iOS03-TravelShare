@@ -20,7 +20,7 @@ class MyPageViewModel: ViewModelProtocol {
     let management = ["팔로우", "알림", "문의하기"]
     let patcher: PatchUseCase
     let searcher: SearchUseCase
-    var myInfo: UserProfile = UserProfile(email: "", name: "", imageUrl: "", introduce: "", followersNum: 0, followeesNum: 0)
+    @Published var myInfo: UserProfile = UserProfile(email: "", name: "", imageUrl: "", introduce: "", followersNum: 0, followeesNum: 0)
     
     // MARK: - init
     init(patcher: PatchUseCase, searcher: SearchUseCase) {
@@ -49,6 +49,7 @@ class MyPageViewModel: ViewModelProtocol {
                 switch input {
                 case let .completeButtonPressed(cellIndex, query):
                     self?.modifyInformation(cellIndex, query)
+                    self?.getMyUserData(self?.email ?? "")
                 case let .getMyUserData(email):
                     self?.getMyUserData(email)
                 }
@@ -61,9 +62,7 @@ class MyPageViewModel: ViewModelProtocol {
     func modifyInformation(_ cellIndex: Int, _ query: String) {
        
         patcher.patchUser(cellIndex: cellIndex, query: query).sink { completion in
-            print(completion)
         } receiveValue: { [weak self] response in
-            print(response)
             self?.outputSubject.send(.patchCompleted(cellIndex, query))
         }.store(in: &cancellables)
     }
