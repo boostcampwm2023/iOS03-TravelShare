@@ -10,12 +10,12 @@ import { Post } from './post.entity';
 
 const POINT_COORDINATES_EXTRACT_REGEXP = /POINT\(([\d\.]+ [\d\.]+)\)/;
 
-type Coordinate = {
+export type Coordinate = {
   x: number;
   y: number;
 };
 
-const pointToJsonObject = (text: string) => {
+export const pointToJsonObject = (text: string) => {
   const [y, x] = POINT_COORDINATES_EXTRACT_REGEXP.exec(text)?.[1]
     .split(/\s/)
     .map(parseFloat) as [number, number];
@@ -23,7 +23,7 @@ const pointToJsonObject = (text: string) => {
   return { x, y } as Coordinate;
 };
 
-const jsonToPoint = ({ x, y }: Coordinate) => {
+export const jsonToPoint = ({ x, y }: Coordinate) => {
   return `POINT(${y} ${x})`;
 };
 
