@@ -103,6 +103,8 @@
 		D21B10132B17610500F2F84E /* UpdateUserEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B10122B17610500F2F84E /* UpdateUserEndPoint.swift */; };
 		D21B10162B17636800F2F84E /* PatchUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B10152B17636800F2F84E /* PatchUseCase.swift */; };
 		D21B10192B176B2700F2F84E /* PatchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B10182B176B2700F2F84E /* PatchResponse.swift */; };
+		D21B101C2B1792EA00F2F84E /* ComfirmUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B101B2B1792EA00F2F84E /* ComfirmUseCase.swift */; };
+		D21B101F2B17994100F2F84E /* ConfirmError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B101E2B17994100F2F84E /* ConfirmError.swift */; };
 		D241DC6E2B0D9FFE0037DDB6 /* SearchUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC6D2B0D9FFE0037DDB6 /* SearchUseCase.swift */; };
 		D241DC712B0DA0070037DDB6 /* CommonUIComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC702B0DA0070037DDB6 /* CommonUIComponents.swift */; };
 		D241DC752B0DA00F0037DDB6 /* Writer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC732B0DA00F0037DDB6 /* Writer.swift */; };
@@ -221,6 +223,8 @@
 		D21B10122B17610500F2F84E /* UpdateUserEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateUserEndPoint.swift; sourceTree = "<group>"; };
 		D21B10152B17636800F2F84E /* PatchUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchUseCase.swift; sourceTree = "<group>"; };
 		D21B10182B176B2700F2F84E /* PatchResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchResponse.swift; sourceTree = "<group>"; };
+		D21B101B2B1792EA00F2F84E /* ComfirmUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComfirmUseCase.swift; sourceTree = "<group>"; };
+		D21B101E2B17994100F2F84E /* ConfirmError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmError.swift; sourceTree = "<group>"; };
 		D241DC6D2B0D9FFE0037DDB6 /* SearchUseCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUseCase.swift; sourceTree = "<group>"; };
 		D241DC702B0DA0070037DDB6 /* CommonUIComponents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonUIComponents.swift; sourceTree = "<group>"; };
 		D241DC732B0DA00F0037DDB6 /* Writer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Writer.swift; sourceTree = "<group>"; };
@@ -533,6 +537,8 @@
 		BA32E1782B0DC3CB00EA0EE2 /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
+				D21B101D2B17992400F2F84E /* Entities */,
+				D21B101A2B17921D00F2F84E /* UseCases */,
 				D21B10112B1760C800F2F84E /* Network */,
 				BA32E1792B0DC3CB00EA0EE2 /* InterfaceAdapters */,
 			);
@@ -963,6 +969,22 @@
 			path = Network;
 			sourceTree = "<group>";
 		};
+		D21B101A2B17921D00F2F84E /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				D21B101B2B1792EA00F2F84E /* ComfirmUseCase.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		D21B101D2B17992400F2F84E /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				D21B101E2B17994100F2F84E /* ConfirmError.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
 		D241DC6C2B0D9FFE0037DDB6 /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
@@ -1229,6 +1251,7 @@
 				BAB24ED72B15D3D7000991A1 /* CoreDataManager.swift in Sources */,
 				D241DC752B0DA00F0037DDB6 /* Writer.swift in Sources */,
 				BA33AA892B0AF9F30065D1E0 /* HomeViewController.swift in Sources */,
+				D21B101F2B17994100F2F84E /* ConfirmError.swift in Sources */,
 				BA90CB872B0F3BF600365AE2 /* PostCollectionView.swift in Sources */,
 				D263CA132B02DD8900B4A144 /* RouteTableViewController.swift in Sources */,
 				D21B10092B14799C00F2F84E /* NameEditView.swift in Sources */,
@@ -1257,6 +1280,7 @@
 				BA33AA702B0AF9DD0065D1E0 /* TaBarBackgroundLineView.swift in Sources */,
 				BA6C6DF52B05FFC500563B22 /* UIScreen+.swift in Sources */,
 				BA90CBB22B14988400365AE2 /* Macro.xcdatamodeld in Sources */,
+				D21B101C2B1792EA00F2F84E /* ComfirmUseCase.swift in Sources */,
 				AAD0B2BE2B0DA35B003B4D5F /* LoginViewController.swift in Sources */,
 				BA90CBC12B149E1700365AE2 /* TravelInfo.swift in Sources */,
 				AAD0B2DF2B0FC4A1003B4D5F /* UploadImage.swift in Sources */,
