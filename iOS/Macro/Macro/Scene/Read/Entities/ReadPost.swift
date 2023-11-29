@@ -17,31 +17,3 @@ struct ReadPost: Codable {
     let route: Route
     let liked: Bool
 }
-
-// MARK: - Content
-struct Content: Codable {
-    let imageURL: String
-    var description: String?
-    var coordinate: Coordinate?
-
-    enum CodingKeys: String, CodingKey {
-        case imageURL = "imageUrl"
-        case description, coordinate
-    }
-}
-
-// MARK: - Coordinate
-struct Coordinate: Codable {
-    let xPosition: Double
-    let yPosition: Double
-    
-    enum CodingKeys: String, CodingKey {
-        case xPosition = "x"
-        case yPosition = "y"
-    }
-}
-
-// MARK: - Route
-struct Route: Codable {
-    let coordinates: [Coordinate]?
-}

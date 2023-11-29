@@ -1,13 +1,12 @@
 //
-//  WriteRequestDTO.swift
+//  Post.swift
 //  Macro
 //
-//  Created by 김경호 on 11/24/23.
+//  Created by 김경호 on 11/29/23.
 //
 
 import Foundation
 
-// MARK: - Welcome
 struct Post: Codable {
     let title, summary: String
     let route: Route
@@ -21,3 +20,8 @@ struct Post: Codable {
         case startAt, endAt
     }
 }
+
+struct Route: Codable {
+    let coordinates: [Coordinate]?
+}
+
