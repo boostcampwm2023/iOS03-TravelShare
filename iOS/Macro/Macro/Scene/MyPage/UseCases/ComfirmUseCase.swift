@@ -14,16 +14,16 @@ protocol ConfirmUseCase {
 
 struct Confirmer: ConfirmUseCase {
     func confirmNickName(text: String) -> Result<Void, ConfirmError> {
-        if isValidNickNameLength(text: text) { return .failure(.invalidNickNameLength) }
-        else if isValidNickNameCharacter(text: text) { return .failure(.invalidNickNameCharacter) }
-        else if isValidSpacing(text: text) { return .failure(.multipleSpacing)}
+        if !isValidNickNameLength(text: text) { return .failure(.invalidNickNameLength) }
+        else if !isValidNickNameCharacter(text: text) { return .failure(.invalidNickNameCharacter) }
+        else if !isValidSpacing(text: text) { return .failure(.multipleSpacing)}
         
         return .success(())
     }
     
     func confirmIntroduce(text: String) -> Result<Void, ConfirmError> {
-        if isValidIntroduceLength(text: text) { return .failure(.invalidIntroduceLength) }
-        else if isValidLineBreak(text: text) { return .failure(.invalidLineBreak) }
+        if !isValidIntroduceLength(text: text) { return .failure(.invalidIntroduceLength) }
+        else if !isValidLineBreak(text: text) { return .failure(.invalidLineBreak) }
         
         return .success(())
     }

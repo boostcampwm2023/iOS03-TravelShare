@@ -130,15 +130,34 @@ final class MyInfoViewController: UIViewController {
     // MARK: - Binding
     
     func bind() {
-          let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
-          
+        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+        outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
+            switch output {
+            case .dissMissView: self?.dissMissView()
+            case let .showAlert(failError): self?.showAlert(failError)
+            default: break
+            }
+        }.store(in: &cancellables)
     }
-    @objc private func saveButtonTapped() {
-        switch selectedIndex {
-        case 0: inputSubject.send(.completeButtonPressed(selectedIndex, nameEditView.nameTextField.text ?? ""))
-        default: inputSubject.send(.completeButtonPressed(selectedIndex, introductionEditView.introductionTextView.text ?? ""))
-        }
+    
+    private func dissMissView() {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    private func showAlert(_ failError: String) {
+        let alert = UIAlertController(title: "오류", message: failError, preferredStyle: .alert)
+           let okAction = UIAlertAction(title: "확인", style: .default)
+           alert.addAction(okAction)
+           self.present(alert, animated: true, completion: nil)
+    }
+    
+    @objc private func saveButtonTapped() {
+        
+        switch selectedIndex {
+        case 0: inputSubject.send(.completeButtonTapped(selectedIndex, nameEditView.nameTextField.text ?? ""))
+        default: inputSubject.send(.completeButtonTapped(selectedIndex, introductionEditView.introductionTextView.text ?? ""))
+        }
+     //   self.dismiss(animated: true, completion: nil)
     }
     
 }

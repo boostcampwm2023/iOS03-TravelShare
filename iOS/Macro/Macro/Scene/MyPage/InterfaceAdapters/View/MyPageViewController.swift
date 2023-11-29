@@ -228,7 +228,7 @@ extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
             navigationController?.pushViewController(userInfoViewController, animated: true)
         }
         else if indexPath.section == 1 && indexPath.row == 1 {
-            inputSubject.send(.completeButtonPressed(3, ""))
+            inputSubject.send(.completeButtonTapped(3, ""))
         }
         
     }

@@ -20,18 +20,20 @@ class MyPageViewModel: ViewModelProtocol {
     let management = ["팔로우", "알림", "문의하기"]
     let patcher: PatchUseCase
     let searcher: SearchUseCase
+    let comfirmer: ConfirmUseCase
     @Published var myInfo: UserProfile = UserProfile(email: "", name: "", imageUrl: "", introduce: "", followersNum: 0, followeesNum: 0)
     
     // MARK: - init
-    init(patcher: PatchUseCase, searcher: SearchUseCase) {
+    init(patcher: PatchUseCase, searcher: SearchUseCase, confirmer: ConfirmUseCase) {
         self.patcher = patcher
         self.searcher = searcher
+        self.comfirmer = confirmer
     }
     
     // MARK: - Input
     
     enum Input {
-        case completeButtonPressed(Int, String)
+        case completeButtonTapped(Int, String)
         case getMyUserData(String)
     }
     
@@ -40,6 +42,8 @@ class MyPageViewModel: ViewModelProtocol {
     enum Output {
         case patchCompleted(Int, String)
         case sendMyUserData(UserProfile)
+        case dissMissView
+        case showAlert(String)
     }
     
     // MARK: - Methods
@@ -47,8 +51,8 @@ class MyPageViewModel: ViewModelProtocol {
         input
             .sink { [weak self] input in
                 switch input {
-                case let .completeButtonPressed(cellIndex, query):
-                    self?.modifyInformation(cellIndex, query)
+                case let .completeButtonTapped(cellIndex, query):
+                    self?.checkValidInput(cellIndex, query)
                     self?.getMyUserData(self?.email ?? "")
                 case let .getMyUserData(email):
                     self?.getMyUserData(email)
@@ -60,11 +64,26 @@ class MyPageViewModel: ViewModelProtocol {
     }
     
     func modifyInformation(_ cellIndex: Int, _ query: String) {
-       
         patcher.patchUser(cellIndex: cellIndex, query: query).sink { completion in
         } receiveValue: { [weak self] response in
             self?.outputSubject.send(.patchCompleted(cellIndex, query))
         }.store(in: &cancellables)
+    }
+    
+    func checkValidInput(_ cellIndex: Int, _ query: String) {
+        let result: Result<Void, ConfirmError>
+        switch cellIndex {
+        case 0: result = self.comfirmer.confirmNickName(text: query)
+        default: result = self.comfirmer.confirmIntroduce(text: query)
+        }
+        
+        switch result {
+        case .success:
+            modifyInformation(cellIndex, query)
+            outputSubject.send(.dissMissView)
+        case .failure(let failure):
+            outputSubject.send(.showAlert(failure.localizedDescription))
+        }
     }
     
     func getMyUserData(_ email: String) {
