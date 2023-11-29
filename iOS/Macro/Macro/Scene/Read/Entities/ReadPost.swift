@@ -11,7 +11,6 @@ struct ReadPost: Codable {
     let postId: Int
     let title: String
     let viewNum, likeNum: Int
-    let hashtag: [String]
     let createdAt, modifiedAt: String
     let contents: [Content]
     let writer: Writer
@@ -22,8 +21,8 @@ struct ReadPost: Codable {
 // MARK: - Content
 struct Content: Codable {
     let imageURL: String
-    let description: String?
-    let coordinate: Coordinate?
+    var description: String?
+    var coordinate: Coordinate?
 
     enum CodingKeys: String, CodingKey {
         case imageURL = "imageUrl"

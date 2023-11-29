@@ -21,6 +21,7 @@ final class WriteViewController: TabViewController {
     private let inputSubject: PassthroughSubject<WriteViewModel.Input, Never> = .init()
     private var photoAuthorizationStatus = CurrentValueSubject<PHAuthorizationStatus, Never>(.notDetermined)
     private var subscriptions: Set<AnyCancellable> = []
+    private var carouselCurrentIndex: Int = 0
     
     lazy var picker: PHPickerViewController = {
         var configuration = PHPickerConfiguration()
@@ -56,6 +57,7 @@ final class WriteViewController: TabViewController {
         textField.placeholder = "제목을 입력하세요..."
         textField.font = UIFont.appFont(.baeEunBody)
         textField.rightViewMode = .always
+        textField.addTarget(self, action: #selector(titleTextFieldDidChange), for: .editingChanged)
         return textField
     }()
     
@@ -69,6 +71,7 @@ final class WriteViewController: TabViewController {
         textField.borderStyle = .roundedRect
         textField.placeholder = "문구를 입력하세요"
         textField.font = UIFont.appFont(.baeEunBody)
+        textField.addTarget(self, action: #selector(descriptionTextFieldDidChange), for: .editingChanged)
         return textField
     }()
     
@@ -120,6 +123,7 @@ private extension WriteViewController {
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
+        delegateConfigure()
     }
     
     func setTranslatesAutoresizingMaskIntoConstraints() {
@@ -172,7 +176,7 @@ private extension WriteViewController {
             mapView.heightAnchor.constraint(equalToConstant: UIScreen.width - 48),
             
             writeSubmitButton.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 30),
-            writeSubmitButton.bottomAnchor.constraint(equalTo: scrollContentView.bottomAnchor, constant: -30),
+            writeSubmitButton.bottomAnchor.constraint(equalTo: scrollContentView.bottomAnchor, constant: -50),
             writeSubmitButton.centerXAnchor.constraint(equalTo: scrollContentView.centerXAnchor),
             writeSubmitButton.widthAnchor.constraint(equalToConstant: UIScreen.width - 40),
             writeSubmitButton.heightAnchor.constraint(equalToConstant: 50),
@@ -183,6 +187,10 @@ private extension WriteViewController {
             scrollContentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             
         ])
+    }
+    
+    func delegateConfigure() {
+        titleTextField.delegate = self
     }
 }
 
@@ -198,6 +206,7 @@ private extension WriteViewController {
                 case let .isVisibilityToggle(isVisibility):
                     let image = (isVisibility ? UIImage.appImage(.lockOpenFill) : UIImage.appImage(.lockFill))?.withTintColor(isVisibility ? UIColor.appColor(.statusGreen) : UIColor.appColor(.statusRed), renderingMode: .alwaysOriginal)
                     self?.isVisibilityButton.setImage(image, for: .normal)
+                // imageData Cell에 추가
                 case let .outputImageData(imageDatas):
                     var images = [UIImage?]()
                     
@@ -206,9 +215,12 @@ private extension WriteViewController {
                     }
                     
                     self?.carouselView.updateData(images)
+                // Submit 버튼 눌러진 경우
                 case .uploadWrite:
                     // TODO: - Home화면으로 돌아가
                     break
+                case let .outputDescriptionString(description):
+                    self?.imageDescriptionTextField.text = description
                 }
             }
             .store(in: &subscriptions)
@@ -228,6 +240,14 @@ private extension WriteViewController {
                 default:
                     self?.photoAuthorizationRequest()
                 }
+            }
+            .store(in: &subscriptions)
+        
+        didScrollSubject
+            .receive(on: DispatchQueue.global())
+            .sink { [weak self] index in
+                self?.carouselCurrentIndex = index
+                self?.inputSubject.send(.didScroll(self?.carouselCurrentIndex ?? 0))
             }
             .store(in: &subscriptions)
     }
@@ -291,5 +311,18 @@ extension WriteViewController: PHPickerViewControllerDelegate {
         DispatchQueue.main.async {
             self.present(self.picker, animated: true)
         }
+    }
+}
+
+extension WriteViewController: UITextFieldDelegate {
+    @objc func titleTextFieldDidChange(_ sender: Any?) {
+        guard let title = self.titleTextField.text else { return }
+        inputSubject.send(.titleTextUpdate(title))
+    }
+    
+    @objc func descriptionTextFieldDidChange(_ sender: Any?) {
+        guard let description = self.imageDescriptionTextField.text else { return }
+        debugPrint(self.carouselCurrentIndex, description)
+        inputSubject.send(.imageDescriptionUpdate(index: self.carouselCurrentIndex, description: description))
     }
 }
