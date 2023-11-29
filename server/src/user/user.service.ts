@@ -24,10 +24,7 @@ export class UserService {
     userInfo: UserProfileUpdateQuery,
   ) {
     await this.userRepository.update({ email }, userInfo);
-    return plainToInstance(UserProfileUpdateResponse, {
-      ...userInfo,
-      email,
-    });
+    return plainToInstance(UserProfileUpdateResponse, {});
   }
 
   async getUserProfile(email: string): Promise<UserProfileResponse> {
@@ -38,7 +35,7 @@ export class UserService {
         },
       })
       .catch((err) => {
-        throw new NotFoundException('user not found', { cause: err });
+        throw new NotFoundException('user not found', { cause: err, description: 'user not found' });
       });
     return plainToInstance(UserProfileResponse, user);
   }
