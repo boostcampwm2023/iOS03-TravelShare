@@ -15,7 +15,10 @@ export type Coordinate = {
   y: number;
 };
 
-export const pointToJsonObject = (text: string) => {
+export const pointToJsonObject = (text?: string) => {
+  if (!text) {
+    return null;
+  }
   const [y, x] = POINT_COORDINATES_EXTRACT_REGEXP.exec(text)?.[1]
     .split(/\s/)
     .map(parseFloat) as [number, number];
@@ -23,7 +26,11 @@ export const pointToJsonObject = (text: string) => {
   return { x, y } as Coordinate;
 };
 
-export const jsonToPoint = ({ x, y }: Coordinate) => {
+export const jsonToPoint = (coordinate?: Coordinate) => {
+  if (!coordinate) {
+    return null;
+  }
+  const { x, y } = coordinate;
   return `POINT(${y} ${x})`;
 };
 
@@ -36,10 +43,10 @@ export class PostContentElement {
   @JoinColumn({ name: 'post_id' })
   post: Post;
 
-  @Column({ name: 'image_url', nullable: true })
+  @Column({ name: 'image_url' })
   imageUrl: string;
 
-  @Column()
+  @Column({ nullable: true })
   @Index({ fulltext: true, parser: 'ngram' })
   description: string;
 
@@ -50,6 +57,7 @@ export class PostContentElement {
       from: pointToJsonObject,
       to: jsonToPoint,
     },
+    nullable: true,
   })
   coordinate: Coordinate;
 }
