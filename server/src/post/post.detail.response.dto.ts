@@ -50,7 +50,7 @@ export class PostDetailResponse {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => PlaceBase)
-  pings: PlaceBase[];
+  pins: PlaceBase[];
 
   @ApiProperty({ description: '좋아요개수' })
   @IsInt()

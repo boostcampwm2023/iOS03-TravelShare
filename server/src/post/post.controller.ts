@@ -90,7 +90,7 @@ SELECT ... FROM post ... WHERE title LIKE '%:title%' OR '%:user:%';
 - query로 id만 꼭 명시해주어야 합니다.
 - route는 이동 경로를 나타낼 좌표 배열,
 - contents는 캐러셀 뷰에 들어갈 이미지와 설명, 좌표로 이루어진 배열
-- pings는 지도에 핑이 찍힐 위치와 위치에 대한 메타데이터(상호명, 주소, 등)
+- pins는 지도에 핑이 찍힐 위치와 위치에 대한 메타데이터(상호명, 주소, 등)
 
 `,
   })
@@ -112,10 +112,10 @@ SELECT ... FROM post ... WHERE title LIKE '%:title%' OR '%:user:%';
 - imageUrl 등은 필수값이 아니므로 잘 확인해주세요.
 - ### 경로는 route를 통해 설정할 수 있습니다.
 - public 인자를 통해 게시글 공개여부를 설정할 수 있습니다.
-## route.coordinates와 pings를 설정해야 합니다.
+## route.coordinates와 pins를 설정해야 합니다.
 - coordinates는 이동경로로 저장한 좌표배열을 의미하고,
-- pings는 핑찍은 장소들에 대한 좌표배열입니다.
-- pings를 저장할 때는 몇 가지 정보들이 더 필요한데,
+- pins는 핑찍은 장소들에 대한 좌표배열입니다.
+- pins를 저장할 때는 몇 가지 정보들이 더 필요한데,
 map api를 통해 불러온 정보들을 그대로 사용하면 됩니다.
 - 장소를 구별하기 위해 place_id가 꼭 필요한데, kakao map api 검색을 통해 응답받은
 id 항목을 넣어주어야 합니다.

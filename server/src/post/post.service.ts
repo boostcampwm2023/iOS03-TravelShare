@@ -321,7 +321,7 @@ ORDER BY
           contents: true,
           writer: true,
           route: true,
-          pings: true,
+          pins: true,
         },
       })
       .catch((err) => {
@@ -359,15 +359,15 @@ ORDER BY
     // 이미 들어있는 엔티티
     const placeIds = (
       await this.placeRepository.find({
-        where: { placeId: In(post.pings.map(({ placeId }) => placeId)) },
+        where: { placeId: In(post.pins.map(({ placeId }) => placeId)) },
       })
     ).map(({ placeId }) => placeId);
     const { identifiers: places } = await this.placeRepository.insert(
-      post.pings.filter(({ placeId }) => !placeIds.includes(placeId)),
+      post.pins.filter(({ placeId }) => !placeIds.includes(placeId)),
     );
     await this.postRepository
       .createQueryBuilder()
-      .relation('pings')
+      .relation('pins')
       .of(postId)
       .add([...places.map(({ placeId }) => placeId), ...placeIds]);
     return plainToInstance(PostUploadResponse, {

@@ -65,7 +65,7 @@ export class PostUploadBody {
   @ApiProperty({ description: '핑 정보를 넣어줍니다.', type: [PlaceBase] })
   @ValidateNested({ each: true })
   @Type(() => PlaceBase)
-  pings: PlaceBase[];
+  pins: PlaceBase[];
 
   @ApiProperty({ description: '사진과 글', type: [PostUploadElement] })
   @IsArray()
