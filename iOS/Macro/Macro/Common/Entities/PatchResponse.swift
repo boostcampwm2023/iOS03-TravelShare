@@ -8,6 +8,7 @@
 import Foundation
 
 struct PatchResponse: Codable {
+    let message: String
+    let error: String?
     let statusCode: Int
-    let body: String
 }

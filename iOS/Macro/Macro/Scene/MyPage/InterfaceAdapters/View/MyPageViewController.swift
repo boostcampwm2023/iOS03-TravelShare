@@ -28,7 +28,7 @@ final class MyPageViewController: TabViewController {
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "아몰랑"
+        label.textAlignment = .center
         label.textColor = UIColor.appColor(.purple5)
         label.font = UIFont.appFont(.baeEunCallout)
         return label
@@ -264,7 +264,7 @@ extension MyPageViewController {
     enum Metrics {
         static let imageWidth: CGFloat = 120
         static let imageHeight: CGFloat = 120
-        static let nameLabelWidth: CGFloat = 42
+        static let nameLabelWidth: CGFloat = 100
         static let nameLabelHeight: CGFloat = 46
     }
     
