@@ -19,13 +19,14 @@ extension PostFindEndPoint: EndPoint {
     }
     
     var headers: MacroNetwork.HTTPHeaders {
-        return []
+        let token = KeyChainManager.load(key: "AccessToken") ?? ""
+            return ["Authorization": "Bearer \(token)"]
     }
     
     var parameter: MacroNetwork.HTTPParameter {
         switch self {
         case let .search(text):
-            return .query(["post": text])
+            return .query(["title": text])
         }
     }
     
@@ -37,6 +38,6 @@ extension PostFindEndPoint: EndPoint {
     }
     
     var path: String {
-        return ""
+        return "post/search"
     }
 }

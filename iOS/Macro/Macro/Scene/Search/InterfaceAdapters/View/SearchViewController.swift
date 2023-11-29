@@ -21,6 +21,8 @@ final class SearchViewController: TabViewController {
     
     private let searchBar: UITextField = CommonUIComponents.createSearchBar()
     
+    lazy var postCollectionView: PostCollectionView = PostCollectionView(frame: .zero, viewModel: viewModel)
+    
     private let searchSegment: UISegmentedControl = {
         let segmentItems = ["계정", "글"]
         let segmentControl = UISegmentedControl(items: segmentItems)
@@ -33,27 +35,22 @@ final class SearchViewController: TabViewController {
             .font: font,
             .foregroundColor: color
         ]
-
         for (index, text) in segmentItems.enumerated() {
             let icon = index == 0 ? accountImage : postImage
             let textSize = (text as NSString).size(withAttributes: attributes)
             let textRect = CGRect(origin: CGPoint.zero, size: textSize)
             let iconRect = CGRect(origin: CGPoint(x: textRect.maxX + 5, y: (textSize.height - icon.size.height) / 2), size: icon.size)
             let imageSize = CGSize(width: iconRect.maxX, height: max(textRect.height, icon.size.height))
-
             UIGraphicsBeginImageContextWithOptions(imageSize, false, 0)
             text.draw(in: textRect, withAttributes: attributes)
             icon.draw(in: iconRect)
             let combinedImage = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
-
             segmentControl.setImage(combinedImage, forSegmentAt: index)
         }
-
         return segmentControl
     }()
 
-    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -81,11 +78,13 @@ extension SearchViewController {
     private func setTranslatesAutoresizingMaskIntoConstraints() {
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchSegment.translatesAutoresizingMaskIntoConstraints = false
+        postCollectionView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func addsubviews() {
         view.addSubview(searchBar)
         view.addSubview(searchSegment)
+        view.addSubview(postCollectionView)
     }
     
     private func setLayoutConstraints() {
@@ -97,9 +96,12 @@ extension SearchViewController {
             searchSegment.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: Padding.segmentTop),
             searchSegment.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             searchSegment.heightAnchor.constraint(equalToConstant: Metrics.segmentHeight),
-            searchSegment.widthAnchor.constraint(equalToConstant: Metrics.segmentWidth)
+            searchSegment.widthAnchor.constraint(equalToConstant: Metrics.segmentWidth),
+            postCollectionView.topAnchor.constraint(equalTo: searchSegment.bottomAnchor, constant: Padding.postCollectionViewTop),
+            postCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            postCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            postCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
-        
     }
 }
 
@@ -122,6 +124,10 @@ extension SearchViewController {
             switch output {
             case let .updateSearchResult(result):
                 self?.updateSearchResult(result)
+            case .navigateToProfileView(_):
+                print(1)
+            case .navigateToReadView(_):
+                print(2)
             }
         }.store(in: &cancellables)
         
@@ -141,7 +147,8 @@ extension SearchViewController {
     }
     
     func updateSearchResult(_ result: [PostFindResponse]) {
-      
+        postCollectionView.viewModel.posts = result
+        postCollectionView.reloadData()
     }
 }
 
@@ -157,5 +164,6 @@ extension SearchViewController {
         static let seachBarTop: CGFloat = 10
         static let segmentTop: CGFloat = 20
         static let searchSide: CGFloat = 10
+        static let postCollectionViewTop: CGFloat = 10
     }
 }
