@@ -42,7 +42,6 @@ final class MyPageViewController: TabViewController {
     init(viewModel: MyPageViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        view.backgroundColor = .systemBackground
     }
     
     required init?(coder: NSCoder) {

@@ -55,7 +55,6 @@ final class SearchViewController: TabViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
         setUpLayout()
         bind()
         searchSegment.addTarget(self, action: #selector(segmentValueChanged(_:)), for: .valueChanged)
