@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from 'entities/post.entity';
 import { In, Like, Raw, Repository } from 'typeorm';
@@ -310,16 +314,19 @@ ORDER BY
 
   @Transactional()
   async detail({ postId }: PostDetailQuery, { email }: Authentication) {
-    const post = await this.postRepository.findOneOrFail({
-      where: { postId },
-      relations: {
-        contents: true,
-        writer: true,
-        route: true,
-        pings: true,
-      },
-    });
-    console.log(post);
+    const post = await this.postRepository
+      .findOneOrFail({
+        where: { postId },
+        relations: {
+          contents: true,
+          writer: true,
+          route: true,
+          pings: true,
+        },
+      })
+      .catch((err) => {
+        throw new NotFoundException('post not found', { cause: err });
+      });
     if (post.writer.email !== email && !post.public) {
       throw new BadRequestException('비공개 게시글입니다.');
     }
@@ -383,12 +390,16 @@ ORDER BY
     } else {
       await this.likeInternal(postId, email);
     }
-    const { likeNum } = await this.postRepository.findOneOrFail({
-      where: {
-        postId,
-      },
-      select: { likeNum: true },
-    });
+    const { likeNum } = await this.postRepository
+      .findOneOrFail({
+        where: {
+          postId,
+        },
+        select: { likeNum: true },
+      })
+      .catch((err) => {
+        throw new NotFoundException('post not found', { cause: err });
+      });
 
     return plainToInstance(PostLikeResponse, {
       likeNum,
@@ -411,7 +422,10 @@ ORDER BY
       .createQueryBuilder()
       .relation('likedUsers')
       .of(postId)
-      .add(email);
+      .add(email)
+      .catch((err) => {
+        throw new NotFoundException('post or user not found', { cause: err });
+      });
     await this.postRepository.update(postId, {
       likeNum: () => 'like_num + 1',
     });
@@ -422,7 +436,10 @@ ORDER BY
       .createQueryBuilder()
       .relation('likedUsers')
       .of(postId)
-      .remove(email);
+      .remove(email)
+      .catch((err) => {
+        throw new NotFoundException('post or user not found', { cause: err });
+      });
     await this.postRepository.update(postId, {
       likeNum: () => 'like_num - 1',
     });
