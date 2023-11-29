@@ -52,6 +52,13 @@ final class WriteViewController: TabViewController {
         return textField
     }()
     
+    private let summaryTextView: UITextView = {
+        let textView = UITextView()
+        textView.font = UIFont.appFont(.baeEunCallout)
+        textView.backgroundColor = UIColor.appColor(.purple1)
+        return textView
+    }()
+    
     private lazy var carouselView: MacroCarouselView = {
         let view = MacroCarouselView(const: const, addImageOutputSubject: imageAddSubject, didScrollOutputSubject: didScrollSubject)
         return view
@@ -121,6 +128,7 @@ private extension WriteViewController {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         carouselView.translatesAutoresizingMaskIntoConstraints = false
         titleTextField.translatesAutoresizingMaskIntoConstraints = false
+        summaryTextView.translatesAutoresizingMaskIntoConstraints = false
         imageDescriptionTextField.translatesAutoresizingMaskIntoConstraints = false
         mapView.translatesAutoresizingMaskIntoConstraints = false
         writeSubmitButton.translatesAutoresizingMaskIntoConstraints = false
@@ -132,6 +140,7 @@ private extension WriteViewController {
         scrollView.addSubview(scrollContentView)
         [
             titleTextField,
+            summaryTextView,
             carouselView,
             imageDescriptionTextField,
             mapView,
@@ -151,7 +160,12 @@ private extension WriteViewController {
             titleTextField.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -20),
             titleTextField.heightAnchor.constraint(equalToConstant: 50),
             
-            carouselView.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 20),
+            summaryTextView.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 20),
+            summaryTextView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 20),
+            summaryTextView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -10),
+            summaryTextView.heightAnchor.constraint(equalToConstant: 210),
+            
+            carouselView.topAnchor.constraint(equalTo: summaryTextView.bottomAnchor, constant: 20),
             carouselView.leftAnchor.constraint(equalTo: scrollContentView.leftAnchor),
             carouselView.rightAnchor.constraint(equalTo: scrollContentView.rightAnchor),
             carouselView.heightAnchor.constraint(equalToConstant: const.itemSize.height),
@@ -182,6 +196,7 @@ private extension WriteViewController {
     
     func delegateConfigure() {
         titleTextField.delegate = self
+        summaryTextView.delegate = self
     }
 }
 
@@ -273,7 +288,7 @@ extension WriteViewController: UIImagePickerControllerDelegate, UINavigationCont
     }
 }
 
-extension WriteViewController: UITextFieldDelegate {
+extension WriteViewController: UITextFieldDelegate, UITextViewDelegate {
     @objc func titleTextFieldDidChange(_ sender: Any?) {
         guard let title = self.titleTextField.text else { return }
         inputSubject.send(.titleTextUpdate(title))
@@ -282,5 +297,10 @@ extension WriteViewController: UITextFieldDelegate {
     @objc func descriptionTextFieldDidChange(_ sender: Any?) {
         guard let description = self.imageDescriptionTextField.text else { return }
         inputSubject.send(.imageDescriptionUpdate(index: self.carouselCurrentIndex, description: description))
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        guard let summarry = textView.text else { return }
+        inputSubject.send(.summaryTextUpdate(summarry))
     }
 }
