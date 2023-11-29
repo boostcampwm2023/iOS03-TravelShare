@@ -11,8 +11,11 @@ const LINESTRING_COORDINATES_EXTRACT_REGEXP =
 
 export type LineString = { x: number; y: number }[];
 
-const lineStringToJsonArray = (text: string) => {
+const lineStringToJsonArray = (text?: string) => {
   const extracted = LINESTRING_COORDINATES_EXTRACT_REGEXP.exec(text)?.[1];
+  if (!text) {
+    return null;
+  }
   return extracted
     .split(',')
     .map((coordinate) => coordinate.split(/\s+/).map(parseFloat))
@@ -20,7 +23,6 @@ const lineStringToJsonArray = (text: string) => {
 };
 
 const jsonArrayToLineString = (coordinates: LineString) => {
-  console.log(coordinates);
   return `LINESTRING(${coordinates.map(({ x, y }) => `${y} ${x}`).join(',')})`;
 };
 
