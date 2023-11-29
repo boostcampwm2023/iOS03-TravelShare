@@ -83,8 +83,8 @@ extension SearchViewModel {
             }.store(in: &cancellables)
     }
     
-    func navigateToProfileView(userId: String) {
-        outputSubject.send(.navigateToProfileView(userId))
+    func navigateToProfileView(email: String) {
+        outputSubject.send(.navigateToProfileView(email))
     }
     
     func navigateToReadView(postId: Int) {

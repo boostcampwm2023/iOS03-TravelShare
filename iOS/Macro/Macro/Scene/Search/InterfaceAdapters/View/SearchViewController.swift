@@ -124,7 +124,7 @@ extension SearchViewController {
             switch output {
             case let .updateSearchResult(result):
                 self?.updateSearchResult(result)
-            case .navigateToProfileView(_):
+            case let .navigateToProfileView(userId):
                 print(1)
             case .navigateToReadView(_):
                 print(2)
@@ -149,6 +149,21 @@ extension SearchViewController {
     func updateSearchResult(_ result: [PostFindResponse]) {
         postCollectionView.viewModel.posts = result
         postCollectionView.reloadData()
+    }
+    func navigateToProfileView(_ userId: String) {
+//        let userInfoViewModel = UserInfoViewModel(postSearcher: viewModel.postSearcher, followFeature: viewModel.followFeatrue)
+//        let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: userId)
+//
+//        navigationController?.pushViewController(userInfoViewController, animated: true)
+    }
+    
+    func navigateToReadView(_ postId: Int) {
+//        let provider = APIProvider(session: URLSession.shared)
+//        let readuseCase = ReadPostUseCase(provider: provider)
+//        let readViewModel = ReadViewModel(useCase: readuseCase, postId: postId)
+//        let readViewController = ReadViewController(viewModel: readViewModel)
+//
+//        navigationController?.pushViewController(readViewController, animated: true)
     }
 }
 

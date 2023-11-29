@@ -11,7 +11,7 @@ import UIKit
 protocol PostCollectionViewProtocol: AnyObject {
     var posts: [PostFindResponse] { get set }
     
-    func navigateToProfileView(userId: String)
+    func navigateToProfileView(email: String)
     func navigateToReadView(postId: Int)
     func loadImage(profileImageStringURL: String, completion: @escaping (UIImage?) -> Void)
     func touchLike(postId: String, compeletion: @escaping (Bool) -> Void)

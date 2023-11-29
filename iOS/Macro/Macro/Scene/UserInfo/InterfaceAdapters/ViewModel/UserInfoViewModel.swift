@@ -13,6 +13,7 @@ final class UserInfoViewModel: ViewModelProtocol {
     // MARK: - Properties
     
     var posts: [PostFindResponse] = []
+    var userProfile: UserProfile = UserProfile(email: "", name: "", imageUrl: nil, introduce: nil, followersNum: 0, followeesNum: 0)
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
     let searcher: SearchUseCase
@@ -87,8 +88,8 @@ final class UserInfoViewModel: ViewModelProtocol {
 // MARK: - PostCollectionView Delegate
 extension UserInfoViewModel: PostCollectionViewProtocol {
     
-    func navigateToProfileView(userId: String) {
-        self.outputSubject.send(.navigateToProfileView(userId))
+    func navigateToProfileView(email: String) {
+        self.outputSubject.send(.navigateToProfileView(email))
     }
     
     func navigateToReadView(postId: Int) {

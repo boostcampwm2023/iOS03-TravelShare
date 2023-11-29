@@ -14,8 +14,8 @@ final class HomeViewModel: ViewModelProtocol, PostCollectionViewProtocol {
         self.outputSubject.send(.navigateToReadView(postId))
     }
     
-    func navigateToProfileView(userId: String) {
-        self.outputSubject.send(.navigateToProfileView(userId))
+    func navigateToProfileView(email: String) {
+        self.outputSubject.send(.navigateToProfileView(email))
     }
 
     func searchUser(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {

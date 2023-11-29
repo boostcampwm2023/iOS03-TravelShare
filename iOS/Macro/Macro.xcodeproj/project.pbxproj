@@ -98,6 +98,7 @@
 		D21B10072B14660600F2F84E /* MyInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B10062B14660600F2F84E /* MyInfoViewController.swift */; };
 		D21B10092B14799C00F2F84E /* NameEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B10082B14799C00F2F84E /* NameEditView.swift */; };
 		D21B100B2B1497E000F2F84E /* IntroductionEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B100A2B1497E000F2F84E /* IntroductionEditView.swift */; };
+		D21B100E2B16E73200F2F84E /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B100D2B16E73200F2F84E /* UserProfile.swift */; };
 		D241DC6E2B0D9FFE0037DDB6 /* SearchUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC6D2B0D9FFE0037DDB6 /* SearchUseCase.swift */; };
 		D241DC712B0DA0070037DDB6 /* CommonUIComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC702B0DA0070037DDB6 /* CommonUIComponents.swift */; };
 		D241DC752B0DA00F0037DDB6 /* Writer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC732B0DA00F0037DDB6 /* Writer.swift */; };
@@ -211,6 +212,7 @@
 		D21B10062B14660600F2F84E /* MyInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoViewController.swift; sourceTree = "<group>"; };
 		D21B10082B14799C00F2F84E /* NameEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameEditView.swift; sourceTree = "<group>"; };
 		D21B100A2B1497E000F2F84E /* IntroductionEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroductionEditView.swift; sourceTree = "<group>"; };
+		D21B100D2B16E73200F2F84E /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		D241DC6D2B0D9FFE0037DDB6 /* SearchUseCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUseCase.swift; sourceTree = "<group>"; };
 		D241DC702B0DA0070037DDB6 /* CommonUIComponents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonUIComponents.swift; sourceTree = "<group>"; };
 		D241DC732B0DA00F0037DDB6 /* Writer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Writer.swift; sourceTree = "<group>"; };
@@ -657,6 +659,7 @@
 		BA6C6DE52B05FFC500563B22 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				D21B100C2B16DDF200F2F84E /* Network */,
 				D241DC722B0DA00F0037DDB6 /* Entities */,
 				D241DC6F2B0DA0070037DDB6 /* UI */,
 				D241DC6C2B0D9FFE0037DDB6 /* UseCases */,
@@ -935,6 +938,13 @@
 			path = NetworkUnresearchable;
 			sourceTree = "<group>";
 		};
+		D21B100C2B16DDF200F2F84E /* Network */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
 		D241DC6C2B0D9FFE0037DDB6 /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
@@ -961,6 +971,7 @@
 				D241DC732B0DA00F0037DDB6 /* Writer.swift */,
 				D241DC742B0DA00F0037DDB6 /* PostFindResponse.swift */,
 				BAB24EDA2B1633B2000991A1 /* ProfileGetResponse.swift */,
+				D21B100D2B16E73200F2F84E /* UserProfile.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -1188,6 +1199,7 @@
 				AAD0B3002B147CA3003B4D5F /* RefreshTokenResponse.swift in Sources */,
 				AAD0B3022B147CCC003B4D5F /* RefreshTokenEndPoint.swift in Sources */,
 				D263CA222B040EBE00B4A144 /* TravelViewModel.swift in Sources */,
+				D21B100E2B16E73200F2F84E /* UserProfile.swift in Sources */,
 				AAD0B3162B14E394003B4D5F /* ReadPostUseCase.swift in Sources */,
 				BA8DC40A2B0B5F7800929E01 /* TabViewController.swift in Sources */,
 				D241DC762B0DA00F0037DDB6 /* PostFindResponse.swift in Sources */,

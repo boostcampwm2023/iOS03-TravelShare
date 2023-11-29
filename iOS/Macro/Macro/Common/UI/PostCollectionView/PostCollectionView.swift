@@ -43,17 +43,12 @@ final class PostCollectionView<T: PostCollectionViewProtocol>: UICollectionView,
         return viewModel.posts.count
     }
     
-    func collectionView(_ collectionView: UICollectionView,
-                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "PostCollectionViewCell",
-            for: indexPath) as? PostCollectionViewCell<T> else { return UICollectionViewCell()
-        }
-        let item: PostFindResponse = viewModel.posts[indexPath.row]
-        cell.configure(item: item, viewModel: viewModel)
-        
-        return cell
-    }
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+           guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCollectionViewCell", for: indexPath) as? PostCollectionViewCell<T> else { return UICollectionViewCell() }
+           let item = viewModel.posts[indexPath.row]
+           cell.configure(item: item, viewModel: viewModel, indexPath: indexPath)
+           return cell
+       }
     
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
