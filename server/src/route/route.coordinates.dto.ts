@@ -25,7 +25,7 @@ export class RouteCoordinates {
     ],
   })
   @IsArray()
-  @ValidateNested()
+  @ValidateNested({ each: true })
   @Type(() => RouteCoordinate)
   coordinates: RouteCoordinate[];
 }
