@@ -207,8 +207,9 @@ private extension WriteViewController {
                     
                     self?.carouselView.updateData(images)
                 // Submit 버튼 눌러진 경우
-                case .uploadWrite:
+                case .postUploadSuccess:
                     // TODO: - Home화면으로 돌아가
+                    debugPrint("Post Upload Success")
                     break
                 case let .outputDescriptionString(description):
                     self?.imageDescriptionTextField.text = description
@@ -280,7 +281,6 @@ extension WriteViewController: UITextFieldDelegate {
     
     @objc func descriptionTextFieldDidChange(_ sender: Any?) {
         guard let description = self.imageDescriptionTextField.text else { return }
-        debugPrint(self.carouselCurrentIndex, description)
         inputSubject.send(.imageDescriptionUpdate(index: self.carouselCurrentIndex, description: description))
     }
 }
