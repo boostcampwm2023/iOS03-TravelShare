@@ -360,7 +360,7 @@ ORDER BY
     post.pins ??= [];
     const placeIds = (
       await this.placeRepository.find({
-        where: { placeId: In((post.pins).map(({ placeId }) => placeId)) },
+        where: { placeId: In(post.pins.map(({ placeId }) => placeId)) },
       })
     ).map(({ placeId }) => placeId);
     const { identifiers: places } = await this.placeRepository.insert(
@@ -377,11 +377,7 @@ ORDER BY
   }
 
   private async saveOrGetRouteId({ route }: PostUploadBody): Promise<number> {
-    if(
-      !route ||
-      !route.coordinates ||
-      route.coordinates?.length === 0
-    ) {
+    if (!route || !route.coordinates || route.coordinates?.length === 0) {
       return null;
     }
     const {
