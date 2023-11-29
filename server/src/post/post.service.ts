@@ -15,6 +15,7 @@ import { PostUploadResponse } from './post.upload.response.dto';
 import { Route } from 'entities/route.entity';
 import { PostLikeResponse } from './post.like.response.dto';
 import { PostContentElement } from 'entities/post.content.element.entity';
+import { Place } from 'entities/place.entity';
 
 @Injectable()
 export class PostService {
@@ -25,6 +26,8 @@ export class PostService {
     private readonly postContentElementRepository: Repository<PostContentElement>,
     @InjectRepository(Route)
     private readonly routeRepository: Repository<Route>,
+    @InjectRepository(Place)
+    private readonly placeRepository: Repository<Place>,
   ) {}
 
   /**
@@ -313,9 +316,10 @@ ORDER BY
         contents: true,
         writer: true,
         route: true,
+        pings: true,
       },
     });
-
+    console.log(post);
     if (post.writer.email !== email && !post.public) {
       throw new BadRequestException('비공개 게시글입니다.');
     }
@@ -345,21 +349,30 @@ ORDER BY
         post: { postId },
       })),
     );
+    // 이미 들어있는 엔티티
+    const placeIds = (
+      await this.placeRepository.find({
+        where: { placeId: In(post.pings.map(({ placeId }) => placeId)) },
+      })
+    ).map(({ placeId }) => placeId);
+    const { identifiers: places } = await this.placeRepository.insert(
+      post.pings.filter(({ placeId }) => !placeIds.includes(placeId)),
+    );
+    await this.postRepository
+      .createQueryBuilder()
+      .relation('pings')
+      .of(postId)
+      .add([...places.map(({ placeId }) => placeId), ...placeIds]);
     return plainToInstance(PostUploadResponse, {
       postId,
     });
   }
 
   private async saveOrGetRouteId({ route }: PostUploadBody): Promise<number> {
-    const { coordinates, routeId } = route;
-    if (coordinates) {
-      const {
-        identifiers: [{ routeId }],
-      } = await this.routeRepository.insert({ ...route, routeId: null });
-      return routeId;
-    } else {
-      return routeId;
-    }
+    const {
+      identifiers: [{ routeId }],
+    } = await this.routeRepository.insert({ ...route, routeId: null });
+    return routeId;
   }
 
   @Transactional()
