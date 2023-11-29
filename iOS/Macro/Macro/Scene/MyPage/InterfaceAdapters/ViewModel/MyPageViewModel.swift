@@ -18,21 +18,27 @@ class MyPageViewModel: ViewModelProtocol {
     let information = ["이름", "프로필 사진", "자기소개"]
     let post = ["작성한 글", "좋아요한 글"]
     let management = ["팔로우", "알림", "문의하기"]
+    let patcher: PatchUseCase
+    let searcher: SearchUseCase
     
     // MARK: - init
-    init() {
+    init(patcher: PatchUseCase, searcher: SearchUseCase) {
+        self.patcher = patcher
+        self.searcher = searcher
     }
     
     // MARK: - Input
     
     enum Input {
-        
+        case completeButtonPressed(Int, String)
+        case getMyUserData(String)
     }
     
     // MARK: - Output
 
     enum Output {
-        case appleLoginCompleted
+        case patchCompleted(Int, String)
+        case sendMyUserData(UserProfile)
     }
     
     // MARK: - Methods
@@ -40,10 +46,31 @@ class MyPageViewModel: ViewModelProtocol {
         input
             .sink { [weak self] input in
                 switch input {
+                case let .completeButtonPressed(cellIndex, query):
+                    self?.modifyInformation(cellIndex, query)
+                case let .getMyUserData(email):
+                    self?.getMyUserData(email)
                 }
             }
             .store(in: &cancellables)
+        
         return outputSubject.eraseToAnyPublisher()
     }
     
+    func modifyInformation(_ cellIndex: Int, _ query: String) {
+        patcher.patchUser(cellIndex: cellIndex, query: query).sink { completion in
+        } receiveValue: { [weak self] response in
+            print(response)
+            self?.outputSubject.send(.patchCompleted(cellIndex, query))
+        }.store(in: &cancellables)
+    }
+    
+    func getMyUserData(_ email: String) {
+        print(2)
+        searcher.searchUserProfile(query: email).sink { completion in
+        } receiveValue: { [weak self] response in
+            print(response)
+            self?.outputSubject.send(.sendMyUserData(response))
+        }.store(in: &cancellables)
+    }
 }

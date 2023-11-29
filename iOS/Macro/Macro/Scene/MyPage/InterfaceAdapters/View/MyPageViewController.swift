@@ -5,6 +5,7 @@
 //  Created by Byeon jinha on 11/21/23.
 //
 
+import Combine
 import MacroNetwork
 import UIKit
 
@@ -13,7 +14,9 @@ final class MyPageViewController: TabViewController {
     // MARK: - Properties
     
     private let viewModel: MyPageViewModel
-    
+    private let inputSubject: PassthroughSubject<MyPageViewModel.Input, Never> = .init()
+    private var cancellables = Set<AnyCancellable>()
+
     // MARK: - UI Components
     
     private let profileImageView: UIImageView = {
@@ -56,11 +59,14 @@ final class MyPageViewController: TabViewController {
         tableView.dataSource = self
         tableView.delegate = self
         setUpLayout()
+        bind()
+        if let email = viewModel.email {
+            inputSubject.send(.getMyUserData(email))
+        }
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
         profileImageView.layer.cornerRadius = profileImageView.bounds.width / 2
         profileImageView.clipsToBounds = true
     }
@@ -112,6 +118,26 @@ extension MyPageViewController {
     @objc func backButtonPressed() {
         self.dismiss(animated: true, completion: nil)
     }
+}
+
+// MARK: - Bind
+extension MyPageViewController {
+    
+    private func bind() {
+        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+        outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
+            switch output {
+            case let .sendMyUserData(userProfile):
+                self?.updateUserInformation(userProfile)
+            default: break
+            }
+        }.store(in: &cancellables)
+    }
+    
+    private func updateUserInformation(_ data: UserProfile) {
+        nameLabel.text = data.name
+    }
+    
 }
 
 // MARK: - Methods

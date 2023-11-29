@@ -5,6 +5,7 @@
 //  Created by 김나훈 on 11/27/23.
 //
 
+import Combine
 import UIKit
 
 final class MyInfoViewController: UIViewController {
@@ -13,6 +14,7 @@ final class MyInfoViewController: UIViewController {
     
     let viewModel: MyPageViewModel
     let selectedIndex: Int
+    private let inputSubject: PassthroughSubject<MyPageViewModel.Input, Never> = .init()
     
     // MARK: - UI Components
     
@@ -50,6 +52,7 @@ final class MyInfoViewController: UIViewController {
         super.viewDidLoad()
         setUpLayout()
         introductionEditView.introductionTextView.delegate = self
+        saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
     }
     
     // MARK: - Init
@@ -122,8 +125,12 @@ final class MyInfoViewController: UIViewController {
     
     // MARK: - Binding
     
-    private func bind() {
-        
+    
+    @objc private func saveButtonTapped() {
+        switch selectedIndex {
+        case 0: inputSubject.send(.completeButtonPressed(selectedIndex, nameEditView.nameTextField.text ?? ""))
+        default: inputSubject.send(.completeButtonPressed(selectedIndex, introductionEditView.introductionTextView.text ?? ""))
+        }
     }
     
 }
