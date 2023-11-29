@@ -40,7 +40,7 @@ export class UserController {
     @AuthenticatedUser() user: Authentication,
     @Query() userInfo: UserProfileUpdateQuery,
   ) {
-    await this.userService.updateUserInfo(user, userInfo);
+    return await this.userService.updateUserInfo(user, userInfo);
   }
 
   @ApiOperation({
