@@ -30,10 +30,13 @@ protocol SearchUseCase {
     
     /// 특정 사용자의 id를 검색하면, 해당 json 파일 내의 해당 사용자의 게시글 모두 불러옴
     func searchMockUserProfile(query: String, json: String) -> AnyPublisher<ProfileGetResponse, NetworkError>
+
+    /// 특정 제목으로 게시글을 검색
+    func searchPostTitle(query: String) -> AnyPublisher<[PostFindResponse], NetworkError>
 }
 
 final class Searcher: SearchUseCase {
-   
+    
     // MARK: - Properties
     
     private let provider: Requestable
@@ -72,5 +75,9 @@ final class Searcher: SearchUseCase {
     
     func searchMockUserProfile(query: String, json: String) -> AnyPublisher<ProfileGetResponse, MacroNetwork.NetworkError> {
         return provider.mockRequest(UserInfoEndPoint.search(query), url: json)
+    }
+    
+    func searchPostTitle(query: String) -> AnyPublisher<[PostFindResponse], MacroNetwork.NetworkError> {
+        return provider.request(PostFindEndPoint.search(query))
     }
 }

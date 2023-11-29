@@ -71,7 +71,7 @@ extension SearchViewModel {
     }
     
     private func searchPost(text: String) {
-        postSearcher.searchPost(query: text)
+        postSearcher.searchPostTitle(query: text)
             .sink { completion in
                 if case let .failure(error) = completion {
                     print(error)
