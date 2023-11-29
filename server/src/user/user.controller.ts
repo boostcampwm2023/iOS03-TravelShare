@@ -23,7 +23,15 @@ import { UserFollowResponse } from './user.follow.response.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @ApiOperation({ description: '회원정보 수정' })
+  @ApiOperation({
+    summary: '유저 정보를 업데이트합니다.',
+    description: `
+# user/update
+
+- 유저 정보를 업데이트합니다.
+- 쿼리 파라미터로 email, introduce(자기소개), imageUrl(프로필 사진) 중 하나 이상을 설정할 수 있습니다.
+`,
+  })
   @Patch('update')
   async update(
     @AuthenticatedUser() user: Authentication,
@@ -32,8 +40,10 @@ export class UserController {
     await this.userService.updateUserInfo(user, userInfo);
   }
 
+  @ApiOperation({
+    summary: '나의 정보 혹은 다른 유저의 정보를 불러옵니다.',
+  })
   @ApiResponse({
-    description: '나의 정보 혹은 다른 유저의 정보를 불러옵니다.',
     type: UserProfileResponse,
   })
   @Get('profile')
@@ -47,7 +57,7 @@ export class UserController {
     return this.userService.getUserProfile(email ?? user.email);
   }
 
-  @ApiOperation({ description: '팔로우 혹은 언팔로우' })
+  @ApiOperation({ summary: '팔로우 혹은 언팔로우' })
   @ApiOkResponse({ type: UserFollowResponse })
   @Patch('follow')
   async follow(
@@ -57,7 +67,7 @@ export class UserController {
     return await this.userService.follow(email, followee);
   }
 
-  @ApiOperation({ description: '팔로워 리스트' })
+  @ApiOperation({ summary: '팔로워 리스트' })
   @ApiResponse({ type: [UserProfileSimpleResponse] })
   @Get('followers')
   async followers(
@@ -67,7 +77,7 @@ export class UserController {
     return await this.userService.getFollowers({ ...user, ...otherUser });
   }
 
-  @ApiOperation({ description: '팔로잉 리스트' })
+  @ApiOperation({ summary: '팔로잉 리스트' })
   @ApiResponse({ type: [UserProfileSimpleResponse] })
   @Get('followees')
   async followings(

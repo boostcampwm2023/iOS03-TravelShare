@@ -13,8 +13,7 @@ export class AppleAuthController {
   constructor(private readonly appleAuthService: AppleAuthService) {}
 
   @ApiOperation({
-    description:
-      'Apple 로그인 혹은 회원가입을 실행하여 access token을 반환합니다.',
+    summary: 'Apple 로그인 혹은 회원가입을 실행하여 access token을 반환합니다.',
   })
   @ApiResponse({ type: AppleClientAuthResponse })
   @Public()
@@ -24,7 +23,7 @@ export class AppleAuthController {
   }
 
   @ApiOperation({
-    description: 'Apple 회원탈퇴를 진행합니다. 테스트필요',
+    summary: 'Apple 회원탈퇴를 진행합니다. 테스트필요',
   })
   @Delete('revoke')
   async revoke(@Body() payload: AppleClientRevokeBody) {
