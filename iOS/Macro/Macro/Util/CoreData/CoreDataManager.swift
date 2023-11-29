@@ -25,7 +25,12 @@ class CoreDataManager {
         }
     }
     
-    func saveTravel(id: String, recordedLocation: [[Double]], recordedPindedLocation: [[Double]], sequence: Int, startAt: Date, endAt: Date) {
+    func saveTravel(id: String,
+                    recordedLocation: [[Double]],
+                    recordedPindedLocation: [[String: [Double?]]],
+                    sequence: Int,
+                    startAt: Date,
+                    endAt: Date) {
         let request = NSFetchRequest<Travel>(entityName: Label.entityName)
         do {
             let locations = try coreDataStack.managedContext.fetch(request)
