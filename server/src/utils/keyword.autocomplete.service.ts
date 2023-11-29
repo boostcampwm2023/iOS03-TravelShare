@@ -48,6 +48,14 @@ export class KeywordAutoCompleteService implements OnModuleInit {
     return returnArray.map(({ word }) => word).slice(0, 10);
   }
 
+  delete(word: string) {
+    let node: TrieNode = this.root;
+    for (const char of word) {
+      node = node.children.get(char);
+    }
+    node.isEndOfWord--;
+  }
+
   private collectWords(node: TrieNode, word: string, returnArray: any[]) {
     // if (returnArray.length == 10) {
     //   return;
