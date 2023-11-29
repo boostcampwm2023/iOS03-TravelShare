@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'entities/user.entity';
 import { In, Repository } from 'typeorm';
@@ -31,18 +31,21 @@ export class UserService {
   }
 
   async getUserProfile(email: string): Promise<UserProfileResponse> {
-    const user = await this.userRepository.findOneOrFail({
-      where: {
-        email,
-      },
-    });
+    const user = await this.userRepository
+      .findOneOrFail({
+        where: {
+          email,
+        },
+      })
+      .catch((err) => {
+        throw new NotFoundException('user not found', { cause: err });
+      });
     return plainToInstance(UserProfileResponse, user);
   }
 
   @Transactional()
   async follow(from: string, to: string) {
     const isFollowed = await this.isUserFollowed(from, to);
-    console.log(isFollowed);
     if (!isFollowed) {
       await this.followInternal(from, to);
     } else {
@@ -63,7 +66,12 @@ export class UserService {
       .createQueryBuilder()
       .relation('followees')
       .of(from)
-      .add(to);
+      .add(to)
+      .catch((err) => {
+        throw new NotFoundException(`user email ${to} not found`, {
+          cause: err,
+        });
+      });
     await this.userRepository.increment({ email: from }, 'followeesNum', 1);
     await this.userRepository.increment({ email: to }, 'followersNum', 1);
   }
@@ -73,7 +81,12 @@ export class UserService {
       .createQueryBuilder()
       .relation('followees')
       .of(from)
-      .remove(to);
+      .remove(to)
+      .catch((err) => {
+        throw new NotFoundException(`user email ${to} not found`, {
+          cause: err,
+        });
+      });
     await this.userRepository.decrement({ email: from }, 'followeesNum', 1);
     await this.userRepository.decrement({ email: to }, 'followersNum', 1);
   }
@@ -92,7 +105,6 @@ export class UserService {
   async getFollowers({
     email,
   }: UserProfileQuery): Promise<UserProfileSimpleResponse[]> {
-    console.log(email);
     return plainToInstance(
       UserProfileSimpleResponse,
       await this.userRepository
