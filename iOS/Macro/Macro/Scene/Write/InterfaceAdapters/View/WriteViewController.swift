@@ -19,17 +19,8 @@ final class WriteViewController: TabViewController {
     private let imageAddSubject: PassthroughSubject<Bool, Never> = .init()
     private let didScrollSubject: PassthroughSubject<Int, Never> = .init()
     private let inputSubject: PassthroughSubject<WriteViewModel.Input, Never> = .init()
-    private var photoAuthorizationStatus = CurrentValueSubject<PHAuthorizationStatus, Never>(.notDetermined)
     private var subscriptions: Set<AnyCancellable> = []
     private var carouselCurrentIndex: Int = 0
-    
-    lazy var picker: PHPickerViewController = {
-        var configuration = PHPickerConfiguration()
-        configuration.filter = .images
-        let picker = PHPickerViewController(configuration: configuration)
-        picker.delegate = self
-        return picker
-    }()
     
     // MARK: - UI Components
     
@@ -231,18 +222,6 @@ private extension WriteViewController {
             }
             .store(in: &subscriptions)
         
-        photoAuthorizationStatus
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] state in
-                switch state {
-                case .authorized:
-                    self?.addImagePresent()
-                default:
-                    self?.photoAuthorizationRequest()
-                }
-            }
-            .store(in: &subscriptions)
-        
         didScrollSubject
             .receive(on: DispatchQueue.global())
             .sink { [weak self] index in
@@ -265,52 +244,31 @@ private extension WriteViewController {
     }
 }
 
-// MARK: - Image Picker
+// MARK: - ImagePicker
 
-extension WriteViewController: PHPickerViewControllerDelegate {
-    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        picker.dismiss(animated: true)
-        
-        guard !results.isEmpty else {
-            debugPrint("Image Pick results is Empyt")
-            return
+extension WriteViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    private func presentImagePickerController() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.delegate = self
+        present(imagePicker, animated: true)
+    }
+    
+    /// 사용자가 이미지를 선택했을 때
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let selectedImage = info[.originalImage] as? UIImage, let data = selectedImage.jpegData(compressionQuality: 1.0) {
+            self.inputSubject.send(.addImageData(imageData: data))
         }
-        
-        let itemProvider = results.first?.itemProvider
-        
-        var images = [UIImage?]()
-        
-        if let resultItempProvider = results.first?.itemProvider,
-           resultItempProvider.canLoadObject(ofClass: UIImage.self) {
-            resultItempProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
-                if let error {
-                    debugPrint("Error loading image: \(error.localizedDescription)")
-                }
-                
-                if let image = image as? UIImage, let data = image.jpegData(compressionQuality: 1.0) {
-                    self?.inputSubject.send(.addImageData(imageData: data))
-                }
-            }
-        }
+        dismiss(animated: true, completion: nil)
+    }
+    
+    /// 사용자가 이미지 선택을 취소했을 때
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
     
     func imageAddButtonTouched() {
-        self.photoAuthorizationStatus.value = PHPhotoLibrary.authorizationStatus(for: .readWrite)
-    }
-    
-    /// 사용자에게 라이브러리 접근 권한 요청 Method
-    private func photoAuthorizationRequest() {
-        let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
-        PHPhotoLibrary.requestAuthorization(for: .readWrite) { newStatus in
-            self.photoAuthorizationStatus.value = newStatus
-        }
-    }
-    
-    /// Image Picker 나타나게 하는 Method
-    private func addImagePresent() {
-        DispatchQueue.main.async {
-            self.present(self.picker, animated: true)
-        }
+        self.presentImagePickerController()
     }
 }
 
