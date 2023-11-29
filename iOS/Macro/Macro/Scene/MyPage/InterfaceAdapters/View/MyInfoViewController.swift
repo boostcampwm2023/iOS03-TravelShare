@@ -5,6 +5,7 @@
 //  Created by 김나훈 on 11/27/23.
 //
 
+import Combine
 import UIKit
 
 final class MyInfoViewController: UIViewController {
@@ -13,6 +14,8 @@ final class MyInfoViewController: UIViewController {
     
     let viewModel: MyPageViewModel
     let selectedIndex: Int
+    private let inputSubject: PassthroughSubject<MyPageViewModel.Input, Never> = .init()
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
     
@@ -26,12 +29,14 @@ final class MyInfoViewController: UIViewController {
     private lazy var nameEditView: NameEditView = {
         let view = NameEditView()
         view.optionLabel.text = viewModel.information[selectedIndex]
+        view.nameTextField.text = viewModel.myInfo.name
         return view
     }()
     
     private lazy var introductionEditView: IntroductionEditView = {
         let view = IntroductionEditView()
         view.optionLabel.text = viewModel.information[selectedIndex]
+        view.introductionTextView.text = viewModel.myInfo.introduce
         return view
     }()
     
@@ -50,6 +55,8 @@ final class MyInfoViewController: UIViewController {
         super.viewDidLoad()
         setUpLayout()
         introductionEditView.introductionTextView.delegate = self
+        saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
+        bind()
     }
     
     // MARK: - Init
@@ -122,8 +129,35 @@ final class MyInfoViewController: UIViewController {
     
     // MARK: - Binding
     
-    private func bind() {
+    func bind() {
+        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+        outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
+            switch output {
+            case .dissMissView: self?.dissMissView()
+            case let .showAlert(failError): self?.showAlert(failError)
+            default: break
+            }
+        }.store(in: &cancellables)
+    }
+    
+    private func dissMissView() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    private func showAlert(_ failError: String) {
+        let alert = UIAlertController(title: "오류", message: failError, preferredStyle: .alert)
+           let okAction = UIAlertAction(title: "확인", style: .default)
+           alert.addAction(okAction)
+           self.present(alert, animated: true, completion: nil)
+    }
+    
+    @objc private func saveButtonTapped() {
         
+        switch selectedIndex {
+        case 0: inputSubject.send(.completeButtonTapped(selectedIndex, nameEditView.nameTextField.text ?? ""))
+        default: inputSubject.send(.completeButtonTapped(selectedIndex, introductionEditView.introductionTextView.text ?? ""))
+        }
+     //   self.dismiss(animated: true, completion: nil)
     }
     
 }

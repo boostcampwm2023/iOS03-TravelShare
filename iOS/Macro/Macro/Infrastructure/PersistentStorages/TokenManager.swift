@@ -10,26 +10,25 @@ import Foundation
 import MacroNetwork
 
 struct TokenManager {
-    static func decodeJWTToken(token: String) -> TimeInterval? {
+    static func decodeJWTToken(token: String) -> JWTToken? {
         let tokenComponents = token.components(separatedBy: ".")
         
         guard tokenComponents.count == 3,
               let payloadData = tokenComponents[1].base64Decoded(),
-              let payload = try? JSONSerialization.jsonObject(with: payloadData, options: []) as? [String: Any],
-              let expiresTimeInterval = payload["exp"] as? TimeInterval else {
+              let payload = try? JSONSerialization.jsonObject(with: payloadData, options: []) as? [String: Any] else {
             return nil
         }
         
-        return expiresTimeInterval
+        return JWTToken(iat: payload["iat"] as? TimeInterval, exp: payload["exp"] as? TimeInterval, role: payload["role"] as? String, emial: payload["email"] as? String)
     }
     
     static func isTokenExpired() -> LoginState {
-        guard let token = KeyChainManager.load(key: "AccessToken"), let decodeToken = decodeJWTToken(token: token) else {
+        guard let token = KeyChainManager.load(key: KeyChainManager.Keywords.accessToken), let tokenExp = decodeJWTToken(token: token)?.exp else {
             return LoginState.loggedOut
         }
         let currentTimeInterval = Date().timeIntervalSince1970
         
-        return currentTimeInterval < decodeToken ? LoginState.loggedIn : LoginState.loggedOut
+        return currentTimeInterval < tokenExp ? LoginState.loggedIn : LoginState.loggedOut
     }
     
     static func refreshToken(cancellables: inout Set<AnyCancellable>) {
@@ -46,6 +45,20 @@ struct TokenManager {
                 KeyChainManager.save(key: KeyChainManager.Keywords.accessToken, token: refreshTokenResponse.accessToken)
             }
             .store(in: &cancellables)
+    }
+    
+    static func extractEmailFromJWTToken() -> String? {
+        guard let token = KeyChainManager.load(key: KeyChainManager.Keywords.accessToken), let email = decodeJWTToken(token: token)?.emial else {
+            return nil
+        }
+        return email
+    }
+    
+    struct JWTToken {
+        let iat: TimeInterval?
+        let exp: TimeInterval?
+        let role: String?
+        let emial: String?
     }
 }
 

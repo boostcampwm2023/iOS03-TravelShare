@@ -5,6 +5,7 @@
 //  Created by Byeon jinha on 11/21/23.
 //
 
+import Combine
 import MacroNetwork
 import UIKit
 
@@ -13,7 +14,9 @@ final class MyPageViewController: TabViewController {
     // MARK: - Properties
     
     private let viewModel: MyPageViewModel
-    
+    private let inputSubject: PassthroughSubject<MyPageViewModel.Input, Never> = .init()
+    private var cancellables = Set<AnyCancellable>()
+
     // MARK: - UI Components
     
     private let profileImageView: UIImageView = {
@@ -25,7 +28,7 @@ final class MyPageViewController: TabViewController {
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "아몰랑"
+        label.textAlignment = .center
         label.textColor = UIColor.appColor(.purple5)
         label.font = UIFont.appFont(.baeEunCallout)
         return label
@@ -42,7 +45,6 @@ final class MyPageViewController: TabViewController {
     init(viewModel: MyPageViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        view.backgroundColor = .systemBackground
     }
     
     required init?(coder: NSCoder) {
@@ -57,11 +59,14 @@ final class MyPageViewController: TabViewController {
         tableView.dataSource = self
         tableView.delegate = self
         setUpLayout()
+        bind()
+        if let email = viewModel.email {
+            inputSubject.send(.getMyUserData(email))
+        }
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
         profileImageView.layer.cornerRadius = profileImageView.bounds.width / 2
         profileImageView.clipsToBounds = true
     }
@@ -113,6 +118,28 @@ extension MyPageViewController {
     @objc func backButtonPressed() {
         self.dismiss(animated: true, completion: nil)
     }
+}
+
+// MARK: - Bind
+extension MyPageViewController {
+    
+    private func bind() {
+        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+        outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
+            switch output {
+            case let .sendMyUserData(userProfile):
+                self?.updateUserInformation(userProfile)
+            default: break
+            }
+        }.store(in: &cancellables)
+    }
+    
+    private func updateUserInformation(_ data: UserProfile) {
+        nameLabel.text = data.name
+        // TODO: 이미지 변경
+
+    }
+    
 }
 
 // MARK: - Methods
@@ -192,13 +219,16 @@ extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
             presentImagePickerController()
         }
         else if indexPath.section == 1 && indexPath.row == 0 {
+            guard let email = viewModel.email else { return }
             let provider = APIProvider(session: URLSession.shared)
-            let userInfoViewModel = UserInfoViewModel(postSearcher: Searcher(provider: provider), followFeature: FollowFeature(provider: provider))
-            let userInfoVC = UserInfoViewController(viewModel: userInfoViewModel, userInfo: "SomeUserInfo")
-            self.navigationController?.pushViewController(userInfoVC, animated: true)
+            let postSearcher = Searcher(provider: provider)
+            let followFeature = FollowFeature(provider: provider)
+            let userInfoViewModel = UserInfoViewModel(postSearcher: postSearcher, followFeature: followFeature)
+            let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: email)
+            navigationController?.pushViewController(userInfoViewController, animated: true)
         }
         else if indexPath.section == 1 && indexPath.row == 1 {
-            
+            inputSubject.send(.completeButtonTapped(3, ""))
         }
         
     }
@@ -234,7 +264,7 @@ extension MyPageViewController {
     enum Metrics {
         static let imageWidth: CGFloat = 120
         static let imageHeight: CGFloat = 120
-        static let nameLabelWidth: CGFloat = 42
+        static let nameLabelWidth: CGFloat = 100
         static let nameLabelHeight: CGFloat = 46
     }
     
