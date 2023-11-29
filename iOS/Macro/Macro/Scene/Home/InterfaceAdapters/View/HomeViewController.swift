@@ -43,7 +43,7 @@ final class HomeViewController: UIViewController {
         inputSubject.send(.searchPosts)
         setUpLayout()
     }
-
+    
 }
 
 // MARK: UI Settings
