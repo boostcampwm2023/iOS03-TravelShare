@@ -17,6 +17,7 @@ import {
 import { User } from './user.entity';
 import { Route } from './route.entity';
 import { PostContentElement } from './post.content.element.entity';
+import { Place } from './place.entity';
 
 @Entity('post')
 export class Post {
@@ -50,9 +51,6 @@ export class Post {
   @OneToOne(() => Route)
   @JoinColumn({ name: 'route_id', referencedColumnName: 'routeId' })
   route: Route;
-
-  @Column('json')
-  hashtag: string[];
 
   @VirtualColumn({
     query: (alias) =>
@@ -91,4 +89,12 @@ export class Post {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;
+
+  @ManyToMany(() => Place)
+  @JoinTable({
+    name: 'pings',
+    joinColumn: { name: 'post_id' },
+    inverseJoinColumn: { name: 'place_id', referencedColumnName: 'placeId' },
+  })
+  pings: Place[];
 }
