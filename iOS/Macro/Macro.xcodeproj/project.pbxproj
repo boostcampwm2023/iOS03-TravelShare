@@ -48,6 +48,7 @@
 		AAD0B3232B17474D003B4D5F /* UploadPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B3222B17474D003B4D5F /* UploadPost.swift */; };
 		AAD0B3252B17477A003B4D5F /* PostUploadEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B3242B17477A003B4D5F /* PostUploadEndPoint.swift */; };
 		AAD0B3272B176832003B4D5F /* PostUploadResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B3262B176832003B4D5F /* PostUploadResponse.swift */; };
+		AAD0B3292B17AD23003B4D5F /* ImageSaveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B3282B17AD22003B4D5F /* ImageSaveManager.swift */; };
 		BA32E0E92B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E0E82B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift */; };
 		BA32E1762B0DC2F900EA0EE2 /* UserInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E1732B0DC2F900EA0EE2 /* UserInfoViewModel.swift */; };
 		BA32E1772B0DC2F900EA0EE2 /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E1752B0DC2F900EA0EE2 /* UserInfoViewController.swift */; };
@@ -180,6 +181,7 @@
 		AAD0B3222B17474D003B4D5F /* UploadPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPost.swift; sourceTree = "<group>"; };
 		AAD0B3242B17477A003B4D5F /* PostUploadEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostUploadEndPoint.swift; sourceTree = "<group>"; };
 		AAD0B3262B176832003B4D5F /* PostUploadResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostUploadResponse.swift; sourceTree = "<group>"; };
+		AAD0B3282B17AD22003B4D5F /* ImageSaveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSaveManager.swift; sourceTree = "<group>"; };
 		BA32E0E82B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TabBarViewController+Animaion.swift"; sourceTree = "<group>"; };
 		BA32E1732B0DC2F900EA0EE2 /* UserInfoViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoViewModel.swift; sourceTree = "<group>"; };
 		BA32E1752B0DC2F900EA0EE2 /* UserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
@@ -352,6 +354,7 @@
 				AAD0B2962B0B0841003B4D5F /* CacheManager.swift */,
 				AAD0B2972B0B0841003B4D5F /* KeyChainManager.swift */,
 				AAD0B2AD2B0CCBD7003B4D5F /* TokenManager.swift */,
+				AAD0B3282B17AD22003B4D5F /* ImageSaveManager.swift */,
 			);
 			path = PersistentStorages;
 			sourceTree = "<group>";
@@ -1364,6 +1367,7 @@
 				BA90CBC12B149E1700365AE2 /* TravelInfo.swift in Sources */,
 				BAB24EE02B16D3F9000991A1 /* MapCollectionView.swift in Sources */,
 				AAD0B2DF2B0FC4A1003B4D5F /* UploadImage.swift in Sources */,
+				AAD0B3292B17AD23003B4D5F /* ImageSaveManager.swift in Sources */,
 				AAD0B3152B14E394003B4D5F /* ReadEndPoint.swift in Sources */,
 				AAD0B2992B0B0841003B4D5F /* KeyChainManager.swift in Sources */,
 				BA6C6DF62B05FFC500563B22 /* TabBarViewModel.swift in Sources */,

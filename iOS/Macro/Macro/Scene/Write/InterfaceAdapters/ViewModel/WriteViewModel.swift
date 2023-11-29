@@ -21,7 +21,6 @@ class WriteViewModel: ViewModelProtocol {
             outputSubject.send(.outputImageData(imageDatas))
         }
     }
-    private var imageURLs: [String?] = []
     private var postPublic: Bool = false
     private var title: String = ""
     private var summary: String = ""
@@ -89,31 +88,14 @@ class WriteViewModel: ViewModelProtocol {
         outputSubject.send(.isVisibilityToggle(postPublic))
     }
     
-    private func convertImageDataToImageURL(imageDatas: [Data], completion: @escaping (() -> Void)) {
-        imageDatas.forEach { imageData in
-            uploadImageUseCase.execute(imageData: imageData)
-                .receive(on: DispatchQueue.global())
-                .sink { [weak self] result in
-                    if case let .failure(error) = result {
-                        debugPrint("Image Upload Fail : ", error)
-                    } else if self?.imageURLs.count == imageDatas.count {
-                        completion()
-                    }
-                } receiveValue: { [weak self] imageURLResponse in
-                    self?.imageURLs.append(imageURLResponse.url)
-                }
-                .store(in: &cancellables)
-        }
-    }
-    
     private func contentsDescriptionUpdate(index: Int, description: String) {
         guard (0..<contents.count).contains(index), contents.count != index else { return }
         contents[index].description = description
     }
     
     private func writeSubmit() {
-        convertImageDataToImageURL(imageDatas: imageDatas) {
-            self.imageURLs.enumerated().forEach {
+        ImageSaveManager.convertImageDataToImageURL(imageDatas: imageDatas, cancellables: &cancellables) { imageURLs in
+            imageURLs.enumerated().forEach {
                 self.contents[$0].imageURL = $1
             }
             let post = Post(title: self.title,
@@ -124,29 +106,62 @@ class WriteViewModel: ViewModelProtocol {
                             ]
                                         ),
                             pins: self.pins,
-                            contents: 
-                                [
-                                Content(imageURL: "https://kr.object.ncloudstorage.com/macro-bucket/static/image/boostcampmacro-beeae45f-3772-427c-ab71-bf85b663b043", description: nil, coordinate: nil)
-                            ],
+                            contents: self.contents,
                             postPublic: self.postPublic,
                             startAt: "2023-11-29T13:34:14.391Z",
                             endAt: "2023-11-29T13:34:14.391Z")
-
+            
             guard let token = KeyChainManager.load(key: KeyChainManager.Keywords.accessToken) else { return }
-                self.uploadPostUseCase.execute(post: post, token: token)
-                    .receive(on: DispatchQueue.global())
-                    .sink { [weak self] completion in
-                        switch completion {
-                        case .finished:
-                            self?.outputSubject.send(.postUploadSuccess)
-                        case let .failure(error):
-                            debugPrint("Post Upload Fail : ", error)
-                        }
-                    } receiveValue: { postId in
-                        debugPrint("Post Upload Success : ", postId)
+            self.uploadPostUseCase.execute(post: post, token: token)
+                .receive(on: DispatchQueue.global())
+                .sink { [weak self] completion in
+                    switch completion {
+                    case .finished:
+                        self?.outputSubject.send(.postUploadSuccess)
+                    case let .failure(error):
+                        debugPrint("Post Upload Fail : ", error)
                     }
-                    .store(in: &self.cancellables)
+                } receiveValue: { postId in
+                    debugPrint("Post Upload Success : ", postId)
+                }
+                .store(in: &self.cancellables)
         }
+        
+//        convertImageDataToImageURL(imageDatas: imageDatas) {
+//            self.imageURLs.enumerated().forEach {
+//                self.contents[$0].imageURL = $1
+//            }
+//            let post = Post(title: self.title,
+//                            summary: self.summary,
+//                            route: Route(coordinates: [
+//                                Coordinate(xPosition: 120, yPosition: 33.6),
+//                                Coordinate(xPosition: 123, yPosition: 12.2)
+//                            ]
+//                                        ),
+//                            pins: self.pins,
+//                            contents: 
+//                                [
+//                                Content(imageURL: "https://kr.object.ncloudstorage.com/macro-bucket/static/image/boostcampmacro-beeae45f-3772-427c-ab71-bf85b663b043", description: nil, coordinate: nil)
+//                            ],
+//                            postPublic: self.postPublic,
+//                            startAt: "2023-11-29T13:34:14.391Z",
+//                            endAt: "2023-11-29T13:34:14.391Z")
+//
+//            guard let token = KeyChainManager.load(key: KeyChainManager.Keywords.accessToken) else { return }
+//                self.uploadPostUseCase.execute(post: post, token: token)
+//                    .receive(on: DispatchQueue.global())
+//                    .sink { [weak self] completion in
+//                        switch completion {
+//                        case .finished:
+//                            self?.outputSubject.send(.postUploadSuccess)
+//                        case let .failure(error):
+//                            debugPrint("Post Upload Fail : ", error)
+//                        }
+//                    } receiveValue: { postId in
+//                        debugPrint("Post Upload Success : ", postId)
+//                    }
+//                    .store(in: &self.cancellables)
+//        }
     }
     
     private func didScroll(index: Int) {
