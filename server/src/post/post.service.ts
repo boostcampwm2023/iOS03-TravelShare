@@ -224,7 +224,7 @@ ORDER BY
         },
       })
       .addSelect(`\`view_num\` * 0.2 + \`like_num\` * 0.8`, 'score')
-      .orderBy('score')
+      .orderBy('score', 'DESC')
       .getMany();
     const isLikedPosts = await this.postRepository.find({
       where: {
