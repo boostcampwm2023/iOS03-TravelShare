@@ -8,7 +8,7 @@
 import Foundation
 
 struct Content: Codable {
-    let imageURL: String
+    var imageURL: String?
     var description: String?
     var coordinate: Coordinate?
 
