@@ -91,6 +91,8 @@ private extension UserInfoViewController {
                 self?.updateFollowResult(result)
             case let .updateUserProfile(result):
                 self?.updateUserProfile(result)
+            case let .updateUserPost(result):
+                self?.updateUserPost(result)
             default: break
             }
         }.store(in: &cancellables)
@@ -101,10 +103,6 @@ private extension UserInfoViewController {
 // MARK: - Methods
 
 private extension UserInfoViewController {
-    func updateSearchResult(_ result: [PostFindResponse]) {
-        homeCollectionView.viewModel.posts += result
-        homeCollectionView.reloadData()
-    }
     
     func updateFollowResult(_ result: FollowResponse) {
         userInfoHeaderView.updateFollow(item: result)
@@ -112,6 +110,10 @@ private extension UserInfoViewController {
     
     func updateUserProfile(_ result: ProfileGetResponse) {
         userInfoHeaderView.configure(item: result)
-        updateSearchResult(result.posts)
+    }
+    
+    func updateUserPost(_ result: [PostFindResponse]) {
+        homeCollectionView.viewModel.posts = result
+        homeCollectionView.reloadData()
     }
 }

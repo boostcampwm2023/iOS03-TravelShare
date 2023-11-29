@@ -45,6 +45,7 @@ final class UserInfoViewModel: ViewModelProtocol {
         case navigateToReadView(Int)
         case updateFollowResult(FollowResponse)
         case updateUserProfile(ProfileGetResponse)
+        case updateUserPost([PostFindResponse])
     }
     
     // MARK: - Methods
@@ -68,7 +69,6 @@ final class UserInfoViewModel: ViewModelProtocol {
     private func tappedFollowButton(followUserId: String) {
         // TODO: - 통신코드 목파일 수정
         followFeature.mockFollowUser(userId: "asdf", followUserId: followUserId, json: "FollowMock").sink { _ in
-
         } receiveValue: { [weak self] response in
             self?.outputSubject.send(.updateFollowResult(response))
         }.store(in: &cancellables)
@@ -84,9 +84,9 @@ final class UserInfoViewModel: ViewModelProtocol {
         searcher.searchPost(query: searchUserEmail).sink { _ in
         } receiveValue: { [weak self] response in
             self?.posts = response
-            print(response)
+            self?.outputSubject.send(.updateUserPost(response))
         }.store(in: &cancellables)
-      
+        
     }
     
     private func searchMockUserProfile(userId: String) {

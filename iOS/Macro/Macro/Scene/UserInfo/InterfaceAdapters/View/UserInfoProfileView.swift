@@ -101,7 +101,8 @@ extension UserInfoProfileView {
 // MARK: - Methods
 extension UserInfoProfileView {
     func configure(item: ProfileGetResponse) {
-        loadImage(profileImageStringURL: item.imageUrl) { image in
+        // TODO: nil 일 경우 default 이미지
+        loadImage(profileImageStringURL: item.imageUrl ?? "") { image in
             self.userProfileImageView.image = image
         }
         
