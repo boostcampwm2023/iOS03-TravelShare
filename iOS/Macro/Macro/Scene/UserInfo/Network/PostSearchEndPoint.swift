@@ -1,18 +1,18 @@
 //
-//  UserInfoEndPoint.swift
+//  PostSearchEndPoint.swift
 //  Macro
 //
-//  Created by Byeon jinha on 11/27/23.
+//  Created by 김나훈 on 11/29/23.
 //
 
 import Foundation
 import MacroNetwork
 
-enum UserInfoEndPoint {
+enum PostSearchEndPoint {
     case search(String)
 }
 
-extension UserInfoEndPoint: EndPoint {
+extension PostSearchEndPoint: EndPoint {
     
     var baseURL: String {
         return "https://jijihuny.store"
@@ -38,6 +38,6 @@ extension UserInfoEndPoint: EndPoint {
     }
     
     var path: String {
-        return "user/profile"
+        return "post/search"
     }
 }

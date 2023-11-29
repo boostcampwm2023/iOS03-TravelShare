@@ -10,27 +10,6 @@ import Foundation
 
 final class HomeViewModel: ViewModelProtocol, PostCollectionViewProtocol {
     
-    func navigateToReadView(postId: Int) {
-        self.outputSubject.send(.navigateToReadView(postId))
-    }
-    
-    func navigateToProfileView(email: String) {
-        self.outputSubject.send(.navigateToProfileView(email))
-    }
-
-    func searchUser(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
-        input.sink { [weak self] input in
-            switch input {
-            case .searchPosts:
-              self?.searchPosts()
-            case .searchMockPost:
-                self?.searchMockPost()
-            }
-        }.store(in: &cancellables)
-        
-        return outputSubject.eraseToAnyPublisher()
-    }
-    
     // MARK: - Input
     
     enum Input {
@@ -98,4 +77,13 @@ final class HomeViewModel: ViewModelProtocol, PostCollectionViewProtocol {
     private func searchPost(postId: Int) {
         self.outputSubject.send(.navigateToReadView(postId))
     }
+    
+    func navigateToReadView(postId: Int) {
+        self.outputSubject.send(.navigateToReadView(postId))
+    }
+    
+    func navigateToProfileView(email: String) {
+        self.outputSubject.send(.navigateToProfileView(email))
+    }
+
 }

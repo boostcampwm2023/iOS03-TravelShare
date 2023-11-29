@@ -14,6 +14,7 @@ final class UserInfoViewModel: ViewModelProtocol {
     
     var posts: [PostFindResponse] = []
     var userProfile: UserProfile = UserProfile(email: "", name: "", imageUrl: nil, introduce: nil, followersNum: 0, followeesNum: 0)
+    var searchUserEmail = ""
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
     let searcher: SearchUseCase
@@ -29,7 +30,7 @@ final class UserInfoViewModel: ViewModelProtocol {
     // MARK: - Input
     
     enum Input {
-        case searchUserProfile(userId: String)
+        case searchUserProfile(email: String)
         case tapFollowButton(userId: String)
         
         // Mock
@@ -75,6 +76,17 @@ final class UserInfoViewModel: ViewModelProtocol {
     
     private func searchUserProfile() {
         
+        searcher.searchUserProfile(query: searchUserEmail).sink { _ in
+        } receiveValue: { [weak self] response in
+            self?.userProfile = response
+        }.store(in: &cancellables)
+        
+        searcher.searchPost(query: searchUserEmail).sink { _ in
+        } receiveValue: { [weak self] response in
+            self?.posts = response
+            print(response)
+        }.store(in: &cancellables)
+      
     }
     
     private func searchMockUserProfile(userId: String) {

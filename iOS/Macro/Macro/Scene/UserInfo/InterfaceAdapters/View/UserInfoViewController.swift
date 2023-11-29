@@ -25,7 +25,7 @@ final class UserInfoViewController: UIViewController {
     override func viewDidLoad() {
         self.view.backgroundColor = UIColor.appColor(.blue1)
         bind()
-        inputSubject.send(.searchMockUserProfile(userId: "jinhaday@gmail.com"))
+        inputSubject.send(.searchUserProfile(email: viewModel.searchUserEmail))
         setUpLayout()
         super.viewDidLoad()
     }
@@ -34,8 +34,8 @@ final class UserInfoViewController: UIViewController {
     
     init(viewModel: UserInfoViewModel, userInfo: String) {
         self.viewModel = viewModel
+        viewModel.searchUserEmail = userInfo 
         super.init(nibName: nil, bundle: nil)
-        
     }
     
     required init?(coder: NSCoder) {

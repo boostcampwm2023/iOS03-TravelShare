@@ -95,9 +95,9 @@ private extension HomeViewController {
         homeCollectionView.reloadData()
     }
     
-    func navigateToProfileView(_ userId: String) {
+    func navigateToProfileView(_ email: String) {
         let userInfoViewModel = UserInfoViewModel(postSearcher: viewModel.postSearcher, followFeature: viewModel.followFeatrue)
-        let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: userId)
+        let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: email)
 
         navigationController?.pushViewController(userInfoViewController, animated: true)
     }
@@ -118,8 +118,8 @@ private extension HomeViewController {
             switch output {
             case let .updateSearchResult(result):
                 self?.updateSearchResult(result)
-            case let .navigateToProfileView(userId):
-                self?.navigateToProfileView(userId)
+            case let .navigateToProfileView(email):
+                self?.navigateToProfileView(email)
             case let .navigateToReadView(postId):
                 self?.navigateToReadView(postId)
             default: break

@@ -99,6 +99,7 @@
 		D21B10092B14799C00F2F84E /* NameEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B10082B14799C00F2F84E /* NameEditView.swift */; };
 		D21B100B2B1497E000F2F84E /* IntroductionEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B100A2B1497E000F2F84E /* IntroductionEditView.swift */; };
 		D21B100E2B16E73200F2F84E /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B100D2B16E73200F2F84E /* UserProfile.swift */; };
+		D21B10102B16FDA000F2F84E /* PostSearchEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B100F2B16FDA000F2F84E /* PostSearchEndPoint.swift */; };
 		D241DC6E2B0D9FFE0037DDB6 /* SearchUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC6D2B0D9FFE0037DDB6 /* SearchUseCase.swift */; };
 		D241DC712B0DA0070037DDB6 /* CommonUIComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC702B0DA0070037DDB6 /* CommonUIComponents.swift */; };
 		D241DC752B0DA00F0037DDB6 /* Writer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC732B0DA00F0037DDB6 /* Writer.swift */; };
@@ -213,6 +214,7 @@
 		D21B10082B14799C00F2F84E /* NameEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameEditView.swift; sourceTree = "<group>"; };
 		D21B100A2B1497E000F2F84E /* IntroductionEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroductionEditView.swift; sourceTree = "<group>"; };
 		D21B100D2B16E73200F2F84E /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
+		D21B100F2B16FDA000F2F84E /* PostSearchEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostSearchEndPoint.swift; sourceTree = "<group>"; };
 		D241DC6D2B0D9FFE0037DDB6 /* SearchUseCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUseCase.swift; sourceTree = "<group>"; };
 		D241DC702B0DA0070037DDB6 /* CommonUIComponents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonUIComponents.swift; sourceTree = "<group>"; };
 		D241DC732B0DA00F0037DDB6 /* Writer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Writer.swift; sourceTree = "<group>"; };
@@ -873,6 +875,7 @@
 			children = (
 				BA90CB9D2B145CDE00365AE2 /* FollowEndPoint.swift */,
 				BA90CBA72B147E1900365AE2 /* UserInfoEndPoint.swift */,
+				D21B100F2B16FDA000F2F84E /* PostSearchEndPoint.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -1226,6 +1229,7 @@
 				AAD0B2E52B103555003B4D5F /* WriteRequestDTO.swift in Sources */,
 				AA46C4B82B02304400856628 /* AppDelegate.swift in Sources */,
 				BA6C6DF92B05FFC500563B22 /* TabBarCenterView.swift in Sources */,
+				D21B10102B16FDA000F2F84E /* PostSearchEndPoint.swift in Sources */,
 				BA90CB9E2B145CDE00365AE2 /* FollowEndPoint.swift in Sources */,
 				BA6C6DF42B05FFC500563B22 /* CircularViewProtocol.swift in Sources */,
 				BA90CB982B1450A200365AE2 /* UserInfoProfileView.swift in Sources */,
