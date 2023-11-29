@@ -15,6 +15,7 @@ final class MyInfoViewController: UIViewController {
     let viewModel: MyPageViewModel
     let selectedIndex: Int
     private let inputSubject: PassthroughSubject<MyPageViewModel.Input, Never> = .init()
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
     
@@ -28,12 +29,14 @@ final class MyInfoViewController: UIViewController {
     private lazy var nameEditView: NameEditView = {
         let view = NameEditView()
         view.optionLabel.text = viewModel.information[selectedIndex]
+        view.nameTextField.text = viewModel.myInfo.name
         return view
     }()
     
     private lazy var introductionEditView: IntroductionEditView = {
         let view = IntroductionEditView()
         view.optionLabel.text = viewModel.information[selectedIndex]
+        view.introductionTextView.text = viewModel.myInfo.introduce
         return view
     }()
     
@@ -124,6 +127,7 @@ final class MyInfoViewController: UIViewController {
     }
     
     // MARK: - Binding
+    
     
     
     @objc private func saveButtonTapped() {

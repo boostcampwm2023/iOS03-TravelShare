@@ -20,6 +20,7 @@ class MyPageViewModel: ViewModelProtocol {
     let management = ["팔로우", "알림", "문의하기"]
     let patcher: PatchUseCase
     let searcher: SearchUseCase
+    var myInfo: UserProfile = UserProfile(email: "", name: "", imageUrl: "", introduce: "", followersNum: 0, followeesNum: 0)
     
     // MARK: - init
     init(patcher: PatchUseCase, searcher: SearchUseCase) {
@@ -66,11 +67,10 @@ class MyPageViewModel: ViewModelProtocol {
     }
     
     func getMyUserData(_ email: String) {
-        print(2)
         searcher.searchUserProfile(query: email).sink { completion in
         } receiveValue: { [weak self] response in
-            print(response)
             self?.outputSubject.send(.sendMyUserData(response))
+            self?.myInfo = response
         }.store(in: &cancellables)
     }
 }

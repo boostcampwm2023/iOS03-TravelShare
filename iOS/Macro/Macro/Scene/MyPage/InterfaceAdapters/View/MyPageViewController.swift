@@ -136,6 +136,8 @@ extension MyPageViewController {
     
     private func updateUserInformation(_ data: UserProfile) {
         nameLabel.text = data.name
+        // TODO: 이미지 변경
+
     }
     
 }
