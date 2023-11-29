@@ -16,6 +16,7 @@ import { AuthenticatedUser } from 'auth/auth.decorators';
 import { Authentication } from 'auth/authentication.dto';
 import { RestController } from 'utils/rest.controller.decorator';
 import { UserFollowResponse } from './user.follow.response.dto';
+import { UserProfileUpdateResponse } from './user.profile.update.response.dto';
 
 @ApiTags('User')
 @ApiBearerAuth('access-token')
@@ -29,9 +30,11 @@ export class UserController {
 # user/update
 
 - 유저 정보를 업데이트합니다.
-- 쿼리 파라미터로 email, introduce(자기소개), imageUrl(프로필 사진) 중 하나 이상을 설정할 수 있습니다.
+- 쿼리 파라미터로 name, introduce(자기소개), imageUrl(프로필 사진) 중 하나 이상을 설정할 수 있습니다.
+- 응답 포맷은 email과 함께 수정 완료된 정보를 응답합니다.
 `,
   })
+  @ApiOkResponse({type: UserProfileUpdateResponse})
   @Patch('update')
   async update(
     @AuthenticatedUser() user: Authentication,
