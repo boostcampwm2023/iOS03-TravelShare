@@ -106,6 +106,7 @@
 		BAB24EE82B16DB6F000991A1 /* RouteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB24EE72B16DB6F000991A1 /* RouteViewController.swift */; };
 		BAB24EEA2B16DB79000991A1 /* RouteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB24EE92B16DB79000991A1 /* RouteViewModel.swift */; };
 		BAB24EEC2B16DE55000991A1 /* MapCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB24EEB2B16DE55000991A1 /* MapCollectionViewCell.swift */; };
+		BABE98332B17C67300903F4F /* MyPageHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BABE98322B17C67300903F4F /* MyPageHeaderView.swift */; };
 		BADB1F0C2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADB1F0B2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift */; };
 		D21B10072B14660600F2F84E /* MyInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B10062B14660600F2F84E /* MyInfoViewController.swift */; };
 		D21B10092B14799C00F2F84E /* NameEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B10082B14799C00F2F84E /* NameEditView.swift */; };
@@ -238,6 +239,7 @@
 		BAB24EE72B16DB6F000991A1 /* RouteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteViewController.swift; sourceTree = "<group>"; };
 		BAB24EE92B16DB79000991A1 /* RouteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteViewModel.swift; sourceTree = "<group>"; };
 		BAB24EEB2B16DE55000991A1 /* MapCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCollectionViewCell.swift; sourceTree = "<group>"; };
+		BABE98322B17C67300903F4F /* MyPageHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageHeaderView.swift; sourceTree = "<group>"; };
 		BADB1F0B2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUnresearchableViewController.swift; sourceTree = "<group>"; };
 		D21B10062B14660600F2F84E /* MyInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoViewController.swift; sourceTree = "<group>"; };
 		D21B10082B14799C00F2F84E /* NameEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameEditView.swift; sourceTree = "<group>"; };
@@ -594,6 +596,7 @@
 				D21B10062B14660600F2F84E /* MyInfoViewController.swift */,
 				D21B10082B14799C00F2F84E /* NameEditView.swift */,
 				D21B100A2B1497E000F2F84E /* IntroductionEditView.swift */,
+				BABE98322B17C67300903F4F /* MyPageHeaderView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1373,6 +1376,7 @@
 				BA6C6DF62B05FFC500563B22 /* TabBarViewModel.swift in Sources */,
 				BADB1F0C2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift in Sources */,
 				AAD0B2D52B0E04CA003B4D5F /* MacroCarouselViewCell.swift in Sources */,
+				BABE98332B17C67300903F4F /* MyPageHeaderView.swift in Sources */,
 				BA00A08D2B177113007F7BB9 /* DateFormatter.swift in Sources */,
 				BA90CB842B0F3BF600365AE2 /* PostCollectionViewCell.swift in Sources */,
 				BA6C6DFD2B05FFC500563B22 /* TabBarViewController.swift in Sources */,

@@ -16,27 +16,16 @@ final class MyPageViewController: TabViewController {
     private let viewModel: MyPageViewModel
     private let inputSubject: PassthroughSubject<MyPageViewModel.Input, Never> = .init()
     private var cancellables = Set<AnyCancellable>()
-
+    
     // MARK: - UI Components
     
-    private let profileImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "person.fill")
-        imageView.backgroundColor = .cyan
-        return imageView
-    }()
-    
-    private let nameLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.textColor = UIColor.appColor(.purple5)
-        label.font = UIFont.appFont(.baeEunCallout)
-        return label
-    }()
+    private let myPageHeaderView: MyPageHeaderView = MyPageHeaderView()
     
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
-        tableView.separatorColor = UIColor.appColor(.purple2)
+        tableView.backgroundColor = UIColor.appColor(.blue1)
+        tableView.separatorStyle = .none
+        tableView.showsVerticalScrollIndicator = false
         return tableView
     }()
     
@@ -65,12 +54,6 @@ final class MyPageViewController: TabViewController {
         }
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        profileImageView.layer.cornerRadius = profileImageView.bounds.width / 2
-        profileImageView.clipsToBounds = true
-    }
-    
 }
 
 // MARK: - UI Settings
@@ -78,31 +61,22 @@ final class MyPageViewController: TabViewController {
 extension MyPageViewController {
     
     private func setTranslatesAutoresizingMaskIntoConstraints() {
-        profileImageView.translatesAutoresizingMaskIntoConstraints = false
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        myPageHeaderView.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func addsubviews() {
-        view.addSubview(profileImageView)
-        view.addSubview(nameLabel)
         view.addSubview(tableView)
     }
     
     private func setLayoutConstraints() {
         NSLayoutConstraint.activate([
-            profileImageView.widthAnchor.constraint(equalToConstant: Metrics.imageWidth),
-            profileImageView.heightAnchor.constraint(equalToConstant: Metrics.imageHeight),
-            profileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Padding.imageTop),
-            profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            nameLabel.widthAnchor.constraint(equalToConstant: Metrics.nameLabelWidth),
-            nameLabel.heightAnchor.constraint(equalToConstant: Metrics.nameLabelHeight),
-            nameLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: Padding.labelTop),
-            nameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            tableView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Padding.tableViewTop),
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Padding.tableViewSide),
+            
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.tableViewSide),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Padding.tableViewBottom)
+            
         ])
     }
     
@@ -134,23 +108,35 @@ extension MyPageViewController {
         }.store(in: &cancellables)
     }
     
-    private func updateUserInformation(_ data: UserProfile) {
-        nameLabel.text = data.name
-        // TODO: 이미지 변경
-
+    private func updateUserInformation(_ userProfile: UserProfile) {
+        updateUserProfile(userProfile: userProfile)
     }
     
 }
 
 // MARK: - Methods
+extension MyPageViewController {
+    func updateUserProfile(userProfile: UserProfile) {
+        myPageHeaderView.configure(userProfile: userProfile)
+    }
+}
 
 // MARK: - TableView
 
 extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 0 {
+            return 186
+        }
+        return 50
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case 0: return viewModel.information.count
-        case 1: return viewModel.post.count
+        case 0: return 1
+        case 1: return viewModel.information.count
+        case 2: return viewModel.post.count
         default: return viewModel.management.count
         }
     }
@@ -159,33 +145,83 @@ extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "sectionTableViewCell", for: indexPath)
         cell.backgroundColor = UIColor.appColor(.purple1)
         cell.textLabel?.font = UIFont.appFont(.baeEunCallout)
-        switch indexPath.section {
-        case 0: cell.textLabel?.text = "\(viewModel.information[indexPath.row])"
-        case 1: cell.textLabel?.text = "\(viewModel.post[indexPath.row])"
-        default: cell.textLabel?.text = "\(viewModel.management[indexPath.row])"
-        }
         cell.accessoryType = .disclosureIndicator
+        
+        cell.selectionStyle = .none
+        switch indexPath.section {
+        case 0:
+            cell.addSubview(myPageHeaderView)
+            cell.backgroundColor = UIColor.appColor(.blue1)
+            
+            NSLayoutConstraint.activate([
+                myPageHeaderView.topAnchor.constraint(equalTo: cell.topAnchor),
+                myPageHeaderView.heightAnchor.constraint(equalToConstant: 186),
+                myPageHeaderView.centerXAnchor.constraint(equalTo: cell.centerXAnchor)
+            ])
+            
+            cell.accessoryType = .none
+        case 1: cell.textLabel?.text = "\(viewModel.information[indexPath.row])"
+        case 2: cell.textLabel?.text = "\(viewModel.post[indexPath.row])"
+        case 3: cell.textLabel?.text = "\(viewModel.management[indexPath.row])"
+        default:
+            break
+        }
+        
+        let isStartOfSection = indexPath.row == 0
+        let numberOfRowsInSection = tableView.numberOfRows(inSection: indexPath.section)
+        let isEndOfSection = indexPath.row == numberOfRowsInSection - 1
+        
+        if isStartOfSection {
+            cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            cell.layer.cornerRadius = 10
+        } else if isEndOfSection {
+            cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+            cell.layer.cornerRadius = 10
+        }
+        
+        if !isEndOfSection {
+            let seperateLine: UIView = {
+                let view = UIView()
+                view.translatesAutoresizingMaskIntoConstraints = false
+                view.backgroundColor = UIColor.appColor(.purple2)
+                return view
+            }()
+            
+            cell.addSubview(seperateLine)
+            NSLayoutConstraint.activate([
+                seperateLine.widthAnchor.constraint(equalToConstant: cell.bounds.width - 36),
+                seperateLine.heightAnchor.constraint(equalToConstant: 1),
+                seperateLine.topAnchor.constraint(equalTo: cell.bottomAnchor),
+                seperateLine.centerXAnchor.constraint(equalTo: cell.centerXAnchor)
+            ])
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        guard section != .zero else { return nil }
         return viewModel.sections[section]
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return viewModel.sections.count
     }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard section != .zero else { return nil }
         let headerLabel = UILabel()
         
         headerLabel.text = viewModel.sections[section]
-        headerLabel.font = UIFont.appFont(.baeEunBody)
+        headerLabel.font = UIFont.appFont(.baeEunTitle1)
         
         let headerView = UIView()
-        headerView.backgroundColor = .systemBackground
+        
+        headerView.backgroundColor = UIColor.appColor(.blue1)
+        
         headerView.addSubview(headerLabel)
         
         headerLabel.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
             headerLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
             headerLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
@@ -195,30 +231,25 @@ extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
         
         return headerView
     }
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let footerView = UIView()
-        footerView.backgroundColor = .systemBackground
-        return footerView
-    }
+    
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         guard let headerView = view as? UITableViewHeaderFooterView else { return }
-        headerView.contentView.backgroundColor = UIColor.systemBackground
+        headerView.contentView.backgroundColor = UIColor.appColor(.blue1)
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if indexPath.section == 0 && (indexPath.row == 0 || indexPath.row == 2) {
+        if indexPath.section == 1 && (indexPath.row == 0 || indexPath.row == 2) {
             let myInfoVC = MyInfoViewController(viewModel: viewModel, selectedIndex: indexPath.row)
+            
             if #available(iOS 15.0, *) {
                 myInfoVC.sheetPresentationController?.detents = [.large()]
                 myInfoVC.sheetPresentationController?.prefersGrabberVisible = true
             }
             present(myInfoVC, animated: true)
-        }
-        else if indexPath.section == 0 && indexPath.row == 1 {
+        } else if indexPath.section == 1 && indexPath.row == 1 {
             presentImagePickerController()
-        }
-        else if indexPath.section == 1 && indexPath.row == 0 {
+        } else if indexPath.section == 2 && indexPath.row == 0 {
             guard let email = viewModel.email else { return }
             let provider = APIProvider(session: URLSession.shared)
             let postSearcher = Searcher(provider: provider)
@@ -226,11 +257,9 @@ extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
             let userInfoViewModel = UserInfoViewModel(postSearcher: postSearcher, followFeature: followFeature)
             let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: email)
             navigationController?.pushViewController(userInfoViewController, animated: true)
-        }
-        else if indexPath.section == 1 && indexPath.row == 1 {
+        } else if indexPath.section == 2 && indexPath.row == 1 {
             inputSubject.send(.completeButtonTapped(3, ""))
         }
-        
     }
 }
 
@@ -245,9 +274,10 @@ extension MyPageViewController: UIImagePickerControllerDelegate, UINavigationCon
     }
     
     /// 사용자가 이미지를 선택했을 때
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         if let selectedImage = info[.originalImage] as? UIImage {
-            profileImageView.image = selectedImage
+            myPageHeaderView.configure(profileImage: selectedImage)
         }
         dismiss(animated: true, completion: nil)
     }
@@ -258,19 +288,10 @@ extension MyPageViewController: UIImagePickerControllerDelegate, UINavigationCon
     }
 }
 
-// MARK: - LayoutMetrics
+// MARK: - Layout Metrics
 
 extension MyPageViewController {
-    enum Metrics {
-        static let imageWidth: CGFloat = 120
-        static let imageHeight: CGFloat = 120
-        static let nameLabelWidth: CGFloat = 100
-        static let nameLabelHeight: CGFloat = 46
-    }
-    
     enum Padding {
-        static let imageTop: CGFloat = 40
-        static let labelTop: CGFloat = 20
         static let tableViewTop: CGFloat = 10
         static let tableViewSide: CGFloat = 38
         static let tableViewBottom: CGFloat = 75
