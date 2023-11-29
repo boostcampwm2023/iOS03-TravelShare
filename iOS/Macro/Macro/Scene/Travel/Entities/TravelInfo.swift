@@ -10,8 +10,8 @@ import Foundation
 struct TravelInfo {
     let id: String
     var recordedLocation: [[Double]]?
-    var recordedPindedInfo: [[String: [Double?]]]?
-    let sequence: Int16
+    var recordedPindedInfo: [[String: [Double]]]?
+    let sequence: Int
     var startAt: Date?
     var endAt: Date?
 }
