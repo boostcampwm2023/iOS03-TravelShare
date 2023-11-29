@@ -28,7 +28,7 @@ final class ReadProfileView: UIView {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         
-        imageView.image = UIImage.appImage(.appLogo)
+        imageView.image = UIImage.appImage(.ProfileDefaultImage)
         
         return imageView
     }()
