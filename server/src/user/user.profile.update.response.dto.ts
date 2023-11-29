@@ -1,22 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsOptional, IsString, IsUrl } from 'class-validator';
+import { IsEmail, IsEmpty, IsNumber, IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class UserProfileUpdateResponse {
-  @ApiProperty({ description: '작성자 email' })
-  @IsEmail()
-  email: string;
-
-  @ApiProperty({ description: '작성자 이름' })
+  @ApiProperty({default: 'user updated'})
   @IsString()
-  name: string;
+  message: string = 'user updated';
 
-  @ApiProperty({ description: '프로필 사진 url', required: false })
-  @IsUrl()
-  @IsOptional()
-  imageUrl?: string;
+  @ApiProperty({default: null})
+  @IsEmpty()
+  error: any = null;
 
-  @ApiProperty({ description: '자기소개', required: false })
-  @IsString()
-  @IsOptional()
-  introduce?: string;
+  @ApiProperty({default: 200})
+  @IsNumber()
+  statusCode: number = 200;
 }
