@@ -23,7 +23,7 @@ final class PostProfileView<T: PostCollectionViewProtocol>: UIView {
         return label
     }()
     
-    private let userNameLabel: UILabel = {
+    var userNameLabel: UILabel = {
         let label: UILabel = UILabel()
         label.textColor = UIColor.appColor(.purple5)
         label.font = UIFont.appFont(.baeEunBody)
@@ -76,7 +76,7 @@ final class PostProfileView<T: PostCollectionViewProtocol>: UIView {
         if let indexPath = indexPath {
             guard let email = viewModel?.posts[indexPath.row].writer.email else { return }
             viewModel?.navigateToProfileView(email: email)
-            print(email)
+
         }
         
     }
