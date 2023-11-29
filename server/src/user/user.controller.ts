@@ -34,7 +34,7 @@ export class UserController {
 - 응답 포맷은 email과 함께 수정 완료된 정보를 응답합니다.
 `,
   })
-  @ApiOkResponse({type: UserProfileUpdateResponse})
+  @ApiOkResponse({ type: UserProfileUpdateResponse })
   @Patch('update')
   async update(
     @AuthenticatedUser() user: Authentication,

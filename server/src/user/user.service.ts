@@ -35,7 +35,10 @@ export class UserService {
         },
       })
       .catch((err) => {
-        throw new NotFoundException('user not found', { cause: err, description: 'user not found' });
+        throw new NotFoundException('user not found', {
+          cause: err,
+          description: 'user not found',
+        });
       });
     return plainToInstance(UserProfileResponse, user);
   }

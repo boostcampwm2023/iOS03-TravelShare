@@ -4,6 +4,7 @@ import {
   IsArray,
   IsBoolean,
   IsDate,
+  IsObject,
   IsOptional,
   IsString,
   ValidateNested,
@@ -58,18 +59,22 @@ export class PostUploadBody {
       },
     ],
   })
+  @IsObject()
   @ValidateNested()
   @Type(() => RouteCoordinates)
+  @IsOptional()
   route: RouteCoordinates;
 
   @ApiProperty({ description: '핑 정보를 넣어줍니다.', type: [PlaceBase] })
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => PlaceBase)
+  @IsOptional()
   pins: PlaceBase[];
 
   @ApiProperty({ description: '사진과 글', type: [PostUploadElement] })
   @IsArray()
-  @ValidateNested()
+  @ValidateNested({ each: true })
   @Type(() => PostUploadElement)
   contents: PostUploadElement[];
 
