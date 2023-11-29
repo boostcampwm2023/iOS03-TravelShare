@@ -15,7 +15,7 @@ final class WriteViewController: TabViewController {
     // MARK: - Properties
     
     private let viewModel: WriteViewModel
-    private let const = MacroCarouselView.Const(itemSize: CGSize(width: 300, height: 340), itemSpacing: 24.0)
+    private let const = MacroCarouselView.Const(itemSize: CGSize(width: UIScreen.width, height: 340), itemSpacing: 24.0)
     private let imageAddSubject: PassthroughSubject<Bool, Never> = .init()
     private let didScrollSubject: PassthroughSubject<Int, Never> = .init()
     private let inputSubject: PassthroughSubject<WriteViewModel.Input, Never> = .init()
@@ -225,7 +225,6 @@ private extension WriteViewController {
                 case .postUploadSuccess:
                     // TODO: - Home화면으로 돌아가
                     debugPrint("Post Upload Success")
-                    break
                 case let .outputDescriptionString(description):
                     self?.imageDescriptionTextField.text = description
                 }
