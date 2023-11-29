@@ -121,10 +121,10 @@ final class TravelViewModel: ViewModelProtocol {
     }
     
     private func completeTravel() {
-        let transRoute = savedRoute.routePoints.map{[$0.coordinate.latitude, $0.coordinate.longitude]}
-        let pinnedTransROUTE = savedRoute.pinnedPlaces.map{[Double($0.mapx), Double($0.mapy)]}
+        let transRoute = savedRoute.routePoints.map({ [$0.coordinate.latitude, $0.coordinate.longitude] })
+        let pinnedTransRoute = savedRoute.pinnedPlaces.map({ [$0.placeName: [Double($0.mapx), Double($0.mapy)]] })
         self.currentTravel?.recordedLocation = transRoute
-        self.currentTravel?.recordedPindedLocation = transRoute
+        self.currentTravel?.recordedPindedInfo = pinnedTransRoute
         
     }
     
@@ -132,14 +132,14 @@ final class TravelViewModel: ViewModelProtocol {
         let currentTime: Date = Date()
         guard let travel = self.currentTravel,
               let recordedLocation = travel.recordedLocation,
-              let recordedPindedLocation = travel.recordedPindedLocation,
+              let recordedPindedInfo: [[String: [Double?]]] = travel.recordedPindedInfo,
               let startAt = travel.startAt,
               let endAt = travel.endAt
         else { return }
         
         CoreDataManager.shared.saveTravel(id: travel.id,
                                           recordedLocation: recordedLocation,
-                                          recordedPindedLocation: recordedPindedLocation,
+                                          recordedPindedLocation: recordedPindedInfo,
                                           sequence: Int(travel.sequence),
                                           startAt: startAt,
                                           endAt: endAt)
