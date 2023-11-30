@@ -7,9 +7,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { PostFindResponse } from './post.find.response.dto';
 import { PostDetailResponse } from './post.detail.response.dto';
-import { PostFindQuery } from './post.find.query.dto';
 import { PostService } from './post.service';
 import { AuthenticatedUser } from 'auth/auth.decorators';
 import { Authentication } from 'auth/authentication.dto';
@@ -24,6 +22,9 @@ import { PostKeywordAutoCompleteQuery } from './post.keyword.autocomplete.query.
 import { KeywordAutoCompleteService } from 'utils/keyword.autocomplete.service';
 import { plainToInstance } from 'class-transformer';
 import { PostKeywordAutoCompleteResponse } from './post.keyword.autocomplete.response.dto';
+import { PostSearchResponse } from './post.search.response.dto';
+import { PostSearchQuery } from './post.search.query.dto';
+import { PostFindQuery } from './post.find.query.dto';
 
 @ApiTags('Post')
 @ApiBearerAuth('access-token')
@@ -45,7 +46,7 @@ export class PostController {
 `,
   })
   @ApiResponse({
-    type: [PostFindResponse],
+    type: [PostSearchResponse],
     description:
       '응답 데이터에서 liked를 수집하는 방법에 대해 논의가 좀 더 필요한 상황입니다.',
   })
@@ -72,10 +73,10 @@ SELECT ... FROM post ... WHERE title LIKE '%:title%' OR '%:user:%';
 \`\`\`
 `,
   })
-  @ApiResponse({ description: '리스트 조회', type: [PostFindResponse] })
+  @ApiResponse({ description: '리스트 조회', type: [PostSearchResponse] })
   @Get('search')
   async search(
-    @Query() query: PostFindQuery,
+    @Query() query: PostSearchQuery,
     @AuthenticatedUser() user: Authentication,
   ) {
     return await this.postService.search(query, user);
@@ -172,5 +173,10 @@ id 항목을 넣어주어야 합니다.
       PostKeywordAutoCompleteResponse,
       this.autoCompleteService.search(query),
     );
+  }
+
+  @Get('find')
+  async find(@Query() query: PostFindQuery) {
+    return await this.postService.findByPlaceId(query);
   }
 }
