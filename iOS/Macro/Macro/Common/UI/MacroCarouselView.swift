@@ -27,12 +27,12 @@ class MacroCarouselView: UIView {
     private let viewType: ViewType
     private var subscriptions: Set<AnyCancellable> = []
     private var addImageOutputSubject: PassthroughSubject<Bool, Never> = .init()
-    private var didScrollOutputSubject: PassthroughSubject<Int, Never> = .init()
+    private var didScrollSubject: PassthroughSubject<Int, Never> = .init()
     
     var pageIndex = 0 {
         didSet {
             self.pageController.currentPage = pageIndex
-            self.didScrollOutputSubject.send(pageIndex)
+            self.didScrollSubject.send(pageIndex)
         }
     }
     
@@ -78,7 +78,7 @@ class MacroCarouselView: UIView {
         self.const = const
         self.viewType = .write
         self.addImageOutputSubject = addImageOutputSubject
-        self.didScrollOutputSubject = didScrollOutputSubject
+        self.didScrollSubject = didScrollOutputSubject
         super.init(frame: .zero)
         setLayout()
     }
@@ -86,7 +86,7 @@ class MacroCarouselView: UIView {
     init(const: Const, didScrollOutputSubject : PassthroughSubject<Int, Never>) {
         self.const = const
         self.viewType = .read
-        self.didScrollOutputSubject = didScrollOutputSubject
+        self.didScrollSubject = didScrollOutputSubject
         super.init(frame: .zero)
         setLayout()
     }

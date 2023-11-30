@@ -16,7 +16,7 @@ class RouteViewModel: ViewModelProtocol, MapCollectionViewProtocol {
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
     
-    let writeViewModel = WriteViewModel(uploadImageUseCase: UploadImage(provider: APIProvider(session: URLSession.shared)))
+    let writeViewModel = WriteViewModel(uploadImageUseCase: UploadImage(provider: APIProvider(session: URLSession.shared)), uploadPostUseCase: UploadPost(provider: APIProvider(session: URLSession.shared)))
     lazy var writeViewController = WriteViewController(viewModel: writeViewModel)
     
     // MARK: - Input

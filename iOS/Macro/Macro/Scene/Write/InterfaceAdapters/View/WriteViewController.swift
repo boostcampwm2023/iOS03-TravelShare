@@ -15,20 +15,12 @@ final class WriteViewController: TabViewController {
     // MARK: - Properties
     
     private let viewModel: WriteViewModel
-    private let const = MacroCarouselView.Const(itemSize: CGSize(width: 300, height: 340), itemSpacing: 24.0)
+    private let const = MacroCarouselView.Const(itemSize: CGSize(width: UIScreen.width, height: 340), itemSpacing: 24.0)
     private let imageAddSubject: PassthroughSubject<Bool, Never> = .init()
     private let didScrollSubject: PassthroughSubject<Int, Never> = .init()
     private let inputSubject: PassthroughSubject<WriteViewModel.Input, Never> = .init()
-    private var photoAuthorizationStatus = CurrentValueSubject<PHAuthorizationStatus, Never>(.notDetermined)
     private var subscriptions: Set<AnyCancellable> = []
-    
-    lazy var picker: PHPickerViewController = {
-        var configuration = PHPickerConfiguration()
-        configuration.filter = .images
-        let picker = PHPickerViewController(configuration: configuration)
-        picker.delegate = self
-        return picker
-    }()
+    private var carouselCurrentIndex: Int = 0
     
     // MARK: - UI Components
     
@@ -56,7 +48,15 @@ final class WriteViewController: TabViewController {
         textField.placeholder = "제목을 입력하세요..."
         textField.font = UIFont.appFont(.baeEunBody)
         textField.rightViewMode = .always
+        textField.addTarget(self, action: #selector(titleTextFieldDidChange), for: .editingChanged)
         return textField
+    }()
+    
+    private let summaryTextView: UITextView = {
+        let textView = UITextView()
+        textView.font = UIFont.appFont(.baeEunCallout)
+        textView.backgroundColor = UIColor.appColor(.purple1)
+        return textView
     }()
     
     private lazy var carouselView: MacroCarouselView = {
@@ -69,6 +69,7 @@ final class WriteViewController: TabViewController {
         textField.borderStyle = .roundedRect
         textField.placeholder = "문구를 입력하세요"
         textField.font = UIFont.appFont(.baeEunBody)
+        textField.addTarget(self, action: #selector(descriptionTextFieldDidChange), for: .editingChanged)
         return textField
     }()
     
@@ -120,12 +121,14 @@ private extension WriteViewController {
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
+        delegateConfigure()
     }
     
     func setTranslatesAutoresizingMaskIntoConstraints() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         carouselView.translatesAutoresizingMaskIntoConstraints = false
         titleTextField.translatesAutoresizingMaskIntoConstraints = false
+        summaryTextView.translatesAutoresizingMaskIntoConstraints = false
         imageDescriptionTextField.translatesAutoresizingMaskIntoConstraints = false
         mapView.translatesAutoresizingMaskIntoConstraints = false
         writeSubmitButton.translatesAutoresizingMaskIntoConstraints = false
@@ -137,6 +140,7 @@ private extension WriteViewController {
         scrollView.addSubview(scrollContentView)
         [
             titleTextField,
+            summaryTextView,
             carouselView,
             imageDescriptionTextField,
             mapView,
@@ -156,7 +160,12 @@ private extension WriteViewController {
             titleTextField.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -20),
             titleTextField.heightAnchor.constraint(equalToConstant: 50),
             
-            carouselView.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 20),
+            summaryTextView.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 20),
+            summaryTextView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 20),
+            summaryTextView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -10),
+            summaryTextView.heightAnchor.constraint(equalToConstant: 210),
+            
+            carouselView.topAnchor.constraint(equalTo: summaryTextView.bottomAnchor, constant: 20),
             carouselView.leftAnchor.constraint(equalTo: scrollContentView.leftAnchor),
             carouselView.rightAnchor.constraint(equalTo: scrollContentView.rightAnchor),
             carouselView.heightAnchor.constraint(equalToConstant: const.itemSize.height),
@@ -172,7 +181,7 @@ private extension WriteViewController {
             mapView.heightAnchor.constraint(equalToConstant: UIScreen.width - 48),
             
             writeSubmitButton.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 30),
-            writeSubmitButton.bottomAnchor.constraint(equalTo: scrollContentView.bottomAnchor, constant: -30),
+            writeSubmitButton.bottomAnchor.constraint(equalTo: scrollContentView.bottomAnchor, constant: -50),
             writeSubmitButton.centerXAnchor.constraint(equalTo: scrollContentView.centerXAnchor),
             writeSubmitButton.widthAnchor.constraint(equalToConstant: UIScreen.width - 40),
             writeSubmitButton.heightAnchor.constraint(equalToConstant: 50),
@@ -183,6 +192,11 @@ private extension WriteViewController {
             scrollContentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             
         ])
+    }
+    
+    func delegateConfigure() {
+        titleTextField.delegate = self
+        summaryTextView.delegate = self
     }
 }
 
@@ -198,6 +212,7 @@ private extension WriteViewController {
                 case let .isVisibilityToggle(isVisibility):
                     let image = (isVisibility ? UIImage.appImage(.lockOpenFill) : UIImage.appImage(.lockFill))?.withTintColor(isVisibility ? UIColor.appColor(.statusGreen) : UIColor.appColor(.statusRed), renderingMode: .alwaysOriginal)
                     self?.isVisibilityButton.setImage(image, for: .normal)
+                // imageData Cell에 추가
                 case let .outputImageData(imageDatas):
                     var images = [UIImage?]()
                     
@@ -206,9 +221,12 @@ private extension WriteViewController {
                     }
                     
                     self?.carouselView.updateData(images)
-                case .uploadWrite:
+                // Submit 버튼 눌러진 경우
+                case .postUploadSuccess:
                     // TODO: - Home화면으로 돌아가
-                    break
+                    debugPrint("Post Upload Success")
+                case let .outputDescriptionString(description):
+                    self?.imageDescriptionTextField.text = description
                 }
             }
             .store(in: &subscriptions)
@@ -219,15 +237,11 @@ private extension WriteViewController {
             }
             .store(in: &subscriptions)
         
-        photoAuthorizationStatus
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] state in
-                switch state {
-                case .authorized:
-                    self?.addImagePresent()
-                default:
-                    self?.photoAuthorizationRequest()
-                }
+        didScrollSubject
+            .receive(on: DispatchQueue.global())
+            .sink { [weak self] index in
+                self?.carouselCurrentIndex = index
+                self?.inputSubject.send(.didScroll(self?.carouselCurrentIndex ?? 0))
             }
             .store(in: &subscriptions)
     }
@@ -245,51 +259,47 @@ private extension WriteViewController {
     }
 }
 
-// MARK: - Image Picker
+// MARK: - ImagePicker
 
-extension WriteViewController: PHPickerViewControllerDelegate {
-    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        picker.dismiss(animated: true)
-        
-        guard !results.isEmpty else {
-            debugPrint("Image Pick results is Empyt")
-            return
+extension WriteViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    private func presentImagePickerController() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.delegate = self
+        present(imagePicker, animated: true)
+    }
+    
+    /// 사용자가 이미지를 선택했을 때
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let selectedImage = info[.originalImage] as? UIImage, let data = selectedImage.jpegData(compressionQuality: 1.0) {
+            self.inputSubject.send(.addImageData(imageData: data))
         }
-        
-        let itemProvider = results.first?.itemProvider
-        
-        var images = [UIImage?]()
-        
-        if let resultItempProvider = results.first?.itemProvider,
-           resultItempProvider.canLoadObject(ofClass: UIImage.self) {
-            resultItempProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
-                if let error {
-                    debugPrint("Error loading image: \(error.localizedDescription)")
-                }
-                
-                if let image = image as? UIImage, let data = image.jpegData(compressionQuality: 1.0) {
-                    self?.inputSubject.send(.addImageData(imageData: data))
-                }
-            }
-        }
+        dismiss(animated: true, completion: nil)
+    }
+    
+    /// 사용자가 이미지 선택을 취소했을 때
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
     
     func imageAddButtonTouched() {
-        self.photoAuthorizationStatus.value = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+        self.presentImagePickerController()
+    }
+}
+
+extension WriteViewController: UITextFieldDelegate, UITextViewDelegate {
+    @objc func titleTextFieldDidChange(_ sender: Any?) {
+        guard let title = self.titleTextField.text else { return }
+        inputSubject.send(.titleTextUpdate(title))
     }
     
-    /// 사용자에게 라이브러리 접근 권한 요청 Method
-    private func photoAuthorizationRequest() {
-        let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
-        PHPhotoLibrary.requestAuthorization(for: .readWrite) { newStatus in
-            self.photoAuthorizationStatus.value = newStatus
-        }
+    @objc func descriptionTextFieldDidChange(_ sender: Any?) {
+        guard let description = self.imageDescriptionTextField.text else { return }
+        inputSubject.send(.imageDescriptionUpdate(index: self.carouselCurrentIndex, description: description))
     }
     
-    /// Image Picker 나타나게 하는 Method
-    private func addImagePresent() {
-        DispatchQueue.main.async {
-            self.present(self.picker, animated: true)
-        }
+    func textViewDidChange(_ textView: UITextView) {
+        guard let summarry = textView.text else { return }
+        inputSubject.send(.summaryTextUpdate(summarry))
     }
 }

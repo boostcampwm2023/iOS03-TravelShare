@@ -58,7 +58,7 @@ private extension ReadViewModel {
         useCase.execute(postId: postId)
             .sink { completion in
                 if case let .failure(error) = completion {
-                    debugPrint("Token Get Fail : ", error)
+                    debugPrint("Read Get Fail : ", error)
                 }
             } receiveValue: { [weak self] readPost in
                 self?.outputSubject.send(.updatePost(post: readPost))

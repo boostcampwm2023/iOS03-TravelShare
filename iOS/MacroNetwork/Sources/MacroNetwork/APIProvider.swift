@@ -38,8 +38,16 @@ public final class APIProvider: Requestable {
                 
                 switch response.statusCode {
                 case 200..<300: return data
-                case 400..<500: throw NetworkError.invalidRequest
-                case 500..<600: throw NetworkError.invalidServer
+                case 400..<500:
+                    if let responseBody = String(data: data, encoding: .utf8) {
+                        print("Error 4xx - Status Code: \(response.statusCode), Response Body: \(responseBody)")
+                    }
+                    throw NetworkError.invalidRequest
+                case 500..<600: 
+                    if let responseBody = String(data: data, encoding: .utf8) {
+                        print("Error 5xx - Status Code: \(response.statusCode), Response Body: \(responseBody)")
+                    }
+                    throw NetworkError.invalidServer
                 default: throw NetworkError.unknownError
                 }
             }
