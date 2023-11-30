@@ -1,3 +1,3 @@
-import { PostPagenation } from './post.pagenation.dto';
+import { PostSortable } from './post.sortable.dto';
 
-export class PostHitsQuery extends PostPagenation {}
+export class PostHitsQuery extends PostSortable {}
