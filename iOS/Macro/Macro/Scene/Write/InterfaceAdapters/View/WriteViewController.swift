@@ -169,8 +169,6 @@ private extension WriteViewController {
             carouselView.topAnchor.constraint(equalTo: summaryTextView.bottomAnchor, constant: 20),
             carouselView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 20),
             carouselView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -20),
-//            carouselView.leftAnchor.constraint(equalTo: scrollContentView.leftAnchor),
-//            carouselView.rightAnchor.constraint(equalTo: scrollContentView.rightAnchor),
             carouselView.heightAnchor.constraint(equalToConstant: const.itemSize.height),
             
             imageDescriptionTextField.topAnchor.constraint(equalTo: carouselView.bottomAnchor, constant: 30),
@@ -213,8 +211,10 @@ private extension WriteViewController {
             .sink { [weak self] output in
                 switch output {
                 case let .isVisibilityToggle(isVisibility):
-                    let image = (isVisibility ? UIImage.appImage(.lockOpenFill) : UIImage.appImage(.lockFill))?.withTintColor(isVisibility ? UIColor.appColor(.statusGreen) : UIColor.appColor(.statusRed), renderingMode: .alwaysOriginal)
-                    self?.isVisibilityButton.setImage(image, for: .normal)
+                    DispatchQueue.main.async {
+                        let image = (isVisibility ? UIImage.appImage(.lockOpenFill) : UIImage.appImage(.lockFill))?.withTintColor(isVisibility ? UIColor.appColor(.statusGreen) : UIColor.appColor(.statusRed), renderingMode: .alwaysOriginal)
+                        self?.isVisibilityButton.setImage(image, for: .normal)
+                    }
                 // imageData Cell에 추가
                 case let .outputImageData(imageDatas):
                     var images = [UIImage?]()
@@ -229,13 +229,15 @@ private extension WriteViewController {
                     // TODO: - Home화면으로 돌아가
                     debugPrint("Post Upload Success")
                 case let .outputDescriptionString(description):
-                    self?.imageDescriptionTextField.text = description
+                    DispatchQueue.main.async {
+                        self?.imageDescriptionTextField.text = description
+                    }
                 }
             }
             .store(in: &subscriptions)
         
         imageAddSubject
-            .sink { buttonTouched in
+            .sink { _ in
                 self.imageAddButtonTouched()
             }
             .store(in: &subscriptions)
@@ -269,7 +271,9 @@ extension WriteViewController: UIImagePickerControllerDelegate, UINavigationCont
         let imagePicker = UIImagePickerController()
         imagePicker.sourceType = .photoLibrary
         imagePicker.delegate = self
-        present(imagePicker, animated: true)
+        DispatchQueue.main.async {
+            self.present(imagePicker, animated: true)
+        }
     }
     
     /// 사용자가 이미지를 선택했을 때
