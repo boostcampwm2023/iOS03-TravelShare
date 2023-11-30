@@ -122,6 +122,7 @@ private extension WriteViewController {
         addsubviews()
         setLayoutConstraints()
         delegateConfigure()
+        hideKeyboardWhenTappedAround()
     }
     
     func setTranslatesAutoresizingMaskIntoConstraints() {
@@ -301,5 +302,18 @@ extension WriteViewController: UITextFieldDelegate, UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         guard let summarry = textView.text else { return }
         inputSubject.send(.summaryTextUpdate(summarry))
+    }
+}
+
+// 키보드 숨기기
+extension UIViewController {
+    func hideKeyboardWhenTappedAround() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 }
