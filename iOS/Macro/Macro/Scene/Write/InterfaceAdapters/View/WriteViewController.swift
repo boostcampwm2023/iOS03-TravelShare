@@ -226,8 +226,17 @@ private extension WriteViewController {
                     self?.carouselView.updateData(images)
                 // Submit 버튼 눌러진 경우
                 case .postUploadSuccess:
-                    // TODO: - Home화면으로 돌아가
-                    debugPrint("Post Upload Success")
+                    let alertController = UIAlertController(title: "", message: "글 작성 완료", preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "확인", style: .default) { _ in
+                        if let navigationController = self?.navigationController {
+                            navigationController.popViewController(animated: true)
+                        } else {
+                            self?.dismiss(animated: true)
+                        }
+                    }
+                    alertController.addAction(okAction)
+
+                    self?.present(alertController, animated: true)
                 case let .outputDescriptionString(description):
                     DispatchQueue.main.async {
                         self?.imageDescriptionTextField.text = description
