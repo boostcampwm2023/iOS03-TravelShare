@@ -7,9 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from 'entities/post.entity';
 import { In, Like, Raw, Repository } from 'typeorm';
-import { PostFindQuery } from './post.find.query.dto';
 import { plainToInstance } from 'class-transformer';
-import { PostFindResponse } from './post.find.response.dto';
 import { PostHitsQuery } from './post.hits.query.dto';
 import { PostDetailResponse } from './post.detail.response.dto';
 import { Authentication } from 'auth/authentication.dto';
@@ -21,6 +19,11 @@ import { Route } from 'entities/route.entity';
 import { PostLikeResponse } from './post.like.response.dto';
 import { PostContentElement } from 'entities/post.content.element.entity';
 import { Place } from 'entities/place.entity';
+import { PostSearchResponse } from './post.search.response.dto';
+import { PostSearchQuery } from './post.search.query.dto';
+import { PostFindQuery } from './post.find.query.dto';
+import { DistanceCalculator } from 'utils/distance.calculator';
+import { PostFindResponse } from './post.find.response.dto';
 
 @Injectable()
 export class PostService {
@@ -246,7 +249,7 @@ ORDER BY
     });
 
     return plainToInstance(
-      PostFindResponse,
+      PostSearchResponse,
       posts.map((post) => ({
         ...post,
         liked: isLikedPosts.map(({ postId }) => postId).includes(post.postId),
@@ -256,7 +259,7 @@ ORDER BY
 
   @Transactional()
   async search(
-    { title, username, email, ...pagination }: PostFindQuery,
+    { title, username, email, placeId, ...pagination }: PostSearchQuery,
     { email: loginUser }: Authentication,
   ) {
     const posts = await this.postRepository.find({
@@ -284,6 +287,14 @@ ORDER BY
               }
             : {}),
         },
+        {
+          ...(placeId
+            ? {
+                public: email === loginUser ? null : true,
+                pins: { placeId },
+              }
+            : {}),
+        },
       ],
       ...pagination,
       relations: {
@@ -302,16 +313,12 @@ ORDER BY
     });
 
     return plainToInstance(
-      PostFindResponse,
+      PostSearchResponse,
       posts.map((post) => ({
         ...post,
         liked: isLikedPosts.map(({ postId }) => postId).includes(post.postId),
       })),
     );
-  }
-
-  async find({ email }: { email: string }) {
-    return await this.postRepository.findBy({ writer: { email } });
   }
 
   @Transactional()
@@ -451,4 +458,110 @@ ORDER BY
       likeNum: () => 'like_num - 1',
     });
   }
+
+  async findByPlaceId({ placeId }: PostFindQuery) {
+    // const result =  this.postRepository.query(`
+    // SELECT * FROM place WHERE place.place_id=? AND
+    // ST_Intersection(ST_Buffer(place.coordinate,100),
+    //   (
+    //     SELECT place.coordinate FROM place,
+    //     (
+    //       SELECT place_id, count(post_id)  AS countPlace
+    //       FROM pins
+    //       WHERE NOT place_id=? AND post_id IN (
+    //         SELECT post_id
+    //         FROM pins AS child
+    //         WHERE place_id=?
+    //       )
+    //       GROUP BY place_id
+    //       ORDER BY countPlace DESC
+    //     ) AS Temp
+    //     WHERE place.place_id=Temp.place_id
+    //   )
+    // )
+    // `, [placeId,placeId, placeId]);
+
+    // POINT(1 1)
+    // POINT(122 244)
+    const arr = await this.postRepository.query(
+      `
+    SELECT 
+      place.place_id as placeId,
+      place.place_name as placeName,
+      place.phone_number as phoneNumber,
+      place.category,
+      place.address,
+      place.road_address as roadAddress,
+      place.coordinate,
+      Temp.countPlace
+    FROM place,
+    (
+      SELECT place_id, count(post_id) as countPlace
+      FROM pins
+      WHERE NOT place_id=? AND post_id IN (
+        SELECT post_id
+        FROM pins AS child
+        WHERE place_id=?
+      )
+      GROUP BY place_id
+      ORDER BY countPlace DESC
+    ) AS Temp
+    WHERE place.place_id=Temp.place_id
+    `,
+      [placeId, placeId],
+    );
+    const result = [];
+    arr.forEach((data) => {
+      if (
+        DistanceCalculator(0, 0, data.coordinate.x, data.coordinate.y) <= 20
+      ) {
+        result.push(data);
+      }
+    });
+
+    console.log(result);
+
+    //     const result=this.postRepository.query(
+    //     `
+    //     SET @targetPoint = ST_PointFromText('POINT(0 0)');
+
+    //       SELECT *, ST_Distance(b.coordinate,@targetPoint) AS distance_to_target
+    //       FROM (SELECT place.coordinate FROM place,
+    //     (
+    //       SELECT place_id, count(post_id) as countPlace
+    //       FROM pins
+    //       WHERE NOT place_id=? AND post_id IN (
+    //         SELECT post_id
+    //         FROM pins AS child
+    //         WHERE place_id=?
+    //       )
+    //       GROUP BY place_id
+    //       ORDER BY countPlace
+    //     ) AS Temp
+    //     WHERE place.place_id=Temp.place_id) as b
+    // HAVING distance_to_target <= ?`,[0,0,placeId,placeId,100])
+
+    return plainToInstance(PostFindResponse, result);
+  }
 }
+
+/**
+ * POINT(12 22)
+ * PONINT
+ *
+ * Multi-Point(12 11, 1133 232, )
+ */
+
+/**
+ * SELECT * FROM place,
+      (SELECT place_id, count(post_id) AS countPlace
+      FROM pins
+      WHERE NOT place_id=? AND post_id IN (
+        SELECT post_id
+        FROM pins AS child
+        WHERE place_id=?
+      )
+      GROUP BY place_id
+      ORDER BY countPlace DESC) AS Temp
+      WHERE place.place_id=Temp.place_id
+ */
