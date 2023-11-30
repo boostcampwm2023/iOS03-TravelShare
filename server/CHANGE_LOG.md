@@ -17,3 +17,7 @@ pings 객체는 place 객체의 배열이며, place 객체의 배열은
 - /post/detail: 게시글 조회 시에 pings 객체가 추가되었습니다.
 
 참고 [PostDetailResponse](./src/post/post.detail.response.dto.ts)
+
+### 2023-11-30
+- /post/hits: sortBy 옵션 추가. 기존 인기순 정렬은 hot, 최신순 정렬은 latest 옵션을 주면 됩니다.
+- /post/upload, detail: swagger 문서 dto required property 수정
