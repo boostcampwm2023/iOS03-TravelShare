@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,6 +24,7 @@ import { Place } from 'entities/place.entity';
 
 @Injectable()
 export class PostService {
+  private readonly logger: Logger = new Logger(PostService.name);
   constructor(
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
@@ -231,7 +233,7 @@ ORDER BY
         },
       })
       .addSelect(`\`view_num\` * 0.2 + \`like_num\` * 0.8`, 'score')
-      .orderBy('score', 'DESC')
+      .orderBy(pagination.sortBy === 'hot' ? 'score' : 'post.postId', 'DESC')
       .getMany();
     const isLikedPosts = await this.postRepository.find({
       where: {
@@ -277,7 +279,7 @@ ORDER BY
         {
           ...(email
             ? {
-                public: true,
+                public: email === loginUser ? null : true,
                 writer: { email },
               }
             : {}),
@@ -325,6 +327,7 @@ ORDER BY
         },
       })
       .catch((err) => {
+        this.logger.error(err);
         throw new NotFoundException('post not found', { cause: err });
       });
     if (post.writer.email !== email && !post.public) {
