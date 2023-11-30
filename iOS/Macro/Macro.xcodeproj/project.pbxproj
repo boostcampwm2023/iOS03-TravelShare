@@ -1564,7 +1564,7 @@
 				CODE_SIGN_ENTITLEMENTS = Macro/Macro.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VYAAXRZFXH;
+				DEVELOPMENT_TEAM = B3PWYBKFUK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Macro/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "어디갈래";
@@ -1582,8 +1582,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kr.boostcamp8.macro;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcamp8.macro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1604,7 +1604,7 @@
 				CODE_SIGN_ENTITLEMENTS = Macro/Macro.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VYAAXRZFXH;
+				DEVELOPMENT_TEAM = B3PWYBKFUK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Macro/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "어디갈래";
@@ -1622,8 +1622,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kr.boostcamp8.macro;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcamp8.macro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
