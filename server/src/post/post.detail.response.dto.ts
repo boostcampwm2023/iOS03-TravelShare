@@ -29,13 +29,23 @@ export class PostDetailResponse {
   @IsString()
   title: string;
 
-  @ApiProperty({ description: '내용들', type: [PostDetailElement] })
+  @ApiProperty({ description: '요약', required: false })
+  @IsString()
+  @IsOptional()
+  summary: string;
+
+  @ApiProperty({
+    description: '내용들',
+    type: [PostDetailElement],
+    required: false,
+  })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => PostDetailElement)
+  @IsOptional()
   contents: PostDetailElement[];
 
-  @ApiProperty({ description: '작성자' })
+  @ApiProperty({ description: '작성자', type: UserProfileSimpleResponse })
   @IsObject()
   @ValidateNested()
   @Type(() => UserProfileSimpleResponse)
@@ -44,6 +54,7 @@ export class PostDetailResponse {
   @ApiProperty({
     description: '이동 경로, 2차원 배열입니다.',
     type: RouteCoordinates,
+    required: false,
   })
   @IsObject()
   @ValidateNested()
@@ -55,6 +66,7 @@ export class PostDetailResponse {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => PlaceBase)
+  @IsOptional()
   pins: PlaceBase[];
 
   @ApiProperty({ description: '좋아요개수' })
