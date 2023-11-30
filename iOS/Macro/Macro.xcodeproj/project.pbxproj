@@ -38,9 +38,6 @@
 		AAD0B3142B14E394003B4D5F /* ReadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B30B2B14E394003B4D5F /* ReadViewController.swift */; };
 		AAD0B3152B14E394003B4D5F /* ReadEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B30D2B14E394003B4D5F /* ReadEndPoint.swift */; };
 		AAD0B3162B14E394003B4D5F /* ReadPostUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B30F2B14E394003B4D5F /* ReadPostUseCase.swift */; };
-		BA00A0892B1732E6007F7BB9 /* MapCollectionViewCellHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA00A0882B1732E6007F7BB9 /* MapCollectionViewCellHeaderView.swift */; };
-		BA00A08B2B1732EF007F7BB9 /* MapCollectionViewCellContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA00A08A2B1732EF007F7BB9 /* MapCollectionViewCellContentView.swift */; };
-		BA00A08D2B177113007F7BB9 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA00A08C2B177113007F7BB9 /* DateFormatter.swift */; };
 		AAD0B31A2B1710C9003B4D5F /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B3192B1710C9003B4D5F /* Post.swift */; };
 		AAD0B31C2B171171003B4D5F /* Cotent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B31B2B171171003B4D5F /* Cotent.swift */; };
 		AAD0B31E2B171187003B4D5F /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B31D2B171187003B4D5F /* Coordinate.swift */; };
@@ -49,6 +46,9 @@
 		AAD0B3252B17477A003B4D5F /* PostUploadEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B3242B17477A003B4D5F /* PostUploadEndPoint.swift */; };
 		AAD0B3272B176832003B4D5F /* PostUploadResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B3262B176832003B4D5F /* PostUploadResponse.swift */; };
 		AAD0B3292B17AD23003B4D5F /* ImageSaveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B3282B17AD22003B4D5F /* ImageSaveManager.swift */; };
+		BA00A0892B1732E6007F7BB9 /* MapCollectionViewCellHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA00A0882B1732E6007F7BB9 /* MapCollectionViewCellHeaderView.swift */; };
+		BA00A08B2B1732EF007F7BB9 /* MapCollectionViewCellContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA00A08A2B1732EF007F7BB9 /* MapCollectionViewCellContentView.swift */; };
+		BA00A08D2B177113007F7BB9 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA00A08C2B177113007F7BB9 /* DateFormatter.swift */; };
 		BA32E0E92B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E0E82B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift */; };
 		BA32E1762B0DC2F900EA0EE2 /* UserInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E1732B0DC2F900EA0EE2 /* UserInfoViewModel.swift */; };
 		BA32E1772B0DC2F900EA0EE2 /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E1752B0DC2F900EA0EE2 /* UserInfoViewController.swift */; };
@@ -172,9 +172,6 @@
 		AAD0B30B2B14E394003B4D5F /* ReadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadViewController.swift; sourceTree = "<group>"; };
 		AAD0B30D2B14E394003B4D5F /* ReadEndPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadEndPoint.swift; sourceTree = "<group>"; };
 		AAD0B30F2B14E394003B4D5F /* ReadPostUseCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadPostUseCase.swift; sourceTree = "<group>"; };
-		BA00A0882B1732E6007F7BB9 /* MapCollectionViewCellHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCollectionViewCellHeaderView.swift; sourceTree = "<group>"; };
-		BA00A08A2B1732EF007F7BB9 /* MapCollectionViewCellContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCollectionViewCellContentView.swift; sourceTree = "<group>"; };
-		BA00A08C2B177113007F7BB9 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		AAD0B3192B1710C9003B4D5F /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		AAD0B31B2B171171003B4D5F /* Cotent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cotent.swift; sourceTree = "<group>"; };
 		AAD0B31D2B171187003B4D5F /* Coordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
@@ -183,6 +180,9 @@
 		AAD0B3242B17477A003B4D5F /* PostUploadEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostUploadEndPoint.swift; sourceTree = "<group>"; };
 		AAD0B3262B176832003B4D5F /* PostUploadResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostUploadResponse.swift; sourceTree = "<group>"; };
 		AAD0B3282B17AD22003B4D5F /* ImageSaveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSaveManager.swift; sourceTree = "<group>"; };
+		BA00A0882B1732E6007F7BB9 /* MapCollectionViewCellHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCollectionViewCellHeaderView.swift; sourceTree = "<group>"; };
+		BA00A08A2B1732EF007F7BB9 /* MapCollectionViewCellContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCollectionViewCellContentView.swift; sourceTree = "<group>"; };
+		BA00A08C2B177113007F7BB9 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		BA32E0E82B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TabBarViewController+Animaion.swift"; sourceTree = "<group>"; };
 		BA32E1732B0DC2F900EA0EE2 /* UserInfoViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoViewModel.swift; sourceTree = "<group>"; };
 		BA32E1752B0DC2F900EA0EE2 /* UserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
@@ -1311,7 +1311,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BA90CB962B10999100365AE2 /* UserInfoResponse.swift in Sources */,
 				BA8DC4152B0B602D00929E01 /* WriteViewController.swift in Sources */,
 				D241DC7C2B0DA0DA0037DDB6 /* SearchType.swift in Sources */,
 				BA90CBA82B147E1900365AE2 /* UserInfoEndPoint.swift in Sources */,
@@ -1389,7 +1388,6 @@
 				BA32E17F2B0DC3CB00EA0EE2 /* MyPageViewController.swift in Sources */,
 				BA90CBA02B145D6600365AE2 /* FollowUseCase.swift in Sources */,
 				BA6C6DFC2B05FFC500563B22 /* TabComponentView.swift in Sources */,
-				BAB24ED92B15D3D7000991A1 /* Travels+CoreData.swift in Sources */,
 				D263CA262B04147E00B4A144 /* TravelViewController.swift in Sources */,
 				BAB24ED82B15D3D7000991A1 /* CoreDataStack.swift in Sources */,
 				BA90CB932B10997D00365AE2 /* UserInfoHeaderView.swift in Sources */,
@@ -1487,7 +1485,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				INFOPLIST_KEY_CFBundleDisplayName = "어디갈래";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1544,7 +1543,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				INFOPLIST_KEY_CFBundleDisplayName = "어디갈래";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -1560,12 +1560,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Macro/Macro.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = B3PWYBKFUK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Macro/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "어디갈래";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "이 앱은 여러분의 위치 정보를 사용합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1579,7 +1582,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcamp8.macro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1597,12 +1600,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Macro/Macro.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = B3PWYBKFUK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Macro/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "어디갈래";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "이 앱은 여러분의 위치 정보를 사용합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1616,7 +1622,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcamp8.macro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
