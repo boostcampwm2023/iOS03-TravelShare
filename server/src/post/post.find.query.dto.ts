@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsOptional, IsString } from 'class-validator';
-import { PostPagenation } from './post.pagenation.dto';
+import { PostPagination } from './post.pagination.dto';
 
-export class PostFindQuery extends PostPagenation {
+export class PostFindQuery extends PostPagination {
   @ApiProperty({ description: '검색할 제목', required: false })
   @IsString()
   @IsOptional()
