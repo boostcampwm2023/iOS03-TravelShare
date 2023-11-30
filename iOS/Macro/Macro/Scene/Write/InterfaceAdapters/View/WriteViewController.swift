@@ -15,7 +15,7 @@ final class WriteViewController: TabViewController {
     // MARK: - Properties
     
     private let viewModel: WriteViewModel
-    private let const = MacroCarouselView.Const(itemSize: CGSize(width: UIScreen.width, height: 340), itemSpacing: 24.0)
+    private let const = MacroCarouselView.Const(itemSize: CGSize(width: UIScreen.width - 40, height: 340), itemSpacing: 24.0)
     private let imageAddSubject: PassthroughSubject<Bool, Never> = .init()
     private let didScrollSubject: PassthroughSubject<Int, Never> = .init()
     private let inputSubject: PassthroughSubject<WriteViewModel.Input, Never> = .init()
@@ -163,12 +163,14 @@ private extension WriteViewController {
             
             summaryTextView.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 20),
             summaryTextView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 20),
-            summaryTextView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -10),
+            summaryTextView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -20),
             summaryTextView.heightAnchor.constraint(equalToConstant: 210),
             
             carouselView.topAnchor.constraint(equalTo: summaryTextView.bottomAnchor, constant: 20),
-            carouselView.leftAnchor.constraint(equalTo: scrollContentView.leftAnchor),
-            carouselView.rightAnchor.constraint(equalTo: scrollContentView.rightAnchor),
+            carouselView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 20),
+            carouselView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -20),
+//            carouselView.leftAnchor.constraint(equalTo: scrollContentView.leftAnchor),
+//            carouselView.rightAnchor.constraint(equalTo: scrollContentView.rightAnchor),
             carouselView.heightAnchor.constraint(equalToConstant: const.itemSize.height),
             
             imageDescriptionTextField.topAnchor.constraint(equalTo: carouselView.bottomAnchor, constant: 30),
