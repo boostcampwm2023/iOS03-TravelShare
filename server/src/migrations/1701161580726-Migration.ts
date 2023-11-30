@@ -31,7 +31,6 @@ export class Migration1701161580726 implements MigrationInterface {
                 \`view_num\` int NOT NULL DEFAULT '0',
                 \`like_num\` int NOT NULL DEFAULT '0',
                 \`summary\` varchar(255) NULL,
-                \`hashtag\` json NOT NULL,
                 \`start_at\` date NOT NULL,
                 \`end_at\` date NOT NULL,
                 \`public\` tinyint NOT NULL DEFAULT 1,
