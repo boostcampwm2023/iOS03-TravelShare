@@ -90,7 +90,7 @@ export class Post {
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;
 
-  @ManyToMany(() => Place)
+  @ManyToMany(() => Place, ({ posts }) => posts)
   @JoinTable({
     name: 'pins',
     joinColumn: { name: 'post_id' },
