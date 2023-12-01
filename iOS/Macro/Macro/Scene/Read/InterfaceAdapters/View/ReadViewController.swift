@@ -248,7 +248,7 @@ private extension ReadViewController {
         let provider = APIProvider(session: URLSession.shared)
         let searchUseCase = Searcher(provider: provider)
         let followFeature = FollowFeature(provider: provider)
-        let userInfoViewModel = UserInfoViewModel(postSearcher: searchUseCase, followFeature: followFeature)
+        let userInfoViewModel = UserInfoViewModel(postSearcher: searchUseCase, followFeature: followFeature, patcher: Patcher(provider: provider))
         let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: userId)
 
         navigationController?.pushViewController(userInfoViewController, animated: true)

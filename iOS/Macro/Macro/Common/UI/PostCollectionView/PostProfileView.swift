@@ -14,6 +14,7 @@ final class PostProfileView<T: PostCollectionViewProtocol>: UIView {
     private var cancellables = Set<AnyCancellable>()
     var viewModel: T?
     var indexPath: IndexPath?
+    var postId: Int?
     // MARK: - UI Components
     
     private let viewCountLabel: UILabel = {
@@ -81,20 +82,9 @@ final class PostProfileView<T: PostCollectionViewProtocol>: UIView {
         
     }
     
-    
     @objc private func likeImageViewTap(_ sender: UITapGestureRecognizer) {
-        guard let likeCount: Int = Int(self.likeCountLabel.text ?? "0") else { return }
-        viewModel?.touchLike(postId: "") { isLike in
-            DispatchQueue.main.async { [weak self] in
-                if isLike {
-                    self?.likeImageView.image = UIImage.appImage(.handThumbsupFill)
-                    self?.likeCountLabel.text = "\(likeCount + 1)"
-                } else {
-                    self?.likeImageView.image = UIImage.appImage(.handThumbsup)
-                    self?.likeCountLabel.text = "\(likeCount - 1)"
-                }
-            }
-        }
+        guard let postId: Int = self.postId else { return }
+        viewModel?.touchLike(postId: postId)
     }
     
 }
@@ -197,6 +187,8 @@ extension PostProfileView {
         userNameLabel.text = item.writer.name
         likeCountLabel.text = "\(item.likeNum)"
         viewCountLabel.text = "\(item.viewNum)"
+        
+        self.postId = item.postId
     }
     
 }

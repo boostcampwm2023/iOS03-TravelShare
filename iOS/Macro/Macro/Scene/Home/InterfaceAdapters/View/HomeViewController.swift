@@ -86,17 +86,42 @@ extension HomeViewController {
     
 }
 
+// MARK: - Bind
+
+private extension HomeViewController {
+    func bind() {
+        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+        
+        outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
+            switch output {
+            case let .updateSearchResult(result):
+                self?.updateSearchResult(result)
+            case let .navigateToProfileView(email):
+                self?.navigateToProfileView(email)
+            case let .navigateToReadView(postId):
+                self?.navigateToReadView(postId)
+            case let .updatePostLike(likePostResponse):
+                self?.updatePostLike(likePostResponse)
+            default: break
+            }
+        }.store(in: &cancellables)
+    }
+}
+
 // MARK: - Methods
 
 private extension HomeViewController {
     
     func updateSearchResult(_ result: [PostFindResponse]) {
+        let sortedPostById = result.sorted { $0.postId < $1.postId }
         homeCollectionView.viewModel.posts = result
         homeCollectionView.reloadData()
     }
     
     func navigateToProfileView(_ email: String) {
-        let userInfoViewModel = UserInfoViewModel(postSearcher: viewModel.postSearcher, followFeature: viewModel.followFeatrue)
+        let userInfoViewModel = UserInfoViewModel(postSearcher: viewModel.postSearcher,
+                                                  followFeature: viewModel.followFeatrue,
+                                                  patcher: Patcher(provider: provider))
         let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: email)
         navigationController?.pushViewController(userInfoViewController, animated: true)
     }
@@ -110,21 +135,12 @@ private extension HomeViewController {
         navigationController?.pushViewController(readViewController, animated: true)
     }
     
-    func bind() {
-        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
-        
-        outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
-            switch output {
-            case let .updateSearchResult(result):
-                self?.updateSearchResult(result)
-            case let .navigateToProfileView(email):
-                self?.navigateToProfileView(email)
-            case let .navigateToReadView(postId):
-                self?.navigateToReadView(postId)
-            default: break
-            }
-        }.store(in: &cancellables)
-        
+    func updatePostLike(_ likePostReponse: LikePostResponse) {
+        guard let post = viewModel.posts.first(where: { $0.postId == likePostReponse.postId }) else { return }
+        guard let index = viewModel.posts.firstIndex(where: { $0.postId == post.postId }) else { return }
+        viewModel.posts[index].liked = likePostReponse.liked
+        viewModel.posts[index].likeNum = likePostReponse.likeNum
+        homeCollectionView.reloadData()
     }
     
 }
