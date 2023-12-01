@@ -12,6 +12,7 @@ import MacroNetwork
 protocol PatchUseCase {
     
     func patchUser(cellIndex: Int, query: String) -> AnyPublisher<PatchResponse, NetworkError>
+    func patchPostLike(postId: Int) -> AnyPublisher<LikePostResponse, NetworkError>
 }
 
 final class Patcher: PatchUseCase {
@@ -30,5 +31,9 @@ final class Patcher: PatchUseCase {
     
     func patchUser(cellIndex: Int, query: String) -> AnyPublisher<PatchResponse, MacroNetwork.NetworkError> {
         return provider.request(UpdateUserEndPoint.cellIndex(cellIndex, query))
+    }
+    
+    func patchPostLike(postId: Int) -> AnyPublisher<LikePostResponse, MacroNetwork.NetworkError> {
+        return provider.request(UpdateLikeEndPoint.postLike(postId))
     }
 }
