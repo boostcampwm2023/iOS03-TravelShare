@@ -175,6 +175,16 @@ id 항목을 넣어주어야 합니다.
     );
   }
 
+  @ApiOperation({
+    summary: '핀 위치를 기준으로 같이 다녀간 인기장소들을 보여줍니다.',
+    description: `
+# post/find
+
+- 핀의 장소 id(placeId)를 기준으로 주변 인기장소들을 보여줍니다.
+- 많은 게시글이 함께 다녀간 장소들을 보여줍니다.
+- postNum은 게시된 횟수를 보여줍니다.
+    `,
+  })
   @Get('find')
   async find(@Query() query: PostFindQuery) {
     return await this.postService.findByPlaceId(query);
