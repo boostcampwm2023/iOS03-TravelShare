@@ -9,7 +9,7 @@ import Combine
 import Foundation
 
 final class UserInfoViewModel: ViewModelProtocol {
- 
+    
     // MARK: - Properties
     
     var posts: [PostFindResponse] = []
@@ -19,12 +19,14 @@ final class UserInfoViewModel: ViewModelProtocol {
     private let outputSubject = PassthroughSubject<Output, Never>()
     let searcher: SearchUseCase
     let followFeature: FollowUseCase
+    let patcher: PatchUseCase
     
     // MARK: - init
     
-    init(postSearcher: SearchUseCase, followFeature: FollowUseCase) {
+    init(postSearcher: SearchUseCase, followFeature: FollowUseCase, patcher: PatchUseCase) {
         self.searcher = postSearcher
         self.followFeature = followFeature
+        self.patcher = patcher
     }
     
     // MARK: - Input
@@ -46,6 +48,7 @@ final class UserInfoViewModel: ViewModelProtocol {
         case updateFollowResult(FollowResponse)
         case updateUserProfile(UserProfile)
         case updateUserPost([PostFindResponse])
+        case updatePostLike(LikePostResponse)
     }
     
     // MARK: - Methods
@@ -93,7 +96,7 @@ final class UserInfoViewModel: ViewModelProtocol {
     private func searchMockUserProfile(userId: String) {
         searcher.searchMockUserProfile(query: userId, json: "UserInfoMock").sink { _ in
         } receiveValue: { [weak self] response in
-           // self?.outputSubject.send(.updateUserProfile(response))
+            // self?.outputSubject.send(.updateUserProfile(response))
         }.store(in: &cancellables)
     }
 }
@@ -109,4 +112,10 @@ extension UserInfoViewModel: PostCollectionViewProtocol {
         self.outputSubject.send(.navigateToReadView(postId))
     }
     
+    func touchLike(postId: Int) {
+        patcher.patchPostLike(postId: postId).sink { _ in
+        } receiveValue: { [weak self] likePostResponse in
+            self?.outputSubject.send(.updatePostLike(likePostResponse))
+        }.store(in: &cancellables)
+    }
 }

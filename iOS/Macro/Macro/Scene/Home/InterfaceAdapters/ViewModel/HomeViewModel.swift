@@ -24,6 +24,7 @@ final class HomeViewModel: ViewModelProtocol, PostCollectionViewProtocol {
         case navigateToProfileView(String)
         case navigateToReadView(Int)
         case updateSearchResult([PostFindResponse])
+        case updatePostLike(LikePostResponse)
     }
     
     // MARK: - Properties
@@ -32,11 +33,13 @@ final class HomeViewModel: ViewModelProtocol, PostCollectionViewProtocol {
     let postSearcher: SearchUseCase
     let followFeatrue: FollowUseCase
     private var cancellables = Set<AnyCancellable>()
+    let patcher: PatchUseCase
     var posts: [PostFindResponse] = []
     
-    init(postSearcher: SearchUseCase, followFeature: FollowUseCase) {
+    init(postSearcher: SearchUseCase, followFeature: FollowUseCase, patcher: PatchUseCase) {
         self.postSearcher = postSearcher
         self.followFeatrue = followFeature
+        self.patcher = patcher
     }
     
     // MARK: - Methods
@@ -86,4 +89,10 @@ final class HomeViewModel: ViewModelProtocol, PostCollectionViewProtocol {
         self.outputSubject.send(.navigateToProfileView(email))
     }
 
+    func touchLike(postId: Int) {
+        patcher.patchPostLike(postId: postId).sink { _ in
+        } receiveValue: { [weak self] likePostResponse in
+            self?.outputSubject.send(.updatePostLike(likePostResponse))
+        }.store(in: &cancellables)
+    }
 }
