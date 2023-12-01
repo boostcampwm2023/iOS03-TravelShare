@@ -17,12 +17,14 @@ import { PostUploadBody } from './post.upload.body.dto';
 import { PostUploadResponse } from './post.upload.response.dto';
 import { Route } from 'entities/route.entity';
 import { PostLikeResponse } from './post.like.response.dto';
-import { PostContentElement } from 'entities/post.content.element.entity';
+import {
+  PostContentElement,
+  jsonToPoint,
+} from 'entities/post.content.element.entity';
 import { Place } from 'entities/place.entity';
 import { PostSearchResponse } from './post.search.response.dto';
 import { PostSearchQuery } from './post.search.query.dto';
 import { PostFindQuery } from './post.find.query.dto';
-import { DistanceCalculator } from 'utils/distance.calculator';
 import { PostFindResponse } from './post.find.response.dto';
 
 @Injectable()
@@ -482,66 +484,39 @@ ORDER BY
     // `, [placeId,placeId, placeId]);
 
     // POINT(1 1)
-    // POINT(122 244)
-    const arr = await this.postRepository.query(
-      `
-    SELECT 
-      place.place_id as placeId,
-      place.place_name as placeName,
-      place.phone_number as phoneNumber,
-      place.category,
-      place.address,
-      place.road_address as roadAddress,
-      place.coordinate,
-      Temp.countPlace
-    FROM place,
-    (
-      SELECT place_id, count(post_id) as countPlace
-      FROM pins
-      WHERE NOT place_id=? AND post_id IN (
-        SELECT post_id
-        FROM pins AS child
-        WHERE place_id=?
-      )
-      GROUP BY place_id
-      ORDER BY countPlace DESC
-    ) AS Temp
-    WHERE place.place_id=Temp.place_id
-    `,
-      [placeId, placeId],
-    );
-    const result = [];
-    arr.forEach((data) => {
-      if (
-        DistanceCalculator(0, 0, data.coordinate.x, data.coordinate.y) <= 20
-      ) {
-        result.push(data);
-      }
+    // POINT(122 244){}
+    const { coordinate } = await this.placeRepository.findOneOrFail({
+      where: { placeId },
+      select: ['coordinate'],
     });
+    const { raw, entities } = await this.placeRepository
+      .createQueryBuilder('place')
+      .select()
+      .innerJoinAndSelect(
+        (qb) => {
+          return qb
+            .select('COUNT(post_id)', 'postNum')
+            .addSelect('place_id')
+            .from('pins', 'pins')
+            .groupBy('place_id');
+        },
+        'post_count',
+        'post_count.place_id=place.place_id',
+      )
+      .where(
+        `ST_CONTAINS(ST_BUFFER(place.coordinate, 100), ST_GEOMFROMTEXT(:point, 4326))`,
+        { point: jsonToPoint(coordinate) },
+      )
+      .orderBy('postNum', 'DESC')
+      .getRawAndEntities();
 
-    console.log(result);
-
-    //     const result=this.postRepository.query(
-    //     `
-    //     SET @targetPoint = ST_PointFromText('POINT(0 0)');
-
-    //       SELECT *, ST_Distance(b.coordinate,@targetPoint) AS distance_to_target
-    //       FROM (SELECT place.coordinate FROM place,
-    //     (
-    //       SELECT place_id, count(post_id) as countPlace
-    //       FROM pins
-    //       WHERE NOT place_id=? AND post_id IN (
-    //         SELECT post_id
-    //         FROM pins AS child
-    //         WHERE place_id=?
-    //       )
-    //       GROUP BY place_id
-    //       ORDER BY countPlace
-    //     ) AS Temp
-    //     WHERE place.place_id=Temp.place_id) as b
-    // HAVING distance_to_target <= ?`,[0,0,placeId,placeId,100])
-
-    return plainToInstance(PostFindResponse, result);
+    return plainToInstance(
+      PostFindResponse,
+      entities.map((place, index) => ({
+        ...place,
+        postNum: raw[index].postNum,
+      })),
+    );
   }
 }
 
