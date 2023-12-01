@@ -18,11 +18,13 @@ final class SearchViewModel: ViewModelProtocol, PostCollectionViewProtocol {
     private let postSearcher: SearchUseCase
     private var searchType: SearchType = .post
     var posts: [PostFindResponse] = []
+    var patcher: PatchUseCase
     
     // MARK: - Init
     
-    init(postSearcher: SearchUseCase) {
+    init(postSearcher: SearchUseCase, patcher: PatchUseCase) {
         self.postSearcher = postSearcher
+        self.patcher = patcher
     }
     
     // MARK: - Input
@@ -38,6 +40,7 @@ final class SearchViewModel: ViewModelProtocol, PostCollectionViewProtocol {
         case updateSearchResult([PostFindResponse])
         case navigateToProfileView(String)
         case navigateToReadView(Int)
+        case updatePostLike(LikePostResponse)
     }
     
 }
@@ -89,6 +92,13 @@ extension SearchViewModel {
     
     func navigateToReadView(postId: Int) {
         outputSubject.send(.navigateToReadView(postId))
+    }
+    
+    func touchLike(postId: Int) {
+        patcher.patchPostLike(postId: postId).sink { _ in
+        } receiveValue: { [weak self] likePostResponse in
+            self?.outputSubject.send(.updatePostLike(likePostResponse))
+        }.store(in: &cancellables)
     }
 }
 

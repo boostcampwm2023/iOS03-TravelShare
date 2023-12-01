@@ -26,8 +26,8 @@ final class TabBarViewModel {
     
     init() {
         let provider = APIProvider(session: URLSession.shared)
-        let searchViewModel = SearchViewModel(postSearcher: Searcher(provider: provider))
-        let homeViewModel = HomeViewModel(postSearcher: Searcher(provider: provider), followFeature: FollowFeature(provider: provider))
+        let searchViewModel = SearchViewModel(postSearcher: Searcher(provider: provider), patcher: Patcher(provider: provider))
+        let homeViewModel = HomeViewModel(postSearcher: Searcher(provider: provider), followFeature: FollowFeature(provider: provider), patcher: Patcher(provider: provider))
         let routeViewModel = RouteViewModel()
         let travelViewModel = TravelViewModel(
             routeRecorder: RouteRecorder(provider: provider),

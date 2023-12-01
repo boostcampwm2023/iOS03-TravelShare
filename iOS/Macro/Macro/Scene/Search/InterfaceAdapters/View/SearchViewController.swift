@@ -116,17 +116,21 @@ extension SearchViewController {
 
 // MARK: - Bind
 extension SearchViewController {
+    
     private func bind() {
         let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
         
+        // TODO: - 네비게이션 연결
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
             switch output {
             case let .updateSearchResult(result):
                 self?.updateSearchResult(result)
             case let .navigateToProfileView(userId):
-                print(1)
+                break
             case .navigateToReadView(_):
-                print(2)
+                break
+            case let .updatePostLike(result):
+                self?.updatePostLike(result)
             }
         }.store(in: &cancellables)
         
@@ -163,6 +167,10 @@ extension SearchViewController {
 //        let readViewController = ReadViewController(viewModel: readViewModel)
 //
 //        navigationController?.pushViewController(readViewController, animated: true)
+    }
+    
+    func updatePostLike(_ likePostResponse: LikePostResponse) {
+        print("updatee")
     }
 }
 
