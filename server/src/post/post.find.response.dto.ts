@@ -31,15 +31,16 @@ export class PostFindResponse {
   address: string;
 
   @ApiProperty({ description: '도로명 주소' })
-  road_address: string;
+  @IsString()
+  roadAddress: string;
 
   @ApiProperty({ description: '좌표' })
   @ValidateNested()
   @Type(() => RouteCoordinate)
   coordinate: RouteCoordinate;
 
-  @ApiProperty({ description: '조회수' })
+  @ApiProperty({ description: '이 가게 다녀간 게시글 개수' })
   @Transform(({ value }) => parseInt(value))
   @IsNumber()
-  countPlace: number;
+  postNum: number;
 }
