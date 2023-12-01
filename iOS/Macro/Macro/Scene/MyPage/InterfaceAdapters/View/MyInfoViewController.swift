@@ -57,6 +57,7 @@ final class MyInfoViewController: UIViewController {
         introductionEditView.introductionTextView.delegate = self
         saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         bind()
+        hideKeyboardWhenTappedAround()
     }
     
     // MARK: - Init
@@ -157,7 +158,6 @@ final class MyInfoViewController: UIViewController {
         case 0: inputSubject.send(.completeButtonTapped(selectedIndex, nameEditView.nameTextField.text ?? ""))
         default: inputSubject.send(.completeButtonTapped(selectedIndex, introductionEditView.introductionTextView.text ?? ""))
         }
-     //   self.dismiss(animated: true, completion: nil)
     }
     
 }
