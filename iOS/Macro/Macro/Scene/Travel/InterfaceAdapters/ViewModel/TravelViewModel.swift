@@ -111,8 +111,6 @@ final class TravelViewModel: ViewModelProtocol {
                 self?.outputSubject.send(.updateRoute(self?.savedRoute.routePoints ?? []))
             }
             .store(in: &cancellables)
-        
-        
     }
     
     private func generateTravel() {

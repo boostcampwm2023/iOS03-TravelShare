@@ -17,7 +17,7 @@ class WriteViewModel: ViewModelProtocol {
     private let uploadImageUseCase: UploadImageUseCases
     private let uploadPostUseCase: UploadPostUseCase
     private var imageDatas: [Data] = [] {
-        didSet{
+        didSet {
             outputSubject.send(.outputImageData(imageDatas))
         }
     }

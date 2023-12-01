@@ -6,3 +6,10 @@
 //
 
 import Foundation
+import OSLog
+
+enum Log {
+  static func make() -> Logger {
+    .init(subsystem: Bundle.main.bundleIdentifier ?? "NONE", category: "")
+  }
+}

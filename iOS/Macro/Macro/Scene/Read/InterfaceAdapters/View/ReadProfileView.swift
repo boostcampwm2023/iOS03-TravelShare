@@ -68,7 +68,7 @@ extension ReadProfileView {
             
             userNameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: Padding.userNameLabelLeading),
             userNameLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            userNameLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            userNameLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
     }
     

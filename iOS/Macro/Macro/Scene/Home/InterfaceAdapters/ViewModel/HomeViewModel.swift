@@ -60,16 +60,17 @@ final class HomeViewModel: ViewModelProtocol, PostCollectionViewProtocol {
     private func searchPosts() {
         postSearcher.fetchHitPost().sink { completion in
             if case let .failure(error) = completion {
+                Log.make().error("\(error)")
             }
         } receiveValue: { [weak self] response in
             self?.outputSubject.send(.updateSearchResult(response))
         }.store(in: &cancellables)
-        
     }
     
     private func searchMockPost() {
         postSearcher.searchMockPost(json: "tempJson").sink { completion in
             if case let .failure(error) = completion {
+                Log.make().error("\(error)")
             }
         } receiveValue: { [weak self] response in
             self?.outputSubject.send(.updateSearchResult(response))

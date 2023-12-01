@@ -266,7 +266,7 @@ private extension ReadViewController {
         titleLabel.text = readPost.title
         imageDescriptionLabel.text = readPost.contents.first?.description
         
-        let imageURLs = readPost.contents.compactMap{ $0.imageURL }
+        let imageURLs = readPost.contents.compactMap { $0.imageURL }
         downloadImages(imageURLs: imageURLs) { [weak self] images in
             self?.carouselView.updateData(images)
         }

@@ -8,7 +8,6 @@
 import Combine
 import UIKit
 
-
 final class SearchViewController: TabViewController {
     
     // MARK: - Properties
@@ -32,7 +31,7 @@ final class SearchViewController: TabViewController {
         let font = UIFont.appFont(.baeEunBody)
         let color = UIColor.appColor(.purple5)
         let attributes: [NSAttributedString.Key: Any] = [
-            .font: font,
+            .font: font ?? UIFont.systemFont(ofSize: 12),
             .foregroundColor: color
         ]
         for (index, text) in segmentItems.enumerated() {

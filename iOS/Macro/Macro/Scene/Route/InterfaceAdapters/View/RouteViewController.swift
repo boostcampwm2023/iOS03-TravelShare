@@ -90,7 +90,6 @@ extension RouteViewController {
                 self?.deleteTravel(uuid: uuid)
             case let .navigateToWriteView(travelInfo):
                 self?.navigateToWriteView(travelInfo: travelInfo)
-            default: break
             }
         }.store(in: &cancellables)
     }

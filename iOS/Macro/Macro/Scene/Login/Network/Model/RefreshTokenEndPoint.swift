@@ -22,8 +22,8 @@ extension RefreshTokenEndPoint: EndPoint {
         switch self {
         case let .refreshToken(accessToken):
             return [
-                "Authorization" : "Bearer " + accessToken,
-                "Host" : "jijihuny.store"
+                "Authorization": "Bearer " + accessToken,
+                "Host": "jijihuny.store"
             ]
         }
     }

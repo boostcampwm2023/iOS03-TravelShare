@@ -34,7 +34,7 @@ class RouteViewModel: ViewModelProtocol, MapCollectionViewProtocol {
     // MARK: - Methods
     
     func transform(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
-        input.sink { [weak self] _ in
+        input.sink { _ in
         }.store(in: &cancellables)
         
         return outputSubject.eraseToAnyPublisher()

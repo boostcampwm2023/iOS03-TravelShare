@@ -68,7 +68,7 @@ final class LocationInfoViewController: UIViewController {
         control.tintColor = UIColor.appColor(.purple2)
         let font = UIFont.appFont(.baeEunBody)
         let normalTextColor = UIColor.appColor(.purple5)
-        control.setTitleTextAttributes([.font: font, .foregroundColor: normalTextColor], for: .normal)
+        control.setTitleTextAttributes([.font: font ?? UIFont.systemFont(ofSize: 12), .foregroundColor: normalTextColor], for: .normal)
         return control
     }()
     

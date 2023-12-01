@@ -27,8 +27,6 @@ final class UserInfoHeaderView: UIView {
         let button = UIButton()
         button.layer.cornerRadius = 10
         button.titleLabel?.font = UIFont.appFont(.baeEunCallout)
-        button.addTarget(self, action: #selector(tapFollowButton), for: .touchUpInside)
-        
         button.backgroundColor = UIColor.appColor(.purple1)
         button.setTitleColor(UIColor.appColor(.purple3), for: .normal)
         button.setTitle(Label.follow, for: .normal)
@@ -39,6 +37,8 @@ final class UserInfoHeaderView: UIView {
     init(frame: CGRect, inputSubject: PassthroughSubject<UserInfoViewModel.Input, Never> = .init()) {
         self.inputSubject = inputSubject
         super.init(frame: frame)
+        followButton.addTarget(self, action: #selector(tapFollowButton), for: .touchUpInside)
+        
         setupLayout()
     }
     

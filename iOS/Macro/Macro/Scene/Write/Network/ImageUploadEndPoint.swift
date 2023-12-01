@@ -22,9 +22,9 @@ extension ImageUploadEndPoint: EndPoint {
         switch self {
         case let .uploadImage(imageData):
             return [
-                "Content-Type" : "image/jpeg",
-                "Contents-Length" : "\(imageData.count)",
-                "Host" : "jijihuny.store"
+                "Content-Type": "image/jpeg",
+                "Contents-Length": "\(imageData.count)",
+                "Host": "jijihuny.store"
             ]
         }
     }

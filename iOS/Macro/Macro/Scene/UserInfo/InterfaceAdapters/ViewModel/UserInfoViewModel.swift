@@ -95,7 +95,7 @@ final class UserInfoViewModel: ViewModelProtocol {
     
     private func searchMockUserProfile(userId: String) {
         searcher.searchMockUserProfile(query: userId, json: "UserInfoMock").sink { _ in
-        } receiveValue: { [weak self] response in
+        } receiveValue: { _ in
             // self?.outputSubject.send(.updateUserProfile(response))
         }.store(in: &cancellables)
     }

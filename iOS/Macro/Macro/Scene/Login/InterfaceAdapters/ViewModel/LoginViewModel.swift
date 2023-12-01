@@ -54,7 +54,7 @@ final class LoginViewModel: ViewModelProtocol {
                 }
             } receiveValue: { [weak self] response in
                 KeyChainManager.save(key: "AccessToken", token: response.accessToken)
-                if let token = KeyChainManager.load(key: "AccessToken") {
+                if KeyChainManager.load(key: "AccessToken") != nil {
                     self?.outputSubject.send(.appleLoginCompleted)
                 } else {
                     debugPrint("Access Token 불러오는데 실패했습니다.")

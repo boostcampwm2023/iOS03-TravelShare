@@ -32,7 +32,7 @@ final class MacroCarouselViewCell: UICollectionViewCell {
             self.myView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor),
             self.myView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
             self.myView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
-            self.myView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+            self.myView.topAnchor.constraint(equalTo: self.contentView.topAnchor)
         ])
     }
 
@@ -47,4 +47,3 @@ final class MacroCarouselViewCell: UICollectionViewCell {
         self.myView.image = image
     }
 }
-

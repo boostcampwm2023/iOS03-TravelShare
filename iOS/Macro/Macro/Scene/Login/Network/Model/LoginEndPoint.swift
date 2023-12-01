@@ -22,9 +22,9 @@ extension LoginEndPoint: EndPoint {
         switch self {
         case let .login(identityToken):
             return [
-                "Content-Type" : "application/json",
-                "Contents-Length" : "\(identityToken.count)",
-                "Host" : "jijihuny.store"
+                "Content-Type": "application/json",
+                "Contents-Length": "\(identityToken.count)",
+                "Host": "jijihuny.store"
             ]
         }
     }
