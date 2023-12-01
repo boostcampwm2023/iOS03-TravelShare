@@ -23,7 +23,7 @@ final class ReadProfileView: UIView {
         return label
     }()
     
-    private let profilImageView: UIImageView = {
+    private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -50,32 +50,32 @@ final class ReadProfileView: UIView {
 extension ReadProfileView {
     
     private func setTranslatesAutoresizingMaskIntoConstraints() {
-        profilImageView.translatesAutoresizingMaskIntoConstraints = false
+        profileImageView.translatesAutoresizingMaskIntoConstraints = false
         userNameLabel.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func addSubviews() {
-        self.addSubview(profilImageView)
+        self.addSubview(profileImageView)
         self.addSubview(userNameLabel)
     }
     
     private func setLayoutConstraints() {
         NSLayoutConstraint.activate([
-            profilImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            profilImageView.widthAnchor.constraint(equalToConstant: Metrics.profileImageViewWidth),
-            profilImageView.heightAnchor.constraint(equalToConstant: Metrics.profileImageViewHeight),
-            profilImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Padding.profileImageViewLeading),
+            profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            profileImageView.widthAnchor.constraint(equalToConstant: Metrics.profileImageViewWidth),
+            profileImageView.heightAnchor.constraint(equalToConstant: Metrics.profileImageViewHeight),
+            profileImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Padding.profileImageViewLeading),
             
-            userNameLabel.leadingAnchor.constraint(equalTo: profilImageView.trailingAnchor, constant: Padding.userNameLabelLeading),
+            userNameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: Padding.userNameLabelLeading),
             userNameLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             userNameLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor),
         ])
     }
     
     private func addTapGesture() {
-        profilImageView.isUserInteractionEnabled = true
+        profileImageView.isUserInteractionEnabled = true
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(profileImageTap(_:)))
-        profilImageView.addGestureRecognizer(tapGesture)
+        profileImageView.addGestureRecognizer(tapGesture)
     }
     
     func setLayout() {
@@ -83,7 +83,7 @@ extension ReadProfileView {
         addSubviews()
         setLayoutConstraints()
         addTapGesture()
-        self.profilImageView.layer.cornerRadius = self.profilImageView.frame.width / 2
+        self.profileImageView.layer.cornerRadius = self.profileImageView.frame.width / 2
     }
 }
 
@@ -95,13 +95,13 @@ extension ReadProfileView {
         DispatchQueue.main.async { [weak self] in
             self?.profilImageUpdate(profileImageStringURL: writer.imageUrl ?? "") { profileImage in
                 if let image = profileImage {
-                    self?.profilImageView.image = image
+                    self?.profileImageView.image = image
                 } else {
                     let defaultImage = UIImage.appImage(.ProfileDefaultImage)
-                    self?.profilImageView.image = defaultImage
+                    self?.profileImageView.image = defaultImage
                 }
-                guard let width = self?.profilImageView.frame.width else { return }
-                self?.profilImageView.layer.cornerRadius = width / 2
+                guard let width = self?.profileImageView.frame.width else { return }
+                self?.profileImageView.layer.cornerRadius = width / 2
             }
             self?.userNameLabel.text = writer.name
         }
