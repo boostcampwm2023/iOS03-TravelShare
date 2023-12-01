@@ -15,7 +15,7 @@ final class WriteViewController: TabViewController {
     // MARK: - Properties
     
     private let viewModel: WriteViewModel
-    private let const = MacroCarouselView.Const(itemSize: CGSize(width: UIScreen.width, height: 340), itemSpacing: 24.0)
+    private let const = MacroCarouselView.Const(itemSize: CGSize(width: UIScreen.width - 40, height: 340), itemSpacing: 24.0)
     private let imageAddSubject: PassthroughSubject<Bool, Never> = .init()
     private let didScrollSubject: PassthroughSubject<Int, Never> = .init()
     private let inputSubject: PassthroughSubject<WriteViewModel.Input, Never> = .init()
@@ -122,6 +122,7 @@ private extension WriteViewController {
         addsubviews()
         setLayoutConstraints()
         delegateConfigure()
+        hideKeyboardWhenTappedAround()
     }
     
     func setTranslatesAutoresizingMaskIntoConstraints() {
@@ -162,12 +163,12 @@ private extension WriteViewController {
             
             summaryTextView.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 20),
             summaryTextView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 20),
-            summaryTextView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -10),
+            summaryTextView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -20),
             summaryTextView.heightAnchor.constraint(equalToConstant: 210),
             
             carouselView.topAnchor.constraint(equalTo: summaryTextView.bottomAnchor, constant: 20),
-            carouselView.leftAnchor.constraint(equalTo: scrollContentView.leftAnchor),
-            carouselView.rightAnchor.constraint(equalTo: scrollContentView.rightAnchor),
+            carouselView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 20),
+            carouselView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -20),
             carouselView.heightAnchor.constraint(equalToConstant: const.itemSize.height),
             
             imageDescriptionTextField.topAnchor.constraint(equalTo: carouselView.bottomAnchor, constant: 30),
@@ -210,8 +211,10 @@ private extension WriteViewController {
             .sink { [weak self] output in
                 switch output {
                 case let .isVisibilityToggle(isVisibility):
-                    let image = (isVisibility ? UIImage.appImage(.lockOpenFill) : UIImage.appImage(.lockFill))?.withTintColor(isVisibility ? UIColor.appColor(.statusGreen) : UIColor.appColor(.statusRed), renderingMode: .alwaysOriginal)
-                    self?.isVisibilityButton.setImage(image, for: .normal)
+                    DispatchQueue.main.async {
+                        let image = (isVisibility ? UIImage.appImage(.lockOpenFill) : UIImage.appImage(.lockFill))?.withTintColor(isVisibility ? UIColor.appColor(.statusGreen) : UIColor.appColor(.statusRed), renderingMode: .alwaysOriginal)
+                        self?.isVisibilityButton.setImage(image, for: .normal)
+                    }
                 // imageData Cell에 추가
                 case let .outputImageData(imageDatas):
                     var images = [UIImage?]()
@@ -223,16 +226,27 @@ private extension WriteViewController {
                     self?.carouselView.updateData(images)
                 // Submit 버튼 눌러진 경우
                 case .postUploadSuccess:
-                    // TODO: - Home화면으로 돌아가
-                    debugPrint("Post Upload Success")
+                    let alertController = UIAlertController(title: "", message: "글 작성 완료", preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "확인", style: .default) { _ in
+                        if let navigationController = self?.navigationController {
+                            navigationController.popViewController(animated: true)
+                        } else {
+                            self?.dismiss(animated: true)
+                        }
+                    }
+                    alertController.addAction(okAction)
+
+                    self?.present(alertController, animated: true)
                 case let .outputDescriptionString(description):
-                    self?.imageDescriptionTextField.text = description
+                    DispatchQueue.main.async {
+                        self?.imageDescriptionTextField.text = description
+                    }
                 }
             }
             .store(in: &subscriptions)
         
         imageAddSubject
-            .sink { buttonTouched in
+            .sink { _ in
                 self.imageAddButtonTouched()
             }
             .store(in: &subscriptions)
@@ -266,7 +280,9 @@ extension WriteViewController: UIImagePickerControllerDelegate, UINavigationCont
         let imagePicker = UIImagePickerController()
         imagePicker.sourceType = .photoLibrary
         imagePicker.delegate = self
-        present(imagePicker, animated: true)
+        DispatchQueue.main.async {
+            self.present(imagePicker, animated: true)
+        }
     }
     
     /// 사용자가 이미지를 선택했을 때
@@ -301,5 +317,18 @@ extension WriteViewController: UITextFieldDelegate, UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         guard let summarry = textView.text else { return }
         inputSubject.send(.summaryTextUpdate(summarry))
+    }
+}
+
+// 키보드 숨기기
+extension UIViewController {
+    func hideKeyboardWhenTappedAround() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 }

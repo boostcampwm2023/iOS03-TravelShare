@@ -29,7 +29,6 @@ final class ReadProfileView: UIView {
         imageView.clipsToBounds = true
         
         imageView.image = UIImage.appImage(.ProfileDefaultImage)
-        
         return imageView
     }()
     
@@ -84,6 +83,7 @@ extension ReadProfileView {
         addSubviews()
         setLayoutConstraints()
         addTapGesture()
+        self.profileImageView.layer.cornerRadius = self.profileImageView.frame.width / 2
     }
 }
 
