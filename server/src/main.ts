@@ -7,6 +7,7 @@ import {
   StorageDriver,
   initializeTransactionalContext,
 } from 'typeorm-transactional';
+import { NcpEffectiveLogSearchAnalyticsLogger } from 'logger/ncp.elsa.logger.provider';
 
 async function bootstrap() {
   initializeTransactionalContext({
@@ -14,12 +15,11 @@ async function bootstrap() {
   });
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     rawBody: true,
+    bufferLogs: true,
   });
   const config = app.get(ConfigService);
   app.useBodyParser('json', { type: 'application/json' });
-  app.useLogger(
-    config.get('application.log') || ['log', 'warn', 'error', 'fatal'],
-  );
+  app.useLogger(app.get(NcpEffectiveLogSearchAnalyticsLogger));
 
   const documentConfig = new DocumentBuilder()
     .setTitle('어디갈래 api docs')
