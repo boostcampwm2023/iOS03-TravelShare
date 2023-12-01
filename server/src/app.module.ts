@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { UtilsModule } from './utils/utils.module';
 import { FileModule } from './file/file.module';
 import { RouteModule } from './route/route.module';
+import { LoggerModule } from 'logger/logger.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { RouteModule } from './route/route.module';
     AuthModule,
     UtilsModule,
     FileModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
