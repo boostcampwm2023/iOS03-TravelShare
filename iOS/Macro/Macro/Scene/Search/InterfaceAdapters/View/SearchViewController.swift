@@ -124,9 +124,9 @@ extension SearchViewController {
             switch output {
             case let .updateSearchResult(result):
                 self?.updateSearchResult(result)
-            case let .navigateToProfileView(userId):
+            case .navigateToProfileView:
                 break
-            case .navigateToReadView(_):
+            case .navigateToReadView:
                 break
             case let .updatePostLike(result):
                 self?.updatePostLike(result)

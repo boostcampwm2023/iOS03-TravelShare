@@ -124,7 +124,6 @@ extension UserInfoHeaderView {
     }
 }
 
-
 // MARK: - LayoutMetrics
 extension UserInfoHeaderView {
     

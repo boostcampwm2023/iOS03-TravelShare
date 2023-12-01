@@ -113,7 +113,7 @@ private extension HomeViewController {
 private extension HomeViewController {
     
     func updateSearchResult(_ result: [PostFindResponse]) {
-        let sortedPostById = result.sorted { $0.postId < $1.postId }
+        _ = result.sorted { $0.postId < $1.postId }
         homeCollectionView.viewModel.posts = result
         homeCollectionView.reloadData()
     }
