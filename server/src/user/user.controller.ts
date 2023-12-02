@@ -18,6 +18,10 @@ import { UserFollowResponse } from './user.follow.response.dto';
 import { UserProfileUpdateResponse } from './user.profile.update.response.dto';
 import { UserSearchQuery } from './user.search.query.dto';
 import { UserSearchResponse } from './user.search.response.dto';
+import { UserFollowersQuery } from './user.followers.query.dto';
+import { UserFollowersResponse } from './user.followers.response.dto';
+import { UserFolloweesQuery } from './user.followees.query.dto';
+import { UserFolloweesResponse } from './user.followees.response.dto';
 
 @ApiTags('User')
 @ApiBearerAuth('access-token')
@@ -79,20 +83,20 @@ export class UserController {
   }
 
   @ApiOperation({ summary: '팔로워 리스트' })
-  @ApiResponse({ type: [UserProfileResponse] })
+  @ApiResponse({ type: [UserFollowersResponse] })
   @Get('followers')
   async followers(
-    @Optional() @Query() otherUser: UserProfileQuery,
+    @Optional() @Query() otherUser: UserFollowersQuery,
     @AuthenticatedUser() user: Authentication,
   ) {
     return await this.userService.getFollowers({ ...user, ...otherUser });
   }
 
   @ApiOperation({ summary: '팔로잉 리스트' })
-  @ApiResponse({ type: [UserProfileResponse] })
+  @ApiResponse({ type: [UserFolloweesResponse] })
   @Get('followees')
   async followings(
-    @Optional() @Query() otherUser: UserProfileQuery,
+    @Optional() @Query() otherUser: UserFolloweesQuery,
     @AuthenticatedUser() user: Authentication,
   ) {
     return await this.userService.getFollowees({ ...user, ...otherUser });
