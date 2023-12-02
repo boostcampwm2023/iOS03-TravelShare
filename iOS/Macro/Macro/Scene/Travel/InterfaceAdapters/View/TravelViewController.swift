@@ -56,7 +56,7 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
     
     private var markers: [LocationDetail: NMFMarker] = [:]
     
-    // MARK: - Life Cycles
+    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,8 +90,11 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    // MARK: - UI Settings
+}
+
+// MARK: - UI Settings
+
+extension TravelViewController {
     
     private func setUpLayouts() {
         view.addSubview(mapView)
@@ -131,11 +134,13 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
         ])
     }
     
-    // MARK: - Bind
+}
+
+// MARK: - Bind
+
+extension TravelViewController {
     
     private func bind() {
-        
-        // MARK: - Output Binding
         
         let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
         
@@ -162,9 +167,12 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
         }.store(in: &cancellables)
         
     }
-    
-    // MARK: - Methods
-    
+}
+
+// MARK: - Methods
+
+extension TravelViewController {
+
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.first {
             let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: location.coordinate.latitude, lng: location.coordinate.longitude))

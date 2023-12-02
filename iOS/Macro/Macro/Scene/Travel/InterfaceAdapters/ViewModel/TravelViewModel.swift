@@ -12,6 +12,19 @@ import CoreLocation
 
 final class TravelViewModel: ViewModelProtocol {
     
+    // MARK: - Properties
+    
+    private var locationManager: LocationManager?
+    private var currentTravel: TravelInfo?
+    private let outputSubject = PassthroughSubject<Output, Never>()
+    private let routeRecorder: RouteRecordUseCase
+    private let locationSearcher: SearchUseCase
+    private let pinnedPlaceManager: PinnedPlaceManageUseCase
+    private var cancellables = Set<AnyCancellable>()
+    private (set) var savedRoute: SavedRoute = SavedRoute()
+    private (set) var searchedResult: [LocationDetail] = []
+    private var searchPageNum = 1
+    
     // MARK: - Input
     
     enum Input {
@@ -38,20 +51,6 @@ final class TravelViewModel: ViewModelProtocol {
         case showLocationInfo(LocationDetail)
     }
     
-    // MARK: - Properties
-    
-    private var locationManager: LocationManager?
-    private var currentTravel: TravelInfo?
-    
-    private let outputSubject = PassthroughSubject<Output, Never>()
-    private let routeRecorder: RouteRecordUseCase
-    private let locationSearcher: SearchUseCase
-    private let pinnedPlaceManager: PinnedPlaceManageUseCase
-    private var cancellables = Set<AnyCancellable>()
-    private (set) var savedRoute: SavedRoute = SavedRoute()
-    private (set) var searchedResult: [LocationDetail] = []
-    private var searchPageNum = 1
-    
     // MARK: - Init
     
     init(routeRecorder: RouteRecordUseCase, locationSearcher: SearchUseCase, pinnedPlaceManager: PinnedPlaceManageUseCase) {
@@ -59,8 +58,11 @@ final class TravelViewModel: ViewModelProtocol {
         self.locationSearcher = locationSearcher
         self.pinnedPlaceManager = pinnedPlaceManager
     }
-    
-    // MARK: - Methods
+}
+
+// MARK: - Methods
+
+extension TravelViewModel {
     
     func transform(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         input.sink { [weak self] input in

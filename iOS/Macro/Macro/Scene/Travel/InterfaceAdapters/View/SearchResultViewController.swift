@@ -17,7 +17,7 @@ final class SearchResultViewController: UIViewController, UITableViewDataSource,
   private let inputSubject: PassthroughSubject<TravelViewModel.Input, Never> = .init()
   private var cancellables = Set<AnyCancellable>()
   
-  // MARK: - Life Cycles
+  // MARK: - Life Cycle
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -36,49 +36,55 @@ final class SearchResultViewController: UIViewController, UITableViewDataSource,
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
-  // MARK: - UI Settings
-  
-  private func setupTableView() {
-    tableView = UITableView()
-    tableView.dataSource = self
-    tableView.delegate = self
-    tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-    tableView.translatesAutoresizingMaskIntoConstraints = false
-    view.addSubview(tableView)
+
+}
+
+// MARK: - UI Settings
+
+extension SearchResultViewController {
     
-    NSLayoutConstraint.activate([
-      tableView.topAnchor.constraint(equalTo: view.topAnchor),
-      tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
-      tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-      tableView.rightAnchor.constraint(equalTo: view.rightAnchor)
-    ])
-  }
-  
-  // MARK: - Bind
-  
-  private func bind() {
-    viewModel.transform(with: inputSubject.eraseToAnyPublisher())
-      .sink { [weak self] output in
-        switch output {
-        case .updateSearchResult:
-          self?.tableView.reloadData()
-        default:
-          break
+    private func setupTableView() {
+      tableView = UITableView()
+      tableView.dataSource = self
+      tableView.delegate = self
+      tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+      tableView.translatesAutoresizingMaskIntoConstraints = false
+      view.addSubview(tableView)
+      
+      NSLayoutConstraint.activate([
+        tableView.topAnchor.constraint(equalTo: view.topAnchor),
+        tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
+        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        tableView.rightAnchor.constraint(equalTo: view.rightAnchor)
+      ])
+    }
+}
+// MARK: - Bind
+extension SearchResultViewController {
+    private func bind() {
+      viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+        .sink { [weak self] output in
+          switch output {
+          case .updateSearchResult:
+            self?.tableView.reloadData()
+          default:
+            break
+          }
         }
-      }
-      .store(in: &cancellables)
-  }
-  
-  // MARK: - Methods
-  
-  @objc func pinLocation(_ sender: UIButton) {
-    let location = viewModel.searchedResult[sender.tag]
-    viewModel.togglePinnedPlaces(location)
-    let isPinnedNow = viewModel.isPinned(location)
-    let pinImage = isPinnedNow ? UIImage.appImage(.pinFill) : UIImage.appImage(.pin)
-    sender.setImage(pinImage, for: .normal)
-  }
+        .store(in: &cancellables)
+    }
+}
+
+extension SearchResultViewController {
+    // MARK: - Methods
+    
+    @objc func pinLocation(_ sender: UIButton) {
+      let location = viewModel.searchedResult[sender.tag]
+      viewModel.togglePinnedPlaces(location)
+      let isPinnedNow = viewModel.isPinned(location)
+      let pinImage = isPinnedNow ? UIImage.appImage(.pinFill) : UIImage.appImage(.pin)
+      sender.setImage(pinImage, for: .normal)
+    }
 }
 
 // MARK: - TableView

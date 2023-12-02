@@ -60,6 +60,7 @@ final class SearchViewController: TabViewController {
         searchBar.addTarget(self, action: #selector(searchBarReturnPressed), for: .editingDidEndOnExit)
     }
     
+    // MARK: Init
     init(viewModel: SearchViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -72,6 +73,7 @@ final class SearchViewController: TabViewController {
 }
 
 // MARK: - UI Settings
+
 extension SearchViewController {
     private func setTranslatesAutoresizingMaskIntoConstraints() {
         searchBar.translatesAutoresizingMaskIntoConstraints = false
@@ -101,16 +103,12 @@ extension SearchViewController {
             postCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
     }
-}
-
-extension SearchViewController {
     
     private func setUpLayout() {
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
     }
-    
 }
 
 // MARK: - Bind

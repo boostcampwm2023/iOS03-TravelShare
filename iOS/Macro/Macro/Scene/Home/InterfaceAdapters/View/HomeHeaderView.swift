@@ -25,7 +25,8 @@ final class HomeHeaderView: UIView {
         return label
     }()
     
-    // MARK: - Initialize
+    // MARK: - Init
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
@@ -37,19 +38,19 @@ final class HomeHeaderView: UIView {
 
 // MARK: UI Settings
 
-private extension HomeHeaderView {
+extension HomeHeaderView {
     
     private func setupTranslatesAutoresizingMaskIntoConstraints() {
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    func addsubviews() {
+    private func addsubviews() {
         self.addSubview(logoImageView)
         self.addSubview(titleLabel)
     }
     
-    func setLayoutConstraints() {
+    private func setLayoutConstraints() {
         NSLayoutConstraint.activate([
             logoImageView.heightAnchor.constraint(equalToConstant: Metrics.logoImageViewHeight),
             logoImageView.widthAnchor.constraint(equalToConstant: CGFloat(Metrics.logoImageViewWidth)),
@@ -60,9 +61,7 @@ private extension HomeHeaderView {
             titleLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor)
         ])
     }
-}
-
-extension HomeHeaderView {
+    
     func setUpLayout() {
         setupTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()

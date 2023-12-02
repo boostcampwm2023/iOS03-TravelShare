@@ -86,7 +86,7 @@ final class WriteViewController: TabViewController {
         return button
     }()
     
-    // MARK: - Life Cycles
+    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -113,17 +113,6 @@ final class WriteViewController: TabViewController {
 // MARK: - UI Settings
 
 private extension WriteViewController {
-    
-    func setLayout() {
-        titleTextField.rightView = isVisibilityButton
-        view.backgroundColor = .white
-        
-        setTranslatesAutoresizingMaskIntoConstraints()
-        addsubviews()
-        setLayoutConstraints()
-        delegateConfigure()
-        hideKeyboardWhenTappedAround()
-    }
     
     func setTranslatesAutoresizingMaskIntoConstraints() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -198,6 +187,16 @@ private extension WriteViewController {
     func delegateConfigure() {
         titleTextField.delegate = self
         summaryTextView.delegate = self
+    }
+    
+    func setLayout() {
+        titleTextField.rightView = isVisibilityButton
+        view.backgroundColor = .white
+        setTranslatesAutoresizingMaskIntoConstraints()
+        addsubviews()
+        setLayoutConstraints()
+        delegateConfigure()
+        hideKeyboardWhenTappedAround()
     }
 }
 

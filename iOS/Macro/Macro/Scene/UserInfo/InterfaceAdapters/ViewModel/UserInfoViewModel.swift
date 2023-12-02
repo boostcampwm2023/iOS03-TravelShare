@@ -21,7 +21,7 @@ final class UserInfoViewModel: ViewModelProtocol {
     let followFeature: FollowUseCase
     let patcher: PatchUseCase
     
-    // MARK: - init
+    // MARK: - Init
     
     init(postSearcher: SearchUseCase, followFeature: FollowUseCase, patcher: PatchUseCase) {
         self.searcher = postSearcher
@@ -51,7 +51,11 @@ final class UserInfoViewModel: ViewModelProtocol {
         case updatePostLike(LikePostResponse)
     }
     
-    // MARK: - Methods
+}
+
+// MARK: - Methods
+
+extension UserInfoViewModel {
     
     func transform(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         input

@@ -11,7 +11,9 @@ import UIKit
 final class UserInfoHeaderView: UIView {
     
     // MARK: - Properties
+    
     var inputSubject: PassthroughSubject<UserInfoViewModel.Input, Never> = .init()
+    
     // MARK: - UI Components
     
     private let userNameLabel: UILabel = {
@@ -32,7 +34,8 @@ final class UserInfoHeaderView: UIView {
         button.setTitle(Label.follow, for: .normal)
         return button
     }()
-    // MARK: - Initialization
+    
+    // MARK: - Initi
     
     init(frame: CGRect, inputSubject: PassthroughSubject<UserInfoViewModel.Input, Never> = .init()) {
         self.inputSubject = inputSubject

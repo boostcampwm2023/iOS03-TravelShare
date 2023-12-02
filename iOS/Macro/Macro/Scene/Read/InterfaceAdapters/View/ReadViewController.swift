@@ -126,34 +126,7 @@ final class ReadViewController: UIViewController {
     }
 }
 
-// MARK: - bind
-
-private extension ReadViewController {
-    func bind() {
-        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
-        
-        outputSubject
-            .receive(on: RunLoop.main)
-            .sink { [weak self] output in
-                switch output {
-                case let .updatePost(post):
-                    self?.updatePost(post)
-                case let .navigateToProfileView(userID):
-                    self?.navigateToProfileView(userID)
-                }
-            }
-            .store(in: &cancellables)
-        
-        didScrollSubject
-            .receive(on: RunLoop.main)
-            .sink { [weak self] index in
-                self?.imageDescriptionLabel.text = self?.readPost?.contents[index].description
-            }
-            .store(in: &cancellables)
-    }
-}
-
-// MARK: - UI
+// MARK: - UI Settings
 
 private extension ReadViewController {
     
@@ -241,6 +214,33 @@ private extension ReadViewController {
     }
 }
 
+// MARK: - Bind
+
+private extension ReadViewController {
+    func bind() {
+        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+        
+        outputSubject
+            .receive(on: RunLoop.main)
+            .sink { [weak self] output in
+                switch output {
+                case let .updatePost(post):
+                    self?.updatePost(post)
+                case let .navigateToProfileView(userID):
+                    self?.navigateToProfileView(userID)
+                }
+            }
+            .store(in: &cancellables)
+        
+        didScrollSubject
+            .receive(on: RunLoop.main)
+            .sink { [weak self] index in
+                self?.imageDescriptionLabel.text = self?.readPost?.contents[index].description
+            }
+            .store(in: &cancellables)
+    }
+}
+
 // MARK: - Methods
 
 private extension ReadViewController {
@@ -302,6 +302,8 @@ private extension ReadViewController {
 }
 
 // TODO: - 정리
+
+// MARK: - LayoutMetrics
 private extension ReadViewController {
     enum Metrics {
         static let profileImageViewWidth: CGFloat = 36

@@ -18,7 +18,6 @@ final class UserInfoViewController: UIViewController {
     
     // MARK: - UI Components
     lazy var homeCollectionView: PostCollectionView = PostCollectionView(frame: .zero, viewModel: viewModel)
-    
     lazy var userInfoHeaderView: UserInfoHeaderView = UserInfoHeaderView(frame: .zero, inputSubject: inputSubject)
     
     // MARK: - Life Cycle
@@ -47,17 +46,17 @@ final class UserInfoViewController: UIViewController {
 
 private extension UserInfoViewController {
     
-    func setTranslatesAutoresizingMaskIntoConstraints() {
+    private func setTranslatesAutoresizingMaskIntoConstraints() {
         userInfoHeaderView.translatesAutoresizingMaskIntoConstraints = false
         homeCollectionView.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    func addSubviews() {
+    private func addSubviews() {
         self.view.addSubview(userInfoHeaderView)
         self.view.addSubview(homeCollectionView)
     }
     
-    func setLayoutConstraints() {
+    private func setLayoutConstraints() {
         NSLayoutConstraint.activate([
             userInfoHeaderView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             userInfoHeaderView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
@@ -71,7 +70,7 @@ private extension UserInfoViewController {
         ])
     }
 
-    func setUpLayout() {
+    private func setUpLayout() {
         setTranslatesAutoresizingMaskIntoConstraints()
         addSubviews()
         setLayoutConstraints()
@@ -79,10 +78,10 @@ private extension UserInfoViewController {
     
 }
 
-// MARK: - Binding
+// MARK: - Bind
 
 private extension UserInfoViewController {
-    func bind() {
+    private func bind() {
         let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
         
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
@@ -104,15 +103,15 @@ private extension UserInfoViewController {
 
 private extension UserInfoViewController {
     
-    func updateFollowResult(_ result: FollowResponse) {
+    private func updateFollowResult(_ result: FollowResponse) {
         userInfoHeaderView.updateFollow(item: result)
     }
     
-    func updateUserProfile(_ result: UserProfile) {
+    private func updateUserProfile(_ result: UserProfile) {
         userInfoHeaderView.configure(item: result)
     }
     
-    func updateUserPost(_ result: [PostFindResponse]) {
+    private func updateUserPost(_ result: [PostFindResponse]) {
         homeCollectionView.viewModel.posts = result
         homeCollectionView.reloadData()
     }

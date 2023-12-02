@@ -77,7 +77,6 @@ final class LocationInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        
         setUpLayout()
     }
     
@@ -127,17 +126,11 @@ extension LocationInfoViewController {
         ])
         
     }
-    
-}
-
-extension LocationInfoViewController {
-    
     private func setUpLayout() {
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
     }
-    
 }
 
 // MARK: - Bind

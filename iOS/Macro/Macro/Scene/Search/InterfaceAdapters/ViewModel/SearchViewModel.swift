@@ -46,6 +46,7 @@ final class SearchViewModel: ViewModelProtocol, PostCollectionViewProtocol {
 }
 
 // MARK: - Methods
+
 extension SearchViewModel {
     func transform(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         input

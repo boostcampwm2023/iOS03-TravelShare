@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MyPageHeaderView: UIView {
+final class MyPageHeaderView: UIView {
     
     // MARK: - UIComponents
     
@@ -26,6 +26,8 @@ class MyPageHeaderView: UIView {
         return label
     }()
     
+    // MARK: Init
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupLayout()
@@ -34,15 +36,16 @@ class MyPageHeaderView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
 }
+
+// MARK: UI Settings
 
 private extension MyPageHeaderView {
     
     private func setTranslatesAutoresizingMaskIntoConstraints() {
-        
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        
     }
     
     private func addsubviews() {
@@ -73,6 +76,7 @@ private extension MyPageHeaderView {
 // MARK: - Methods
 
 extension MyPageHeaderView {
+    
     func configure(userProfile: UserProfile) {
         if let url = userProfile.imageUrl {
             loadImage(profileImageStringURL: url) { image in
@@ -112,7 +116,7 @@ extension MyPageHeaderView {
     }
 }
 
-// MARK: - Layout Metrics
+// MARK: - LayoutMetrics
 
 extension MyPageHeaderView {
     enum Metrics {

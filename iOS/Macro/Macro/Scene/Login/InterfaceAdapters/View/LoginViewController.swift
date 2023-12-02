@@ -11,7 +11,9 @@ import MacroDesignSystem
 import UIKit
 
 final class LoginViewController: UIViewController {
+    
     // MARK: - Properties
+    
     private var subscriptions: Set<AnyCancellable> = []
     private var viewModel: LoginViewModel
     private var cacheManger: CacheManager = CacheManager()
@@ -19,6 +21,7 @@ final class LoginViewController: UIViewController {
     private let loginStateSubject: CurrentValueSubject<LoginState, Never>
     
     // MARK: - UI Componenets
+    
     private let appleLoginButton = ASAuthorizationAppleIDButton(type: .continue, style: .black)
     
     private let loginImageView: UIImageView = {
@@ -54,7 +57,7 @@ final class LoginViewController: UIViewController {
         configureUI()
     }
     
-    // MARK: - init
+    // MARK: - Init
     init(viewModel: LoginViewModel, loginStateSubject: CurrentValueSubject<LoginState, Never>) {
         self.viewModel = viewModel
         self.loginStateSubject = loginStateSubject
@@ -66,7 +69,8 @@ final class LoginViewController: UIViewController {
     }
 }
 
-// MARK: - UI Setting
+// MARK: - UI Settings
+
 private extension LoginViewController {
     private func configureUI() {
         view.backgroundColor = .systemBackground
@@ -97,7 +101,7 @@ private extension LoginViewController {
     }
 }
 
-// MARK: - bind
+// MARK: - Bind
 private extension LoginViewController {
     func bind() {
         let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
@@ -138,6 +142,7 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
     }
     
     // MARK: - objc
+    
     @objc private func loginButtonDidTap() {
         let appleIDProvider = ASAuthorizationAppleIDProvider()
         let request = appleIDProvider.createRequest()

@@ -42,7 +42,11 @@ final class HomeViewModel: ViewModelProtocol, PostCollectionViewProtocol {
         self.patcher = patcher
     }
     
-    // MARK: - Methods
+}
+
+// MARK: - Methods
+
+extension HomeViewModel {
     
     func transform(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         input.sink { [weak self] input in

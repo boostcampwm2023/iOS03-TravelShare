@@ -8,15 +8,17 @@
 import Combine
 import Foundation
 
-class ReadViewModel: ViewModelProtocol {
+final class ReadViewModel: ViewModelProtocol {
     
     // MARK: - Properties
+    
     private var cancellables = Set<AnyCancellable>()
     private let useCase: ReadPostUseCaseProtocol
     private let outputSubject = PassthroughSubject<Output, Never>()
     private let postId: Int
     
-    // MARK: - init
+    // MARK: - Init
+    
     init(useCase: ReadPostUseCaseProtocol, postId: Int) {
         self.useCase = useCase
         self.postId = postId
@@ -30,13 +32,17 @@ class ReadViewModel: ViewModelProtocol {
     }
     
     // MARK: - Output
-
+    
     enum Output {
         case updatePost(post: ReadPost)
         case navigateToProfileView(String)
     }
+}
+
+// MARK: - Methods
+
+extension ReadViewModel {
     
-    // MARK: - Methods
     func transform(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         input
             .sink { [weak self] input in
@@ -50,10 +56,7 @@ class ReadViewModel: ViewModelProtocol {
             .store(in: &cancellables)
         return outputSubject.eraseToAnyPublisher()
     }
-}
-
-// MARK: - Methods
-private extension ReadViewModel {
+    
     func updateReadViewItems() {
         useCase.execute(postId: postId)
             .sink { completion in
@@ -65,10 +68,7 @@ private extension ReadViewModel {
             }
             .store(in: &cancellables)
     }
-}
-
-// MARK: - Metohds
-private extension ReadViewModel {
+    
     private func searchUser(id: String) {
         self.outputSubject.send(.navigateToProfileView(id))
     }

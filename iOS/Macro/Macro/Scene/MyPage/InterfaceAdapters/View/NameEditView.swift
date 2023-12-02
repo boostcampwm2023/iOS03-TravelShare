@@ -3,6 +3,7 @@ import UIKit
 final class NameEditView: UIView {
     
     // MARK: - UI Components
+    
     let optionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.appFont(.baeEunCaption)
@@ -57,22 +58,11 @@ extension NameEditView {
             nameTextField.heightAnchor.constraint(equalToConstant: Metrics.textFieldHeight)
         ])
     }
-    
-}
-
-extension NameEditView {
-    
     private func setUpLayout() {
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
     }
-    
-}
-
-// MARK: - Methods
-
-extension NameEditView {
     
 }
 
