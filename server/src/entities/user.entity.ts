@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   JoinTable,
   ManyToMany,
   OneToMany,
@@ -22,6 +23,7 @@ export class User {
   email: string;
 
   @Column()
+  @Index({ fulltext: true, parser: 'ngram' })
   name: string;
 
   @Column()
