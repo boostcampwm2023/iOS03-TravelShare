@@ -7,7 +7,7 @@ import {
   StorageDriver,
   initializeTransactionalContext,
 } from 'typeorm-transactional';
-import { NcpEffectiveLogSearchAnalyticsLogger } from 'logger/ncp.elsa.logger.provider';
+import { APPLICATION_LOGGER_SYMBOL } from 'logger/app.logger.symbol';
 
 async function bootstrap() {
   initializeTransactionalContext({
@@ -19,7 +19,7 @@ async function bootstrap() {
   });
   const config = app.get(ConfigService);
   app.useBodyParser('json', { type: 'application/json' });
-  app.useLogger(app.get(NcpEffectiveLogSearchAnalyticsLogger));
+  app.useLogger(app.get(APPLICATION_LOGGER_SYMBOL));
 
   const documentConfig = new DocumentBuilder()
     .setTitle('어디갈래 api docs')
