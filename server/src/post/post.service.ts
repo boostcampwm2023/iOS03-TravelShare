@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from 'entities/post.entity';
-import { In, Like, Raw, Repository } from 'typeorm';
+import { In, Raw, Repository } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { PostHitsQuery } from './post.hits.query.dto';
 import { PostDetailResponse } from './post.detail.response.dto';
@@ -321,7 +321,14 @@ ORDER BY
           : []),
         {
           ...(username
-            ? { public: true, writer: { name: Like(`%${username}%`) } }
+            ? {
+                public: true,
+                writer: {
+                  name: Raw((alias) => `MATCH(${alias}) AGAINST(:username)`, {
+                    username,
+                  }),
+                },
+              }
             : {}),
         },
         {
