@@ -21,3 +21,20 @@ pings 객체는 place 객체의 배열이며, place 객체의 배열은
 ### 2023-11-30
 - /post/hits: sortBy 옵션 추가. 기존 인기순 정렬은 hot, 최신순 정렬은 latest 옵션을 주면 됩니다.
 - /post/upload, detail: swagger 문서 dto required property 수정
+
+### 2023-12-03
+- /post/like: 빠른 시간에 여러번 좋아요할 경우 데이터 부정합이 발생하는 문제를 해결했습니다.
+- /post/search: content와 keyword를 통해 검색할 수 있는 기능을 추가했습니다.
+
+참고 [PostSearchQuery](./src/post/post.search.query.dto.ts)
+
+- /user/follow: /post/like와 마찬가지로 데이터 부정합이 발생할 수 있는 문제를 해결했습니다.
+- /user/search: 유저 검색 기능을 추가했습니다.
+
+참고 [UserSearchQuery](./src/user/user.search.query.dto.ts) [UserSerachResponse](./src/user/user.search.response.dto.ts)
+
+- /user/followers, followees: 응답 DTO를 profile과 일치시켰습니다.
+
+참고 [UserFollowersQuery](./src/user/user.followees.query.dto.ts) [UserFollowersResponse](./src/user/user.followers.response.dto.ts)
+[UserFolloweesQuery](./src/user/user.followees.query.dto.ts) [UserFolloweesResponse](./src/user/user.followees.response.dto.ts)
+
