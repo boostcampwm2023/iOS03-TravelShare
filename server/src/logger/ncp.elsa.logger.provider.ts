@@ -58,4 +58,18 @@ export class NcpEffectiveLogSearchAnalyticsLogger extends ConsoleLogger {
     this.sendMessageToElsa('error', context, message);
     super.error(message, stack, context, ...rest);
   }
+
+  fatal(message: any, context?: string): void;
+  fatal(message: any, ...optionalParams: any[]): void;
+  fatal(message: unknown, context?: unknown, ...rest: unknown[]): void {
+    this.sendMessageToElsa('fatal', context, message);
+    super.fatal(message, context, ...rest);
+  }
+
+  debug(message: any, context?: string): void;
+  debug(message: any, ...optionalParams: any[]): void;
+  debug(message: unknown, context?: unknown, ...rest: unknown[]): void {
+    this.sendMessageToElsa('debug', context, message);
+    super.debug(message, context, ...rest);
+  }
 }
