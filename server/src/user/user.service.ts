@@ -12,6 +12,10 @@ import { UserProfileUpdateResponse } from './user.profile.update.response.dto';
 import { UserFollowResponse } from './user.follow.response.dto';
 import { UserSearchQuery } from './user.search.query.dto';
 import { UserSearchResponse } from './user.search.response.dto';
+import { UserFollowersQuery } from './user.followers.query.dto';
+import { UserFollowersResponse } from './user.followers.response.dto';
+import { UserFolloweesQuery } from './user.followees.query.dto';
+import { UserFolloweesResponse } from './user.followees.response.dto';
 
 @Injectable()
 export class UserService {
@@ -130,9 +134,9 @@ export class UserService {
 
   async getFollowers({
     email,
-  }: UserProfileQuery): Promise<UserProfileResponse[]> {
+  }: UserFollowersQuery): Promise<UserFollowersResponse[]> {
     return plainToInstance(
-      UserProfileResponse,
+      UserFollowersResponse,
       await this.userRepository
         .createQueryBuilder()
         .relation(User, 'followers')
@@ -143,9 +147,9 @@ export class UserService {
 
   async getFollowees({
     email,
-  }: UserProfileQuery): Promise<UserProfileResponse[]> {
+  }: UserFolloweesQuery): Promise<UserFolloweesResponse[]> {
     return plainToInstance(
-      UserProfileResponse,
+      UserFolloweesResponse,
       await this.userRepository
         .createQueryBuilder()
         .relation(User, 'followees')
