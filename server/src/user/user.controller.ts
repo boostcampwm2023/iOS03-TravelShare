@@ -10,13 +10,14 @@ import { UserProfileUpdateQuery } from './user.profile.update.query.dto';
 import { UserProfileResponse } from './user.profile.response.dto';
 import { UserProfileQuery } from './user.profile.query.dto';
 import { UserFollowQuery } from './user.follow.query.dto';
-import { UserProfileSimpleResponse } from './user.profile.simple.response.dto';
 import { UserService } from './user.service';
 import { AuthenticatedUser } from 'auth/auth.decorators';
 import { Authentication } from 'auth/authentication.dto';
 import { RestController } from 'utils/rest.controller.decorator';
 import { UserFollowResponse } from './user.follow.response.dto';
 import { UserProfileUpdateResponse } from './user.profile.update.response.dto';
+import { UserSearchQuery } from './user.search.query.dto';
+import { UserSearchResponse } from './user.search.response.dto';
 
 @ApiTags('User')
 @ApiBearerAuth('access-token')
@@ -45,6 +46,13 @@ export class UserController {
 
   @ApiOperation({
     summary: '나의 정보 혹은 다른 유저의 정보를 불러옵니다.',
+    description: `
+# user/profile
+
+- 유저 정보를 불러옵니다.
+- 자기 자신일 경우 팔로우 관련(follower, followee) 정보를 제공하지 않습니다.
+    
+    `,
   })
   @ApiResponse({
     type: UserProfileResponse,
@@ -53,11 +61,11 @@ export class UserController {
   async profile(
     @Optional()
     @Query()
-    { email }: UserProfileQuery,
+    user: UserProfileQuery,
     @AuthenticatedUser()
-    user: Authentication,
+    owner: Authentication,
   ) {
-    return this.userService.getUserProfile(email ?? user.email);
+    return await this.userService.getUserProfile(user, owner);
   }
 
   @ApiOperation({ summary: '팔로우 혹은 언팔로우' })
@@ -71,7 +79,7 @@ export class UserController {
   }
 
   @ApiOperation({ summary: '팔로워 리스트' })
-  @ApiResponse({ type: [UserProfileSimpleResponse] })
+  @ApiResponse({ type: [UserProfileResponse] })
   @Get('followers')
   async followers(
     @Optional() @Query() otherUser: UserProfileQuery,
@@ -81,12 +89,32 @@ export class UserController {
   }
 
   @ApiOperation({ summary: '팔로잉 리스트' })
-  @ApiResponse({ type: [UserProfileSimpleResponse] })
+  @ApiResponse({ type: [UserProfileResponse] })
   @Get('followees')
   async followings(
     @Optional() @Query() otherUser: UserProfileQuery,
     @AuthenticatedUser() user: Authentication,
   ) {
     return await this.userService.getFollowees({ ...user, ...otherUser });
+  }
+
+  @ApiOperation({
+    summary: '유저 검색',
+    description: `
+# user/search
+
+- 유저를 검색합니다.
+- 이메일 혹은 닉네임을 통해 검색합니다.
+- 검색결과로 본인은 제외되며, 팔로우 여부와 숫자 등 정보를 제공합니다.
+
+    `,
+  })
+  @ApiResponse({ type: UserSearchResponse })
+  @Get('search')
+  async search(
+    @Query() query: UserSearchQuery,
+    @AuthenticatedUser() loginUser: Authentication,
+  ) {
+    return await this.userService.search(query, loginUser);
   }
 }
