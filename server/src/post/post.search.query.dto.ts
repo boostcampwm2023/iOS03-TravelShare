@@ -8,6 +8,16 @@ export class PostSearchQuery extends PostPagination {
   @IsOptional()
   title?: string;
 
+  @ApiProperty({ description: '검색할 내용', required: false })
+  @IsString()
+  @IsOptional()
+  content?: string;
+
+  @ApiProperty({ description: '검색할 키워드(제목 + 내용)', required: false })
+  @IsString()
+  @IsOptional()
+  keyword?: string;
+
   @ApiProperty({ description: '유저 이름', required: false })
   @IsString()
   @IsOptional()
@@ -18,8 +28,8 @@ export class PostSearchQuery extends PostPagination {
   @IsOptional()
   email?: string;
 
-  @ApiProperty({ description: '' })
+  @ApiProperty({ description: '', required: false })
   @IsNumberString()
   @IsOptional()
-  placeId: string;
+  placeId?: string;
 }
