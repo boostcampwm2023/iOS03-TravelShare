@@ -66,11 +66,10 @@ export class PostController {
 - 게시글 검색 API입니다.
 - 제목과 유저 이름을 기준으로 검색할 수 있는데,
 둘다 Optional이고 둘다 넣어도 됩니다.
-- 일단 단어나 키워드가 제목 안에 포함되어있어야 합니다.
-\`\`\`
-# 참고 sql
-SELECT ... FROM post ... WHERE title LIKE '%:title%' OR '%:user:%';
-\`\`\`
+- 여러개의 옵션이 있어 스키마를 참고해주시기 바랍니다.
+- keyword 옵션으로 검색할 경우 제목과 내용을 모두 살펴보고 검색 결과를 반환합니다.
+- 제목, 내용 관련하여 fulltext index 및 검색 옵션이 적용되어 검색어에 가장 가까운 순으로 결과를 정렬하여 보여줍니다.
+
 `,
   })
   @ApiResponse({ description: '리스트 조회', type: [PostSearchResponse] })
