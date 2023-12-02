@@ -40,8 +40,12 @@ pings 객체는 place 객체의 배열이며, place 객체의 배열은
 :bow_and_arrow: [UserSearchQuery](./src/user/user.search.query.dto.ts) :bow_and_arrow: [UserSerachResponse](./src/user/user.search.response.dto.ts)
 
 :heavy_check_mark: /user/followers, followees: 응답 DTO를 profile과 일치시켰습니다.
+
 :bow_and_arrow: [UserFollowersQuery](./src/user/user.followees.query.dto.ts)
+
 :bow_and_arrow: [UserFollowersResponse](./src/user/user.followers.response.dto.ts)
+
 :bow_and_arrow: [UserFolloweesQuery](./src/user/user.followees.query.dto.ts) 
+
 :bow_and_arrow: [UserFolloweesResponse](./src/user/user.followees.response.dto.ts)
 
