@@ -261,7 +261,15 @@ ORDER BY
 
   @Transactional()
   async search(
-    { title, username, email, placeId, ...pagination }: PostSearchQuery,
+    {
+      title,
+      content,
+      keyword,
+      username,
+      email,
+      placeId,
+      ...pagination
+    }: PostSearchQuery,
     { email: loginUser }: Authentication,
   ) {
     const posts = await this.postRepository.find({
@@ -276,6 +284,41 @@ ORDER BY
               }
             : {}),
         },
+        {
+          ...(content
+            ? {
+                public: true,
+                contents: {
+                  description: Raw(
+                    (alias) => `MATCH(${alias}) AGAINST(:content)`,
+                    {
+                      content,
+                    },
+                  ),
+                },
+              }
+            : {}),
+        },
+        ...(keyword
+          ? [
+              {
+                public: true,
+                title: Raw((alias) => `MATCH(${alias}) AGAINST(:title)`, {
+                  title: keyword,
+                }),
+              },
+              {
+                contents: {
+                  description: Raw(
+                    (alias) => `MATCH(${alias}) AGAINST(:description)`,
+                    {
+                      description: keyword,
+                    },
+                  ),
+                },
+              },
+            ]
+          : []),
         {
           ...(username
             ? { public: true, writer: { name: Like(`%${username}%`) } }
@@ -325,8 +368,8 @@ ORDER BY
 
   @Transactional()
   async detail({ postId }: PostDetailQuery, { email }: Authentication) {
-    const post = await this.postRepository
-      .findOneOrFail({
+    const [post] = await Promise.all([
+      this.postRepository.findOneOrFail({
         where: { postId },
         relations: {
           contents: true,
@@ -334,18 +377,18 @@ ORDER BY
           route: true,
           pins: true,
         },
-      })
-      .catch((err) => {
-        this.logger.error(err);
-        throw new NotFoundException('post not found', { cause: err });
-      });
+      }),
+      this.postRepository.increment({ postId }, 'viewNum', 1),
+    ]).catch((err) => {
+      this.logger.error(err);
+      throw new NotFoundException('post not found', { cause: err });
+    });
     if (post.writer.email !== email && !post.public) {
       throw new BadRequestException('비공개 게시글입니다.');
     }
-
-    await this.postRepository.increment({ postId }, 'viewNum', 1);
     return plainToInstance(PostDetailResponse, {
       ...post,
+      viewNum: post.viewNum + 1,
       liked: await this.postRepository.exist({
         where: { likedUsers: { email }, postId },
       }),
@@ -430,6 +473,9 @@ ORDER BY
         postId,
         likedUsers: { email },
       },
+      lock: {
+        mode: 'pessimistic_write',
+      },
     });
   }
 
@@ -461,34 +507,49 @@ ORDER BY
     });
   }
 
+  /**
+   *
+   * ```sql
+   * SELECT
+   *   `place`.`place_id` AS `place_place_id`,
+   *   `place`.`place_name` AS `place_place_name`,
+   *   `place`.`phone_number` AS `place_phone_number`,
+   *   `place`.`category` AS `place_category`,
+   *   `place`.`address` AS `place_address`,
+   *   `place`.`road_address` AS `place_road_address`,
+   *   ST_AsText(`place`.`coordinate`) AS `place_coordinate`,
+   *   `post_count`.*
+   * FROM `place` `place`
+   * INNER JOIN
+   * (
+   *  SELECT
+   *    COUNT(post_id) AS `postNum`,
+   *    place_id
+   *  FROM `pins` `pins`
+   *  GROUP BY place_id
+   * ) `post_count`
+   * ON post_count.place_id=`place`.`place_id`
+   * WHERE ST_CONTAINS(
+   *  ST_BUFFER(`place`.`coordinate`, 100),
+   *  ST_GEOMFROMTEXT(?, 4326)
+   * )
+   * ORDER BY postNum DESC
+   * ```
+   * @param param0
+   * @returns
+   */
   async findByPlaceId({ placeId }: PostFindQuery) {
-    // const result =  this.postRepository.query(`
-    // SELECT * FROM place WHERE place.place_id=? AND
-    // ST_Intersection(ST_Buffer(place.coordinate,100),
-    //   (
-    //     SELECT place.coordinate FROM place,
-    //     (
-    //       SELECT place_id, count(post_id)  AS countPlace
-    //       FROM pins
-    //       WHERE NOT place_id=? AND post_id IN (
-    //         SELECT post_id
-    //         FROM pins AS child
-    //         WHERE place_id=?
-    //       )
-    //       GROUP BY place_id
-    //       ORDER BY countPlace DESC
-    //     ) AS Temp
-    //     WHERE place.place_id=Temp.place_id
-    //   )
-    // )
-    // `, [placeId,placeId, placeId]);
-
-    // POINT(1 1)
-    // POINT(122 244){}
-    const { coordinate } = await this.placeRepository.findOneOrFail({
-      where: { placeId },
-      select: ['coordinate'],
-    });
+    const { coordinate } = await this.placeRepository
+      .findOneOrFail({
+        where: { placeId },
+        select: ['coordinate'],
+      })
+      .catch((err) => {
+        this.logger.error(err);
+        throw new NotFoundException(`place ${placeId} not found`, {
+          cause: err,
+        });
+      });
     const { raw, entities } = await this.placeRepository
       .createQueryBuilder('place')
       .select()
@@ -504,7 +565,7 @@ ORDER BY
         'post_count.place_id=place.place_id',
       )
       .where(
-        `ST_CONTAINS(ST_BUFFER(place.coordinate, 100), ST_GEOMFROMTEXT(:point, 4326))`,
+        `ST_CONTAINS(ST_BUFFER(place.coordinate, 10000), ST_GEOMFROMTEXT(:point, 4326))`,
         { point: jsonToPoint(coordinate) },
       )
       .orderBy('postNum', 'DESC')
