@@ -30,13 +30,14 @@ export class UserProfileResponse {
 
   @ApiProperty({
     description:
-      '내가 이 사람을 팔로우하고 있나? (다른 유저 프로필 열람할 때만)',
+      '내가 이 사람을 팔로우하고 있나? 자기 자신을 열람할 땐 조회되지 않습니다.',
+    required: false,
   })
   @IsBoolean()
   @IsOptional()
   followee?: boolean;
 
-  @ApiProperty({ description: '이 사람이 나를 팔로우하나?' })
+  @ApiProperty({ description: '이 사람이 나를 팔로우하나?', required: false })
   @IsBoolean()
   @IsOptional()
   follower?: boolean;
