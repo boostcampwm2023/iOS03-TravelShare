@@ -93,7 +93,7 @@ export class Post {
   @ManyToMany(() => Place, ({ posts }) => posts)
   @JoinTable({
     name: 'pins',
-    joinColumn: { name: 'post_id' },
+    joinColumn: { name: 'post_id', referencedColumnName: 'postId' },
     inverseJoinColumn: { name: 'place_id', referencedColumnName: 'placeId' },
   })
   pins: Place[];
