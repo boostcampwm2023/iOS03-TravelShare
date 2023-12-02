@@ -8,6 +8,8 @@ const DATA_SOURCE = Symbol('DATA_SOURCE');
 
 /**
  * 함수의 실행이 트렌젝션 스코프 안에서 일어납니다.
+ * @deprecated 트렌젝션이 시작될 경우 새로운 커넥션을 연결해버립니다.
+ * AsyncLocalStorage 등을 사용하면 해곃할 수 있겠으나, 관련 package가 있어 그로 대체하였습니다.
  * @author jijihuny
  * @param isolationLevel
  */
