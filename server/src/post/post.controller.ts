@@ -36,7 +36,7 @@ export class PostController {
   ) {}
 
   @ApiOperation({
-    summary: '인기 게시글 리스트 조회, 테스트 중이지만 사용 가능',
+    summary: '인기 게시글 리스트 조회',
     description: `
 # post/hits
 
