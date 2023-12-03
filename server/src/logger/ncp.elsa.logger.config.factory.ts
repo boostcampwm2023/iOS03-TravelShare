@@ -8,7 +8,7 @@ export const NcpEffectiveLogSearchAnalyticsConfigFactory = async (
 ) => {
   const config = plainToInstance(
     NcpEffectiveLogSearchAnalyticsConfig,
-    configService.get('ncp.elsa'),
+    configService.get('naver.elsa'),
   );
   await validateOrReject(config);
   return config;
