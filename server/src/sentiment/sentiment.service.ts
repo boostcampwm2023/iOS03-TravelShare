@@ -5,7 +5,7 @@ import { AxiosResponse } from 'axios';
 import { map } from 'rxjs';
 import { plainToInstance } from 'class-transformer';
 import { SentimentAnalysisResponse } from './sentiment.analysis.response.dto';
-import { SentimentAnalysisBody } from './sentiment.analysis.body.dto';
+import { SentimentAnalysisQuery } from './sentiment.analysis.query.dto';
 
 @Injectable()
 export class SentimentService {
@@ -13,7 +13,7 @@ export class SentimentService {
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
   ) {}
-  async SentimentAnalysis({ content }: SentimentAnalysisBody) {
+  async SentimentAnalysis({ content }: SentimentAnalysisQuery) {
     return this.httpService
       .post(
         this.configService.get('naver.sentiment.url'),
