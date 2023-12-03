@@ -1,9 +1,14 @@
 import { SentimentService } from './sentiment.service';
 import { Body, Post } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { RestController } from 'utils/rest.controller.decorator';
 import { SentimentAnalysisResponse } from './sentiment.analysis.response.dto';
-import { plainToInstance } from 'class-transformer';
 import { SentimentAnalysisBody } from './sentiment.analysis.body.dto';
 
 @ApiTags('Sentiment')
@@ -17,11 +22,9 @@ export class SentimentController {
   })
   @ApiResponse({ type: [SentimentAnalysisResponse] })
   @ApiBody({ type: SentimentAnalysisBody })
+  @ApiBearerAuth('access-token')
   @Post('sentiment')
-  async sentiment(@Body() content: string) {
-    return plainToInstance(
-      SentimentAnalysisResponse,
-      await this.sentimentService.SentimentAnalysis(content),
-    );
+  async sentiment(@Body() { content }: SentimentAnalysisBody) {
+    return await this.sentimentService.SentimentAnalysis({ content });
   }
 }
