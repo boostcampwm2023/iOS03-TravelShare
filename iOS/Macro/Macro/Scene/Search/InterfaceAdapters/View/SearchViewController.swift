@@ -128,6 +128,8 @@ extension SearchViewController {
                 break
             case let .updatePostLike(result):
                 self?.updatePostLike(result)
+            case let .updateUserFollow(result):
+                self?.updateUserFollow(result)
             }
         }.store(in: &cancellables)
         
@@ -168,6 +170,10 @@ extension SearchViewController {
     
     func updatePostLike(_ likePostResponse: LikePostResponse) {
         print("updatee")
+    }
+    
+    func updateUserFollow(_ followPatchResponse: FollowPatchResponse) {
+        
     }
 }
 

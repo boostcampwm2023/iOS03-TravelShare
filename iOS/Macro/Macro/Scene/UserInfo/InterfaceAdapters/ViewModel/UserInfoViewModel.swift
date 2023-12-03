@@ -49,6 +49,7 @@ final class UserInfoViewModel: ViewModelProtocol {
         case updateUserProfile(UserProfile)
         case updateUserPost([PostFindResponse])
         case updatePostLike(LikePostResponse)
+        case updateUserFollow(FollowPatchResponse)
     }
     
 }
@@ -107,6 +108,12 @@ extension UserInfoViewModel {
 
 // MARK: - PostCollectionView Delegate
 extension UserInfoViewModel: PostCollectionViewProtocol {
+    func touchFollow(email: String) {
+        patcher.patchFollow(email: email).sink { _ in
+        } receiveValue: { [weak self] followPatchResponse in
+            self?.outputSubject.send(.updateUserFollow(followPatchResponse))
+        }
+    }
     
     func navigateToProfileView(email: String) {
         self.outputSubject.send(.navigateToProfileView(email))
