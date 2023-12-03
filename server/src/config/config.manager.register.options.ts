@@ -1,7 +1,6 @@
-import { ClassConstructor } from "class-transformer";
+import { ClassConstructor } from 'class-transformer';
 
-
-export interface ConfigManagerRegisterOptions<T extends Object> {
-    schema: ClassConstructor<T>;
-    path: string;
+export interface ConfigManagerRegisterOptions<T extends Record<string, any>> {
+  schema: ClassConstructor<T>;
+  path: string;
 }
