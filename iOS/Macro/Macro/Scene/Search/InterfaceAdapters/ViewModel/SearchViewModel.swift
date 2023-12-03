@@ -41,6 +41,7 @@ final class SearchViewModel: ViewModelProtocol, PostCollectionViewProtocol {
         case navigateToProfileView(String)
         case navigateToReadView(Int)
         case updatePostLike(LikePostResponse)
+        case updateUserFollow(FollowPatchResponse)
     }
     
 }
@@ -101,6 +102,14 @@ extension SearchViewModel {
             self?.outputSubject.send(.updatePostLike(likePostResponse))
         }.store(in: &cancellables)
     }
+  
+    func touchFollow(email: String) {
+        patcher.patchFollow(email: email).sink { _ in
+        } receiveValue: { [weak self] followPatchResponse in
+            self?.outputSubject.send(.updateUserFollow(followPatchResponse))
+        }
+    }
+    
 }
 
 // MARK: - Mock Methods

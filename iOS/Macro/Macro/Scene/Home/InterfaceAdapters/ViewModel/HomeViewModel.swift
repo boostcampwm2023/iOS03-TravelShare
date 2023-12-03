@@ -25,6 +25,7 @@ final class HomeViewModel: ViewModelProtocol, PostCollectionViewProtocol {
         case navigateToReadView(Int)
         case updateSearchResult([PostFindResponse])
         case updatePostLike(LikePostResponse)
+        case updateUserFollow(FollowPatchResponse)
     }
     
     // MARK: - Properties
@@ -99,5 +100,12 @@ extension HomeViewModel {
         } receiveValue: { [weak self] likePostResponse in
             self?.outputSubject.send(.updatePostLike(likePostResponse))
         }.store(in: &cancellables)
+    }
+    
+    func touchFollow(email: String) {
+        patcher.patchFollow(email: email).sink { _ in
+        } receiveValue: { [weak self] followPatchResponse in
+            self?.outputSubject.send(.updateUserFollow(followPatchResponse))
+        }
     }
 }
