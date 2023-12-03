@@ -4,19 +4,19 @@ import { AppService } from './app.service';
 import { PostModule } from './post/post.module';
 import { UserModule } from './user/user.module';
 import { MapModule } from './map/map.module';
-import { AppConfigModule } from './config/app.config.module';
 import { AuthModule } from './auth/auth.module';
 import { UtilsModule } from './utils/utils.module';
 import { FileModule } from './file/file.module';
 import { RouteModule } from './route/route.module';
 import { LoggerModule } from 'logger/logger.module';
 import { SentimentModule } from 'sentiment/sentiment.module';
+import { ConfigManagerModule } from 'config/config.manager.module';
 
 @Module({
   imports: [
     PostModule,
     UserModule,
-    AppConfigModule,
+    ConfigManagerModule,
     MapModule,
     RouteModule,
     AuthModule,
