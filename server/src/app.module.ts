@@ -10,6 +10,7 @@ import { UtilsModule } from './utils/utils.module';
 import { FileModule } from './file/file.module';
 import { RouteModule } from './route/route.module';
 import { LoggerModule } from 'logger/logger.module';
+import { SentimentModule } from 'sentiment/sentiment.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { LoggerModule } from 'logger/logger.module';
     UtilsModule,
     FileModule,
     LoggerModule,
+    SentimentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
