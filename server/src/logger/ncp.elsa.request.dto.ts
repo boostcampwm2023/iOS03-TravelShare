@@ -1,4 +1,4 @@
-import { IsObject, IsUrl } from 'class-validator';
+import { IsObject, IsString, IsUrl } from 'class-validator';
 
 export class NcpEffectiveLogSearchAnalyticsRequest {
   @IsUrl()
@@ -8,4 +8,7 @@ export class NcpEffectiveLogSearchAnalyticsRequest {
   headers: Record<string, any> = {
     'Content-Type': 'application/json',
   };
+
+  @IsString()
+  method: string = 'POST';
 }
