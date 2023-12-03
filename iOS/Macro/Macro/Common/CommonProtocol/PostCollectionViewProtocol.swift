@@ -15,6 +15,7 @@ protocol PostCollectionViewProtocol: AnyObject {
     func navigateToReadView(postId: Int)
     func loadImage(profileImageStringURL: String, completion: @escaping (UIImage?) -> Void)
     func touchLike(postId: Int)
+    func touchFollow(email: String)
 }
 
 extension PostCollectionViewProtocol {

@@ -13,6 +13,7 @@ protocol PatchUseCase {
     
     func patchUser(cellIndex: Int, query: String) -> AnyPublisher<PatchResponse, NetworkError>
     func patchPostLike(postId: Int) -> AnyPublisher<LikePostResponse, NetworkError>
+    func patchFollow(email: String) -> AnyPublisher<FollowPatchResponse, NetworkError>
 }
 
 final class Patcher: PatchUseCase {
@@ -35,5 +36,9 @@ final class Patcher: PatchUseCase {
     
     func patchPostLike(postId: Int) -> AnyPublisher<LikePostResponse, MacroNetwork.NetworkError> {
         return provider.request(UpdateLikeEndPoint.postLike(postId))
+    }
+    
+    func patchFollow(email: String) -> AnyPublisher<FollowPatchResponse, NetworkError> {
+        return provider.request(UpdateFollowEndPoint.userFollow(email))
     }
 }
