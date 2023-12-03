@@ -251,7 +251,9 @@ extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
             let provider = APIProvider(session: URLSession.shared)
             let postSearcher = Searcher(provider: provider)
             let followFeature = FollowFeature(provider: provider)
-            let userInfoViewModel = UserInfoViewModel(postSearcher: postSearcher, followFeature: followFeature, patcher: Patcher(provider: provider))
+            let userInfoViewModel = UserInfoViewModel(postSearcher: postSearcher, 
+                                                      followFeature: followFeature,
+                                                      patcher: Patcher(provider: provider))
             let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: email)
             navigationController?.pushViewController(userInfoViewController, animated: true)
         } else if indexPath.section == 2 && indexPath.row == 1 {
