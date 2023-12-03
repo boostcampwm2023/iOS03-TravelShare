@@ -11,11 +11,13 @@ import Foundation
 final class LoginViewModel: ViewModelProtocol {
     
     // MARK: - Properties
+    
     private var subscriptions: Set<AnyCancellable> = []
     private let outputSubject = PassthroughSubject<Output, Never>()
     private var loginUseCase: AppleLoginUseCaseProtocol
     
-    // MARK: - init
+    // MARK: - Init
+    
     init(loginUseCase: AppleLoginUseCaseProtocol) {
         self.loginUseCase = loginUseCase
     }
@@ -32,7 +34,11 @@ final class LoginViewModel: ViewModelProtocol {
         case appleLoginCompleted
     }
     
-    // MARK: - Methods
+}
+
+// MARK: - Methods
+
+extension LoginViewModel {
     func transform(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         input
             .sink { [weak self] input in
@@ -54,7 +60,7 @@ final class LoginViewModel: ViewModelProtocol {
                 }
             } receiveValue: { [weak self] response in
                 KeyChainManager.save(key: "AccessToken", token: response.accessToken)
-                if let token = KeyChainManager.load(key: "AccessToken") {
+                if KeyChainManager.load(key: "AccessToken") != nil {
                     self?.outputSubject.send(.appleLoginCompleted)
                 } else {
                     debugPrint("Access Token 불러오는데 실패했습니다.")

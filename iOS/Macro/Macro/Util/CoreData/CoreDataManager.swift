@@ -49,7 +49,7 @@ final class CoreDataManager {
         let request = NSFetchRequest<Travel>(entityName: Label.entityName)
         
         do {
-            let travels = try coreDataStack.managedContext.fetch(request)
+            _ = try coreDataStack.managedContext.fetch(request)
             let travel = NSEntityDescription.insertNewObject(forEntityName: Label.entityName, into: coreDataStack.managedContext)
             travel.setValue(id, forKey: Label.id)
             travel.setValue(recordedLocation, forKey: Label.recordedLocation)
@@ -59,14 +59,14 @@ final class CoreDataManager {
             travel.setValue(endAt, forKey: Label.endAt)
             coreDataStack.saveContext()
         } catch {
-            // TODO: os log 만들고 실패시 log를 찍도록 작업해요
+            Log.make().error("\(error)")
         }
     }
     
     func deleteTravel(travelUUID: String) {
         let request = NSFetchRequest<Travel>(entityName: "Travel")
         do {
-            var travels = try coreDataStack.managedContext.fetch(request)
+            let travels = try coreDataStack.managedContext.fetch(request)
             for travel in travels where travel.id == travelUUID {
                     self.coreDataStack.managedContext.delete(travel)
                     break

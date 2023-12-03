@@ -130,7 +130,7 @@ internal extension TabBarViewController {
     
     func setItemLayout() {
         viewModel.tabComponentArray
-            .sink { [weak self] tabComponents in
+            .sink { tabComponents in
                 for (index, tabComponent) in tabComponents.enumerated() {
                     let componentView: TabComponentView = TabComponentView(
                         frame: .zero,

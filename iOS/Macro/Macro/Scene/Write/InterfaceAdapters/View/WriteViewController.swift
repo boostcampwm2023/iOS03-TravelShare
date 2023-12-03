@@ -38,7 +38,6 @@ final class WriteViewController: TabViewController {
         let button = UIButton()
         let image = UIImage.appImage(.lockFill)?.withTintColor(UIColor.appColor(.statusRed), renderingMode: .alwaysOriginal)
         button.setImage(image, for: .normal)
-        button.addTarget(self, action: #selector(isisVisibilityButtonTouched), for: .touchUpInside)
         return button
     }()
     
@@ -48,7 +47,6 @@ final class WriteViewController: TabViewController {
         textField.placeholder = "제목을 입력하세요..."
         textField.font = UIFont.appFont(.baeEunBody)
         textField.rightViewMode = .always
-        textField.addTarget(self, action: #selector(titleTextFieldDidChange), for: .editingChanged)
         return textField
     }()
     
@@ -69,7 +67,6 @@ final class WriteViewController: TabViewController {
         textField.borderStyle = .roundedRect
         textField.placeholder = "문구를 입력하세요"
         textField.font = UIFont.appFont(.baeEunBody)
-        textField.addTarget(self, action: #selector(descriptionTextFieldDidChange), for: .editingChanged)
         return textField
     }()
     
@@ -86,16 +83,19 @@ final class WriteViewController: TabViewController {
         button.setTitleColor(UIColor.black, for: .normal)
         button.backgroundColor = UIColor.appColor(.statusGreen)
         button.layer.cornerRadius = 15
-        button.addTarget(self, action: #selector(writeSubmitButtonTouched), for: .touchUpInside)
         return button
     }()
     
-    // MARK: - Life Cycles
+    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setLayout()
         bind()
+        isVisibilityButton.addTarget(self, action: #selector(isisVisibilityButtonTouched), for: .touchUpInside)
+        imageDescriptionTextField.addTarget(self, action: #selector(descriptionTextFieldDidChange), for: .editingChanged)
+        writeSubmitButton.addTarget(self, action: #selector(writeSubmitButtonTouched), for: .touchUpInside)
+        titleTextField.addTarget(self, action: #selector(titleTextFieldDidChange), for: .editingChanged)
     }
     
     // MARK: - Init
@@ -113,17 +113,6 @@ final class WriteViewController: TabViewController {
 // MARK: - UI Settings
 
 private extension WriteViewController {
-    
-    func setLayout() {
-        titleTextField.rightView = isVisibilityButton
-        view.backgroundColor = .white
-        
-        setTranslatesAutoresizingMaskIntoConstraints()
-        addsubviews()
-        setLayoutConstraints()
-        delegateConfigure()
-        hideKeyboardWhenTappedAround()
-    }
     
     func setTranslatesAutoresizingMaskIntoConstraints() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -190,7 +179,7 @@ private extension WriteViewController {
             scrollContentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             scrollContentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             scrollContentView.widthAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.widthAnchor),
-            scrollContentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            scrollContentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
             
         ])
     }
@@ -198,6 +187,16 @@ private extension WriteViewController {
     func delegateConfigure() {
         titleTextField.delegate = self
         summaryTextView.delegate = self
+    }
+    
+    func setLayout() {
+        titleTextField.rightView = isVisibilityButton
+        view.backgroundColor = .white
+        setTranslatesAutoresizingMaskIntoConstraints()
+        addsubviews()
+        setLayoutConstraints()
+        delegateConfigure()
+        hideKeyboardWhenTappedAround()
     }
 }
 
@@ -286,7 +285,7 @@ extension WriteViewController: UIImagePickerControllerDelegate, UINavigationCont
     }
     
     /// 사용자가 이미지를 선택했을 때
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         if let selectedImage = info[.originalImage] as? UIImage, let data = selectedImage.jpegData(compressionQuality: 1.0) {
             self.inputSubject.send(.addImageData(imageData: data))
         }
@@ -319,4 +318,3 @@ extension WriteViewController: UITextFieldDelegate, UITextViewDelegate {
         inputSubject.send(.summaryTextUpdate(summarry))
     }
 }
-

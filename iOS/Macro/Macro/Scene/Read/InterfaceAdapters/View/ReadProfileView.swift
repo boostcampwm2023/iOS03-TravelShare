@@ -32,7 +32,7 @@ final class ReadProfileView: UIView {
         return imageView
     }()
     
-    // MARK: - Initialization
+    // MARK: - Init
     
     init(inputSubject: PassthroughSubject<ReadViewModel.Input, Never>) {
         self.inputSubject = inputSubject
@@ -68,14 +68,8 @@ extension ReadProfileView {
             
             userNameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: Padding.userNameLabelLeading),
             userNameLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            userNameLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            userNameLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
-    }
-    
-    private func addTapGesture() {
-        profileImageView.isUserInteractionEnabled = true
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(profileImageTap(_:)))
-        profileImageView.addGestureRecognizer(tapGesture)
     }
     
     func setLayout() {
@@ -85,6 +79,7 @@ extension ReadProfileView {
         addTapGesture()
         self.profileImageView.layer.cornerRadius = self.profileImageView.frame.width / 2
     }
+
 }
 
 // MARK: - Method
@@ -118,6 +113,12 @@ extension ReadProfileView {
                 completion(nil)
             }
         }.resume()
+    }
+    
+    private func addTapGesture() {
+        profileImageView.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(profileImageTap(_:)))
+        profileImageView.addGestureRecognizer(tapGesture)
     }
 }
 

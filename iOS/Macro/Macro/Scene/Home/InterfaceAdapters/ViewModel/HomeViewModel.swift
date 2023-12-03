@@ -42,7 +42,11 @@ final class HomeViewModel: ViewModelProtocol, PostCollectionViewProtocol {
         self.patcher = patcher
     }
     
-    // MARK: - Methods
+}
+
+// MARK: - Methods
+
+extension HomeViewModel {
     
     func transform(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         input.sink { [weak self] input in
@@ -60,16 +64,17 @@ final class HomeViewModel: ViewModelProtocol, PostCollectionViewProtocol {
     private func searchPosts() {
         postSearcher.fetchHitPost().sink { completion in
             if case let .failure(error) = completion {
+                Log.make().error("\(error)")
             }
         } receiveValue: { [weak self] response in
             self?.outputSubject.send(.updateSearchResult(response))
         }.store(in: &cancellables)
-        
     }
     
     private func searchMockPost() {
         postSearcher.searchMockPost(json: "tempJson").sink { completion in
             if case let .failure(error) = completion {
+                Log.make().error("\(error)")
             }
         } receiveValue: { [weak self] response in
             self?.outputSubject.send(.updateSearchResult(response))

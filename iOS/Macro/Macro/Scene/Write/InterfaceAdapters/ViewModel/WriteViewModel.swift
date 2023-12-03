@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-class WriteViewModel: ViewModelProtocol {
+final class WriteViewModel: ViewModelProtocol {
     
     // MARK: - Properties
     
@@ -17,7 +17,7 @@ class WriteViewModel: ViewModelProtocol {
     private let uploadImageUseCase: UploadImageUseCases
     private let uploadPostUseCase: UploadPostUseCase
     private var imageDatas: [Data] = [] {
-        didSet{
+        didSet {
             outputSubject.send(.outputImageData(imageDatas))
         }
     }
@@ -30,7 +30,7 @@ class WriteViewModel: ViewModelProtocol {
     private var startAt: String = ""
     private var endAt: String = ""
     
-    // MARK: - init
+    // MARK: - Init
     
     init(uploadImageUseCase: UploadImageUseCases, uploadPostUseCase: UploadPostUseCase) {
         self.uploadImageUseCase = uploadImageUseCase
@@ -58,7 +58,11 @@ class WriteViewModel: ViewModelProtocol {
         case outputDescriptionString(String)
     }
     
-    // MARK: - Methods
+}
+
+// MARK: - Methods
+
+extension WriteViewModel {
     
     func transform(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         input

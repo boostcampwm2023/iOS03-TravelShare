@@ -11,7 +11,7 @@ import MacroNetwork
 
 class RouteViewModel: ViewModelProtocol, MapCollectionViewProtocol {
 
-    // MARK: - Propertieds
+    // MARK: - Properties
     var travels: [TravelInfo] = []
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
@@ -30,11 +30,13 @@ class RouteViewModel: ViewModelProtocol, MapCollectionViewProtocol {
         case deleteTravel(String)
         case navigateToWriteView(TravelInfo)
     }
-    
-    // MARK: - Methods
-    
+}
+
+// MARK: - Methods
+
+extension RouteViewModel {
     func transform(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
-        input.sink { [weak self] _ in
+        input.sink { _ in
         }.store(in: &cancellables)
         
         return outputSubject.eraseToAnyPublisher()

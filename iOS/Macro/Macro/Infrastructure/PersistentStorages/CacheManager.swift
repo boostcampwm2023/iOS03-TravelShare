@@ -12,11 +12,11 @@ struct CacheManager {
 }
 
 extension CacheManager {
-    public func save(key: String, data: NSObject) {
+    func save(key: String, data: NSObject) {
         memoryCache.setObject(data, forKey: key as NSString)
     }
     
-    public func load(key: String) -> NSObject? {
+    func load(key: String) -> NSObject? {
         return memoryCache.object(forKey: key as NSString)
     }
 }

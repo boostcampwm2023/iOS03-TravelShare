@@ -11,7 +11,9 @@ import UIKit
 final class UserInfoHeaderView: UIView {
     
     // MARK: - Properties
+    
     var inputSubject: PassthroughSubject<UserInfoViewModel.Input, Never> = .init()
+    
     // MARK: - UI Components
     
     private let userNameLabel: UILabel = {
@@ -27,18 +29,19 @@ final class UserInfoHeaderView: UIView {
         let button = UIButton()
         button.layer.cornerRadius = 10
         button.titleLabel?.font = UIFont.appFont(.baeEunCallout)
-        button.addTarget(self, action: #selector(tapFollowButton), for: .touchUpInside)
-        
         button.backgroundColor = UIColor.appColor(.purple1)
         button.setTitleColor(UIColor.appColor(.purple3), for: .normal)
         button.setTitle(Label.follow, for: .normal)
         return button
     }()
-    // MARK: - Initialization
+    
+    // MARK: - Initi
     
     init(frame: CGRect, inputSubject: PassthroughSubject<UserInfoViewModel.Input, Never> = .init()) {
         self.inputSubject = inputSubject
         super.init(frame: frame)
+        followButton.addTarget(self, action: #selector(tapFollowButton), for: .touchUpInside)
+        
         setupLayout()
     }
     
@@ -123,7 +126,6 @@ extension UserInfoHeaderView {
         inputSubject.send(.tapFollowButton(userId: "asdf"))
     }
 }
-
 
 // MARK: - LayoutMetrics
 extension UserInfoHeaderView {

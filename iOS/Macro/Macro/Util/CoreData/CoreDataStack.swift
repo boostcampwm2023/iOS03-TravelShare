@@ -30,6 +30,7 @@ class CoreDataStack {
         do {
             try managedContext.save()
         } catch let error as NSError {
+            Log.make().error("\(error)")
         }
     }
 }

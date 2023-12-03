@@ -21,7 +21,7 @@ final class UserInfoViewModel: ViewModelProtocol {
     let followFeature: FollowUseCase
     let patcher: PatchUseCase
     
-    // MARK: - init
+    // MARK: - Init
     
     init(postSearcher: SearchUseCase, followFeature: FollowUseCase, patcher: PatchUseCase) {
         self.searcher = postSearcher
@@ -51,7 +51,11 @@ final class UserInfoViewModel: ViewModelProtocol {
         case updatePostLike(LikePostResponse)
     }
     
-    // MARK: - Methods
+}
+
+// MARK: - Methods
+
+extension UserInfoViewModel {
     
     func transform(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         input
@@ -95,7 +99,7 @@ final class UserInfoViewModel: ViewModelProtocol {
     
     private func searchMockUserProfile(userId: String) {
         searcher.searchMockUserProfile(query: userId, json: "UserInfoMock").sink { _ in
-        } receiveValue: { [weak self] response in
+        } receiveValue: { _ in
             // self?.outputSubject.send(.updateUserProfile(response))
         }.store(in: &cancellables)
     }

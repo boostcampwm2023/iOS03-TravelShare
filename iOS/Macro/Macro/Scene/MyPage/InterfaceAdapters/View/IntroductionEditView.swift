@@ -40,6 +40,7 @@ final class IntroductionEditView: UIView {
 }
 
 // MARK: - UI Settings
+
 extension IntroductionEditView {
     
     private func setTranslatesAutoresizingMaskIntoConstraints() {
@@ -64,23 +65,11 @@ extension IntroductionEditView {
             introductionTextView.heightAnchor.constraint(equalToConstant: Metrics.textFieldHeight)
         ])
     }
-    
-}
-
-extension IntroductionEditView {
-    
     private func setUpLayout() {
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
     }
-    
-}
-
-// MARK: - Methods
-
-extension IntroductionEditView {
-    
 }
 
 // MARK: - LayoutMetrics

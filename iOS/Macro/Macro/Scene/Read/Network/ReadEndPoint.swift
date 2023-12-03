@@ -22,8 +22,8 @@ extension ReadEndPoint: EndPoint {
         switch self {
         case let .read(_, accessToken):
             return [
-                "Host" : "jijihuny.store",
-                "Authorization" : "Bearer " + accessToken
+                "Host": "jijihuny.store",
+                "Authorization": "Bearer " + accessToken
             ]
         }
     }
@@ -31,13 +31,13 @@ extension ReadEndPoint: EndPoint {
     var parameter: MacroNetwork.HTTPParameter {
         switch self {
         case let .read(postId, _):
-            return .query(["postId" : postId])
+            return .query(["postId": postId])
         }
     }
     
     var method: MacroNetwork.HTTPMethod {
         switch self {
-        case .read(_, _):
+        case .read:
             return .get
         }
     }

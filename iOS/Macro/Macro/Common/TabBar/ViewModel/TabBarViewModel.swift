@@ -11,16 +11,12 @@ import MacroNetwork
 import Network
 import UIKit
 
-
 final class TabBarViewModel {
     let tabComponentArray = CurrentValueSubject<[TabComponent], Never>([])
-    
     var currentTabComponent: CurrentValueSubject<TabComponent, Never>
-    
     var radius: CGFloat = 90
     var rotationAngle: Double = 0
     var timer: Timer?
-    
     var isTabBarActive: Bool = false
     var animationStep: Int = 0
     
@@ -65,10 +61,5 @@ final class TabBarViewModel {
     // MARK: - Method
     
     private func setTabComponetArray() {
-        
-        
-        
-        
-        
     }
 }

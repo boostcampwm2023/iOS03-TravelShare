@@ -11,6 +11,7 @@ import Foundation
 class MyPageViewModel: ViewModelProtocol {
     
     // MARK: - Properties
+    
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
     let email = TokenManager.extractEmailFromJWTToken()
@@ -23,7 +24,7 @@ class MyPageViewModel: ViewModelProtocol {
     let comfirmer: ConfirmUseCase
     @Published var myInfo: UserProfile = UserProfile(email: "", name: "", imageUrl: "", introduce: "", followersNum: 0, followeesNum: 0)
     
-    // MARK: - init
+    // MARK: - Init
     init(patcher: PatchUseCase, searcher: SearchUseCase, confirmer: ConfirmUseCase) {
         self.patcher = patcher
         self.searcher = searcher
@@ -46,7 +47,12 @@ class MyPageViewModel: ViewModelProtocol {
         case showAlert(String)
     }
     
-    // MARK: - Methods
+}
+
+// MARK: - Methods
+
+extension MyPageViewModel {
+    
     func transform(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         input
             .sink { [weak self] input in
@@ -63,14 +69,14 @@ class MyPageViewModel: ViewModelProtocol {
         return outputSubject.eraseToAnyPublisher()
     }
     
-    func modifyInformation(_ cellIndex: Int, _ query: String) {
+    private func modifyInformation(_ cellIndex: Int, _ query: String) {
         patcher.patchUser(cellIndex: cellIndex, query: query).sink { _ in
         } receiveValue: { [weak self] _ in
             self?.outputSubject.send(.patchCompleted(cellIndex, query))
         }.store(in: &cancellables)
     }
     
-    func checkValidInput(_ cellIndex: Int, _ query: String) {
+    private func checkValidInput(_ cellIndex: Int, _ query: String) {
         let result: Result<Void, ConfirmError>
         switch cellIndex {
         case 0: result = self.comfirmer.confirmNickName(text: query)
@@ -86,7 +92,7 @@ class MyPageViewModel: ViewModelProtocol {
         }
     }
     
-    func getMyUserData(_ email: String) {
+    private func getMyUserData(_ email: String) {
         searcher.searchUserProfile(query: email).sink { _ in
         } receiveValue: { [weak self] response in
             self?.outputSubject.send(.sendMyUserData(response))

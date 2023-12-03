@@ -10,6 +10,7 @@ import UIKit
 class UserInfoProfileView: UIView {
     
     // MARK: - UI Components
+    
     private let userProfileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -43,6 +44,7 @@ class UserInfoProfileView: UIView {
         return label
     }()
     
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupLayout()
@@ -57,21 +59,21 @@ class UserInfoProfileView: UIView {
 
 extension UserInfoProfileView {
     
-    func setTranslatesAutoresizingMaskIntoConstraints() {
+    private func setTranslatesAutoresizingMaskIntoConstraints() {
         userProfileImageView.translatesAutoresizingMaskIntoConstraints = false
         userFollowerLabel.translatesAutoresizingMaskIntoConstraints = false
         userFollowerCountLabel.translatesAutoresizingMaskIntoConstraints = false
         userIntroduceLabel.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    func addsubviews() {
+    private func addsubviews() {
         self.addSubview(userProfileImageView)
         self.addSubview(userFollowerLabel)
         self.addSubview(userFollowerCountLabel)
         self.addSubview(userIntroduceLabel)
     }
     
-    func setLayoutConstraints() {
+    private func setLayoutConstraints() {
         NSLayoutConstraint.activate([
             userProfileImageView.topAnchor.constraint(equalTo: self.topAnchor),
             userProfileImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
@@ -91,7 +93,7 @@ extension UserInfoProfileView {
         ])
     }
     
-    func setupLayout() {
+    private func setupLayout() {
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
@@ -99,6 +101,7 @@ extension UserInfoProfileView {
 }
 
 // MARK: - Methods
+
 extension UserInfoProfileView {
     func configure(item: UserProfile) {
         // TODO: nil 일 경우 default 이미지

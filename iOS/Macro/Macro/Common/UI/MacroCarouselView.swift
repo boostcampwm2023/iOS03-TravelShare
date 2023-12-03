@@ -74,7 +74,7 @@ class MacroCarouselView: UIView {
 
     // MARK: - Init
     
-    init(const: Const, addImageOutputSubject: PassthroughSubject<Bool, Never>, didScrollOutputSubject : PassthroughSubject<Int, Never>) {
+    init(const: Const, addImageOutputSubject: PassthroughSubject<Bool, Never>, didScrollOutputSubject: PassthroughSubject<Int, Never>) {
         self.const = const
         self.viewType = .write
         self.addImageOutputSubject = addImageOutputSubject
@@ -83,7 +83,7 @@ class MacroCarouselView: UIView {
         setLayout()
     }
     
-    init(const: Const, didScrollOutputSubject : PassthroughSubject<Int, Never>) {
+    init(const: Const, didScrollOutputSubject: PassthroughSubject<Int, Never>) {
         self.const = const
         self.viewType = .read
         self.didScrollSubject = didScrollOutputSubject

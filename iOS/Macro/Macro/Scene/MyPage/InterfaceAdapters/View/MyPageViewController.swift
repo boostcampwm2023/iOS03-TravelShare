@@ -29,17 +29,6 @@ final class MyPageViewController: TabViewController {
         return tableView
     }()
     
-    // MARK: - Init
-    
-    init(viewModel: MyPageViewModel) {
-        self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -52,6 +41,17 @@ final class MyPageViewController: TabViewController {
         if let email = viewModel.email {
             inputSubject.send(.getMyUserData(email))
         }
+    }
+    
+    // MARK: - Init
+    
+    init(viewModel: MyPageViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
 }
@@ -79,19 +79,12 @@ extension MyPageViewController {
             
         ])
     }
-    
-}
-
-extension MyPageViewController {
-    
     private func setUpLayout() {
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
     }
-    @objc func backButtonPressed() {
-        self.dismiss(animated: true, completion: nil)
-    }
+    
 }
 
 // MARK: - Bind
@@ -108,16 +101,20 @@ extension MyPageViewController {
         }.store(in: &cancellables)
     }
     
-    private func updateUserInformation(_ userProfile: UserProfile) {
-        updateUserProfile(userProfile: userProfile)
-    }
-    
 }
 
 // MARK: - Methods
 extension MyPageViewController {
-    func updateUserProfile(userProfile: UserProfile) {
+    private func updateUserProfile(userProfile: UserProfile) {
         myPageHeaderView.configure(userProfile: userProfile)
+    }
+    
+    @objc func backButtonPressed() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    private func updateUserInformation(_ userProfile: UserProfile) {
+        updateUserProfile(userProfile: userProfile)
     }
 }
 

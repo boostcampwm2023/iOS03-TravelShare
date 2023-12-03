@@ -20,7 +20,7 @@ extension PostUploadEndPoint: EndPoint {
     
     var headers: MacroNetwork.HTTPHeaders {
         switch self {
-        case let .uploadPost(post, token):
+        case let .uploadPost(_, token):
             return [
                 "Host": "jijihuny.store",
                 "Content-Type": "application/json",

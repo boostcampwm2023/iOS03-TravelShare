@@ -54,7 +54,6 @@ final class MyInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpLayout()
-        introductionEditView.introductionTextView.delegate = self
         saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         bind()
         hideKeyboardWhenTappedAround()
@@ -72,8 +71,11 @@ final class MyInfoViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    // MARK: - UI Settings
+}
+
+// MARK: - UI Settings
+
+extension MyInfoViewController {
     
     private func setTranslatesAutoresizingMaskIntoConstraints() {
         guideLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -128,9 +130,12 @@ final class MyInfoViewController: UIViewController {
         setLayoutConstraints()
     }
     
-    // MARK: - Binding
+}
+// MARK: - Bind
+
+extension MyInfoViewController {
     
-    func bind() {
+    private func bind() {
         let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
             switch output {
@@ -141,6 +146,11 @@ final class MyInfoViewController: UIViewController {
         }.store(in: &cancellables)
     }
     
+}
+
+// MARK: - Methods
+
+extension MyInfoViewController {
     private func dissMissView() {
         self.dismiss(animated: true, completion: nil)
     }
@@ -159,17 +169,8 @@ final class MyInfoViewController: UIViewController {
         default: inputSubject.send(.completeButtonTapped(selectedIndex, introductionEditView.introductionTextView.text ?? ""))
         }
     }
-    
 }
 
-// MARK: - Methods
-
-extension MyInfoViewController: UITextViewDelegate {
-    // TODO: - TextView 3줄 제한
-    func textViewDidChange(_ textView: UITextView) {
-        
-    }
-}
 // MARK: - LayoutMetrics
 
 extension MyInfoViewController {

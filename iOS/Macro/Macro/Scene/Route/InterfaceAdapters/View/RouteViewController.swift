@@ -26,14 +26,7 @@ class RouteViewController: UIViewController {
     let viewModel: RouteViewModel
     lazy var routeCollectionView: MapCollectionView = MapCollectionView(frame: .zero, viewModel: viewModel)
     
-    init(viewModel: RouteViewModel) {
-        self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         setupLayout()
@@ -44,6 +37,16 @@ class RouteViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         fetchLocalTravels()
         super.viewWillAppear(animated)
+    }
+    
+    // MARK: - Init
+    init(viewModel: RouteViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -90,7 +93,6 @@ extension RouteViewController {
                 self?.deleteTravel(uuid: uuid)
             case let .navigateToWriteView(travelInfo):
                 self?.navigateToWriteView(travelInfo: travelInfo)
-            default: break
             }
         }.store(in: &cancellables)
     }

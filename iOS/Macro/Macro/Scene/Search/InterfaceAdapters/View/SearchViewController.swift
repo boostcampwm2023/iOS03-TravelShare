@@ -8,7 +8,6 @@
 import Combine
 import UIKit
 
-
 final class SearchViewController: TabViewController {
     
     // MARK: - Properties
@@ -32,7 +31,7 @@ final class SearchViewController: TabViewController {
         let font = UIFont.appFont(.baeEunBody)
         let color = UIColor.appColor(.purple5)
         let attributes: [NSAttributedString.Key: Any] = [
-            .font: font,
+            .font: font ?? UIFont.systemFont(ofSize: 12),
             .foregroundColor: color
         ]
         for (index, text) in segmentItems.enumerated() {
@@ -61,6 +60,7 @@ final class SearchViewController: TabViewController {
         searchBar.addTarget(self, action: #selector(searchBarReturnPressed), for: .editingDidEndOnExit)
     }
     
+    // MARK: Init
     init(viewModel: SearchViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -73,6 +73,7 @@ final class SearchViewController: TabViewController {
 }
 
 // MARK: - UI Settings
+
 extension SearchViewController {
     private func setTranslatesAutoresizingMaskIntoConstraints() {
         searchBar.translatesAutoresizingMaskIntoConstraints = false
@@ -102,16 +103,12 @@ extension SearchViewController {
             postCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
     }
-}
-
-extension SearchViewController {
     
     private func setUpLayout() {
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
     }
-    
 }
 
 // MARK: - Bind
@@ -125,9 +122,9 @@ extension SearchViewController {
             switch output {
             case let .updateSearchResult(result):
                 self?.updateSearchResult(result)
-            case let .navigateToProfileView(userId):
+            case .navigateToProfileView:
                 break
-            case .navigateToReadView(_):
+            case .navigateToReadView:
                 break
             case let .updatePostLike(result):
                 self?.updatePostLike(result)

@@ -23,7 +23,7 @@ final class HomeViewController: UIViewController {
     private let homeHeaderView: HomeHeaderView = HomeHeaderView()
     lazy var homeCollectionView: PostCollectionView = PostCollectionView(frame: .zero, viewModel: viewModel)
     
-    // MARK: - Initialization
+    // MARK: - Init
     
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
@@ -34,7 +34,7 @@ final class HomeViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Life Cycles
+    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,20 +46,20 @@ final class HomeViewController: UIViewController {
     
 }
 
-// MARK: UI Settings
+// MARK: - UI Settings
 
 extension HomeViewController {
 
-    func setTranslatesAutoresizingMaskIntoConstraints() {
+    private func setTranslatesAutoresizingMaskIntoConstraints() {
         homeHeaderView.translatesAutoresizingMaskIntoConstraints = false
         homeCollectionView.translatesAutoresizingMaskIntoConstraints = false
     }
-    func addsubviews() {
+    private func addsubviews() {
         self.view.addSubview(homeHeaderView)
         self.view.addSubview(homeCollectionView)
     }
     
-    func setLayoutConstraints() {
+    private func setLayoutConstraints() {
         NSLayoutConstraint.activate([
             homeHeaderView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: Padding.homeHeaderViewTop),
             homeHeaderView.heightAnchor.constraint(equalToConstant: Metrics.homeHeaderViewHeight),
@@ -73,17 +73,12 @@ extension HomeViewController {
         ])
     }
     
-}
-
-extension HomeViewController {
-    
-    func setUpLayout() {
+    private func setUpLayout() {
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
         homeHeaderView.setUpLayout()
     }
-    
 }
 
 // MARK: - Bind
@@ -112,13 +107,13 @@ private extension HomeViewController {
 
 private extension HomeViewController {
     
-    func updateSearchResult(_ result: [PostFindResponse]) {
-        let sortedPostById = result.sorted { $0.postId < $1.postId }
+    private func updateSearchResult(_ result: [PostFindResponse]) {
+        _ = result.sorted { $0.postId < $1.postId }
         homeCollectionView.viewModel.posts = result
         homeCollectionView.reloadData()
     }
     
-    func navigateToProfileView(_ email: String) {
+    private func navigateToProfileView(_ email: String) {
         let userInfoViewModel = UserInfoViewModel(postSearcher: viewModel.postSearcher,
                                                   followFeature: viewModel.followFeatrue,
                                                   patcher: Patcher(provider: provider))
@@ -126,7 +121,7 @@ private extension HomeViewController {
         navigationController?.pushViewController(userInfoViewController, animated: true)
     }
     
-    func navigateToReadView(_ postId: Int) {
+    private func navigateToReadView(_ postId: Int) {
         let provider = APIProvider(session: URLSession.shared)
         let readuseCase = ReadPostUseCase(provider: provider)
         let readViewModel = ReadViewModel(useCase: readuseCase, postId: postId)
@@ -135,7 +130,7 @@ private extension HomeViewController {
         navigationController?.pushViewController(readViewController, animated: true)
     }
     
-    func updatePostLike(_ likePostReponse: LikePostResponse) {
+    private func updatePostLike(_ likePostReponse: LikePostResponse) {
         guard let post = viewModel.posts.first(where: { $0.postId == likePostReponse.postId }) else { return }
         guard let index = viewModel.posts.firstIndex(where: { $0.postId == post.postId }) else { return }
         viewModel.posts[index].liked = likePostReponse.liked
