@@ -10,6 +10,8 @@ import UIKit
 
 final class UserResultCell: UICollectionViewCell {
     
+    weak var delegate: PostCollectionViewDelegate?
+    
     var userNameLabel: UILabel = {
         let label: UILabel = UILabel()
         label.textColor = UIColor.appColor(.purple5)

@@ -62,12 +62,12 @@ final class SearchViewController: TouchableViewController {
     }()
     
     // MARK: - Life Cycle
-    
-    override func viewDidLoad() {
+        override func viewDidLoad() {
         super.viewDidLoad()
         setUpLayout()
         bind()
         postCollectionView.postDelegate = self
+        userResultCollectionView.postDelegate = self
         searchSegment.addTarget(self, action: #selector(segmentValueChanged(_:)), for: .valueChanged)
         searchBar.addTarget(self, action: #selector(searchBarReturnPressed), for: .editingDidEndOnExit)
     }

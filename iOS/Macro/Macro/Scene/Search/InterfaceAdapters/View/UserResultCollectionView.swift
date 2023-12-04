@@ -6,11 +6,14 @@
 //
 
 import Foundation
+import MacroNetwork
 import UIKit
 
 final class UserResultCollectionView: UICollectionView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     let viewModel: SearchViewModel
+    weak var postDelegate: PostCollectionViewDelegate?
+    private let provider = APIProvider(session: URLSession.shared)
     
     init(frame: CGRect, viewModel: SearchViewModel) {
         self.viewModel = viewModel
@@ -35,7 +38,17 @@ final class UserResultCollectionView: UICollectionView, UICollectionViewDelegate
         }
         let user = viewModel.userList[indexPath.row]
         cell.configure(with: user)
+        cell.delegate = postDelegate
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedLocation = viewModel.userList[indexPath.row]
+        
+        let email = selectedLocation.email
+        let userInfoViewModel = UserInfoViewModel(postSearcher: Searcher(provider: provider), followFeature: FollowFeature(provider: provider), patcher: Patcher(provider: provider))
+        let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: email)
+        postDelegate?.didTapProfile(viewController: userInfoViewController)
     }
     
     func collectionView(_ collectionView: UICollectionView,
