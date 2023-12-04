@@ -52,11 +52,12 @@
 		BA1181852B1D25C2008D151C /* MacroCarouselCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1181842B1D25C2008D151C /* MacroCarouselCollectionView.swift */; };
 		BA1181872B1D2787008D151C /* CarouselViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1181862B1D2787008D151C /* CarouselViewProtocol.swift */; };
 		BA11818A2B1D30B9008D151C /* CarouselViewType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1181892B1D30B9008D151C /* CarouselViewType.swift */; };
-		BA24D7292B1DA1C000BA8EB5 /* struct PinnedLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA24D7282B1DA1C000BA8EB5 /* struct PinnedLocation.swift */; };
+		BA24D7292B1DA1C000BA8EB5 /* PinnedLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA24D7282B1DA1C000BA8EB5 /* PinnedLocation.swift */; };
 		BA24D72F2B1DED6300BA8EB5 /* TravelMO+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA24D72B2B1DED6300BA8EB5 /* TravelMO+CoreDataClass.swift */; };
 		BA24D7312B1DED6300BA8EB5 /* RecordedPinnedLocationMO+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA24D72D2B1DED6300BA8EB5 /* RecordedPinnedLocationMO+CoreDataClass.swift */; };
 		BA24D7402B1DF3D600BA8EB5 /* TravelMO+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA24D73E2B1DF3D600BA8EB5 /* TravelMO+CoreDataProperties.swift */; };
 		BA24D7412B1DF3D600BA8EB5 /* RecordedPinnedLocationMO+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA24D73F2B1DF3D600BA8EB5 /* RecordedPinnedLocationMO+CoreDataProperties.swift */; };
+		BA24D7432B1E52F200BA8EB5 /* RecordedPinnedLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA24D7422B1E52F200BA8EB5 /* RecordedPinnedLocation.swift */; };
 		BA32E0E92B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E0E82B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift */; };
 		BA32E1762B0DC2F900EA0EE2 /* UserInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E1732B0DC2F900EA0EE2 /* UserInfoViewModel.swift */; };
 		BA32E1772B0DC2F900EA0EE2 /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32E1752B0DC2F900EA0EE2 /* UserInfoViewController.swift */; };
@@ -211,11 +212,12 @@
 		BA1181842B1D25C2008D151C /* MacroCarouselCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacroCarouselCollectionView.swift; sourceTree = "<group>"; };
 		BA1181862B1D2787008D151C /* CarouselViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselViewProtocol.swift; sourceTree = "<group>"; };
 		BA1181892B1D30B9008D151C /* CarouselViewType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselViewType.swift; sourceTree = "<group>"; };
-		BA24D7282B1DA1C000BA8EB5 /* struct PinnedLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "struct PinnedLocation.swift"; sourceTree = "<group>"; };
+		BA24D7282B1DA1C000BA8EB5 /* PinnedLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinnedLocation.swift; sourceTree = "<group>"; };
 		BA24D72B2B1DED6300BA8EB5 /* TravelMO+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TravelMO+CoreDataClass.swift"; sourceTree = "<group>"; };
 		BA24D72D2B1DED6300BA8EB5 /* RecordedPinnedLocationMO+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RecordedPinnedLocationMO+CoreDataClass.swift"; sourceTree = "<group>"; };
 		BA24D73E2B1DF3D600BA8EB5 /* TravelMO+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TravelMO+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		BA24D73F2B1DF3D600BA8EB5 /* RecordedPinnedLocationMO+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecordedPinnedLocationMO+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		BA24D7422B1E52F200BA8EB5 /* RecordedPinnedLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordedPinnedLocation.swift; sourceTree = "<group>"; };
 		BA32E0E82B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TabBarViewController+Animaion.swift"; sourceTree = "<group>"; };
 		BA32E1732B0DC2F900EA0EE2 /* UserInfoViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoViewModel.swift; sourceTree = "<group>"; };
 		BA32E1752B0DC2F900EA0EE2 /* UserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
@@ -1235,11 +1237,11 @@
 		D263CA162B0404B600B4A144 /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				BA24D7422B1E52F200BA8EB5 /* RecordedPinnedLocation.swift */,
 				D263CA1B2B04074D00B4A144 /* LocationDetail.swift */,
 				D263CA322B06C7B300B4A144 /* SavedRoute.swift */,
 				BA90CBC02B149E1700365AE2 /* TravelInfo.swift */,
-				BACCE1FF2B1D90F400B56934 /* RecordedPinnedLocation.swift */,
-				BA24D7282B1DA1C000BA8EB5 /* struct PinnedLocation.swift */,
+				BA24D7282B1DA1C000BA8EB5 /* PinnedLocation.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -1462,6 +1464,7 @@
 				BAB24ED72B15D3D7000991A1 /* CoreDataManager.swift in Sources */,
 				AAD0B31C2B171171003B4D5F /* Cotent.swift in Sources */,
 				D241DC752B0DA00F0037DDB6 /* Writer.swift in Sources */,
+				BA24D7432B1E52F200BA8EB5 /* RecordedPinnedLocation.swift in Sources */,
 				BA33AA892B0AF9F30065D1E0 /* HomeViewController.swift in Sources */,
 				D2CAA5CA2B1D8D1700E825BA /* InfoType.swift in Sources */,
 				D21B101F2B17994100F2F84E /* ConfirmError.swift in Sources */,
@@ -1533,7 +1536,6 @@
 				D263CA262B04147E00B4A144 /* TravelViewController.swift in Sources */,
 				BAB24ED82B15D3D7000991A1 /* CoreDataStack.swift in Sources */,
 				BA90CB932B10997D00365AE2 /* UserInfoHeaderView.swift in Sources */,
-				BACCE2002B1D90F400B56934 /* RecordedPinnedLocation.swift in Sources */,
 				BAB24EE82B16DB6F000991A1 /* RouteViewController.swift in Sources */,
 				D21B100B2B1497E000F2F84E /* IntroductionEditView.swift in Sources */,
 				D21B10072B14660600F2F84E /* MyInfoViewController.swift in Sources */,
@@ -1542,7 +1544,7 @@
 				D263CA242B04134600B4A144 /* ViewModelProtocol.swift in Sources */,
 				D241DC782B0DA07E0037DDB6 /* PostFindEndPoint.swift in Sources */,
 				D263CA2D2B052ECC00B4A144 /* TravelEndPoint.swift in Sources */,
-				BA24D7292B1DA1C000BA8EB5 /* struct PinnedLocation.swift in Sources */,
+				BA24D7292B1DA1C000BA8EB5 /* PinnedLocation.swift in Sources */,
 				AAD0B3122B14E394003B4D5F /* ReadViewModel.swift in Sources */,
 				AAD0B31E2B171187003B4D5F /* Coordinate.swift in Sources */,
 				AAD0B2A42B0B0857003B4D5F /* DefaultLoginRepository.swift in Sources */,
