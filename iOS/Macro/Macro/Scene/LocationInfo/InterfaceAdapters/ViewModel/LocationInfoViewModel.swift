@@ -7,13 +7,14 @@
 
 import Combine
 
-final class LocationInfoViewModel: ViewModelProtocol {
-    
+final class LocationInfoViewModel: ViewModelProtocol, PostCollectionViewProtocol {
+        
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
     private var infoType: InfoType = .post
     private let locationDetail: LocationDetail
+    var posts: [PostFindResponse] = []
     
     // MARK: - Input
     
@@ -25,7 +26,7 @@ final class LocationInfoViewModel: ViewModelProtocol {
     // MARK: - Output
     
     enum Output {
-        case changeTestLabel(LocationDetail?)
+        case changeTextLabel(LocationDetail?)
     }
     
     // MARK: - Init
@@ -43,7 +44,8 @@ extension LocationInfoViewModel {
             case let .changeSelectType(searchType):
                 self?.changeSelectType(type: searchType)
             case .viewDidLoad:
-                self?.outputSubject.send(.changeTestLabel(self?.locationDetail))
+                self?.outputSubject.send(.changeTextLabel(self?.locationDetail))
+                
             }
         }.store(in: &cancellables)
         
@@ -54,7 +56,19 @@ extension LocationInfoViewModel {
         infoType = type
     }
     
-    private func changeLabelText() {
-        
+    func navigateToProfileView(email: String) {
+        //
+    }
+    
+    func navigateToReadView(postId: Int) {
+        //
+    }
+    
+    func touchLike(postId: Int) {
+        //
+    }
+    
+    func touchFollow(email: String) {
+        //
     }
 }

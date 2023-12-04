@@ -67,6 +67,8 @@ final class LocationInfoViewController: UIViewController {
         return label
     }()
     
+    lazy var postCollectionView: PostCollectionView = PostCollectionView(frame: .zero, viewModel: viewModel)
+    
     private let segmentControl: UISegmentedControl = {
         let control = UISegmentedControl(items: ["포함된 여행", "함께 많이 간 장소"])
         control.selectedSegmentIndex = 0
@@ -113,6 +115,7 @@ extension LocationInfoViewController {
         phoneLabel.translatesAutoresizingMaskIntoConstraints = false
         pinLabel.translatesAutoresizingMaskIntoConstraints = false
         segmentControl.translatesAutoresizingMaskIntoConstraints = false
+        postCollectionView.translatesAutoresizingMaskIntoConstraints = false
     }
     private func addsubviews() {
         view.addSubview(placeNameLabel)
@@ -122,6 +125,7 @@ extension LocationInfoViewController {
         view.addSubview(phoneLabel)
         view.addSubview(pinLabel)
         view.addSubview(segmentControl)
+        view.addSubview(postCollectionView)
     }
     
     private func setLayoutConstraints() {
@@ -139,7 +143,11 @@ extension LocationInfoViewController {
             pinLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Padding.pinSide),
             pinLabel.centerYAnchor.constraint(equalTo: placeNameLabel.centerYAnchor),
             segmentControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            segmentControl.topAnchor.constraint(equalTo: phoneLabel.bottomAnchor, constant: Padding.segmentTop)
+            segmentControl.topAnchor.constraint(equalTo: phoneLabel.bottomAnchor, constant: Padding.segmentTop),
+            postCollectionView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: Padding.postCollectionViewTop),
+            postCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            postCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            postCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
         
     }
@@ -158,7 +166,7 @@ extension LocationInfoViewController {
         
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
             switch output {
-            case let .changeTestLabel(locationDetail):
+            case let .changeTextLabel(locationDetail):
                 self?.changeTextLabel(locationDetail)
             }
         }.store(in: &cancellables)
@@ -178,7 +186,6 @@ extension LocationInfoViewController {
         categoryGroupLabel.text = locationDetail.categoryGroupName.isEmpty == true ? "-" : "(\(locationDetail.categoryGroupName))"
         phoneLabel.text = locationDetail.phone?.isEmpty == true ? "-" : (locationDetail.phone ?? "-")
     }
-    
     
     @objc private func segmentValueChanged(_ sender: UISegmentedControl) {
         let selectedType = sender.selectedSegmentIndex == 0 ? InfoType.post : InfoType.location
@@ -201,5 +208,6 @@ extension LocationInfoViewController {
         static let labelSide: CGFloat = 50
         static let pinSide: CGFloat = 28
         static let segmentTop: CGFloat = 18
+        static let postCollectionViewTop: CGFloat = 50
     }
 }
