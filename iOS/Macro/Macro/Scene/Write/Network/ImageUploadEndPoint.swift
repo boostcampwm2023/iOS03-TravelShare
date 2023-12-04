@@ -23,7 +23,7 @@ extension ImageUploadEndPoint: EndPoint {
         case let .uploadImage(imageData):
             return [
                 "Content-Type": "image/jpeg",
-                "Contents-Length": "\(imageData.count)",
+                "Content-Length": "\(imageData.count)",
                 "Host": "jijihuny.store"
             ]
         }
@@ -32,7 +32,7 @@ extension ImageUploadEndPoint: EndPoint {
     var parameter: MacroNetwork.HTTPParameter {
         switch self {
         case let .uploadImage(imageData):
-            return .body([imageData])
+            return .data(imageData)
         }
     }
     
