@@ -110,6 +110,7 @@
 		BAB24EEA2B16DB79000991A1 /* RouteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB24EE92B16DB79000991A1 /* RouteViewModel.swift */; };
 		BAB24EEC2B16DE55000991A1 /* MapCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB24EEB2B16DE55000991A1 /* MapCollectionViewCell.swift */; };
 		BABE98332B17C67300903F4F /* MyPageHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BABE98322B17C67300903F4F /* MyPageHeaderView.swift */; };
+		BACCE1FE2B1D8B4500B56934 /* MacroCarouselViewCelladdPictureComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACCE1FD2B1D8B4500B56934 /* MacroCarouselViewCelladdPictureComponentView.swift */; };
 		BADB1F0C2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADB1F0B2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift */; };
 		BAE3C5862B1995D200BF9798 /* LikePostResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE3C5852B1995D200BF9798 /* LikePostResponse.swift */; };
 		BAE3C5892B1996B200BF9798 /* UpdateLikeEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE3C5882B1996B200BF9798 /* UpdateLikeEndPoint.swift */; };
@@ -256,6 +257,7 @@
 		BAB24EE92B16DB79000991A1 /* RouteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteViewModel.swift; sourceTree = "<group>"; };
 		BAB24EEB2B16DE55000991A1 /* MapCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCollectionViewCell.swift; sourceTree = "<group>"; };
 		BABE98322B17C67300903F4F /* MyPageHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageHeaderView.swift; sourceTree = "<group>"; };
+		BACCE1FD2B1D8B4500B56934 /* MacroCarouselViewCelladdPictureComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MacroCarouselViewCelladdPictureComponentView.swift; path = "/Users/byeonjinha/Desktop/boost/iOS03-Macro/iOS/Macro/Macro/Common/UI/CarouselView/MacroCarouselViewCelladdPictureComponentView.swift"; sourceTree = "<absolute>"; };
 		BADB1F0B2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUnresearchableViewController.swift; sourceTree = "<group>"; };
 		BAE3C5852B1995D200BF9798 /* LikePostResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikePostResponse.swift; sourceTree = "<group>"; };
 		BAE3C5882B1996B200BF9798 /* UpdateLikeEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateLikeEndPoint.swift; sourceTree = "<group>"; };
@@ -1093,6 +1095,7 @@
 				BAE3C5932B1C7F1C00BF9798 /* MacroCarouselViewCelladdPictureView.swift */,
 				BA1181842B1D25C2008D151C /* MacroCarouselCollectionView.swift */,
 				BAE3C5982B1C879D00BF9798 /* MacroCarouselViewCelladdPictureComponentView.swift */,
+				BACCE1FD2B1D8B4500B56934 /* MacroCarouselViewCelladdPictureComponentView.swift */,
 				AAD0B2D62B0F3164003B4D5F /* MacroCarouselViewAddImageCell.swift */,
 			);
 			path = CarouselView;
@@ -1483,6 +1486,7 @@
 				BA8DC4072B0B5F0600929E01 /* SearchViewController.swift in Sources */,
 				BAB24EDD2B16390D000991A1 /* FollowResponse.swift in Sources */,
 				BA90CB852B0F3BF600365AE2 /* PostProfileView.swift in Sources */,
+				BACCE1FE2B1D8B4500B56934 /* MacroCarouselViewCelladdPictureComponentView.swift in Sources */,
 				D21B10162B17636800F2F84E /* PatchUseCase.swift in Sources */,
 				BA6C6DFB2B05FFC500563B22 /* TabBarBackgroundLargeCirclceView.swift in Sources */,
 				BAE3C5862B1995D200BF9798 /* LikePostResponse.swift in Sources */,
