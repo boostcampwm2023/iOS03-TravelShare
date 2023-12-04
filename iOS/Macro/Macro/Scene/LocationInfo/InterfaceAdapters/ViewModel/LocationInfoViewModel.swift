@@ -7,7 +7,7 @@
 
 import Combine
 
-final class LocationInfoViewModel: ViewModelProtocol, PostCollectionViewProtocol {
+final class LocationInfoViewModel: ViewModelProtocol {
         
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
@@ -56,19 +56,4 @@ extension LocationInfoViewModel {
         infoType = type
     }
     
-    func navigateToProfileView(email: String) {
-        //
-    }
-    
-    func navigateToReadView(postId: Int) {
-        //
-    }
-    
-    func touchLike(postId: Int) {
-        //
-    }
-    
-    func touchFollow(email: String) {
-        //
-    }
 }

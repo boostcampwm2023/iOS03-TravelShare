@@ -79,7 +79,7 @@ final class PostContentView: UIView {
 extension PostContentView {
     func bind() {
         guard let viewModel = self.viewModel else { return }
-        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+        _ = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
      
     }
 }

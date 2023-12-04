@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-final class HomeViewModel: ViewModelProtocol, PostCollectionViewProtocol {
+final class HomeViewModel: ViewModelProtocol{
     
     // MARK: - Input
     
@@ -87,25 +87,4 @@ extension HomeViewModel {
         self.outputSubject.send(.navigateToReadView(postId))
     }
     
-    func navigateToReadView(postId: Int) {
-        self.outputSubject.send(.navigateToReadView(postId))
-    }
-    
-    func navigateToProfileView(email: String) {
-        self.outputSubject.send(.navigateToProfileView(email))
-    }
-
-    func touchLike(postId: Int) {
-        patcher.patchPostLike(postId: postId).sink { _ in
-        } receiveValue: { [weak self] likePostResponse in
-            self?.outputSubject.send(.updatePostLike(likePostResponse))
-        }.store(in: &cancellables)
-    }
-    
-    func touchFollow(email: String) {
-        patcher.patchFollow(email: email).sink { _ in
-        } receiveValue: { [weak self] followPatchResponse in
-            self?.outputSubject.send(.updateUserFollow(followPatchResponse))
-        }
-    }
 }

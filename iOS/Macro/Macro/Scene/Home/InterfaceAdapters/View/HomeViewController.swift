@@ -97,8 +97,6 @@ private extension HomeViewController {
             switch output {
             case let .updateSearchResult(result):
                 self?.updateSearchResult(result)
-            case let .updatePostLike(likePostResponse):
-                self?.updatePostLike(likePostResponse)
             default: break
             }
         }.store(in: &cancellables)
@@ -112,14 +110,6 @@ extension HomeViewController {
     private func updateSearchResult(_ result: [PostFindResponse]) {
         _ = result.sorted { $0.postId < $1.postId }
         postCollectionView.viewModel.posts = result
-        postCollectionView.reloadData()
-    }
-    
-    private func updatePostLike(_ likePostReponse: LikePostResponse) {
-        guard let post = viewModel.posts.first(where: { $0.postId == likePostReponse.postId }) else { return }
-        guard let index = viewModel.posts.firstIndex(where: { $0.postId == post.postId }) else { return }
-        viewModel.posts[index].liked = likePostReponse.liked
-        viewModel.posts[index].likeNum = likePostReponse.likeNum
         postCollectionView.reloadData()
     }
     

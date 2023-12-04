@@ -9,7 +9,7 @@ import Combine
 import Foundation
 import MacroNetwork
 
-final class SearchViewModel: ViewModelProtocol, PostCollectionViewProtocol {
+final class SearchViewModel: ViewModelProtocol {
     
     // MARK: - Properties
     
@@ -72,7 +72,7 @@ extension SearchViewModel {
     }
     
     private func searchAccount(text: String) {
-        
+        // TODO: 계정 검색
     }
     
     private func searchPost(text: String) {
@@ -86,28 +86,6 @@ extension SearchViewModel {
                 let defaultValue = [PostFindResponse]()
                 self?.outputSubject.send(.updateSearchResult(self?.posts ?? defaultValue))
             }.store(in: &cancellables)
-    }
-    
-    func navigateToProfileView(email: String) {
-        outputSubject.send(.navigateToProfileView(email))
-    }
-    
-    func navigateToReadView(postId: Int) {
-        outputSubject.send(.navigateToReadView(postId))
-    }
-    
-    func touchLike(postId: Int) {
-        patcher.patchPostLike(postId: postId).sink { _ in
-        } receiveValue: { [weak self] likePostResponse in
-            self?.outputSubject.send(.updatePostLike(likePostResponse))
-        }.store(in: &cancellables)
-    }
-  
-    func touchFollow(email: String) {
-        patcher.patchFollow(email: email).sink { _ in
-        } receiveValue: { [weak self] followPatchResponse in
-            self?.outputSubject.send(.updateUserFollow(followPatchResponse))
-        }
     }
     
 }

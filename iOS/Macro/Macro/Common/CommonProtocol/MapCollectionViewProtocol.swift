@@ -15,5 +15,4 @@ protocol MapCollectionViewProtocol: AnyObject {
     func deleteTravel(uuid: String)
 }
 
-extension PostCollectionViewProtocol {
-}
+

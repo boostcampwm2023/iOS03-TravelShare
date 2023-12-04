@@ -82,7 +82,6 @@
 		BA8DC4182B0B6AD400929E01 /* MacroDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = BA8DC4172B0B6AD400929E01 /* MacroDesignSystem */; };
 		BA8DC41B2B0B6ADD00929E01 /* MacroNetwork in Frameworks */ = {isa = PBXBuildFile; productRef = BA8DC41A2B0B6ADD00929E01 /* MacroNetwork */; };
 		BA90CB3B2B0EF88700365AE2 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CB3A2B0EF88700365AE2 /* LocationManager.swift */; };
-		BA90CB7E2B0F3BA500365AE2 /* PostCollectionViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CB7D2B0F3BA500365AE2 /* PostCollectionViewProtocol.swift */; };
 		BA90CB842B0F3BF600365AE2 /* PostCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CB802B0F3BF600365AE2 /* PostCollectionViewCell.swift */; };
 		BA90CB852B0F3BF600365AE2 /* PostProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CB812B0F3BF600365AE2 /* PostProfileView.swift */; };
 		BA90CB862B0F3BF600365AE2 /* PostContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CB822B0F3BF600365AE2 /* PostContentView.swift */; };
@@ -227,7 +226,6 @@
 		BA8DC4122B0B602000929E01 /* WriteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteViewModel.swift; sourceTree = "<group>"; };
 		BA8DC4142B0B602D00929E01 /* WriteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteViewController.swift; sourceTree = "<group>"; };
 		BA90CB3A2B0EF88700365AE2 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		BA90CB7D2B0F3BA500365AE2 /* PostCollectionViewProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCollectionViewProtocol.swift; sourceTree = "<group>"; };
 		BA90CB802B0F3BF600365AE2 /* PostCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCollectionViewCell.swift; sourceTree = "<group>"; };
 		BA90CB812B0F3BF600365AE2 /* PostProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostProfileView.swift; sourceTree = "<group>"; };
 		BA90CB822B0F3BF600365AE2 /* PostContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostContentView.swift; sourceTree = "<group>"; };
@@ -706,7 +704,6 @@
 		BA4ED7272B0B4C52000F0B5B /* CommonProtocol */ = {
 			isa = PBXGroup;
 			children = (
-				BA90CB7D2B0F3BA500365AE2 /* PostCollectionViewProtocol.swift */,
 				BA8DC3F92B0B5DD100929E01 /* BaseViewControllerProtocol.swift */,
 				D263CA232B04134600B4A144 /* ViewModelProtocol.swift */,
 				BA6C6DE32B05FFC400563B22 /* CircularViewProtocol.swift */,
@@ -1414,7 +1411,6 @@
 				AAD0B2DB2B0FB5A5003B4D5F /* ImageUploadEndPoint.swift in Sources */,
 				BA33AA8C2B0AF9F30065D1E0 /* HomeHeaderView.swift in Sources */,
 				BA32E1762B0DC2F900EA0EE2 /* UserInfoViewModel.swift in Sources */,
-				BA90CB7E2B0F3BA500365AE2 /* PostCollectionViewProtocol.swift in Sources */,
 				BA8DC4132B0B602000929E01 /* WriteViewModel.swift in Sources */,
 				AA46C4B82B02304400856628 /* AppDelegate.swift in Sources */,
 				BA6C6DF92B05FFC500563B22 /* TabBarCenterView.swift in Sources */,
