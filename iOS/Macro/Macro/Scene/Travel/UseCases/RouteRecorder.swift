@@ -45,11 +45,9 @@ final class RouteRecorder: NSObject, RouteRecordUseCase, CLLocationManagerDelega
   
   func startRecording() {
       locationUpdateTimer = Timer.scheduledTimer(withTimeInterval: updateInterval, repeats: true) { [weak self] _ in
-          print("Location update started")
           self?.locationManager.startUpdatingLocation()
           DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // 1초 후에 위치 업데이트 중지
               self?.locationManager.stopUpdatingLocation()
-              print("Location update stopped")
           }
       }
   }
@@ -62,7 +60,6 @@ final class RouteRecorder: NSObject, RouteRecordUseCase, CLLocationManagerDelega
   
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
     locations.forEach { location in
-      print("New location: \(location.coordinate.latitude), \(location.coordinate.longitude)")
       locationPublisher.send(location)
     }
   }

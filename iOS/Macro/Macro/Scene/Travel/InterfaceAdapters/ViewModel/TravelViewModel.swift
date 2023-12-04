@@ -88,7 +88,6 @@ extension TravelViewModel {
     }
     
     func tempMethod() {
-        print("temp")
     }
     
     func togglePinnedPlaces(_ locationDetail: LocationDetail) {
