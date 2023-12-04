@@ -15,12 +15,11 @@ final class WriteViewController: TabViewController {
     // MARK: - Properties
     
     private let viewModel: WriteViewModel
-    private let const = MacroCarouselView.Const(itemSize: CGSize(width: UIScreen.width - 40, height: 340), itemSpacing: 24.0)
     private let imageAddSubject: PassthroughSubject<Bool, Never> = .init()
     private let didScrollSubject: PassthroughSubject<Int, Never> = .init()
     private let inputSubject: PassthroughSubject<WriteViewModel.Input, Never> = .init()
     private var subscriptions: Set<AnyCancellable> = []
-    private var carouselCurrentIndex: Int = 0
+    private var routeOverlay: NMFPath?
     
     // MARK: - UI Components
     
@@ -43,8 +42,8 @@ final class WriteViewController: TabViewController {
     
     private let titleTextField: UITextField = {
         let textField = UITextField()
-        textField.borderStyle = .roundedRect
         textField.placeholder = "제목을 입력하세요..."
+        textField.borderStyle = .none
         textField.font = UIFont.appFont(.baeEunBody)
         textField.rightViewMode = .always
         return textField
@@ -52,23 +51,13 @@ final class WriteViewController: TabViewController {
     
     private let summaryTextView: UITextView = {
         let textView = UITextView()
+        textView.layer.cornerRadius = 10
         textView.font = UIFont.appFont(.baeEunCallout)
         textView.backgroundColor = UIColor.appColor(.purple1)
         return textView
     }()
     
-    private lazy var carouselView: MacroCarouselView = {
-        let view = MacroCarouselView(const: const, addImageOutputSubject: imageAddSubject, didScrollOutputSubject: didScrollSubject)
-        return view
-    }()
-    
-    private let imageDescriptionTextField: UITextField = {
-        let textField = UITextField()
-        textField.borderStyle = .roundedRect
-        textField.placeholder = "문구를 입력하세요"
-        textField.font = UIFont.appFont(.baeEunBody)
-        return textField
-    }()
+    private lazy var carouselView: MacroCarouselView = MacroCarouselView(addImageOutputSubject: imageAddSubject, didScrollOutputSubject: didScrollSubject, inputSubject: self.inputSubject, viewModel: viewModel)
     
     private let mapView: NMFMapView = {
         let mapView = NMFMapView()
@@ -80,8 +69,8 @@ final class WriteViewController: TabViewController {
         let button = UIButton()
         button.setTitle("글 올리기", for: .normal)
         button.titleLabel?.font = UIFont.appFont(.baeEunTitle1)
-        button.setTitleColor(UIColor.black, for: .normal)
-        button.backgroundColor = UIColor.appColor(.statusGreen)
+        button.setTitleColor(UIColor.appColor(.purple4), for: .normal)
+        button.backgroundColor = UIColor.appColor(.purple1)
         button.layer.cornerRadius = 15
         return button
     }()
@@ -92,10 +81,8 @@ final class WriteViewController: TabViewController {
         super.viewDidLoad()
         setLayout()
         bind()
-        isVisibilityButton.addTarget(self, action: #selector(isisVisibilityButtonTouched), for: .touchUpInside)
-        imageDescriptionTextField.addTarget(self, action: #selector(descriptionTextFieldDidChange), for: .editingChanged)
-        writeSubmitButton.addTarget(self, action: #selector(writeSubmitButtonTouched), for: .touchUpInside)
-        titleTextField.addTarget(self, action: #selector(titleTextFieldDidChange), for: .editingChanged)
+        addTarget()
+        self.inputSubject.send(.loadTravel)
     }
     
     // MARK: - Init
@@ -119,7 +106,6 @@ private extension WriteViewController {
         carouselView.translatesAutoresizingMaskIntoConstraints = false
         titleTextField.translatesAutoresizingMaskIntoConstraints = false
         summaryTextView.translatesAutoresizingMaskIntoConstraints = false
-        imageDescriptionTextField.translatesAutoresizingMaskIntoConstraints = false
         mapView.translatesAutoresizingMaskIntoConstraints = false
         writeSubmitButton.translatesAutoresizingMaskIntoConstraints = false
         scrollContentView.translatesAutoresizingMaskIntoConstraints = false
@@ -132,7 +118,6 @@ private extension WriteViewController {
             titleTextField,
             summaryTextView,
             carouselView,
-            imageDescriptionTextField,
             mapView,
             writeSubmitButton
         ].forEach { self.scrollContentView.addSubview($0) }
@@ -156,16 +141,10 @@ private extension WriteViewController {
             summaryTextView.heightAnchor.constraint(equalToConstant: 210),
             
             carouselView.topAnchor.constraint(equalTo: summaryTextView.bottomAnchor, constant: 20),
-            carouselView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 20),
-            carouselView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -20),
-            carouselView.heightAnchor.constraint(equalToConstant: const.itemSize.height),
-            
-            imageDescriptionTextField.topAnchor.constraint(equalTo: carouselView.bottomAnchor, constant: 30),
-            imageDescriptionTextField.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 50),
-            imageDescriptionTextField.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -50),
-            imageDescriptionTextField.heightAnchor.constraint(equalToConstant: 50),
+            carouselView.heightAnchor.constraint(equalToConstant: 400),
+            carouselView.widthAnchor.constraint(equalToConstant: UIScreen.width),
 
-            mapView.topAnchor.constraint(equalTo: imageDescriptionTextField.bottomAnchor, constant: 30),
+            mapView.topAnchor.constraint(equalTo: carouselView.bottomAnchor, constant: 30),
             mapView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 24),
             mapView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -24),
             mapView.heightAnchor.constraint(equalToConstant: UIScreen.width - 48),
@@ -187,6 +166,7 @@ private extension WriteViewController {
     func delegateConfigure() {
         titleTextField.delegate = self
         summaryTextView.delegate = self
+        carouselView.descriptionTextField.delegate = self
     }
     
     func setLayout() {
@@ -238,8 +218,16 @@ private extension WriteViewController {
                     self?.present(alertController, animated: true)
                 case let .outputDescriptionString(description):
                     DispatchQueue.main.async {
-                        self?.imageDescriptionTextField.text = description
+                        self?.carouselView.descriptionTextField.text = description
                     }
+                case let .updatePageIndex(index):
+                    self?.updatePageIndex(index)
+                case let .updateMap(travel):
+                    guard let recordedLocation = travel.recordedLocation else { return }
+                    guard let recordedPinedInfo = travel.recordedPindedInfo else { return }
+                    self?.calculateCenterLocation(routePoints: recordedLocation)
+                    self?.updateMapWithLocation(routePoints: recordedLocation)
+                    self?.updateMark(recordedPindedInfo: recordedPinedInfo)
                 }
             }
             .store(in: &subscriptions)
@@ -253,8 +241,8 @@ private extension WriteViewController {
         didScrollSubject
             .receive(on: DispatchQueue.global())
             .sink { [weak self] index in
-                self?.carouselCurrentIndex = index
-                self?.inputSubject.send(.didScroll(self?.carouselCurrentIndex ?? 0))
+                self?.viewModel.carouselCurrentIndex = index
+                self?.inputSubject.send(.didScroll(self?.viewModel.carouselCurrentIndex ?? 0))
             }
             .store(in: &subscriptions)
     }
@@ -269,6 +257,86 @@ private extension WriteViewController {
     
     @objc func writeSubmitButtonTouched() {
         inputSubject.send(.writeSubmit)
+    }
+}
+
+// MARK: - Methods
+extension WriteViewController {
+    
+    func updatePageIndex(_ index: Int) {
+        self.carouselView.pageController.currentPage = viewModel.pageIndex
+        self.didScrollSubject.send(viewModel.pageIndex)
+    }
+    
+    func addTarget() {
+        isVisibilityButton.addTarget(self, action: #selector(isisVisibilityButtonTouched), for: .touchUpInside)
+        writeSubmitButton.addTarget(self, action: #selector(writeSubmitButtonTouched), for: .touchUpInside)
+        titleTextField.addTarget(self, action: #selector(titleTextFieldDidChange), for: .editingChanged)
+    }
+    
+    func calculateCenterLocation(routePoints: [[Double]]) {
+        var maxLatitude = -90.0
+        var minLatitude = 90.0
+        var maxLongitude = -180.0
+        var minLongitude = 180.0
+        
+        for point in routePoints {
+            let latitude = point[0]
+            let longitude = point[1]
+            
+            if latitude > maxLatitude {
+                maxLatitude = latitude
+            }
+            if latitude < minLatitude {
+                minLatitude = latitude
+            }
+            if longitude > maxLongitude {
+                maxLongitude = longitude
+            }
+            if longitude < minLongitude {
+                minLongitude = longitude
+            }
+        }
+        
+        let centerLatitude = (maxLatitude + minLatitude) / 2.0
+        let centerLongitude = (maxLongitude + minLongitude) / 2.0
+        
+        let centerLocation = NMGLatLng(lat: centerLatitude, lng: centerLongitude)
+        let distanceLatitude = abs(maxLatitude - minLatitude)
+        let distanceLongitude = abs(maxLongitude - minLongitude)
+        
+        let zoomLevelLatitude = log2(90 / distanceLatitude)
+        let zoomLevelLongitude = log2(90 / distanceLongitude)
+        let zoomLevel = min(zoomLevelLatitude, zoomLevelLongitude)
+        mapView.zoomLevel = zoomLevel
+       
+        let cameraUpdate = NMFCameraUpdate(scrollTo: centerLocation )
+        mapView.moveCamera(cameraUpdate)
+    }
+    
+    /// 이동 경로를 입력받아 지도에 그립니다.
+    /// - Parameters:
+    ///   - routePoints: 위도, 경도 배열 입니다.
+    func updateMapWithLocation(routePoints: [[Double]]) {
+        routeOverlay?.mapView = nil
+        let coords = routePoints.map { NMGLatLng(lat: $0[0], lng: $0[1]) }
+        routeOverlay = NMFPath(points: coords)
+        routeOverlay?.color = UIColor.appColor(.purple1)
+        routeOverlay?.mapView = mapView
+    }
+    
+    // TODO: - 위경도 좌표가 바뀌어 있어요. 다음 스프린트 때, 코어데이터 테이블 추가하면서 수정하도록하겠습니다. :)
+    /// Pin이 저장된 곳에  Mark를 찍습니다.
+    /// - Parameters:
+    ///   - recordedPindedInfo: Pin의 위도, 경도 배열 입니다.
+    func updateMark(recordedPindedInfo: [[String: [Double]]]) {
+        for (index, place) in recordedPindedInfo.enumerated() {
+            let marker = NMFMarker()
+            guard let name = place.keys.first, let location = place.values.first else { return }
+            marker.position = NMGLatLng(lat: location[1], lng: location[0])
+            marker.captionText = "\(index + 1). \(name)"
+            marker.mapView = mapView
+        }
     }
 }
 
@@ -308,13 +376,8 @@ extension WriteViewController: UITextFieldDelegate, UITextViewDelegate {
         inputSubject.send(.titleTextUpdate(title))
     }
     
-    @objc func descriptionTextFieldDidChange(_ sender: Any?) {
-        guard let description = self.imageDescriptionTextField.text else { return }
-        inputSubject.send(.imageDescriptionUpdate(index: self.carouselCurrentIndex, description: description))
-    }
-    
     func textViewDidChange(_ textView: UITextView) {
-        guard let summarry = textView.text else { return }
-        inputSubject.send(.summaryTextUpdate(summarry))
+        guard let summary = textView.text else { return }
+        inputSubject.send(.summaryTextUpdate(summary))
     }
 }

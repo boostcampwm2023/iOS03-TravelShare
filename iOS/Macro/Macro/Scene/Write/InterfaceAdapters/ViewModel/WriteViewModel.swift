@@ -6,12 +6,20 @@
 //
 
 import Combine
-import Foundation
+import UIKit.UIImage
 
-final class WriteViewModel: ViewModelProtocol {
+final class WriteViewModel: ViewModelProtocol, CarouselViewProtocol {
     
     // MARK: - Properties
+    var pageIndex = 0 {
+        didSet {
+            self.outputSubject.send(.updatePageIndex(pageIndex))
+        }
+    }
     
+    private let travelInfo: TravelInfo
+    var items: [UIImage?] = []
+    var carouselCurrentIndex: Int = 0
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
     private let uploadImageUseCase: UploadImageUseCases
@@ -26,15 +34,13 @@ final class WriteViewModel: ViewModelProtocol {
     private var summary: String = ""
     private var route: Route = Route(coordinates: [])
     private var contents: [Content] = []
-    private var pins: [Pin] = []
-    private var startAt: String = ""
-    private var endAt: String = ""
     
     // MARK: - Init
     
-    init(uploadImageUseCase: UploadImageUseCases, uploadPostUseCase: UploadPostUseCase) {
+    init(uploadImageUseCase: UploadImageUseCases, uploadPostUseCase: UploadPostUseCase, travelInfo: TravelInfo) {
         self.uploadImageUseCase = uploadImageUseCase
         self.uploadPostUseCase = uploadPostUseCase
+        self.travelInfo = travelInfo
     }
     
     // MARK: - Input
@@ -47,6 +53,7 @@ final class WriteViewModel: ViewModelProtocol {
         case titleTextUpdate(String)
         case summaryTextUpdate(String)
         case imageDescriptionUpdate(index: Int, description: String)
+        case loadTravel
     }
     
     // MARK: - Output
@@ -56,6 +63,8 @@ final class WriteViewModel: ViewModelProtocol {
         case outputImageData([Data])
         case postUploadSuccess
         case outputDescriptionString(String)
+        case updatePageIndex(Int)
+        case updateMap(TravelInfo)
     }
     
 }
@@ -83,6 +92,9 @@ extension WriteViewModel {
                     self?.contentsDescriptionUpdate(index: index, description: description)
                 case let .summaryTextUpdate(summaryText):
                     self?.summary = summaryText
+                case .loadTravel:
+                    guard let travelInfo = self?.travelInfo else { return }
+                    self?.outputSubject.send(.updateMap(travelInfo))
                 }
             }
             .store(in: &cancellables)
@@ -105,21 +117,21 @@ extension WriteViewModel {
             imageURLs.enumerated().forEach {
                 self.contents[$0].imageURL = $1
             }
+            
+            guard let startAt = self.travelInfo.startAt, let endAt = self.travelInfo.endAt else { return }
+            guard let recordedLocation = self.travelInfo.recordedLocation else { return }
+            let transRecordedLocation = recordedLocation.compactMap { position in
+                Coordinate(xPosition: position[1], yPosition: position[0])
+            }
             let post = Post(title: self.title,
                             summary: self.summary,
-                            route: Route(coordinates: [
-                                Coordinate(xPosition: 120, yPosition: 33.6),
-                                Coordinate(xPosition: 123, yPosition: 12.2)
-                            ]
-                                        ),
-                            pins: self.pins,
-                            contents:
-                                [
-                                    Content(imageURL: "https://kr.object.ncloudstorage.com/macro-bucket/static/image/boostcampmacro-beeae45f-3772-427c-ab71-bf85b663b043", description: nil, coordinate: nil)
-                                ],
+                            route: Route(coordinates: transRecordedLocation),
+                            // TODO: pin CoreData 작업 후 수정해야합니다 :)
+                            pins: [],
+                            contents: self.contents,
                             postPublic: self.postPublic,
-                            startAt: "2023-11-29T13:34:14.391Z",
-                            endAt: "2023-11-29T13:34:14.391Z")
+                            startAt: startAt,
+                            endAt: endAt)
             
             guard let token = KeyChainManager.load(key: KeyChainManager.Keywords.accessToken) else { return }
             self.uploadPostUseCase.execute(post: post, token: token)
