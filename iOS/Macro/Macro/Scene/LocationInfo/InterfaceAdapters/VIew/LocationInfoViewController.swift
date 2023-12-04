@@ -175,6 +175,7 @@ extension LocationInfoViewController {
             switch output {
             case let .changeTextLabel(locationDetail):
                 self?.changeTextLabel(locationDetail)
+            default: break
             }
         }.store(in: &cancellables)
     }

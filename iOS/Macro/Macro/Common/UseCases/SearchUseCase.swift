@@ -33,6 +33,12 @@ protocol SearchUseCase {
 
     /// 특정 제목으로 게시글을 검색
     func searchPostTitle(query: String) -> AnyPublisher<[PostFindResponse], NetworkError>
+    
+    /// postId를 기준으로, 해당 장소를 다녀간 게시글들을 보여줌
+    func searchRelatedPost(query: String) -> AnyPublisher<[PostFindResponse], NetworkError>
+    
+    /// postId를 기준으로, 해당 장소와 가장 많이 함께 간 장소를 보여줌
+    func searchRelatedLocation(query: String) -> AnyPublisher<[RelatedLocation], NetworkError>
 }
 
 final class Searcher: SearchUseCase {
@@ -79,5 +85,13 @@ final class Searcher: SearchUseCase {
     
     func searchPostTitle(query: String) -> AnyPublisher<[PostFindResponse], MacroNetwork.NetworkError> {
         return provider.request(PostFindEndPoint.search(query))
+    }
+    
+    func searchRelatedPost(query: String) -> AnyPublisher<[PostFindResponse], MacroNetwork.NetworkError> {
+        return provider.request(LocationInfoEndPoint.relatedPost(query))
+    }
+    
+    func searchRelatedLocation(query: String) -> AnyPublisher<[RelatedLocation], MacroNetwork.NetworkError> {
+        return provider.request(LocationInfoEndPoint.relatedLocation(query))
     }
 }

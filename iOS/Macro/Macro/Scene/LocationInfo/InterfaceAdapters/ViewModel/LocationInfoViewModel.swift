@@ -14,7 +14,8 @@ final class LocationInfoViewModel: ViewModelProtocol {
     private let outputSubject = PassthroughSubject<Output, Never>()
     private var infoType: InfoType = .post
     private let locationDetail: LocationDetail
-    var posts: [PostFindResponse] = []
+    private (set) var posts: [PostFindResponse] = []
+    private let searcher: SearchUseCase
     
     // MARK: - Input
     
@@ -27,11 +28,14 @@ final class LocationInfoViewModel: ViewModelProtocol {
     
     enum Output {
         case changeTextLabel(LocationDetail?)
+        case sendRelatedPost
+        case sendRelatedLocation
     }
     
     // MARK: - Init
-    init(locationDetail: LocationDetail) {
+    init(locationDetail: LocationDetail, searcher: SearchUseCase) {
         self.locationDetail = locationDetail
+        self.searcher = searcher
     }
 }
 
@@ -45,7 +49,7 @@ extension LocationInfoViewModel {
                 self?.changeSelectType(type: searchType)
             case .viewDidLoad:
                 self?.outputSubject.send(.changeTextLabel(self?.locationDetail))
-                
+                self?.getRelatedPost()
             }
         }.store(in: &cancellables)
         
@@ -54,6 +58,24 @@ extension LocationInfoViewModel {
     
     private func changeSelectType(type: InfoType) {
         infoType = type
+        switch infoType {
+        case .post: getRelatedPost()
+        case .location: getRelatedLocation()
+        }
+    }
+    private func getRelatedPost() {
+        var placeId = locationDetail.id
+        // TODO: 임시로 불러온 값을 확인할 수 있게 지정했음.
+        placeId = "1234567"
+        searcher.searchRelatedPost(query: placeId).sink { _ in
+        } receiveValue: { [weak self] response in
+            print(response)
+            self?.outputSubject.send(.sendRelatedPost)
+        }.store(in: &cancellables)
+    }
+    
+    private func getRelatedLocation() {
+        
     }
     
 }
