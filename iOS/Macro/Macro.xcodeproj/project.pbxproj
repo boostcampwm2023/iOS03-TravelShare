@@ -652,6 +652,8 @@
 		BA32E1912B0DEBC500EA0EE2 /* LocationInfo */ = {
 			isa = PBXGroup;
 			children = (
+				D2CAA5C82B1D817900E825BA /* Entities */,
+				D2CAA5D12B1E071700E825BA /* Network */,
 				BA32E1922B0DEBC500EA0EE2 /* InterfaceAdapters */,
 			);
 			path = LocationInfo;
@@ -660,8 +662,6 @@
 		BA32E1922B0DEBC500EA0EE2 /* InterfaceAdapters */ = {
 			isa = PBXGroup;
 			children = (
-				D2CAA5D12B1E071700E825BA /* Network */,
-				D2CAA5C82B1D817900E825BA /* Entities */,
 				D25FAAF72B1D7BDB00077232 /* ViewModel */,
 				BA32E1932B0DEBC500EA0EE2 /* VIew */,
 			);
