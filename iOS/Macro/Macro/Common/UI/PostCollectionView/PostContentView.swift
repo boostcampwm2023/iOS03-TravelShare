@@ -152,14 +152,3 @@ extension PostContentView {
     
 }
 
-extension PostContentView {
-    private func navigateToReadView(_ postId: Int) {
-        let provider = APIProvider(session: URLSession.shared)
-        let readuseCase = ReadPostUseCase(provider: provider)
-        let readViewModel = ReadViewModel(useCase: readuseCase, postId: postId)
-        let readViewController = ReadViewController(viewModel: readViewModel)
-        delegate?.didTapContent(viewController: readViewController)
-      
-    }
-    
-}

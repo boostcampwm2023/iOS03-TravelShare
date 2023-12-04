@@ -10,14 +10,18 @@ import UIKit
 
 protocol PostCollectionViewDelegate: AnyObject {
     func didTapContent(viewController: ReadViewController)
+    func didTapProfile(viewController: UserInfoViewController)
 }
 
 class TouchableViewController: UIViewController { }
 
 extension TouchableViewController: PostCollectionViewDelegate {
+    
     func didTapContent(viewController: ReadViewController) {
         navigationController?.pushViewController(viewController, animated: true)
     }
+    
+    func didTapProfile(viewController: UserInfoViewController) {
+        navigationController?.pushViewController(viewController, animated: true)
+    }
 }
-
-

@@ -85,8 +85,8 @@ extension PostCollectionViewCell {
         postProfileView.configure(item: item, viewModel: viewModel)
         postProfileView.indexPath = indexPath
         postContentView.delegate = delegate
+        postProfileView.delegate = delegate
         setTranslatesAutoresizingMaskIntoConstraints()
-        postContentView.delegate = delegate
         addsubviews()
         setLayoutConstraints()
         componetConfigure(item: item)

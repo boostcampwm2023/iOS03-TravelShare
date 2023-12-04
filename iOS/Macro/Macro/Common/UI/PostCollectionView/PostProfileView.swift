@@ -6,6 +6,7 @@
 //
 
 import Combine
+import MacroNetwork
 import UIKit
 
 final class PostProfileView: UIView {
@@ -14,7 +15,9 @@ final class PostProfileView: UIView {
     private var cancellables = Set<AnyCancellable>()
     var viewModel: PostCollectionViewModel?
     var indexPath: IndexPath?
+    private let provider = APIProvider(session: URLSession.shared)
     private let inputSubject: PassthroughSubject<PostCollectionViewModel.Input, Never> = .init()
+    weak var delegate: PostCollectionViewDelegate?
     var postId: Int?
     
     // MARK: - UI Components
@@ -79,9 +82,14 @@ final class PostProfileView: UIView {
     @objc private func profileImageTap(_ sender: UITapGestureRecognizer) {
         guard let indexPath = indexPath else { return }
         guard let viewModel = viewModel else { return }
-        
         let email = viewModel.posts[indexPath.row].writer.email
         viewModel.navigateToProfileView(email: email)
+        
+        let userInfoViewModel = UserInfoViewModel(postSearcher: viewModel.postSearcher,
+                                                  followFeature: viewModel.followFeatrue,
+                                                  patcher: Patcher(provider: provider))
+        let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: email)
+        delegate?.didTapProfile(viewController: userInfoViewController)
     }
     
     @objc private func likeImageViewTap(_ sender: UITapGestureRecognizer) {
@@ -159,10 +167,9 @@ private extension PostProfileView {
 // MARK: - Bind
 
 extension PostProfileView {
-    func bind(){
+    func bind() {
         guard let viewModel = self.viewModel else { return }
         let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
-        
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
             switch output {
             default: break
