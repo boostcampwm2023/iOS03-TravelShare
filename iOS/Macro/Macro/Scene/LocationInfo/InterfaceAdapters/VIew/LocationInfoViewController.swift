@@ -84,6 +84,7 @@ final class LocationInfoViewController: UIViewController {
         view.backgroundColor = .systemBackground
         setUpLayout()
         bind()
+        inputSubject.send(.viewDidLoad)
         segmentControl.addTarget(self, action: #selector(segmentValueChanged(_:)), for: .valueChanged)
     }
     
@@ -157,6 +158,8 @@ extension LocationInfoViewController {
         
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
             switch output {
+            case let .changeTestLabel(locationDetail):
+                self?.changeTextLabel(locationDetail)
             }
         }.store(in: &cancellables)
     }
@@ -166,13 +169,16 @@ extension LocationInfoViewController {
 
 extension LocationInfoViewController {
     
-    func updateText(_ model: LocationDetail) {
-        placeNameLabel.text = model.placeName.isEmpty == true ? "-" : model.placeName
-        addressLabel.text = model.addressName.isEmpty == true ? "-" : model.addressName
-        categoryNameLabel.text = model.categoryName.isEmpty == true ? "-" : model.categoryName
-        categoryGroupLabel.text = model.categoryGroupName.isEmpty == true ? "-" : "(\(model.categoryGroupName))"
-        phoneLabel.text = model.phone?.isEmpty == true ? "-" : (model.phone ?? "-")
+    private func changeTextLabel(_ detail: LocationDetail?) {
+        guard let locationDetail = detail else { return }
+        
+        placeNameLabel.text = locationDetail.placeName.isEmpty == true ? "-" : locationDetail.placeName
+        addressLabel.text = locationDetail.addressName.isEmpty == true ? "-" : locationDetail.addressName
+        categoryNameLabel.text = locationDetail.categoryName.isEmpty == true ? "-" : locationDetail.categoryName
+        categoryGroupLabel.text = locationDetail.categoryGroupName.isEmpty == true ? "-" : "(\(locationDetail.categoryGroupName))"
+        phoneLabel.text = locationDetail.phone?.isEmpty == true ? "-" : (locationDetail.phone ?? "-")
     }
+    
     
     @objc private func segmentValueChanged(_ sender: UISegmentedControl) {
         let selectedType = sender.selectedSegmentIndex == 0 ? InfoType.post : InfoType.location
