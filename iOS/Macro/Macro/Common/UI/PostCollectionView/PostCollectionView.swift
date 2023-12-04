@@ -5,27 +5,28 @@
 //  Created by Byeon jinha on 11/16/23.
 //
 
+import Combine
 import UIKit
 
-final class PostCollectionView<T: PostCollectionViewProtocol>: UICollectionView,
-                                                               UICollectionViewDelegate,
-                                                               UICollectionViewDataSource,
-                                                               UICollectionViewDelegateFlowLayout {
+final class PostCollectionView: UICollectionView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     // MARK: - Properties
     
-    let viewModel: T
+    let viewModel: PostCollectionViewModel
+    private var cancellables = Set<AnyCancellable>()
+    weak var postDelegate: PostCollectionViewDelegate?
+    private let inputSubject: PassthroughSubject<PostCollectionViewModel.Input, Never> = .init()
     
     // MARK: - Initialization
     
-    init(frame: CGRect, viewModel: T) {
+    init(frame: CGRect, viewModel: PostCollectionViewModel) {
         self.viewModel = viewModel
         let layout = UICollectionViewFlowLayout()
         super.init(frame: frame, collectionViewLayout: layout)
         
         self.backgroundColor = UIColor.appColor(.blue1)
         
-        self.register(PostCollectionViewCell<T>.self, forCellWithReuseIdentifier: "PostCollectionViewCell")
+        self.register(PostCollectionViewCell.self, forCellWithReuseIdentifier: "PostCollectionViewCell")
         
         self.showsVerticalScrollIndicator = false
         
@@ -45,12 +46,13 @@ final class PostCollectionView<T: PostCollectionViewProtocol>: UICollectionView,
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCollectionViewCell",
-                                                            for: indexPath) as? PostCollectionViewCell<T>
+                                                            for: indexPath) as? PostCollectionViewCell
         else { return UICollectionViewCell() }
-           let item = viewModel.posts[indexPath.row]
-           cell.configure(item: item, viewModel: viewModel, indexPath: indexPath)
-           return cell
-       }
+        cell.delegate = postDelegate
+        let item = viewModel.posts[indexPath.row]
+        cell.configure(item: item, viewModel: viewModel, indexPath: indexPath)
+        return cell
+    }
     
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
@@ -68,5 +70,6 @@ final class PostCollectionView<T: PostCollectionViewProtocol>: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 0, bottom: 80, right: 0)
-      }
+    }
+    
 }

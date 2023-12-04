@@ -9,19 +9,24 @@ import Combine
 import MacroNetwork
 import UIKit
 
-final class HomeViewController: UIViewController {
-    
+final class HomeViewController: TouchableViewController {
+
     // MARK: - Properties
     
     private let viewModel: HomeViewModel
     private let inputSubject: PassthroughSubject<HomeViewModel.Input, Never> = .init()
     private let provider = APIProvider(session: URLSession.shared)
     private var cancellables = Set<AnyCancellable>()
+    let postCollectionViewModel = PostCollectionViewModel(posts: [], followFeature: FollowFeature(provider: APIProvider(session: URLSession.shared)), patcher: Patcher(provider: APIProvider(session: URLSession.shared)), postSearcher: Searcher(provider: APIProvider(session: URLSession.shared)))
     
     // MARK: - UI Components
     
+    lazy var postCollectionView: PostCollectionView = {
+           let collectionView = PostCollectionView(frame: .zero, viewModel: postCollectionViewModel)
+           return collectionView
+       }()
+    
     private let homeHeaderView: HomeHeaderView = HomeHeaderView()
-    lazy var homeCollectionView: PostCollectionView = PostCollectionView(frame: .zero, viewModel: viewModel)
     
     // MARK: - Init
     
@@ -40,6 +45,7 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.appColor(.blue1)
         bind()
+        postCollectionView.postDelegate = self
         inputSubject.send(.searchPosts)
         setUpLayout()
     }
@@ -52,11 +58,11 @@ extension HomeViewController {
 
     private func setTranslatesAutoresizingMaskIntoConstraints() {
         homeHeaderView.translatesAutoresizingMaskIntoConstraints = false
-        homeCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        postCollectionView.translatesAutoresizingMaskIntoConstraints = false
     }
     private func addsubviews() {
         self.view.addSubview(homeHeaderView)
-        self.view.addSubview(homeCollectionView)
+        self.view.addSubview(postCollectionView)
     }
     
     private func setLayoutConstraints() {
@@ -66,10 +72,10 @@ extension HomeViewController {
             homeHeaderView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             homeHeaderView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             
-            homeCollectionView.topAnchor.constraint(equalTo: homeHeaderView.bottomAnchor, constant: Padding.homeCollectionViewTop),
-            homeCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            homeCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            homeCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            postCollectionView.topAnchor.constraint(equalTo: homeHeaderView.bottomAnchor, constant: Padding.homeCollectionViewTop),
+            postCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            postCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            postCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
     }
     
@@ -91,12 +97,6 @@ private extension HomeViewController {
             switch output {
             case let .updateSearchResult(result):
                 self?.updateSearchResult(result)
-            case let .navigateToProfileView(email):
-                self?.navigateToProfileView(email)
-            case let .navigateToReadView(postId):
-                self?.navigateToReadView(postId)
-            case let .updatePostLike(likePostResponse):
-                self?.updatePostLike(likePostResponse)
             default: break
             }
         }.store(in: &cancellables)
@@ -105,37 +105,12 @@ private extension HomeViewController {
 
 // MARK: - Methods
 
-private extension HomeViewController {
+extension HomeViewController {
     
     private func updateSearchResult(_ result: [PostFindResponse]) {
         _ = result.sorted { $0.postId < $1.postId }
-        homeCollectionView.viewModel.posts = result
-        homeCollectionView.reloadData()
-    }
-    
-    private func navigateToProfileView(_ email: String) {
-        let userInfoViewModel = UserInfoViewModel(postSearcher: viewModel.postSearcher,
-                                                  followFeature: viewModel.followFeatrue,
-                                                  patcher: Patcher(provider: provider))
-        let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: email)
-        navigationController?.pushViewController(userInfoViewController, animated: true)
-    }
-    
-    private func navigateToReadView(_ postId: Int) {
-        let provider = APIProvider(session: URLSession.shared)
-        let readuseCase = ReadPostUseCase(provider: provider)
-        let readViewModel = ReadViewModel(useCase: readuseCase, postId: postId)
-        let readViewController = ReadViewController(viewModel: readViewModel)
-
-        navigationController?.pushViewController(readViewController, animated: true)
-    }
-    
-    private func updatePostLike(_ likePostReponse: LikePostResponse) {
-        guard let post = viewModel.posts.first(where: { $0.postId == likePostReponse.postId }) else { return }
-        guard let index = viewModel.posts.firstIndex(where: { $0.postId == post.postId }) else { return }
-        viewModel.posts[index].liked = likePostReponse.liked
-        viewModel.posts[index].likeNum = likePostReponse.likeNum
-        homeCollectionView.reloadData()
+        postCollectionView.viewModel.posts = result
+        postCollectionView.reloadData()
     }
     
 }

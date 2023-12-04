@@ -6,15 +6,20 @@
 //
 
 import Combine
+import MacroNetwork
 import UIKit
 
-final class PostProfileView<T: PostCollectionViewProtocol>: UIView {
+final class PostProfileView: UIView {
     
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
-    var viewModel: T?
+    var viewModel: PostCollectionViewModel?
     var indexPath: IndexPath?
+    private let provider = APIProvider(session: URLSession.shared)
+    private let inputSubject: PassthroughSubject<PostCollectionViewModel.Input, Never> = .init()
+    weak var delegate: PostCollectionViewDelegate?
     var postId: Int?
+    
     // MARK: - UI Components
     
     private let viewCountLabel: UILabel = {
@@ -61,37 +66,43 @@ final class PostProfileView<T: PostCollectionViewProtocol>: UIView {
         return imageView
     }()
     
-    // MARK: - Initialization
+    // MARK: - Init
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setLayout()
     }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - Handle Gesture
     
     @objc private func profileImageTap(_ sender: UITapGestureRecognizer) {
-        if let indexPath = indexPath {
-            guard let email = viewModel?.posts[indexPath.row].writer.email else { return }
-            viewModel?.navigateToProfileView(email: email)
-
-        }
+        guard let indexPath = indexPath else { return }
+        guard let viewModel = viewModel else { return }
+        let email = viewModel.posts[indexPath.row].writer.email
+        viewModel.navigateToProfileView(email: email)
         
+        let userInfoViewModel = UserInfoViewModel(postSearcher: viewModel.postSearcher,
+                                                  followFeature: viewModel.followFeatrue,
+                                                  patcher: Patcher(provider: provider))
+        let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: email)
+        delegate?.didTapProfile(viewController: userInfoViewController)
     }
     
     @objc private func likeImageViewTap(_ sender: UITapGestureRecognizer) {
+        guard let _ = viewModel else { return }
         guard let postId: Int = self.postId else { return }
-        viewModel?.touchLike(postId: postId)
+        inputSubject.send(.touchLike(postId))
     }
     
 }
 
 // MARK: - UI Settings
 
-private extension PostProfileView {
+extension PostProfileView {
     
     func setTranslatesAutoresizingMaskIntoConstraints() {
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -141,6 +152,13 @@ private extension PostProfileView {
         ])
     }
     
+    func setLayout() {
+        setTranslatesAutoresizingMaskIntoConstraints()
+        addSubviews()
+        setLayoutConstraints()
+        addTapGesture()
+    }
+    
     func addTapGesture() {
         profileImageView.isUserInteractionEnabled = true
         let profileImageViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(profileImageTap(_:)))
@@ -153,27 +171,31 @@ private extension PostProfileView {
     
 }
 
-// MARK: - Bind
-
 extension PostProfileView {
-    func bind(viewModel: T) {
-        self.viewModel = viewModel
+    func bind() {
+        guard let viewModel = self.viewModel, let postId = self.postId else { return }
+                
+        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+        
+        outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
+            switch output {
+            case .updatePostLike(let likePostResponse) where likePostResponse.postId == postId:
+                                self?.likeCountLabel.text = "\(likePostResponse.likeNum)"
+            case .updatePostView(let updatedPostId, let updatedViewNum) where updatedPostId == postId:
+                           self?.viewCountLabel.text = "\(updatedViewNum)"
+            default: break
+            }
+        }.store(in: &cancellables)
     }
 }
 
 // MARK: - Method
 
 extension PostProfileView {
-    
-    func setLayout() {
-        setTranslatesAutoresizingMaskIntoConstraints()
-        addSubviews()
-        setLayoutConstraints()
-        addTapGesture()
-    }
-    
-    func configure(item: PostFindResponse) {
-        viewModel?.loadImage(profileImageStringURL: item.writer.imageUrl ?? "https://user-images.githubusercontent.com/118811606/285184604-1e5983fd-0b07-4bfe-9c17-8b147f237517.png") { profileImage in
+    func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?) {
+        self.viewModel = viewModel
+        guard let viewModel = self.viewModel else { return }
+        viewModel.loadImage(profileImageStringURL: item.writer.imageUrl ?? "https://user-images.githubusercontent.com/118811606/285184604-1e5983fd-0b07-4bfe-9c17-8b147f237517.png") { profileImage in
             DispatchQueue.main.async { [self] in
                 if let image = profileImage {
                     profileImageView.image = image

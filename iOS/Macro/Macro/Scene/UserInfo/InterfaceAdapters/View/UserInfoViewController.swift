@@ -7,18 +7,28 @@
 
 import Combine
 import UIKit
+import MacroNetwork
 
-final class UserInfoViewController: UIViewController {
+final class UserInfoViewController: TouchableViewController {
     
     // MARK: - Properties
     
     private let viewModel: UserInfoViewModel
+    let postCollectionViewModel = PostCollectionViewModel(posts: [], followFeature: FollowFeature(provider: APIProvider(session: URLSession.shared)), patcher: Patcher(provider: APIProvider(session: URLSession.shared)), postSearcher: Searcher(provider: APIProvider(session: URLSession.shared)))
     private let inputSubject: PassthroughSubject<UserInfoViewModel.Input, Never> = .init()
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
-    lazy var homeCollectionView: PostCollectionView = PostCollectionView(frame: .zero, viewModel: viewModel)
     lazy var userInfoHeaderView: UserInfoHeaderView = UserInfoHeaderView(frame: .zero, inputSubject: inputSubject)
+    
+    // MARK: - UI Components
+    
+    private let homeHeaderView: HomeHeaderView = HomeHeaderView()
+    
+    lazy var postCollectionView: PostCollectionView = {
+        let collectionView = PostCollectionView(frame: .zero, viewModel: postCollectionViewModel)
+        return collectionView
+    }()
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -27,13 +37,14 @@ final class UserInfoViewController: UIViewController {
         inputSubject.send(.searchUserProfile(email: viewModel.searchUserEmail))
         setUpLayout()
         super.viewDidLoad()
+        postCollectionView.postDelegate = self
     }
     
     // MARK: - Init
     
     init(viewModel: UserInfoViewModel, userInfo: String) {
         self.viewModel = viewModel
-        viewModel.searchUserEmail = userInfo 
+        viewModel.searchUserEmail = userInfo
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -48,12 +59,12 @@ private extension UserInfoViewController {
     
     private func setTranslatesAutoresizingMaskIntoConstraints() {
         userInfoHeaderView.translatesAutoresizingMaskIntoConstraints = false
-        homeCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        postCollectionView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func addSubviews() {
         self.view.addSubview(userInfoHeaderView)
-        self.view.addSubview(homeCollectionView)
+        self.view.addSubview(postCollectionView)
     }
     
     private func setLayoutConstraints() {
@@ -63,13 +74,13 @@ private extension UserInfoViewController {
             userInfoHeaderView.widthAnchor.constraint(equalToConstant: UIScreen.width - 40),
             userInfoHeaderView.heightAnchor.constraint(equalToConstant: 217),
             
-            homeCollectionView.topAnchor.constraint(equalTo: userInfoHeaderView.bottomAnchor, constant: 20),
-            homeCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            homeCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            homeCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            postCollectionView.topAnchor.constraint(equalTo: userInfoHeaderView.bottomAnchor, constant: 20),
+            postCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            postCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            postCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
     }
-
+    
     private func setUpLayout() {
         setTranslatesAutoresizingMaskIntoConstraints()
         addSubviews()
@@ -112,7 +123,7 @@ private extension UserInfoViewController {
     }
     
     private func updateUserPost(_ result: [PostFindResponse]) {
-        homeCollectionView.viewModel.posts = result
-        homeCollectionView.reloadData()
+        postCollectionView.viewModel.posts = result
+        postCollectionView.reloadData()
     }
 }

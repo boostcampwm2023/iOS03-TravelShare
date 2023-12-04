@@ -105,28 +105,3 @@ extension UserInfoViewModel {
         }.store(in: &cancellables)
     }
 }
-
-// MARK: - PostCollectionView Delegate
-extension UserInfoViewModel: PostCollectionViewProtocol {
-    func touchFollow(email: String) {
-        patcher.patchFollow(email: email).sink { _ in
-        } receiveValue: { [weak self] followPatchResponse in
-            self?.outputSubject.send(.updateUserFollow(followPatchResponse))
-        }
-    }
-    
-    func navigateToProfileView(email: String) {
-        self.outputSubject.send(.navigateToProfileView(email))
-    }
-    
-    func navigateToReadView(postId: Int) {
-        self.outputSubject.send(.navigateToReadView(postId))
-    }
-    
-    func touchLike(postId: Int) {
-        patcher.patchPostLike(postId: postId).sink { _ in
-        } receiveValue: { [weak self] likePostResponse in
-            self?.outputSubject.send(.updatePostLike(likePostResponse))
-        }.store(in: &cancellables)
-    }
-}

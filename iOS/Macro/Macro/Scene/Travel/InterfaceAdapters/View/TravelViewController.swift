@@ -335,8 +335,7 @@ extension TravelViewController {
     }
     
     private func showLocationInfo(_ locationDetail: LocationDetail) {
-        let locationInfoVC = LocationInfoViewController()
-        locationInfoVC.updateText(locationDetail)
+        let locationInfoVC = LocationInfoViewController(viewModel: LocationInfoViewModel(locationDetail: locationDetail))
         navigationController?.pushViewController(locationInfoVC, animated: true)
     }
     private func handleMarkerTap(_ marker: NMFMarker) {

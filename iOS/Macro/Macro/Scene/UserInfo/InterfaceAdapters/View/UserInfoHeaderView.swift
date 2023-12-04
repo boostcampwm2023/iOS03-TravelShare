@@ -35,7 +35,7 @@ final class UserInfoHeaderView: UIView {
         return button
     }()
     
-    // MARK: - Initi
+    // MARK: - Init
     
     init(frame: CGRect, inputSubject: PassthroughSubject<UserInfoViewModel.Input, Never> = .init()) {
         self.inputSubject = inputSubject

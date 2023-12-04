@@ -6,21 +6,26 @@
 //
 
 import Combine
+import MacroNetwork
 import UIKit
 
-final class SearchViewController: TabViewController {
-    
+final class SearchViewController: TouchableViewController {
+
     // MARK: - Properties
     
     let viewModel: SearchViewModel
     private var cancellables = Set<AnyCancellable>()
     private let inputSubject: PassthroughSubject<SearchViewModel.Input, Never> = .init()
+    let postCollectionViewModel = PostCollectionViewModel(posts: [], followFeature: FollowFeature(provider: APIProvider(session: URLSession.shared)), patcher: Patcher(provider: APIProvider(session: URLSession.shared)), postSearcher: Searcher(provider: APIProvider(session: URLSession.shared)))
     
     // MARK: - UI Components
     
     private let searchBar: UITextField = CommonUIComponents.createSearchBar()
     
-    lazy var postCollectionView: PostCollectionView = PostCollectionView(frame: .zero, viewModel: viewModel)
+    lazy var postCollectionView: PostCollectionView = {
+        let collectionView = PostCollectionView(frame: .zero, viewModel: postCollectionViewModel)
+        return collectionView
+    }()
     
     private let searchSegment: UISegmentedControl = {
         let segmentItems = ["계정", "글"]
@@ -49,13 +54,14 @@ final class SearchViewController: TabViewController {
         }
         return segmentControl
     }()
-
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpLayout()
         bind()
+        postCollectionView.postDelegate = self
         searchSegment.addTarget(self, action: #selector(segmentValueChanged(_:)), for: .valueChanged)
         searchBar.addTarget(self, action: #selector(searchBarReturnPressed), for: .editingDidEndOnExit)
     }
@@ -153,19 +159,19 @@ extension SearchViewController {
         postCollectionView.reloadData()
     }
     func navigateToProfileView(_ userId: String) {
-//        let userInfoViewModel = UserInfoViewModel(postSearcher: viewModel.postSearcher, followFeature: viewModel.followFeatrue)
-//        let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: userId)
-//
-//        navigationController?.pushViewController(userInfoViewController, animated: true)
+        //        let userInfoViewModel = UserInfoViewModel(postSearcher: viewModel.postSearcher, followFeature: viewModel.followFeatrue)
+        //        let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: userId)
+        //
+        //        navigationController?.pushViewController(userInfoViewController, animated: true)
     }
     
     func navigateToReadView(_ postId: Int) {
-//        let provider = APIProvider(session: URLSession.shared)
-//        let readuseCase = ReadPostUseCase(provider: provider)
-//        let readViewModel = ReadViewModel(useCase: readuseCase, postId: postId)
-//        let readViewController = ReadViewController(viewModel: readViewModel)
-//
-//        navigationController?.pushViewController(readViewController, animated: true)
+        //        let provider = APIProvider(session: URLSession.shared)
+        //        let readuseCase = ReadPostUseCase(provider: provider)
+        //        let readViewModel = ReadViewModel(useCase: readuseCase, postId: postId)
+        //        let readViewController = ReadViewController(viewModel: readViewModel)
+        //
+        //        navigationController?.pushViewController(readViewController, animated: true)
     }
     
     func updatePostLike(_ likePostResponse: LikePostResponse) {
@@ -175,6 +181,7 @@ extension SearchViewController {
     func updateUserFollow(_ followPatchResponse: FollowPatchResponse) {
         
     }
+    
 }
 
 // MARK: - LayoutMetrics
