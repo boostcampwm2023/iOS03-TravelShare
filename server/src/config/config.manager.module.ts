@@ -17,6 +17,7 @@ export class ConfigManagerModule {
   static registerAs<T extends Record<string, any>>({
     schema,
     path,
+    plain = true,
   }: ConfigManagerRegisterOptions<T>): DynamicModule {
     return {
       module: ConfigManagerModule,
@@ -27,7 +28,7 @@ export class ConfigManagerModule {
           useFactory: async (configService: ConfigService) => {
             const config = plainToInstance(schema, configService.get(path));
             await validateOrReject(config, { whitelist: true });
-            return instanceToPlain(config);
+            return plain ? instanceToPlain(config) : config;
           },
         },
       ],
