@@ -9,7 +9,7 @@ import Combine
 import MacroNetwork
 import UIKit
 
-final class HomeViewController: UIViewController, PostCollectionViewDelegate {
+final class HomeViewController: TouchableViewController {
 
     // MARK: - Properties
     
@@ -144,10 +144,6 @@ extension HomeViewController {
         postCollectionView.reloadData()
     }
     
-    func didTapContent(viewController: ReadViewController) {
-        print(123)
-        navigationController?.pushViewController(viewController, animated: true)
-    }
 }
 
 // MARK: - LayoutMetrics

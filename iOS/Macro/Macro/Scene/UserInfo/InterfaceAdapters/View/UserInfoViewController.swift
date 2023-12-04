@@ -9,7 +9,7 @@ import Combine
 import UIKit
 import MacroNetwork
 
-final class UserInfoViewController: UIViewController {
+final class UserInfoViewController: TouchableViewController {
     
     // MARK: - Properties
     
@@ -37,6 +37,7 @@ final class UserInfoViewController: UIViewController {
         inputSubject.send(.searchUserProfile(email: viewModel.searchUserEmail))
         setUpLayout()
         super.viewDidLoad()
+        postCollectionView.postDelegate = self
     }
     
     // MARK: - Init

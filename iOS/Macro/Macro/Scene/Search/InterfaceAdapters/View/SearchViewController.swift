@@ -9,8 +9,8 @@ import Combine
 import MacroNetwork
 import UIKit
 
-final class SearchViewController: TabViewController {
-    
+final class SearchViewController: TouchableViewController {
+
     // MARK: - Properties
     
     let viewModel: SearchViewModel
@@ -61,6 +61,7 @@ final class SearchViewController: TabViewController {
         super.viewDidLoad()
         setUpLayout()
         bind()
+        postCollectionView.postDelegate = self
         searchSegment.addTarget(self, action: #selector(segmentValueChanged(_:)), for: .valueChanged)
         searchBar.addTarget(self, action: #selector(searchBarReturnPressed), for: .editingDidEndOnExit)
     }
@@ -180,6 +181,7 @@ extension SearchViewController {
     func updateUserFollow(_ followPatchResponse: FollowPatchResponse) {
         
     }
+    
 }
 
 // MARK: - LayoutMetrics

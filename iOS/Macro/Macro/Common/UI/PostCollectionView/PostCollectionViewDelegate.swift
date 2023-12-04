@@ -6,7 +6,18 @@
 //
 
 import Foundation
+import UIKit
 
 protocol PostCollectionViewDelegate: AnyObject {
     func didTapContent(viewController: ReadViewController)
 }
+
+class TouchableViewController: UIViewController { }
+
+extension TouchableViewController: PostCollectionViewDelegate {
+    func didTapContent(viewController: ReadViewController) {
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+}
+
+
