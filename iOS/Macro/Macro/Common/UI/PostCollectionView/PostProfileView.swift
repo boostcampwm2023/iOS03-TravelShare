@@ -93,7 +93,7 @@ final class PostProfileView: UIView {
     }
     
     @objc private func likeImageViewTap(_ sender: UITapGestureRecognizer) {
-        guard let viewModel = viewModel else { return }
+        guard let _ = viewModel else { return }
         guard let postId: Int = self.postId else { return }
         inputSubject.send(.touchLike(postId))
     }

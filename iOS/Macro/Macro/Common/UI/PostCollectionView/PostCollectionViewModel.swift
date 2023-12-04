@@ -66,11 +66,7 @@ extension PostCollectionViewModel {
             outputSubject.send(.updatePostView(postId, posts[index].viewNum))
         }
     }
-    
-    func navigateToReadView(postId: Int) {
-        self.outputSubject.send(.navigateToReadView(postId))
-    }
-    
+
     func navigateToProfileView(email: String) {
         self.outputSubject.send(.navigateToProfileView(email))
     }
@@ -80,13 +76,6 @@ extension PostCollectionViewModel {
         } receiveValue: { [weak self] likePostResponse in
             self?.outputSubject.send(.updatePostLike(likePostResponse))
         }.store(in: &cancellables)
-    }
-    
-    func touchFollow(email: String) {
-        patcher.patchFollow(email: email).sink { _ in
-        } receiveValue: { [weak self] followPatchResponse in
-            self?.outputSubject.send(.updateUserFollow(followPatchResponse))
-        }
     }
     
     func loadImage(profileImageStringURL: String, completion: @escaping (UIImage?) -> Void) {

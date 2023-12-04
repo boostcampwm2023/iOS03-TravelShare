@@ -69,9 +69,7 @@ final class LocationInfoViewController: UIViewController {
         return label
     }()
     
-    
     // MARK: - UI Components
-    
     
     lazy var postCollectionView: PostCollectionView = {
         let collectionView = PostCollectionView(frame: .zero, viewModel: postCollectionViewModel)

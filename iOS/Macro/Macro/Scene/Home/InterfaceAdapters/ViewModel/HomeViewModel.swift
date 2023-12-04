@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-final class HomeViewModel: ViewModelProtocol{
+final class HomeViewModel: ViewModelProtocol {
     
     // MARK: - Input
     
