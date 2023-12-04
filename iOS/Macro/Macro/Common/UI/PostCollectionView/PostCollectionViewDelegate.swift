@@ -22,6 +22,9 @@ extension TouchableViewController: PostCollectionViewDelegate {
     }
     
     func didTapProfile(viewController: UserInfoViewController) {
+        if navigationController?.viewControllers.contains(where: { $0 is UserInfoViewController }) == true {
+            return
+        }
         navigationController?.pushViewController(viewController, animated: true)
     }
 }
