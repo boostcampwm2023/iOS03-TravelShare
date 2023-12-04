@@ -10,7 +10,7 @@ import MacroDesignSystem
 import MacroNetwork
 import UIKit
 
-final class LocationInfoViewController: UIViewController {
+final class LocationInfoViewController: TouchableViewController {
     
     // MARK: - Properties
     
@@ -95,6 +95,7 @@ final class LocationInfoViewController: UIViewController {
         bind()
         inputSubject.send(.viewDidLoad)
         segmentControl.addTarget(self, action: #selector(segmentValueChanged(_:)), for: .valueChanged)
+        postCollectionView.postDelegate = self
     }
     
     // MARK: - Init
@@ -175,6 +176,8 @@ extension LocationInfoViewController {
             switch output {
             case let .changeTextLabel(locationDetail):
                 self?.changeTextLabel(locationDetail)
+            case let .sendRelatedPost(posts):
+                self?.updateRelatedPost(posts)
             default: break
             }
         }.store(in: &cancellables)
@@ -184,6 +187,11 @@ extension LocationInfoViewController {
 // MARK: - Methods
 
 extension LocationInfoViewController {
+    
+    private func updateRelatedPost(_ posts: [PostFindResponse]) {
+        postCollectionView.viewModel.posts = posts
+        postCollectionView.reloadData()
+    }
     
     private func changeTextLabel(_ detail: LocationDetail?) {
         guard let locationDetail = detail else { return }

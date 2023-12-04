@@ -28,7 +28,7 @@ final class LocationInfoViewModel: ViewModelProtocol {
     
     enum Output {
         case changeTextLabel(LocationDetail?)
-        case sendRelatedPost
+        case sendRelatedPost([PostFindResponse])
         case sendRelatedLocation
     }
     
@@ -69,8 +69,8 @@ extension LocationInfoViewModel {
         placeId = "1234567"
         searcher.searchRelatedPost(query: placeId).sink { _ in
         } receiveValue: { [weak self] response in
-            print(response)
-            self?.outputSubject.send(.sendRelatedPost)
+            self?.posts = response
+            self?.outputSubject.send(.sendRelatedPost(response))
         }.store(in: &cancellables)
     }
     
