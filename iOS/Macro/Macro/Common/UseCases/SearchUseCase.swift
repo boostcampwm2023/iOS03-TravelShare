@@ -16,8 +16,6 @@ protocol SearchUseCase {
     /// 특정 사용자의 게시글들을 전부 불러오는 함수
     func searchPost(query: String) -> AnyPublisher<[PostFindResponse], NetworkError>
     
-  //  func searchAccount(query: String) -> AnyPublisher<[
-    
     /// 특정 검색어가 해당 json 파일 list의 제목에 포함되는지 검색
     func searchMockPost(query: String, json: String) -> AnyPublisher<[PostFindResponse], NetworkError>
     
@@ -35,6 +33,9 @@ protocol SearchUseCase {
 
     /// 특정 제목으로 게시글을 검색
     func searchPostTitle(query: String) -> AnyPublisher<[PostFindResponse], NetworkError>
+    
+    /// 특정 단어로 유저이름을 검색
+    func searchAccountWord(query: String) -> AnyPublisher<[UserProfile], NetworkError>
     
     /// postId를 기준으로, 해당 장소를 다녀간 게시글들을 보여줌
     func searchRelatedPost(query: String) -> AnyPublisher<[PostFindResponse], NetworkError>
@@ -66,7 +67,7 @@ final class Searcher: SearchUseCase {
     }
     
     func searchMockPost(query: String, json: String) -> AnyPublisher<[PostFindResponse], MacroNetwork.NetworkError> {
-        return provider.mockRequest(PostFindEndPoint.search(query), url: json)
+        return provider.mockRequest(PostFindEndPoint.searchPost(query), url: json)
     }
     
     func fetchHitPost() -> AnyPublisher<[PostFindResponse], MacroNetwork.NetworkError> {
@@ -86,7 +87,11 @@ final class Searcher: SearchUseCase {
     }
     
     func searchPostTitle(query: String) -> AnyPublisher<[PostFindResponse], MacroNetwork.NetworkError> {
-        return provider.request(PostFindEndPoint.search(query))
+        return provider.request(PostFindEndPoint.searchPost(query))
+    }
+    
+    func searchAccountWord(query: String) -> AnyPublisher<[UserProfile], MacroNetwork.NetworkError> {
+        return provider.request(PostFindEndPoint.searchAccount(query))
     }
     
     func searchRelatedPost(query: String) -> AnyPublisher<[PostFindResponse], MacroNetwork.NetworkError> {

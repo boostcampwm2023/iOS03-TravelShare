@@ -72,7 +72,14 @@ extension SearchViewModel {
     }
     
     private func searchAccount(text: String) {
-        
+        searcher.searchAccountWord(query: text).sink { completion in
+            if case let .failure(error) = completion {
+                Log.make().error("\(error)")
+            }
+        } receiveValue: { [weak self] response in
+            print(response)
+        }.store(in: &cancellables)
+
     }
     
     private func searchPost(text: String) {
