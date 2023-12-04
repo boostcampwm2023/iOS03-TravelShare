@@ -18,6 +18,7 @@ final class SearchViewModel: ViewModelProtocol {
     private let searcher: SearchUseCase
     private (set) var searchType: SearchType = .post
     private (set) var posts: [PostFindResponse] = []
+    private (set) var userList: [UserProfile] = []
     private let patcher: PatchUseCase
     
     // MARK: - Init
@@ -37,11 +38,8 @@ final class SearchViewModel: ViewModelProtocol {
     // MARK: - Output
     
     enum Output {
-        case updateSearchResult([PostFindResponse])
-        case navigateToProfileView(String)
-        case navigateToReadView(Int)
-        case updatePostLike(LikePostResponse)
-        case updateUserFollow(FollowPatchResponse)
+        case updatePostSearchResult([PostFindResponse])
+        case updateUserSearchResult([UserProfile])
     }
     
 }
@@ -58,7 +56,7 @@ extension SearchViewModel {
                 case let .search(text):
                     guard let self = self else { return }
                     switch self.searchType {
-                    case .account: self.searchAccount(text: text)
+                    case .account: self.searchUser(text: text)
                     case .post: self.searchPost(text: text)
                     }
                 }
@@ -71,13 +69,15 @@ extension SearchViewModel {
         searchType = type
     }
     
-    private func searchAccount(text: String) {
+    private func searchUser(text: String) {
         searcher.searchAccountWord(query: text).sink { completion in
             if case let .failure(error) = completion {
                 Log.make().error("\(error)")
             }
         } receiveValue: { [weak self] response in
-            print(response)
+            self?.userList = response
+            let defaultValue = [UserProfile]()
+            self?.outputSubject.send(.updateUserSearchResult(self?.userList ?? defaultValue))
         }.store(in: &cancellables)
 
     }
@@ -86,12 +86,12 @@ extension SearchViewModel {
         searcher.searchPostTitle(query: text)
             .sink { completion in
                 if case let .failure(error) = completion {
-                    print(error)
+                    Log.make().error("\(error)")
                 }
             } receiveValue: { [weak self] response in
                 self?.posts = response
                 let defaultValue = [PostFindResponse]()
-                self?.outputSubject.send(.updateSearchResult(self?.posts ?? defaultValue))
+                self?.outputSubject.send(.updatePostSearchResult(self?.posts ?? defaultValue))
             }.store(in: &cancellables)
     }
     
@@ -111,7 +111,7 @@ extension SearchViewModel {
                 !post.title.contains(text)
             }
             let defaultValue = [PostFindResponse]()
-            self?.outputSubject.send(.updateSearchResult(self?.posts ?? defaultValue ))
+            self?.outputSubject.send(.updatePostSearchResult(self?.posts ?? defaultValue ))
         }.store(in: &cancellables)
     }
 }

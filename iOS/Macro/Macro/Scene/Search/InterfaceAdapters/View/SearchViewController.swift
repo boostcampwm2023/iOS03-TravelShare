@@ -24,6 +24,12 @@ final class SearchViewController: TouchableViewController {
     
     lazy var postCollectionView: PostCollectionView = {
         let collectionView = PostCollectionView(frame: .zero, viewModel: postCollectionViewModel)
+        collectionView.isHidden = true
+        return collectionView
+    }()
+    
+    lazy var userResultCollectionView: UserResultCollectionView = {
+        let collectionView = UserResultCollectionView(frame: .zero, viewModel: viewModel)
         return collectionView
     }()
     
@@ -85,12 +91,14 @@ extension SearchViewController {
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchSegment.translatesAutoresizingMaskIntoConstraints = false
         postCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        userResultCollectionView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func addsubviews() {
         view.addSubview(searchBar)
         view.addSubview(searchSegment)
         view.addSubview(postCollectionView)
+        view.addSubview(userResultCollectionView)
     }
     
     private func setLayoutConstraints() {
@@ -106,7 +114,11 @@ extension SearchViewController {
             postCollectionView.topAnchor.constraint(equalTo: searchSegment.bottomAnchor, constant: Padding.postCollectionViewTop),
             postCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             postCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            postCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            postCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            userResultCollectionView.topAnchor.constraint(equalTo: searchSegment.bottomAnchor, constant: Padding.postCollectionViewTop),
+            userResultCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            userResultCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            userResultCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
     }
     
@@ -125,16 +137,10 @@ extension SearchViewController {
         
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
             switch output {
-            case let .updateSearchResult(result):
-                self?.updateSearchResult(result)
-            case .navigateToProfileView:
-                break
-            case .navigateToReadView:
-                break
-            case let .updatePostLike(result):
-                self?.updatePostLike(result)
-            case let .updateUserFollow(result):
-                self?.updateUserFollow(result)
+            case let .updatePostSearchResult(result):
+                self?.updatePostSearchResult(result)
+            case let .updateUserSearchResult(result):
+                self?.updateUserSearchResult(result)
             }
         }.store(in: &cancellables)
         
@@ -144,41 +150,33 @@ extension SearchViewController {
 // MARK: - Methods
 extension SearchViewController {
     @objc private func segmentValueChanged(_ sender: UISegmentedControl) {
+        
         let selectedType = sender.selectedSegmentIndex == 0 ? SearchType.account : SearchType.post
+        
+        postCollectionView.isHidden = selectedType != .post
+        userResultCollectionView.isHidden = selectedType != .account
+        
         inputSubject.send(.changeSelectType(selectedType))
     }
     
     @objc private func searchBarReturnPressed() {
         let text = searchBar.text ?? ""
+        switch viewModel.searchType {
+        case .account:
+            postCollectionView.isHidden = true
+        case .post:
+            userResultCollectionView.isHidden = true
+        }
         inputSubject.send(.search(text))
     }
     
-    func updateSearchResult(_ result: [PostFindResponse]) {
+    func updatePostSearchResult(_ result: [PostFindResponse]) {
         postCollectionView.viewModel.posts = result
         postCollectionView.reloadData()
     }
-    func navigateToProfileView(_ userId: String) {
-        //        let userInfoViewModel = UserInfoViewModel(postSearcher: viewModel.postSearcher, followFeature: viewModel.followFeatrue)
-        //        let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: userId)
-        //
-        //        navigationController?.pushViewController(userInfoViewController, animated: true)
-    }
     
-    func navigateToReadView(_ postId: Int) {
-        //        let provider = APIProvider(session: URLSession.shared)
-        //        let readuseCase = ReadPostUseCase(provider: provider)
-        //        let readViewModel = ReadViewModel(useCase: readuseCase, postId: postId)
-        //        let readViewController = ReadViewController(viewModel: readViewModel)
-        //
-        //        navigationController?.pushViewController(readViewController, animated: true)
-    }
-    
-    func updatePostLike(_ likePostResponse: LikePostResponse) {
-        print("updatee")
-    }
-    
-    func updateUserFollow(_ followPatchResponse: FollowPatchResponse) {
-        
+    func updateUserSearchResult(_ result: [UserProfile]) {
+        userResultCollectionView.reloadData()
     }
     
 }
