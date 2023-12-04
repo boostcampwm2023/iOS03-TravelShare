@@ -101,7 +101,7 @@ public extension UIColor {
     
     static func appColor(_ name: ColorAsset.SecondaryColor) -> UIColor {
         switch name {
-        case .statusRed: return UIColor(hexCode: "#FF4250")
+        case .statusRed: return UIColor(hexCode: "#FFA5A5")
         case .statusGreen: return UIColor(hexCode: "#BAFFC9")
         }
     }
