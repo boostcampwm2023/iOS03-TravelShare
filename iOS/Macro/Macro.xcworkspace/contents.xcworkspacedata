@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:/Users/byeonjinha/Desktop/boost/iOS03-Macro/iOS/Macro/Macro/Common/UI/CarouselView/MacroCarouselViewCelladdPictureComponentView.swift">
+   </FileRef>
+   <FileRef
       location = "group:Macro.xcodeproj">
    </FileRef>
    <FileRef
