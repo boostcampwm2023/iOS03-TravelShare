@@ -149,7 +149,7 @@ private extension MacroCarouselView {
             macroCarouselCollectionView.widthAnchor.constraint(equalToConstant: UIScreen.width),
             macroCarouselCollectionView.heightAnchor.constraint(equalToConstant: Const.itemSize.height),
             
-            pageController.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20),
+            pageController.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             pageController.centerXAnchor.constraint(equalTo: macroCarouselCollectionView.centerXAnchor)
         ])
     }

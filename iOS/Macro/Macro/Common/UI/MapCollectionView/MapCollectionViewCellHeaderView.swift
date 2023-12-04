@@ -121,17 +121,15 @@ extension MapCollectionViewCellHeaderView {
     
     func configure(item: TravelInfo) {
         self.uuid = item.id
-        guard let recordedPindedInfo = item.recordedPindedInfo else { return }
+        guard let recordedPindedInfo = item.recordedPinnedLocations else { return }
         var locationNameArray: [String] = []
         if recordedPindedInfo.isEmpty {
             self.travelListLabel.text = "-"
             return
         }
         
-        for pin in recordedPindedInfo {
-            if let locationName = pin.keys.first {
-                locationNameArray.append(locationName)
-            }
+        for pinInfo in recordedPindedInfo {
+            locationNameArray.append(pinInfo.placeName ?? "")
         }
         
         self.travelListLabel.text = locationNameArray.joined(separator: " > ")
