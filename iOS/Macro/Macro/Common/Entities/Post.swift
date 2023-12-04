@@ -13,7 +13,7 @@ struct Post: Codable {
     let pins: [Pin]
     let contents: [Content]
     let postPublic: Bool
-    let startAt, endAt: String
+    let startAt, endAt: Date
 
     enum CodingKeys: String, CodingKey {
         case title, summary, route, contents, pins, startAt, endAt

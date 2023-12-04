@@ -15,11 +15,11 @@ final class ReadViewController: UIViewController {
     // MARK: - Properties
     
     private let viewModel: ReadViewModel
-    private let const = MacroCarouselView.Const(itemSize: CGSize(width: UIScreen.width, height: 340), itemSpacing: 24.0)
     private var readPost: ReadPost?
     private var cancellables = Set<AnyCancellable>()
     private let didScrollSubject: PassthroughSubject<Int, Never> = .init()
     private let inputSubject: PassthroughSubject<ReadViewModel.Input, Never> = .init()
+    private var routeOverlay: NMFPath?
     
     // MARK: - UI Components
     
@@ -46,18 +46,10 @@ final class ReadViewController: UIViewController {
         return label
     }()
     
-    // TODO: - 이미지 없을 시 처리 할 것
-    private lazy var carouselView: MacroCarouselView = {
-        let view = MacroCarouselView(const: const, didScrollOutputSubject: didScrollSubject)
-        return view
-    }()
-    
-    private var imageDescriptionLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.appFont(.baeEunBody)
-        label.textAlignment = .center
-        return label
-    }()
+    private lazy var carouselView: MacroCarouselView = MacroCarouselView(
+        didScrollOutputSubject: didScrollSubject,
+        inputSubject: inputSubject,
+        viewModel: viewModel)
     
     private let likeButton: UIButton = {
         let button = UIButton()
@@ -136,7 +128,6 @@ private extension ReadViewController {
         postProfile.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         carouselView.translatesAutoresizingMaskIntoConstraints = false
-        imageDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         likeButton.translatesAutoresizingMaskIntoConstraints = false
         viewButton.translatesAutoresizingMaskIntoConstraints = false
         messageButton.translatesAutoresizingMaskIntoConstraints = false
@@ -150,7 +141,6 @@ private extension ReadViewController {
             postProfile,
             titleLabel,
             carouselView,
-            imageDescriptionLabel,
             likeButton,
             viewButton,
             messageButton,
@@ -175,37 +165,31 @@ private extension ReadViewController {
             titleLabel.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor),
             
             carouselView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
-            carouselView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor),
-            carouselView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor),
-            carouselView.heightAnchor.constraint(equalToConstant: const.itemSize.height),
+            carouselView.heightAnchor.constraint(equalToConstant: 400),
+            carouselView.widthAnchor.constraint(equalToConstant: UIScreen.width),
             
-            imageDescriptionLabel.topAnchor.constraint(equalTo: carouselView.bottomAnchor, constant: 30),
-            imageDescriptionLabel.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor),
-            imageDescriptionLabel.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor),
-            imageDescriptionLabel.heightAnchor.constraint(equalToConstant: 30),
-            
-            likeButton.topAnchor.constraint(equalTo: imageDescriptionLabel.bottomAnchor, constant: 40),
+            likeButton.topAnchor.constraint(equalTo: carouselView.bottomAnchor, constant: 40),
             likeButton.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 10),
             
-            viewButton.topAnchor.constraint(equalTo: imageDescriptionLabel.bottomAnchor, constant: 40),
+            viewButton.topAnchor.constraint(equalTo: carouselView.bottomAnchor, constant: 40),
             viewButton.leadingAnchor.constraint(equalTo: likeButton.trailingAnchor, constant: 10),
             
-            messageButton.topAnchor.constraint(equalTo: imageDescriptionLabel.bottomAnchor, constant: 40),
+            messageButton.topAnchor.constraint(equalTo: carouselView.bottomAnchor, constant: 40),
             messageButton.leadingAnchor.constraint(equalTo: viewButton.trailingAnchor, constant: 10),
+            
+            scrollContentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            scrollContentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            scrollContentView.widthAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.widthAnchor),
+            scrollContentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             
             mapView.topAnchor.constraint(equalTo: likeButton.bottomAnchor, constant: 10),
             mapView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 24),
             mapView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -24),
             mapView.heightAnchor.constraint(equalToConstant: UIScreen.width - 48),
-            mapView.bottomAnchor.constraint(equalTo: scrollContentView.bottomAnchor, constant: -50),
-            
-            scrollContentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            scrollContentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            scrollContentView.widthAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.widthAnchor),
-            scrollContentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
+            mapView.bottomAnchor.constraint(equalTo: scrollContentView.bottomAnchor, constant: -50)
         ])
     }
-
+    
     func setLayout() {
         setTranslatesAutoresizingMaskIntoConstraints()
         addSubviews()
@@ -228,6 +212,8 @@ private extension ReadViewController {
                     self?.updatePost(post)
                 case let .navigateToProfileView(userID):
                     self?.navigateToProfileView(userID)
+                case let .updatePageIndex(index):
+                    self?.updatePageIndex(index)
                 }
             }
             .store(in: &cancellables)
@@ -235,7 +221,7 @@ private extension ReadViewController {
         didScrollSubject
             .receive(on: RunLoop.main)
             .sink { [weak self] index in
-                self?.imageDescriptionLabel.text = self?.readPost?.contents[index].description
+                self?.carouselView.descriptionLabel.text = self?.readPost?.contents[index].description
             }
             .store(in: &cancellables)
     }
@@ -244,13 +230,19 @@ private extension ReadViewController {
 // MARK: - Methods
 
 private extension ReadViewController {
+    
+    func updatePageIndex(_ index: Int) {
+        self.carouselView.pageController.currentPage = viewModel.pageIndex
+        self.didScrollSubject.send(viewModel.pageIndex)
+    }
+    
     func navigateToProfileView(_ userId: String) {
         let provider = APIProvider(session: URLSession.shared)
         let searchUseCase = Searcher(provider: provider)
         let followFeature = FollowFeature(provider: provider)
         let userInfoViewModel = UserInfoViewModel(postSearcher: searchUseCase, followFeature: followFeature, patcher: Patcher(provider: provider))
         let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: userId)
-
+        
         navigationController?.pushViewController(userInfoViewController, animated: true)
     }
     
@@ -262,14 +254,21 @@ private extension ReadViewController {
         viewButton.setTitle("\(readPost.viewNum)", for: .normal)
         
         postProfile.updateProfil(readPost.writer)
-
+        
         titleLabel.text = readPost.title
-        imageDescriptionLabel.text = readPost.contents.first?.description
+        
+        carouselView.descriptionLabel.text = readPost.contents.first?.description
         
         let imageURLs = readPost.contents.compactMap { $0.imageURL }
         downloadImages(imageURLs: imageURLs) { [weak self] images in
             self?.carouselView.updateData(images)
         }
+        
+        calculateCenterLocation(routePoints: readPost.route.coordinates)
+        updateMapWithLocation(routePoints: readPost.route.coordinates )
+        
+        // TODO: - 핀 로직 수정 후 작업
+//        updateMark(recordedPindedInfo: readPost.)
     }
     
     func downloadImages(imageURLs: [String], completion: @escaping ([UIImage]) -> Void) {
@@ -299,9 +298,71 @@ private extension ReadViewController {
         }
     }
     
+    func calculateCenterLocation(routePoints: [Coordinate]) {
+        var maxLatitude = -90.0
+        var minLatitude = 90.0
+        var maxLongitude = -180.0
+        var minLongitude = 180.0
+        
+        for point in routePoints {
+            let latitude = point.xPosition
+            let longitude = point.yPosition
+            
+            if latitude > maxLatitude {
+                maxLatitude = latitude
+            }
+            if latitude < minLatitude {
+                minLatitude = latitude
+            }
+            if longitude > maxLongitude {
+                maxLongitude = longitude
+            }
+            if longitude < minLongitude {
+                minLongitude = longitude
+            }
+        }
+        
+        let centerLatitude = (maxLatitude + minLatitude) / 2.0
+        let centerLongitude = (maxLongitude + minLongitude) / 2.0
+        
+        let centerLocation = NMGLatLng(lat: centerLatitude, lng: centerLongitude)
+        let distanceLatitude = abs(maxLatitude - minLatitude)
+        let distanceLongitude = abs(maxLongitude - minLongitude)
+        
+        let zoomLevelLatitude = log2(90 / distanceLatitude)
+        let zoomLevelLongitude = log2(90 / distanceLongitude)
+        let zoomLevel = min(zoomLevelLatitude, zoomLevelLongitude)
+        mapView.zoomLevel = zoomLevel
+       
+        let cameraUpdate = NMFCameraUpdate(scrollTo: centerLocation )
+        mapView.moveCamera(cameraUpdate)
+    }
+    
+    /// 이동 경로를 입력받아 지도에 그립니다.
+    /// - Parameters:
+    ///   - routePoints: 위도, 경도 배열 입니다.
+    func updateMapWithLocation(routePoints: [Coordinate]) {
+        routeOverlay?.mapView = nil
+        let coords = routePoints.map { NMGLatLng(lat: $0.xPosition, lng: $0.yPosition) }
+        routeOverlay = NMFPath(points: coords)
+        routeOverlay?.color = UIColor.appColor(.purple1)
+        routeOverlay?.mapView = mapView
+    }
+    
+    // TODO: - 위경도 좌표가 바뀌어 있어요. 다음 스프린트 때, 코어데이터 테이블 추가하면서 수정하도록하겠습니다. :)
+    /// Pin이 저장된 곳에  Mark를 찍습니다.
+    /// - Parameters:
+    ///   - recordedPindedInfo: Pin의 위도, 경도 배열 입니다.
+    func updateMark(recordedPindedInfo: [[String: [Double]]]) {
+        for (index, place) in recordedPindedInfo.enumerated() {
+            let marker = NMFMarker()
+            guard let name = place.keys.first, let location = place.values.first else { return }
+            marker.position = NMGLatLng(lat: location[1], lng: location[0])
+            marker.captionText = "\(index + 1). \(name)"
+            marker.mapView = mapView
+        }
+    }
 }
-
-// TODO: - 정리
 
 // MARK: - LayoutMetrics
 private extension ReadViewController {
@@ -313,7 +374,7 @@ private extension ReadViewController {
         static let likeImageViewWidth: CGFloat = 16
         static let likeImageViewHieght: CGFloat = 16
     }
-
+    
     enum Padding {
         static let profileImageViewLeading: CGFloat = 10
         static let userNameLabelLeading: CGFloat = 10

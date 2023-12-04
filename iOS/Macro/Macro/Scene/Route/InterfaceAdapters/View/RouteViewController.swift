@@ -91,8 +91,8 @@ extension RouteViewController {
             switch output {
             case let .deleteTravel(uuid):
                 self?.deleteTravel(uuid: uuid)
-            case let .navigateToWriteView(travelInfo):
-                self?.navigateToWriteView(travelInfo: travelInfo)
+            case let .navigateToWriteView(viewModel):
+                self?.navigateToWriteView(viewModel: viewModel)
             }
         }.store(in: &cancellables)
     }
@@ -118,7 +118,8 @@ private extension RouteViewController {
         fetchLocalTravels()
     }
     
-    func navigateToWriteView(travelInfo: TravelInfo) {
-        navigationController?.pushViewController(self.viewModel.writeViewController, animated: true)
+    func navigateToWriteView(viewModel: WriteViewModel) {
+        let writeViewController = WriteViewController(viewModel: viewModel)
+        navigationController?.pushViewController(writeViewController, animated: true)
     }
 }

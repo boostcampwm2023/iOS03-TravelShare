@@ -88,15 +88,16 @@ extension ReadProfileView {
     
     func updateProfil(_ writer: Writer) {
         DispatchQueue.main.async { [weak self] in
+            guard let width = self?.profileImageView.frame.width else { return }
+            self?.profileImageView.layer.cornerRadius = width / 2
             self?.profilImageUpdate(profileImageStringURL: writer.imageUrl ?? "") { profileImage in
+                
                 if let image = profileImage {
                     self?.profileImageView.image = image
                 } else {
                     let defaultImage = UIImage.appImage(.ProfileDefaultImage)
                     self?.profileImageView.image = defaultImage
                 }
-                guard let width = self?.profileImageView.frame.width else { return }
-                self?.profileImageView.layer.cornerRadius = width / 2
             }
             self?.userNameLabel.text = writer.name
         }
