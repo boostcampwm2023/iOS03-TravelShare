@@ -42,9 +42,6 @@ export class Post {
   @Column({ name: 'view_num', default: 0 })
   viewNum: number;
 
-  @Column({ name: 'like_num', default: 0 })
-  likeNum: number;
-
   @Column({ nullable: true })
   summary: string;
 
@@ -97,4 +94,8 @@ export class Post {
     inverseJoinColumn: { name: 'place_id', referencedColumnName: 'placeId' },
   })
   pins: Place[];
+
+  @Column({ default: 0 })
+  @Index()
+  score: number;
 }

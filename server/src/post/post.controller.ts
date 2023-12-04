@@ -58,6 +58,14 @@ export class PostController {
     return await this.postService.popularList(query, user);
   }
 
+  @Get('hits/v2')
+  async hitsV2(
+    @Query() query: PostHitsQuery,
+    @AuthenticatedUser() user: Authentication,
+  ) {
+    return await this.postService.hits(query, user);
+  }
+
   @ApiOperation({
     summary: '게시글을 검색하는 API입니다.',
     description: `
@@ -78,6 +86,9 @@ export class PostController {
     @Query() query: PostSearchQuery,
     @AuthenticatedUser() user: Authentication,
   ) {
+    if ('title' in query) {
+      this.autoCompleteService.insert(query.title);
+    }
     return await this.postService.search(query, user);
   }
 
