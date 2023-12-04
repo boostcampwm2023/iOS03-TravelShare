@@ -6,8 +6,6 @@
 //
 
 import Foundation
-
-import Foundation
 import UIKit
 
 final class UserResultCollectionView: UICollectionView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -43,6 +41,6 @@ final class UserResultCollectionView: UICollectionView, UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: UIScreen.width - 20, height: 30)
+        return CGSize(width: UIScreen.width - 20, height: 40)
     }
 }

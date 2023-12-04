@@ -16,7 +16,7 @@ final class SearchViewModel: ViewModelProtocol {
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
     private let searcher: SearchUseCase
-    private (set) var searchType: SearchType = .post
+    private (set) var searchType: SearchType = .account
     private (set) var posts: [PostFindResponse] = []
     private (set) var userList: [UserProfile] = []
     private let patcher: PatchUseCase

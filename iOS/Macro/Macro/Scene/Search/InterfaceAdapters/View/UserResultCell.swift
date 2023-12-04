@@ -19,9 +19,11 @@ final class UserResultCell: UICollectionViewCell {
     
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        return imageView
+           imageView.contentMode = .scaleAspectFill
+           imageView.clipsToBounds = true
+           imageView.layer.cornerRadius = imageView.frame.width / 2
+           imageView.layer.masksToBounds = true
+           return imageView
     }()
     
     override init(frame: CGRect) {
@@ -31,6 +33,11 @@ final class UserResultCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
     }
     
 }
@@ -49,10 +56,13 @@ private extension UserResultCell {
     
     func setLayoutConstraints() {
         NSLayoutConstraint.activate([
-            userNameLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Padding.LabelSide),
+            profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            profileImageView.widthAnchor.constraint(equalToConstant: 36),
+            profileImageView.heightAnchor.constraint(equalToConstant: 36),
+            profileImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
+            userNameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 10),
             userNameLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            profileImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Padding.LabelSide),
-            profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            userNameLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
     }
     private func setupLayout() {
@@ -68,7 +78,10 @@ extension UserResultCell {
     
     func configure(with profile: UserProfile) {
         userNameLabel.text = profile.name
-        guard let imageUrl = profile.imageUrl else { return }
+        guard let imageUrl = profile.imageUrl else { 
+            self.profileImageView.image = nil
+            return
+        }
         if let url = URL(string: imageUrl) {
             URLSession.shared.dataTask(with: url) { (data, _, _) in
                 if let data = data, let image = UIImage(data: data) {
@@ -76,7 +89,7 @@ extension UserResultCell {
                         self.profileImageView.image = image
                     }
                 } else {
-                    debugPrint("Failed to download image form \(url)")
+                    self.profileImageView.image = nil
                 }
             }.resume()
         }

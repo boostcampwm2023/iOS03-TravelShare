@@ -57,7 +57,6 @@ extension PostCollectionViewCell {
             postContentView.heightAnchor.constraint(equalToConstant: 200),
             postContentView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             postContentView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            
             postProfileView.topAnchor.constraint(equalTo: postContentView.bottomAnchor, constant: 10),
             postProfileView.heightAnchor.constraint(equalToConstant: 40),
             postProfileView.leadingAnchor.constraint(equalTo: self.leadingAnchor),

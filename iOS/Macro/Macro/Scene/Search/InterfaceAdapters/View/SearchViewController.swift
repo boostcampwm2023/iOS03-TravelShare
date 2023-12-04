@@ -155,18 +155,11 @@ extension SearchViewController {
         
         postCollectionView.isHidden = selectedType != .post
         userResultCollectionView.isHidden = selectedType != .account
-        
         inputSubject.send(.changeSelectType(selectedType))
     }
     
     @objc private func searchBarReturnPressed() {
         let text = searchBar.text ?? ""
-        switch viewModel.searchType {
-        case .account:
-            postCollectionView.isHidden = true
-        case .post:
-            userResultCollectionView.isHidden = true
-        }
         inputSubject.send(.search(text))
     }
     
@@ -193,6 +186,6 @@ extension SearchViewController {
         static let seachBarTop: CGFloat = 10
         static let segmentTop: CGFloat = 20
         static let searchSide: CGFloat = 10
-        static let postCollectionViewTop: CGFloat = 10
+        static let postCollectionViewTop: CGFloat = 20
     }
 }
