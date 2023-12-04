@@ -11,6 +11,7 @@ import MacroNetwork
 
 enum UpdateUserEndPoint {
     case cellIndex(Int, String)
+    case uploadImage(Data)
 }
 
 extension UpdateUserEndPoint: EndPoint {
@@ -20,8 +21,18 @@ extension UpdateUserEndPoint: EndPoint {
     }
     
     var headers: MacroNetwork.HTTPHeaders {
-        let token = KeyChainManager.load(key: "AccessToken") ?? ""
+        switch self {
+        case .cellIndex:
+            let token = KeyChainManager.load(key: "AccessToken") ?? ""
             return ["Authorization": "Bearer \(token)"]
+        case .uploadImage(let data):
+            return [
+                "Content-Type": "image/jpeg",
+                "Content-Length": "\(data.count)",
+                "Host": "jijihuny.store"
+            ]
+        }
+        
     }
     
     var parameter: MacroNetwork.HTTPParameter {
@@ -32,6 +43,8 @@ extension UpdateUserEndPoint: EndPoint {
             case 1: return .query(["imageUrl": query])
             default: return .query(["introduce": query])
             }
+        case let .uploadImage(imageData):
+            return .data(imageData)
         }
     }
     
@@ -39,10 +52,17 @@ extension UpdateUserEndPoint: EndPoint {
         switch self {
         case .cellIndex:
             return .patch
+        case .uploadImage:
+            return .put
         }
     }
     
     var path: String {
-        return "user/update"
+        switch self {
+        case .cellIndex:
+            return "user/update"
+        case .uploadImage:
+            return "file/put"
+        }
     }
 }

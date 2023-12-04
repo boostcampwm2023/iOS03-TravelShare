@@ -283,7 +283,6 @@ private extension ReadViewController {
                     defer {
                         dispatchGroup.leave()
                     }
-                    
                     if let data = data, let image = UIImage(data: data) {
                         images.append(image)
                     } else {

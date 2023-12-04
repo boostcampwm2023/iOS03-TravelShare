@@ -95,7 +95,9 @@ extension MyPageViewController {
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
             switch output {
             case let .sendMyUserData(userProfile):
-                self?.updateUserInformation(userProfile)
+                self?.updateUserProfile(userProfile)
+            case let .profileEdit(image):
+                self?.downloadImage(image)
             default: break
             }
         }.store(in: &cancellables)
@@ -105,7 +107,24 @@ extension MyPageViewController {
 
 // MARK: - Methods
 extension MyPageViewController {
-    private func updateUserProfile(userProfile: UserProfile) {
+    
+    private func downloadImage(_ imageURL: String) {
+        
+        if let url = URL(string: imageURL) {
+            URLSession.shared.dataTask(with: url) { (data, _, _) in
+                if let data = data, let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        self.myPageHeaderView.configure(profileImage: image)
+                    }
+                } else {
+                    debugPrint("Failed to download image form \(url)")
+                }
+            }.resume()
+        }
+        
+    }
+    
+    private func updateUserProfile(_ userProfile: UserProfile) {
         myPageHeaderView.configure(userProfile: userProfile)
     }
     
@@ -113,9 +132,6 @@ extension MyPageViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
-    private func updateUserInformation(_ userProfile: UserProfile) {
-        updateUserProfile(userProfile: userProfile)
-    }
 }
 
 // MARK: - TableView
@@ -251,7 +267,7 @@ extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
             let provider = APIProvider(session: URLSession.shared)
             let postSearcher = Searcher(provider: provider)
             let followFeature = FollowFeature(provider: provider)
-            let userInfoViewModel = UserInfoViewModel(postSearcher: postSearcher, 
+            let userInfoViewModel = UserInfoViewModel(postSearcher: postSearcher,
                                                       followFeature: followFeature,
                                                       patcher: Patcher(provider: provider))
             let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: email)
@@ -275,9 +291,9 @@ extension MyPageViewController: UIImagePickerControllerDelegate, UINavigationCon
     /// 사용자가 이미지를 선택했을 때
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-        if let selectedImage = info[.originalImage] as? UIImage {
-            myPageHeaderView.configure(profileImage: selectedImage)
-        }
+        guard let selectedImage = info[.originalImage] as? UIImage, let data = selectedImage.jpegData(compressionQuality: 1.0) else { return }
+        
+        inputSubject.send(.selectImage(data))
         dismiss(animated: true, completion: nil)
     }
     
