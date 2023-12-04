@@ -24,4 +24,8 @@ public enum HTTPParameter {
   /// body를 담아 보내야 하는 경우에 사용합니다
   case body(Encodable)
   
+  /// Dictionary가 아닌 body를 설정
+  ///
+  /// Dictionary Type이 아닌 Data를 body에 담아 보내야 하는 경우 사용
+  case data(Data)
 }

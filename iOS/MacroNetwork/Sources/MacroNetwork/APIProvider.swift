@@ -130,6 +130,8 @@ extension EndPoint {
         case let .body(data):
             let bodyDictionary = data.dictionary
             request.httpBody = try JSONSerialization.data(withJSONObject: bodyDictionary)
+        case let .data(data):
+            request.httpBody = data
         }
         
         return request
