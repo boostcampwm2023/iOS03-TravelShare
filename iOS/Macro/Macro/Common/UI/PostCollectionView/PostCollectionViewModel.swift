@@ -13,7 +13,7 @@ import MacroNetwork
 import UIKit
 
 final class PostCollectionViewModel: ViewModelProtocol {
-
+    
     var posts: [PostFindResponse] = []
     private let outputSubject = PassthroughSubject<Output, Never>()
     private var cancellables = Set<AnyCancellable>()
@@ -24,6 +24,7 @@ final class PostCollectionViewModel: ViewModelProtocol {
     enum Input {
         case navigateToReadView(Int)
         case touchLike(Int)
+        case increaseView(Int)
     }
     
     enum Output {
@@ -31,6 +32,7 @@ final class PostCollectionViewModel: ViewModelProtocol {
         case navigateToProfileView(String)
         case updatePostLike(LikePostResponse)
         case updateUserFollow(FollowPatchResponse)
+        case updatePostView(Int, Int)
     }
     
     init(posts: [PostFindResponse], followFeature: FollowUseCase, patcher: PatchUseCase, postSearcher: SearchUseCase) {
@@ -49,11 +51,20 @@ extension PostCollectionViewModel {
             switch input {
             case let .touchLike(postId):
                 self?.touchLike(postId: postId)
+            case let .increaseView(postId):
+                self?.increasePostView(postId)
             default: break
             }
         }.store(in: &cancellables)
         
         return outputSubject.eraseToAnyPublisher()
+    }
+    
+    func increasePostView(_ postId: Int) {
+        if let index = posts.firstIndex(where: { $0.postId == postId }) {
+            posts[index].viewNum += 1
+            outputSubject.send(.updatePostView(postId, posts[index].viewNum))
+        }
     }
     
     func navigateToReadView(postId: Int) {
@@ -63,7 +74,7 @@ extension PostCollectionViewModel {
     func navigateToProfileView(email: String) {
         self.outputSubject.send(.navigateToProfileView(email))
     }
-
+    
     func touchLike(postId: Int) {
         patcher.patchPostLike(postId: postId).sink { _ in
         } receiveValue: { [weak self] likePostResponse in

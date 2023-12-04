@@ -51,6 +51,7 @@ final class PostContentView: UIView {
     }()
     
     // MARK: - Init
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setLayout()
@@ -69,10 +70,19 @@ final class PostContentView: UIView {
         let readViewModel = ReadViewModel(useCase: readuseCase, postId: postId)
         let readViewController = ReadViewController(viewModel: readViewModel)
         delegate?.didTapContent(viewController: readViewController)
+        
+        inputSubject.send(.increaseView(postId))
     }
     
 }
 
+extension PostContentView {
+    func bind() {
+        guard let viewModel = self.viewModel else { return }
+        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+     
+    }
+}
 // MARK: - UI Settings
 
 private extension PostContentView {

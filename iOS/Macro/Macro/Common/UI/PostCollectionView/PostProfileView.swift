@@ -181,6 +181,8 @@ extension PostProfileView {
             switch output {
             case .updatePostLike(let likePostResponse) where likePostResponse.postId == postId:
                                 self?.likeCountLabel.text = "\(likePostResponse.likeNum)"
+            case .updatePostView(let updatedPostId, let updatedViewNum) where updatedPostId == postId:
+                           self?.viewCountLabel.text = "\(updatedViewNum)"
             default: break
             }
         }.store(in: &cancellables)
