@@ -76,6 +76,11 @@ final class LocationInfoViewController: TouchableViewController {
         return collectionView
     }()
     
+    lazy var relatedLocationCollectionView: RelatedLocationCollectionView = {
+        let collectionView = RelatedLocationCollectionView(frame: .zero, viewModel: viewModel)
+        return collectionView
+    }()
+    
     private let segmentControl: UISegmentedControl = {
         let control = UISegmentedControl(items: ["포함된 여행", "함께 많이 간 장소"])
         control.selectedSegmentIndex = 0
@@ -124,7 +129,9 @@ extension LocationInfoViewController {
         pinLabel.translatesAutoresizingMaskIntoConstraints = false
         segmentControl.translatesAutoresizingMaskIntoConstraints = false
         postCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        relatedLocationCollectionView.translatesAutoresizingMaskIntoConstraints = false
     }
+    
     private func addsubviews() {
         view.addSubview(placeNameLabel)
         view.addSubview(addressLabel)
@@ -133,7 +140,8 @@ extension LocationInfoViewController {
         view.addSubview(phoneLabel)
         view.addSubview(pinLabel)
         view.addSubview(segmentControl)
-        view.addSubview(postCollectionView)
+     //   view.addSubview(postCollectionView)
+        view.addSubview(relatedLocationCollectionView)
     }
     
     private func setLayoutConstraints() {
@@ -152,10 +160,15 @@ extension LocationInfoViewController {
             pinLabel.centerYAnchor.constraint(equalTo: placeNameLabel.centerYAnchor),
             segmentControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             segmentControl.topAnchor.constraint(equalTo: phoneLabel.bottomAnchor, constant: Padding.segmentTop),
-            postCollectionView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: Padding.postCollectionViewTop),
-            postCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            postCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            postCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+//            postCollectionView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: Padding.postCollectionViewTop),
+//            postCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+//            postCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+//            postCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            relatedLocationCollectionView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: Padding.postCollectionViewTop),
+            relatedLocationCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            relatedLocationCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            relatedLocationCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            
         ])
         
     }
@@ -178,7 +191,8 @@ extension LocationInfoViewController {
                 self?.changeTextLabel(locationDetail)
             case let .sendRelatedPost(posts):
                 self?.updateRelatedPost(posts)
-            default: break
+            case .sendRelatedLocation:
+                self?.updateRelatedLocation()
             }
         }.store(in: &cancellables)
     }
@@ -191,6 +205,10 @@ extension LocationInfoViewController {
     private func updateRelatedPost(_ posts: [PostFindResponse]) {
         postCollectionView.viewModel.posts = posts
         postCollectionView.reloadData()
+    }
+    
+    private func updateRelatedLocation() {
+        relatedLocationCollectionView.reloadData()
     }
     
     private func changeTextLabel(_ detail: LocationDetail?) {

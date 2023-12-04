@@ -16,6 +16,7 @@ final class LocationInfoViewModel: ViewModelProtocol {
     private let locationDetail: LocationDetail
     private (set) var posts: [PostFindResponse] = []
     private let searcher: SearchUseCase
+    private (set) var relatedLocation: [RelatedLocation] = []
     
     // MARK: - Input
     
@@ -49,7 +50,7 @@ extension LocationInfoViewModel {
                 self?.changeSelectType(type: searchType)
             case .viewDidLoad:
                 self?.outputSubject.send(.changeTextLabel(self?.locationDetail))
-                self?.getRelatedPost()
+                self?.getRelatedLocation()
             }
         }.store(in: &cancellables)
         
@@ -75,7 +76,14 @@ extension LocationInfoViewModel {
     }
     
     private func getRelatedLocation() {
-        
+        var placeId = locationDetail.id
+        // TODO: 임시로 불러온 값을 확인할 수 있게 지정했음.
+        placeId = "1234567"
+        searcher.searchRelatedLocation(query: placeId).sink { _ in
+        } receiveValue: { [weak self] response in
+            self?.relatedLocation = response
+            self?.outputSubject.send(.sendRelatedLocation)
+        }.store(in: &cancellables)
     }
     
 }

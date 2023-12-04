@@ -153,6 +153,8 @@
 		D2CAA5D02B1E047400E825BA /* MacroCarouselViewCelladdPictureComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5CF2B1E047400E825BA /* MacroCarouselViewCelladdPictureComponentView.swift */; };
 		D2CAA5D32B1E073300E825BA /* LocationInfoEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5D22B1E073300E825BA /* LocationInfoEndPoint.swift */; };
 		D2CAA5D52B1E0A1E00E825BA /* RelatedLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5D42B1E0A1E00E825BA /* RelatedLocation.swift */; };
+		D2CAA5D72B1E117600E825BA /* RelatedLocationCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5D62B1E117600E825BA /* RelatedLocationCollectionView.swift */; };
+		D2CAA5DB2B1E151800E825BA /* RelatedLocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5DA2B1E151800E825BA /* RelatedLocationCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -304,6 +306,8 @@
 		D2CAA5CF2B1E047400E825BA /* MacroCarouselViewCelladdPictureComponentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MacroCarouselViewCelladdPictureComponentView.swift; sourceTree = "<group>"; };
 		D2CAA5D22B1E073300E825BA /* LocationInfoEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInfoEndPoint.swift; sourceTree = "<group>"; };
 		D2CAA5D42B1E0A1E00E825BA /* RelatedLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedLocation.swift; sourceTree = "<group>"; };
+		D2CAA5D62B1E117600E825BA /* RelatedLocationCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedLocationCollectionView.swift; sourceTree = "<group>"; };
+		D2CAA5DA2B1E151800E825BA /* RelatedLocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedLocationCell.swift; sourceTree = "<group>"; };
 		EFE56344E8979EDA80D9E782 /* libPods-Macro.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Macro.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE963544592A2BC35C2CD604 /* Pods-Macro.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Macro.release.xcconfig"; path = "Target Support Files/Pods-Macro/Pods-Macro.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -668,6 +672,8 @@
 			isa = PBXGroup;
 			children = (
 				BA32E1942B0DEBC500EA0EE2 /* LocationInfoViewController.swift */,
+				D2CAA5D62B1E117600E825BA /* RelatedLocationCollectionView.swift */,
+				D2CAA5DA2B1E151800E825BA /* RelatedLocationCell.swift */,
 			);
 			path = VIew;
 			sourceTree = "<group>";
@@ -1446,11 +1452,13 @@
 				AAD0B3272B176832003B4D5F /* PostUploadResponse.swift in Sources */,
 				D263CA132B02DD8900B4A144 /* RouteTableViewController.swift in Sources */,
 				D21B10092B14799C00F2F84E /* NameEditView.swift in Sources */,
+				D2CAA5D72B1E117600E825BA /* RelatedLocationCollectionView.swift in Sources */,
 				D21B10132B17610500F2F84E /* UpdateUserEndPoint.swift in Sources */,
 				BA90CB3B2B0EF88700365AE2 /* LocationManager.swift in Sources */,
 				BAE3C5942B1C7F1C00BF9798 /* MacroCarouselViewCelladdPictureView.swift in Sources */,
 				BA6C6DF32B05FFC500563B22 /* CAGradientLayer+.swift in Sources */,
 				BA6C6DFE2B05FFC500563B22 /* TabBarOpacityView.swift in Sources */,
+				D2CAA5DB2B1E151800E825BA /* RelatedLocationCell.swift in Sources */,
 				BA00A0892B1732E6007F7BB9 /* MapCollectionViewCellHeaderView.swift in Sources */,
 				BAB24EEC2B16DE55000991A1 /* MapCollectionViewCell.swift in Sources */,
 				D263CA332B06C7B300B4A144 /* SavedRoute.swift in Sources */,
