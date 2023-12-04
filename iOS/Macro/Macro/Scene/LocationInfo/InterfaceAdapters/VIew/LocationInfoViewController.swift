@@ -10,7 +10,7 @@ import MacroDesignSystem
 import MacroNetwork
 import UIKit
 
-final class LocationInfoViewController: UIViewController {
+final class LocationInfoViewController: TouchableViewController {
     
     // MARK: - Properties
     
@@ -23,6 +23,8 @@ final class LocationInfoViewController: UIViewController {
     
     private let placeNameLabel: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         label.font = UIFont.appFont(.baeEunLargeTitle)
         label.textColor = UIColor.appColor(.blue4)
         return label
@@ -41,8 +43,11 @@ final class LocationInfoViewController: UIViewController {
         return label
     }()
     
+    // TODO: 글자 제한 수를 넘을경우 다음 줄로 넘어가게 처리
     private let addressLabel: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         label.font = UIFont.appFont(.baeEunTitle1)
         label.textColor = UIColor.appColor(.blue4)
         return label
@@ -50,6 +55,8 @@ final class LocationInfoViewController: UIViewController {
     
     private let categoryNameLabel: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         label.font = UIFont.appFont(.baeEunBody)
         label.textColor = UIColor.appColor(.purple3)
         return label
@@ -57,6 +64,8 @@ final class LocationInfoViewController: UIViewController {
     
     private let categoryGroupLabel: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         label.font = UIFont.appFont(.baeEunCaption)
         label.textColor = UIColor.appColor(.purple3)
         return label
@@ -73,6 +82,12 @@ final class LocationInfoViewController: UIViewController {
     
     lazy var postCollectionView: PostCollectionView = {
         let collectionView = PostCollectionView(frame: .zero, viewModel: postCollectionViewModel)
+        return collectionView
+    }()
+    
+    lazy var relatedLocationCollectionView: RelatedLocationCollectionView = {
+        let collectionView = RelatedLocationCollectionView(frame: .zero, viewModel: viewModel)
+        collectionView.isHidden = true
         return collectionView
     }()
     
@@ -95,6 +110,7 @@ final class LocationInfoViewController: UIViewController {
         bind()
         inputSubject.send(.viewDidLoad)
         segmentControl.addTarget(self, action: #selector(segmentValueChanged(_:)), for: .valueChanged)
+        postCollectionView.postDelegate = self
     }
     
     // MARK: - Init
@@ -123,7 +139,9 @@ extension LocationInfoViewController {
         pinLabel.translatesAutoresizingMaskIntoConstraints = false
         segmentControl.translatesAutoresizingMaskIntoConstraints = false
         postCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        relatedLocationCollectionView.translatesAutoresizingMaskIntoConstraints = false
     }
+    
     private func addsubviews() {
         view.addSubview(placeNameLabel)
         view.addSubview(addressLabel)
@@ -133,6 +151,7 @@ extension LocationInfoViewController {
         view.addSubview(pinLabel)
         view.addSubview(segmentControl)
         view.addSubview(postCollectionView)
+        view.addSubview(relatedLocationCollectionView)
     }
     
     private func setLayoutConstraints() {
@@ -154,7 +173,12 @@ extension LocationInfoViewController {
             postCollectionView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: Padding.postCollectionViewTop),
             postCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             postCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            postCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            postCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            relatedLocationCollectionView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: Padding.postCollectionViewTop),
+            relatedLocationCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            relatedLocationCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            relatedLocationCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            
         ])
         
     }
@@ -175,6 +199,10 @@ extension LocationInfoViewController {
             switch output {
             case let .changeTextLabel(locationDetail):
                 self?.changeTextLabel(locationDetail)
+            case let .sendRelatedPost(posts):
+                self?.updateRelatedPost(posts)
+            case .sendRelatedLocation:
+                self?.updateRelatedLocation()
             }
         }.store(in: &cancellables)
     }
@@ -183,6 +211,15 @@ extension LocationInfoViewController {
 // MARK: - Methods
 
 extension LocationInfoViewController {
+    
+    private func updateRelatedPost(_ posts: [PostFindResponse]) {
+        postCollectionView.viewModel.posts = posts
+        postCollectionView.reloadData()
+    }
+    
+    private func updateRelatedLocation() {
+        relatedLocationCollectionView.reloadData()
+    }
     
     private func changeTextLabel(_ detail: LocationDetail?) {
         guard let locationDetail = detail else { return }
@@ -196,6 +233,10 @@ extension LocationInfoViewController {
     
     @objc private func segmentValueChanged(_ sender: UISegmentedControl) {
         let selectedType = sender.selectedSegmentIndex == 0 ? InfoType.post : InfoType.location
+        
+        postCollectionView.isHidden = selectedType != .post
+        relatedLocationCollectionView.isHidden = selectedType != .location
+        
         inputSubject.send(.changeSelectType(selectedType))
     }
     

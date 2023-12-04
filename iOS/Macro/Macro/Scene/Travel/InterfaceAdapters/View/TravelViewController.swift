@@ -7,6 +7,7 @@
 
 import Combine
 import MacroDesignSystem
+import MacroNetwork
 import NMapsMap
 import UIKit
 
@@ -335,7 +336,8 @@ extension TravelViewController {
     }
     
     private func showLocationInfo(_ locationDetail: LocationDetail) {
-        let locationInfoVC = LocationInfoViewController(viewModel: LocationInfoViewModel(locationDetail: locationDetail))
+        let searcher = Searcher(provider: APIProvider(session: URLSession.shared))
+        let locationInfoVC = LocationInfoViewController(viewModel: LocationInfoViewModel(locationDetail: locationDetail, searcher: searcher))
         navigationController?.pushViewController(locationInfoVC, animated: true)
     }
     private func handleMarkerTap(_ marker: NMFMarker) {
