@@ -335,7 +335,7 @@ extension TravelViewController {
     }
     
     private func showLocationInfo(_ locationDetail: LocationDetail) {
-        let locationInfoVC = LocationInfoViewController()
+        let locationInfoVC = LocationInfoViewController(viewModel: LocationInfoViewModel())
         locationInfoVC.updateText(locationDetail)
         navigationController?.pushViewController(locationInfoVC, animated: true)
     }

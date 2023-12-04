@@ -143,6 +143,7 @@
 		D263CA2D2B052ECC00B4A144 /* TravelEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA2C2B052ECC00B4A144 /* TravelEndPoint.swift */; };
 		D263CA2F2B054A0E00B4A144 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA2E2B054A0E00B4A144 /* SearchResultViewController.swift */; };
 		D263CA332B06C7B300B4A144 /* SavedRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA322B06C7B300B4A144 /* SavedRoute.swift */; };
+		D2CAA5C72B1D7E3700E825BA /* LocationInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5C62B1D7E3700E825BA /* LocationInfoViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -284,6 +285,7 @@
 		D263CA2C2B052ECC00B4A144 /* TravelEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelEndPoint.swift; sourceTree = "<group>"; };
 		D263CA2E2B054A0E00B4A144 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
 		D263CA322B06C7B300B4A144 /* SavedRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedRoute.swift; sourceTree = "<group>"; };
+		D2CAA5C62B1D7E3700E825BA /* LocationInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInfoViewModel.swift; sourceTree = "<group>"; };
 		EFE56344E8979EDA80D9E782 /* libPods-Macro.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Macro.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE963544592A2BC35C2CD604 /* Pods-Macro.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Macro.release.xcconfig"; path = "Target Support Files/Pods-Macro/Pods-Macro.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -628,6 +630,8 @@
 		BA32E1922B0DEBC500EA0EE2 /* InterfaceAdapters */ = {
 			isa = PBXGroup;
 			children = (
+				D2CAA5C82B1D817900E825BA /* Entities */,
+				D25FAAF72B1D7BDB00077232 /* ViewModel */,
 				BA32E1932B0DEBC500EA0EE2 /* VIew */,
 			);
 			path = InterfaceAdapters;
@@ -1129,6 +1133,15 @@
 			path = Entities;
 			sourceTree = "<group>";
 		};
+		D25FAAF72B1D7BDB00077232 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				D2CAA5C62B1D7E3700E825BA /* LocationInfoViewModel.swift */,
+			);
+			name = ViewModel;
+			path = Macro/Scene/LocationInfo/InterfaceAdapters/ViewModel;
+			sourceTree = SOURCE_ROOT;
+		};
 		D263CA092B02B22D00B4A144 /* Travel */ = {
 			isa = PBXGroup;
 			children = (
@@ -1192,6 +1205,13 @@
 				D263CA2C2B052ECC00B4A144 /* TravelEndPoint.swift */,
 			);
 			path = Network;
+			sourceTree = "<group>";
+		};
+		D2CAA5C82B1D817900E825BA /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Entities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1391,6 +1411,7 @@
 				D21B10102B16FDA000F2F84E /* PostSearchEndPoint.swift in Sources */,
 				BA90CB9E2B145CDE00365AE2 /* FollowEndPoint.swift in Sources */,
 				BA6C6DF42B05FFC500563B22 /* CircularViewProtocol.swift in Sources */,
+				D2CAA5C72B1D7E3700E825BA /* LocationInfoViewModel.swift in Sources */,
 				BA90CB982B1450A200365AE2 /* UserInfoProfileView.swift in Sources */,
 				AAD0B2AE2B0CCBD7003B4D5F /* TokenManager.swift in Sources */,
 				AAD0B31A2B1710C9003B4D5F /* Post.swift in Sources */,
