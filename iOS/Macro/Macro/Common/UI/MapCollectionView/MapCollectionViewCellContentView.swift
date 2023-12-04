@@ -148,7 +148,8 @@ extension MapCollectionViewCellContentView {
         calculateCenterLocation(routePoints: recordedLocation)
         updateMapWithLocation(routePoints: recordedLocation)
         
-        guard let recordedPindedInfo = item.recordedPindedInfo else { return }
+        guard let recordedPindedInfo = item.recordedPinnedLocations else { return }
+        
         updateMark(recordedPindedInfo: recordedPindedInfo)
     }
     
@@ -210,11 +211,11 @@ extension MapCollectionViewCellContentView {
     /// Pin이 저장된 곳에  Mark를 찍습니다.
     /// - Parameters:
     ///   - recordedPindedInfo: Pin의 위도, 경도 배열 입니다.
-    func updateMark(recordedPindedInfo: [[String: [Double]]]) {
-        for (index, place) in recordedPindedInfo.enumerated() {
+    func updateMark(recordedPindedInfo: [RecordedPinnedLocationInfomation]) {
+        for (index, placeInfo) in recordedPindedInfo.enumerated() {
             let marker = NMFMarker()
-            guard let name = place.keys.first, let location = place.values.first else { return }
-            marker.position = NMGLatLng(lat: location[1], lng: location[0])
+            guard let name = placeInfo.placeName?.first, let placeLocation = placeInfo.coordinate else { return }
+            marker.position = NMGLatLng(lat: placeLocation.latitude, lng: placeLocation.longitude)
             marker.captionText = "\(index + 1). \(name)"
             marker.mapView = mapView
         }
