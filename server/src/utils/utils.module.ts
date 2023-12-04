@@ -5,8 +5,9 @@ import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { addTransactionalDataSource } from 'typeorm-transactional';
-import { Post } from 'entities/post.entity';
 import { KeywordAutoCompleteService } from './keyword.autocomplete.service';
+import { RedisModule } from './redis/redis.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Global()
 @Module({
@@ -27,7 +28,8 @@ import { KeywordAutoCompleteService } from './keyword.autocomplete.service';
       dataSourceFactory: async (options: DataSourceOptions) =>
         addTransactionalDataSource(new DataSource(options)),
     }),
-    TypeOrmModule.forFeature([Post]),
+    RedisModule,
+    ScheduleModule.forRoot(),
   ],
   providers: [KeywordAutoCompleteService],
   exports: [HttpModule, KeywordAutoCompleteService],
