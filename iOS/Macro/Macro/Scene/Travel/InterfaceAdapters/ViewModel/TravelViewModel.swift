@@ -101,9 +101,9 @@ extension TravelViewModel {
     
     private func startRecord() {
         /* TODO: - background 에서 돌아가게 하려고 corelocation에서 위도 경도를 받아오고 있습니다. 논의가 필요해요 :)
-        routeRecorder.startRecording()
-        routeRecorder.locationPublisher
-        */
+         routeRecorder.startRecording()
+         routeRecorder.locationPublisher
+         */
         locationManager = LocationManager()
         
         generateTravel()
@@ -119,7 +119,6 @@ extension TravelViewModel {
         let currentTime: Date = Date()
         do {
             let sequence = try CoreDataManager.shared.calculateNextSequence()
-            print(sequence)
             self.currentTravel = TravelInfo(id: UUID().uuidString, sequence: sequence, startAt: currentTime)
         } catch {
             
@@ -128,9 +127,18 @@ extension TravelViewModel {
     
     private func completeTravel() {
         let transRoute = savedRoute.routePoints.map({ [$0.coordinate.latitude, $0.coordinate.longitude] })
-        let pinnedTransRoute = savedRoute.pinnedPlaces.map({ [$0.placeName: [Double($0.mapx) ?? 0, Double($0.mapy) ?? 0]] })
+        let pinnedTransRoute: [RecordedPinnedLocationInfomation] = savedRoute.pinnedPlaces.map { RecordedPinnedLocationInfomation(
+            placeId: $0.id,
+            placeName: $0.placeName,
+            phoneNumber: $0.phone,
+            category: $0.categoryName,
+            address: $0.addressName,
+            roadAddress: $0.roadAddressName,
+            coordinate: PinnedLocation(latitude: Double($0.mapx) ?? 0,
+                                       longitude: Double($0.mapy) ?? 0))
+        }
         self.currentTravel?.recordedLocation = transRoute
-        self.currentTravel?.recordedPindedInfo = pinnedTransRoute
+        self.currentTravel?.recordedPinnedLocations = pinnedTransRoute
         let currentTime: Date = Date()
         self.currentTravel?.endAt = currentTime
     }
@@ -145,12 +153,12 @@ extension TravelViewModel {
         
         CoreDataManager.shared.saveTravel(id: travel.id,
                                           recordedLocation: recordedLocation,
-                                          recordedPindedLocation: travel.recordedPindedInfo,
+                                          recordedPinnedLocations: travel.recordedPinnedLocations,
                                           sequence: Int(travel.sequence),
                                           startAt: startAt,
                                           endAt: endAt)
         routeRecorder.stopRecording()
-       
+        
         locationManager = nil
     }
     
