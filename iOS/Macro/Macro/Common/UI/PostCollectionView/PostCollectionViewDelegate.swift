@@ -8,5 +8,5 @@
 import Foundation
 
 protocol PostCollectionViewDelegate: AnyObject {
-    func didTapContent(postId: Int, viewController: ReadViewController)
+    func didTapContent(viewController: ReadViewController)
 }

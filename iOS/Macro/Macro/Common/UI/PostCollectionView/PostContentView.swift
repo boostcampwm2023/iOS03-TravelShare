@@ -6,13 +6,17 @@
 //
 
 import Combine
+import MacroNetwork
 import UIKit
 
-final class PostContentView<T: PostCollectionViewProtocol>: UIView {
+final class PostContentView: UIView {
     
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
-    var viewModel: T?
+    var viewModel: PostCollectionViewModel?
+    private let provider = APIProvider(session: URLSession.shared)
+    private let inputSubject: PassthroughSubject<PostCollectionViewModel.Input, Never> = .init()
+    weak var delegate: PostCollectionViewDelegate?
     var postId: Int?
     
     // MARK: - UI Components
@@ -49,6 +53,7 @@ final class PostContentView<T: PostCollectionViewProtocol>: UIView {
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setLayout()
     }
     
     required init?(coder: NSCoder) {
@@ -59,7 +64,11 @@ final class PostContentView<T: PostCollectionViewProtocol>: UIView {
     
     @objc private func contentTap(_ sender: UITapGestureRecognizer) {
         guard let postId: Int = self.postId else { return }
-        viewModel?.navigateToReadView(postId: postId)
+        let provider = APIProvider(session: URLSession.shared)
+        let readuseCase = ReadPostUseCase(provider: provider)
+        let readViewModel = ReadViewModel(useCase: readuseCase, postId: postId)
+        let readViewController = ReadViewController(viewModel: readViewModel)
+        delegate?.didTapContent(viewController: readViewController)
     }
     
 }
@@ -116,10 +125,6 @@ private extension PostContentView {
 
 extension PostContentView {
     
-    func bind(viewModel: T) {
-        self.viewModel = viewModel
-    }
-    
 }
 // MARK: - Methods
 
@@ -132,8 +137,10 @@ extension PostContentView {
         addTapGesture()
     }
     
-    func configure(item: PostFindResponse) {
-        viewModel?.loadImage(profileImageStringURL: item.imageUrl ?? "https://user-images.githubusercontent.com/118811606/285184604-1e5983fd-0b07-4bfe-9c17-8b147f237517.png") { image in
+    func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?) {
+        self.viewModel = viewModel
+        guard let viewModel = self.viewModel else { return }
+        viewModel.loadImage(profileImageStringURL: item.imageUrl ?? "https://user-images.githubusercontent.com/118811606/285184604-1e5983fd-0b07-4bfe-9c17-8b147f237517.png") { image in
             DispatchQueue.main.async { [self] in
                 mainImageView.image = image
                 title.text = item.title
@@ -141,6 +148,18 @@ extension PostContentView {
                 postId = item.postId
             }
         }
+    }
+    
+}
+
+extension PostContentView {
+    private func navigateToReadView(_ postId: Int) {
+        let provider = APIProvider(session: URLSession.shared)
+        let readuseCase = ReadPostUseCase(provider: provider)
+        let readViewModel = ReadViewModel(useCase: readuseCase, postId: postId)
+        let readViewController = ReadViewController(viewModel: readViewModel)
+        delegate?.didTapContent(viewController: readViewController)
+      
     }
     
 }

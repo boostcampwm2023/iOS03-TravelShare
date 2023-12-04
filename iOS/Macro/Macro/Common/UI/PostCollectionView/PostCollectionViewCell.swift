@@ -7,22 +7,33 @@
 
 import UIKit
 
-final class PostCollectionViewCell<T: PostCollectionViewProtocol>: UICollectionViewCell {
-    
-    // MARK: - UI Components
-    let postContentView: PostContentView = PostContentView<T>()
-    let postProfileView: PostProfileView = PostProfileView<T>()
+final class PostCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Properties
-    let identifier = "PostCollectionViewCell"
-    var homeViewModel: T?
     
-    // MARK: - Initialization
+    let identifier = "PostCollectionViewCell"
+    var viewModel: PostCollectionViewModel?
+    weak var delegate: PostCollectionViewDelegate?
+    
+    // MARK: - UI Components
+    
+    let postContentView: PostContentView
+    let postProfileView: PostProfileView
+    
+    // MARK: - Init
+    
     override init(frame: CGRect) {
+        self.postContentView = PostContentView()
+        self.postProfileView = PostProfileView()
         super.init(frame: frame)
+        
+        setTranslatesAutoresizingMaskIntoConstraints()
+        addsubviews()
+        setLayoutConstraints()
     }
+    
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -55,17 +66,11 @@ private extension PostCollectionViewCell {
         ])
     }
     
-    func componetConfigure(item: PostFindResponse, viewModel: T) {
-        if postContentView.viewModel == nil {
-            postContentView.setLayout()
-            postContentView.bind(viewModel: viewModel)
-            postContentView.configure(item: item)
-            }
-        if postProfileView.viewModel == nil {
-            postProfileView.setLayout()
-            postProfileView.bind(viewModel: viewModel)
-            postProfileView.configure(item: item)
-           }
+    func componetConfigure(item: PostFindResponse) {
+        postContentView.setLayout()
+        postContentView.configure(item: item, viewModel: self.viewModel)
+        postProfileView.setLayout()
+        postProfileView.configure(item: item, viewModel: self.viewModel)
         
     }
 }
@@ -74,14 +79,17 @@ private extension PostCollectionViewCell {
 
 extension PostCollectionViewCell {
     
-    func configure(item: PostFindResponse, viewModel: T, indexPath: IndexPath) {
-        postProfileView.configure(item: item)
-        postContentView.configure(item: item)
+    func configure(item: PostFindResponse, viewModel: PostCollectionViewModel, indexPath: IndexPath) {
+        self.viewModel = viewModel
+        postContentView.configure(item: item, viewModel: viewModel)
+        postProfileView.configure(item: item, viewModel: viewModel)
         postProfileView.indexPath = indexPath
+        postContentView.delegate = delegate
         setTranslatesAutoresizingMaskIntoConstraints()
+        postContentView.delegate = delegate
         addsubviews()
         setLayoutConstraints()
-        componetConfigure(item: item, viewModel: viewModel)
+        componetConfigure(item: item)
     }
-
+    
 }

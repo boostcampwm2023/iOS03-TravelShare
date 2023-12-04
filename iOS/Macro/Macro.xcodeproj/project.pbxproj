@@ -145,6 +145,8 @@
 		D263CA332B06C7B300B4A144 /* SavedRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA322B06C7B300B4A144 /* SavedRoute.swift */; };
 		D2CAA5C72B1D7E3700E825BA /* LocationInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5C62B1D7E3700E825BA /* LocationInfoViewModel.swift */; };
 		D2CAA5CA2B1D8D1700E825BA /* InfoType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5C92B1D8D1700E825BA /* InfoType.swift */; };
+		D2CAA5CC2B1DA6A500E825BA /* PostCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5CB2B1DA6A500E825BA /* PostCollectionViewModel.swift */; };
+		D2CAA5CE2B1DC85300E825BA /* PostCollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5CD2B1DC85300E825BA /* PostCollectionViewDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -288,6 +290,8 @@
 		D263CA322B06C7B300B4A144 /* SavedRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedRoute.swift; sourceTree = "<group>"; };
 		D2CAA5C62B1D7E3700E825BA /* LocationInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInfoViewModel.swift; sourceTree = "<group>"; };
 		D2CAA5C92B1D8D1700E825BA /* InfoType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoType.swift; sourceTree = "<group>"; };
+		D2CAA5CB2B1DA6A500E825BA /* PostCollectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCollectionViewModel.swift; sourceTree = "<group>"; };
+		D2CAA5CD2B1DC85300E825BA /* PostCollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCollectionViewDelegate.swift; sourceTree = "<group>"; };
 		EFE56344E8979EDA80D9E782 /* libPods-Macro.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Macro.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE963544592A2BC35C2CD604 /* Pods-Macro.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Macro.release.xcconfig"; path = "Target Support Files/Pods-Macro/Pods-Macro.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -918,6 +922,8 @@
 				BA90CB812B0F3BF600365AE2 /* PostProfileView.swift */,
 				BA90CB822B0F3BF600365AE2 /* PostContentView.swift */,
 				BA90CB832B0F3BF600365AE2 /* PostCollectionView.swift */,
+				D2CAA5CB2B1DA6A500E825BA /* PostCollectionViewModel.swift */,
+				D2CAA5CD2B1DC85300E825BA /* PostCollectionViewDelegate.swift */,
 			);
 			path = PostCollectionView;
 			sourceTree = "<group>";
@@ -1382,6 +1388,7 @@
 				BAE3C5922B1AF6F000BF9798 /* UpdateFollowEndPoint.swift in Sources */,
 				BA8DC40A2B0B5F7800929E01 /* TabViewController.swift in Sources */,
 				D241DC762B0DA00F0037DDB6 /* PostFindResponse.swift in Sources */,
+				D2CAA5CE2B1DC85300E825BA /* PostCollectionViewDelegate.swift in Sources */,
 				AAD0B2C22B0DA35B003B4D5F /* LoginResponse.swift in Sources */,
 				D241DC7A2B0DA0C00037DDB6 /* PostEndPoint.swift in Sources */,
 				BA90CB862B0F3BF600365AE2 /* PostContentView.swift in Sources */,
@@ -1488,6 +1495,7 @@
 				BA32E0E92B0DC14A00EA0EE2 /* TabBarViewController+Animaion.swift in Sources */,
 				BA6C6DF72B05FFC500563B22 /* TabLocation.swift in Sources */,
 				AAD0B2D72B0F3164003B4D5F /* MacroCarouselViewAddImageCell.swift in Sources */,
+				D2CAA5CC2B1DA6A500E825BA /* PostCollectionViewModel.swift in Sources */,
 				D21B10492B19854900F2F84E /* UIViewController+.swift in Sources */,
 				BA32E1952B0DEBC500EA0EE2 /* LocationInfoViewController.swift in Sources */,
 				BA6C6DF82B05FFC500563B22 /* TabComponent.swift in Sources */,

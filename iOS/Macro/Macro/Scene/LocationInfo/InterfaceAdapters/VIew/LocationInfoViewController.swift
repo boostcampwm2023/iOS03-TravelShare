@@ -7,6 +7,7 @@
 
 import Combine
 import MacroDesignSystem
+import MacroNetwork
 import UIKit
 
 final class LocationInfoViewController: UIViewController {
@@ -14,6 +15,7 @@ final class LocationInfoViewController: UIViewController {
     // MARK: - Properties
     
     let viewModel: LocationInfoViewModel
+    let postCollectionViewModel = PostCollectionViewModel(posts: [], followFeature: FollowFeature(provider: APIProvider(session: URLSession.shared)), patcher: Patcher(provider: APIProvider(session: URLSession.shared)), postSearcher: Searcher(provider: APIProvider(session: URLSession.shared)))
     private var cancellables = Set<AnyCancellable>()
     private let inputSubject: PassthroughSubject<LocationInfoViewModel.Input, Never> = .init()
     
@@ -67,7 +69,14 @@ final class LocationInfoViewController: UIViewController {
         return label
     }()
     
-    lazy var postCollectionView: PostCollectionView = PostCollectionView(frame: .zero, viewModel: viewModel)
+    
+    // MARK: - UI Components
+    
+    
+    lazy var postCollectionView: PostCollectionView = {
+        let collectionView = PostCollectionView(frame: .zero, viewModel: postCollectionViewModel)
+        return collectionView
+    }()
     
     private let segmentControl: UISegmentedControl = {
         let control = UISegmentedControl(items: ["포함된 여행", "함께 많이 간 장소"])
@@ -191,7 +200,7 @@ extension LocationInfoViewController {
         let selectedType = sender.selectedSegmentIndex == 0 ? InfoType.post : InfoType.location
         inputSubject.send(.changeSelectType(selectedType))
     }
-
+    
 }
 // MARK: - LayoutMetrics
 
