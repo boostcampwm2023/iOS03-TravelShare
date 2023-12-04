@@ -50,7 +50,7 @@ extension LocationInfoViewModel {
                 self?.changeSelectType(type: searchType)
             case .viewDidLoad:
                 self?.outputSubject.send(.changeTextLabel(self?.locationDetail))
-                self?.getRelatedLocation()
+                self?.getRelatedPost()
             }
         }.store(in: &cancellables)
         

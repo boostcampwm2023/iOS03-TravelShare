@@ -23,6 +23,8 @@ final class LocationInfoViewController: TouchableViewController {
     
     private let placeNameLabel: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         label.font = UIFont.appFont(.baeEunLargeTitle)
         label.textColor = UIColor.appColor(.blue4)
         return label
@@ -41,8 +43,11 @@ final class LocationInfoViewController: TouchableViewController {
         return label
     }()
     
+    // TODO: 글자 제한 수를 넘을경우 다음 줄로 넘어가게 처리
     private let addressLabel: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         label.font = UIFont.appFont(.baeEunTitle1)
         label.textColor = UIColor.appColor(.blue4)
         return label
@@ -50,6 +55,8 @@ final class LocationInfoViewController: TouchableViewController {
     
     private let categoryNameLabel: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         label.font = UIFont.appFont(.baeEunBody)
         label.textColor = UIColor.appColor(.purple3)
         return label
@@ -57,6 +64,8 @@ final class LocationInfoViewController: TouchableViewController {
     
     private let categoryGroupLabel: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         label.font = UIFont.appFont(.baeEunCaption)
         label.textColor = UIColor.appColor(.purple3)
         return label
@@ -78,6 +87,7 @@ final class LocationInfoViewController: TouchableViewController {
     
     lazy var relatedLocationCollectionView: RelatedLocationCollectionView = {
         let collectionView = RelatedLocationCollectionView(frame: .zero, viewModel: viewModel)
+        collectionView.isHidden = true
         return collectionView
     }()
     
@@ -140,7 +150,7 @@ extension LocationInfoViewController {
         view.addSubview(phoneLabel)
         view.addSubview(pinLabel)
         view.addSubview(segmentControl)
-     //   view.addSubview(postCollectionView)
+        view.addSubview(postCollectionView)
         view.addSubview(relatedLocationCollectionView)
     }
     
@@ -160,10 +170,10 @@ extension LocationInfoViewController {
             pinLabel.centerYAnchor.constraint(equalTo: placeNameLabel.centerYAnchor),
             segmentControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             segmentControl.topAnchor.constraint(equalTo: phoneLabel.bottomAnchor, constant: Padding.segmentTop),
-//            postCollectionView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: Padding.postCollectionViewTop),
-//            postCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-//            postCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-//            postCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            postCollectionView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: Padding.postCollectionViewTop),
+            postCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            postCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            postCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             relatedLocationCollectionView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: Padding.postCollectionViewTop),
             relatedLocationCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             relatedLocationCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
@@ -223,6 +233,10 @@ extension LocationInfoViewController {
     
     @objc private func segmentValueChanged(_ sender: UISegmentedControl) {
         let selectedType = sender.selectedSegmentIndex == 0 ? InfoType.post : InfoType.location
+        
+        postCollectionView.isHidden = selectedType != .post
+        relatedLocationCollectionView.isHidden = selectedType != .location
+        
         inputSubject.send(.changeSelectType(selectedType))
     }
     
