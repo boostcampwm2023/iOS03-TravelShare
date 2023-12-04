@@ -16,9 +16,6 @@ class RouteViewModel: ViewModelProtocol, MapCollectionViewProtocol {
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
     
-    let writeViewModel = WriteViewModel(uploadImageUseCase: UploadImage(provider: APIProvider(session: URLSession.shared)), uploadPostUseCase: UploadPost(provider: APIProvider(session: URLSession.shared)))
-    lazy var writeViewController = WriteViewController(viewModel: writeViewModel)
-    
     // MARK: - Input
     
     enum Input {
@@ -28,7 +25,7 @@ class RouteViewModel: ViewModelProtocol, MapCollectionViewProtocol {
     
     enum Output {
         case deleteTravel(String)
-        case navigateToWriteView(TravelInfo)
+        case navigateToWriteView(WriteViewModel)
     }
 }
 
@@ -43,7 +40,11 @@ extension RouteViewModel {
     }
     
     func navigateToWriteView(travelInfo: TravelInfo) {
-        self.outputSubject.send(.navigateToWriteView(travelInfo))
+        let provider = APIProvider(session: URLSession.shared)
+        let viewModel = WriteViewModel(uploadImageUseCase: UploadImage(provider: provider),
+                                       uploadPostUseCase: UploadPost(provider: provider),
+                                       travelInfo: travelInfo)
+        self.outputSubject.send(.navigateToWriteView(viewModel))
     }
                                 
     func deleteTravel(uuid: String) {
