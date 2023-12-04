@@ -97,10 +97,6 @@ private extension HomeViewController {
             switch output {
             case let .updateSearchResult(result):
                 self?.updateSearchResult(result)
-            case let .navigateToProfileView(email):
-                self?.navigateToProfileView(email)
-            case let .navigateToReadView(postId):
-                self?.navigateToReadView(postId)
             case let .updatePostLike(likePostResponse):
                 self?.updatePostLike(likePostResponse)
             default: break
@@ -117,23 +113,6 @@ extension HomeViewController {
         _ = result.sorted { $0.postId < $1.postId }
         postCollectionView.viewModel.posts = result
         postCollectionView.reloadData()
-    }
-    
-    private func navigateToProfileView(_ email: String) {
-        let userInfoViewModel = UserInfoViewModel(postSearcher: viewModel.postSearcher,
-                                                  followFeature: viewModel.followFeatrue,
-                                                  patcher: Patcher(provider: provider))
-        let userInfoViewController = UserInfoViewController(viewModel: userInfoViewModel, userInfo: email)
-        navigationController?.pushViewController(userInfoViewController, animated: true)
-    }
-    
-    private func navigateToReadView(_ postId: Int) {
-        let provider = APIProvider(session: URLSession.shared)
-        let readuseCase = ReadPostUseCase(provider: provider)
-        let readViewModel = ReadViewModel(useCase: readuseCase, postId: postId)
-        let readViewController = ReadViewController(viewModel: readViewModel)
-
-        navigationController?.pushViewController(readViewController, animated: true)
     }
     
     private func updatePostLike(_ likePostReponse: LikePostResponse) {

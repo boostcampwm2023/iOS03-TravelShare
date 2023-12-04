@@ -95,14 +95,14 @@ final class PostProfileView: UIView {
     @objc private func likeImageViewTap(_ sender: UITapGestureRecognizer) {
         guard let viewModel = viewModel else { return }
         guard let postId: Int = self.postId else { return }
-        viewModel.touchLike(postId: postId)
+        inputSubject.send(.touchLike(postId))
     }
     
 }
 
 // MARK: - UI Settings
 
-private extension PostProfileView {
+extension PostProfileView {
     
     func setTranslatesAutoresizingMaskIntoConstraints() {
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -152,6 +152,13 @@ private extension PostProfileView {
         ])
     }
     
+    func setLayout() {
+        setTranslatesAutoresizingMaskIntoConstraints()
+        addSubviews()
+        setLayoutConstraints()
+        addTapGesture()
+    }
+    
     func addTapGesture() {
         profileImageView.isUserInteractionEnabled = true
         let profileImageViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(profileImageTap(_:)))
@@ -164,34 +171,26 @@ private extension PostProfileView {
     
 }
 
-// MARK: - Bind
-
 extension PostProfileView {
     func bind() {
-        guard let viewModel = self.viewModel else { return }
+        guard let viewModel = self.viewModel, let postId = self.postId else { return }
+                
         let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+        
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
             switch output {
+            case .updatePostLike(let likePostResponse) where likePostResponse.postId == postId:
+                                self?.likeCountLabel.text = "\(likePostResponse.likeNum)"
             default: break
             }
         }.store(in: &cancellables)
     }
-   
 }
 
 // MARK: - Method
 
 extension PostProfileView {
-    
-    func setLayout() {
-        setTranslatesAutoresizingMaskIntoConstraints()
-        addSubviews()
-        setLayoutConstraints()
-        addTapGesture()
-    }
-    
     func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?) {
-        
         self.viewModel = viewModel
         guard let viewModel = self.viewModel else { return }
         viewModel.loadImage(profileImageStringURL: item.writer.imageUrl ?? "https://user-images.githubusercontent.com/118811606/285184604-1e5983fd-0b07-4bfe-9c17-8b147f237517.png") { profileImage in

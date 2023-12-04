@@ -13,15 +13,17 @@ import MacroNetwork
 import UIKit
 
 final class PostCollectionViewModel: ViewModelProtocol {
-    
+
     var posts: [PostFindResponse] = []
     private let outputSubject = PassthroughSubject<Output, Never>()
     private var cancellables = Set<AnyCancellable>()
     let followFeatrue: FollowUseCase
     let patcher: PatchUseCase
     let postSearcher: SearchUseCase
+    
     enum Input {
         case navigateToReadView(Int)
+        case touchLike(Int)
     }
     
     enum Output {
@@ -45,10 +47,12 @@ extension PostCollectionViewModel {
     func transform(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         input.sink { [weak self] input in
             switch input {
-            case let .navigateToReadView(postId):
-                self?.navigateToReadView(postId: postId)
+            case let .touchLike(postId):
+                self?.touchLike(postId: postId)
+            default: break
             }
         }.store(in: &cancellables)
+        
         return outputSubject.eraseToAnyPublisher()
     }
     

@@ -21,6 +21,7 @@ protocol PostCollectionViewProtocol: AnyObject {
 extension PostCollectionViewProtocol {
     func loadImage(profileImageStringURL: String, completion: @escaping (UIImage?) -> Void) {
         guard let url = URL(string: profileImageStringURL) else { return }
+        print(url)
         URLSession.shared.dataTask(with: url) { data, _, _ in
             if let data = data, let image = UIImage(data: data) {
                 DispatchQueue.main.async {

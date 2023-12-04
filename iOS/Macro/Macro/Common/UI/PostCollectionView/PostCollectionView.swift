@@ -72,14 +72,4 @@ final class PostCollectionView: UICollectionView, UICollectionViewDelegate, UICo
         return UIEdgeInsets(top: 0, left: 0, bottom: 80, right: 0)
     }
     
-    func bind(){
-    
-        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
-        
-        outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
-            switch output {
-            default: break
-            }
-        }.store(in: &cancellables)
-    }
 }

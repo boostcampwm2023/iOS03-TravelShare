@@ -39,7 +39,7 @@ final class PostCollectionViewCell: UICollectionViewCell {
 
 // MARK: - UI Settings
 
-private extension PostCollectionViewCell {
+extension PostCollectionViewCell {
     
     func setTranslatesAutoresizingMaskIntoConstraints() {
         postContentView.translatesAutoresizingMaskIntoConstraints = false
@@ -71,7 +71,6 @@ private extension PostCollectionViewCell {
         postContentView.configure(item: item, viewModel: self.viewModel)
         postProfileView.setLayout()
         postProfileView.configure(item: item, viewModel: self.viewModel)
-        
     }
 }
 
@@ -86,6 +85,7 @@ extension PostCollectionViewCell {
         postProfileView.indexPath = indexPath
         postContentView.delegate = delegate
         postProfileView.delegate = delegate
+        postProfileView.bind()
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
