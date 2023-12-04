@@ -6,12 +6,19 @@
 //
 
 import Combine
-import Foundation
+import UIKit.UIImage
 
-final class ReadViewModel: ViewModelProtocol {
-    
+final class ReadViewModel: ViewModelProtocol, CarouselViewProtocol {
+
     // MARK: - Properties
+    var pageIndex = 0 {
+        didSet {
+            self.outputSubject.send(.updatePageIndex(pageIndex))
+        }
+    }
     
+    var carouselCurrentIndex: Int = 0
+    var items: [UIImage?] = []
     private var cancellables = Set<AnyCancellable>()
     private let useCase: ReadPostUseCaseProtocol
     private let outputSubject = PassthroughSubject<Output, Never>()
@@ -36,6 +43,7 @@ final class ReadViewModel: ViewModelProtocol {
     enum Output {
         case updatePost(post: ReadPost)
         case navigateToProfileView(String)
+        case updatePageIndex(Int)
     }
 }
 
