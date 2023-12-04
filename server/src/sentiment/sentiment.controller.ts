@@ -21,8 +21,8 @@ export class SentimentController {
   })
   @ApiResponse({ type: [SentimentAnalysisResponse] })
   @ApiBearerAuth('access-token')
-  @Get('sentiment')
-  async sentiment(@Query() { content }: SentimentAnalysisQuery) {
-    return await this.sentimentService.SentimentAnalysis({ content });
+  @Get('analysis')
+  analysis(@Query() { content }: SentimentAnalysisQuery) {
+    return this.sentimentService.analysis({ content });
   }
 }
