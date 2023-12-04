@@ -144,6 +144,7 @@
 		D263CA2F2B054A0E00B4A144 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA2E2B054A0E00B4A144 /* SearchResultViewController.swift */; };
 		D263CA332B06C7B300B4A144 /* SavedRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA322B06C7B300B4A144 /* SavedRoute.swift */; };
 		D2CAA5C72B1D7E3700E825BA /* LocationInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5C62B1D7E3700E825BA /* LocationInfoViewModel.swift */; };
+		D2CAA5CA2B1D8D1700E825BA /* InfoType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5C92B1D8D1700E825BA /* InfoType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -286,6 +287,7 @@
 		D263CA2E2B054A0E00B4A144 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
 		D263CA322B06C7B300B4A144 /* SavedRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedRoute.swift; sourceTree = "<group>"; };
 		D2CAA5C62B1D7E3700E825BA /* LocationInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInfoViewModel.swift; sourceTree = "<group>"; };
+		D2CAA5C92B1D8D1700E825BA /* InfoType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoType.swift; sourceTree = "<group>"; };
 		EFE56344E8979EDA80D9E782 /* libPods-Macro.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Macro.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE963544592A2BC35C2CD604 /* Pods-Macro.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Macro.release.xcconfig"; path = "Target Support Files/Pods-Macro/Pods-Macro.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1210,6 +1212,7 @@
 		D2CAA5C82B1D817900E825BA /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				D2CAA5C92B1D8D1700E825BA /* InfoType.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -1386,6 +1389,7 @@
 				AAD0B31C2B171171003B4D5F /* Cotent.swift in Sources */,
 				D241DC752B0DA00F0037DDB6 /* Writer.swift in Sources */,
 				BA33AA892B0AF9F30065D1E0 /* HomeViewController.swift in Sources */,
+				D2CAA5CA2B1D8D1700E825BA /* InfoType.swift in Sources */,
 				D21B101F2B17994100F2F84E /* ConfirmError.swift in Sources */,
 				BA90CB872B0F3BF600365AE2 /* PostCollectionView.swift in Sources */,
 				AAD0B3272B176832003B4D5F /* PostUploadResponse.swift in Sources */,

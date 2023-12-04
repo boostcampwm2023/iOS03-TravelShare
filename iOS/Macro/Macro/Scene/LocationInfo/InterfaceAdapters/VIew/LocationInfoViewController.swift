@@ -5,13 +5,17 @@
 //  Created by 김나훈 on 11/22/23.
 //
 
+import Combine
 import MacroDesignSystem
 import UIKit
 
 final class LocationInfoViewController: UIViewController {
     
     // MARK: - Properties
+    
     let viewModel: LocationInfoViewModel
+    private var cancellables = Set<AnyCancellable>()
+    private let inputSubject: PassthroughSubject<LocationInfoViewModel.Input, Never> = .init()
     
     // MARK: - UI Components
     
@@ -79,6 +83,8 @@ final class LocationInfoViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setUpLayout()
+        bind()
+        segmentControl.addTarget(self, action: #selector(segmentValueChanged(_:)), for: .valueChanged)
     }
     
     // MARK: - Init
@@ -146,12 +152,20 @@ extension LocationInfoViewController {
 // MARK: - Bind
 
 extension LocationInfoViewController {
-    
+    private func bind() {
+        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+        
+        outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
+            switch output {
+            }
+        }.store(in: &cancellables)
+    }
 }
 
 // MARK: - Methods
 
 extension LocationInfoViewController {
+    
     func updateText(_ model: LocationDetail) {
         placeNameLabel.text = model.placeName.isEmpty == true ? "-" : model.placeName
         addressLabel.text = model.addressName.isEmpty == true ? "-" : model.addressName
@@ -159,6 +173,12 @@ extension LocationInfoViewController {
         categoryGroupLabel.text = model.categoryGroupName.isEmpty == true ? "-" : "(\(model.categoryGroupName))"
         phoneLabel.text = model.phone?.isEmpty == true ? "-" : (model.phone ?? "-")
     }
+    
+    @objc private func segmentValueChanged(_ sender: UISegmentedControl) {
+        let selectedType = sender.selectedSegmentIndex == 0 ? InfoType.post : InfoType.location
+        inputSubject.send(.changeSelectType(selectedType))
+    }
+
 }
 // MARK: - LayoutMetrics
 
