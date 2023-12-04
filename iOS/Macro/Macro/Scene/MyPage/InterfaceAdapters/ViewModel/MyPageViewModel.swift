@@ -23,7 +23,7 @@ class MyPageViewModel: ViewModelProtocol {
     let searcher: SearchUseCase
     let comfirmer: ConfirmUseCase
     let uploader : UploadImageUseCases
-    @Published var myInfo: UserProfile = UserProfile(email: "", name: "", imageUrl: "", introduce: "", followersNum: 0, followeesNum: 0)
+    @Published var myInfo: UserProfile = UserProfile(email: "", name: "", imageUrl: "", introduce: "", followersNum: 0, followeesNum: 0, followee: false, follower: false)
     
     // MARK: - Init
     init(patcher: PatchUseCase, searcher: SearchUseCase, confirmer: ConfirmUseCase, uploader: UploadImageUseCases) {
@@ -115,6 +115,7 @@ extension MyPageViewModel {
         } receiveValue: { [weak self] response in
             self?.outputSubject.send(.sendMyUserData(response))
             self?.myInfo = response
+            print(response)
         }.store(in: &cancellables)
     }
 }

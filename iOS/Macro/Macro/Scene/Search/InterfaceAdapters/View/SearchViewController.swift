@@ -123,7 +123,6 @@ extension SearchViewController {
     private func bind() {
         let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
         
-        // TODO: - 네비게이션 연결
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
             switch output {
             case let .updateSearchResult(result):

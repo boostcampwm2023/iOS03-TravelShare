@@ -16,6 +16,8 @@ protocol SearchUseCase {
     /// 특정 사용자의 게시글들을 전부 불러오는 함수
     func searchPost(query: String) -> AnyPublisher<[PostFindResponse], NetworkError>
     
+  //  func searchAccount(query: String) -> AnyPublisher<[
+    
     /// 특정 검색어가 해당 json 파일 list의 제목에 포함되는지 검색
     func searchMockPost(query: String, json: String) -> AnyPublisher<[PostFindResponse], NetworkError>
     

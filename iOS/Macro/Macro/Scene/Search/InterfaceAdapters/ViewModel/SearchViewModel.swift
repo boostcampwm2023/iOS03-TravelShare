@@ -15,15 +15,15 @@ final class SearchViewModel: ViewModelProtocol {
     
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
-    private let postSearcher: SearchUseCase
-    private var searchType: SearchType = .post
-    var posts: [PostFindResponse] = []
-    var patcher: PatchUseCase
+    private let searcher: SearchUseCase
+    private (set) var searchType: SearchType = .post
+    private (set) var posts: [PostFindResponse] = []
+    private let patcher: PatchUseCase
     
     // MARK: - Init
     
-    init(postSearcher: SearchUseCase, patcher: PatchUseCase) {
-        self.postSearcher = postSearcher
+    init(searcher: SearchUseCase, patcher: PatchUseCase) {
+        self.searcher = searcher
         self.patcher = patcher
     }
     
@@ -56,10 +56,10 @@ extension SearchViewModel {
                 case let .changeSelectType(searchType):
                     self?.changeSelectType(type: searchType)
                 case let .search(text):
-                    switch self?.searchType {
-                    case .account: self?.searchAccount(text: text)
-                    case .post: self?.searchPost(text: text)
-                    case .none: break
+                    guard let self = self else { return }
+                    switch self.searchType {
+                    case .account: self.searchAccount(text: text)
+                    case .post: self.searchPost(text: text)
                     }
                 }
             }
@@ -72,11 +72,11 @@ extension SearchViewModel {
     }
     
     private func searchAccount(text: String) {
-        // TODO: 계정 검색
+        
     }
     
     private func searchPost(text: String) {
-        postSearcher.searchPostTitle(query: text)
+        searcher.searchPostTitle(query: text)
             .sink { completion in
                 if case let .failure(error) = completion {
                     print(error)
@@ -94,7 +94,7 @@ extension SearchViewModel {
 
 extension SearchViewModel {
     private func searchMockPost(text: String) {
-        postSearcher.searchMockPost(query: text, json: "tempJson").sink { completion in
+        searcher.searchMockPost(query: text, json: "tempJson").sink { completion in
             if case let .failure(error) = completion {
                 print(error)
             }
