@@ -161,6 +161,8 @@
 		D2CAA5D52B1E0A1E00E825BA /* RelatedLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5D42B1E0A1E00E825BA /* RelatedLocation.swift */; };
 		D2CAA5D72B1E117600E825BA /* RelatedLocationCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5D62B1E117600E825BA /* RelatedLocationCollectionView.swift */; };
 		D2CAA5DB2B1E151800E825BA /* RelatedLocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5DA2B1E151800E825BA /* RelatedLocationCell.swift */; };
+		D2CAA5DD2B1E51C200E825BA /* UserResultCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5DC2B1E51C200E825BA /* UserResultCollectionView.swift */; };
+		D2CAA5DF2B1E51CF00E825BA /* UserResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5DE2B1E51CF00E825BA /* UserResultCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -320,6 +322,8 @@
 		D2CAA5D42B1E0A1E00E825BA /* RelatedLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedLocation.swift; sourceTree = "<group>"; };
 		D2CAA5D62B1E117600E825BA /* RelatedLocationCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedLocationCollectionView.swift; sourceTree = "<group>"; };
 		D2CAA5DA2B1E151800E825BA /* RelatedLocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedLocationCell.swift; sourceTree = "<group>"; };
+		D2CAA5DC2B1E51C200E825BA /* UserResultCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResultCollectionView.swift; sourceTree = "<group>"; };
+		D2CAA5DE2B1E51CF00E825BA /* UserResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResultCell.swift; sourceTree = "<group>"; };
 		EFE56344E8979EDA80D9E782 /* libPods-Macro.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Macro.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE963544592A2BC35C2CD604 /* Pods-Macro.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Macro.release.xcconfig"; path = "Target Support Files/Pods-Macro/Pods-Macro.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -664,6 +668,8 @@
 		BA32E1912B0DEBC500EA0EE2 /* LocationInfo */ = {
 			isa = PBXGroup;
 			children = (
+				D2CAA5C82B1D817900E825BA /* Entities */,
+				D2CAA5D12B1E071700E825BA /* Network */,
 				BA32E1922B0DEBC500EA0EE2 /* InterfaceAdapters */,
 			);
 			path = LocationInfo;
@@ -672,8 +678,6 @@
 		BA32E1922B0DEBC500EA0EE2 /* InterfaceAdapters */ = {
 			isa = PBXGroup;
 			children = (
-				D2CAA5D12B1E071700E825BA /* Network */,
-				D2CAA5C82B1D817900E825BA /* Entities */,
 				D25FAAF72B1D7BDB00077232 /* ViewModel */,
 				BA32E1932B0DEBC500EA0EE2 /* VIew */,
 			);
@@ -879,6 +883,8 @@
 			isa = PBXGroup;
 			children = (
 				BA8DC4062B0B5F0600929E01 /* SearchViewController.swift */,
+				D2CAA5DC2B1E51C200E825BA /* UserResultCollectionView.swift */,
+				D2CAA5DE2B1E51CF00E825BA /* UserResultCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1529,8 +1535,10 @@
 				BAB24EE22B16D8F5000991A1 /* MapCollectionViewProtocol.swift in Sources */,
 				AAD0B2C12B0DA35B003B4D5F /* AppleLoginUseCase.swift in Sources */,
 				D263CA2F2B054A0E00B4A144 /* SearchResultViewController.swift in Sources */,
+				D2CAA5DD2B1E51C200E825BA /* UserResultCollectionView.swift in Sources */,
 				AAD0B3232B17474D003B4D5F /* UploadPost.swift in Sources */,
 				BA32E17F2B0DC3CB00EA0EE2 /* MyPageViewController.swift in Sources */,
+				D2CAA5DF2B1E51CF00E825BA /* UserResultCell.swift in Sources */,
 				BA90CBA02B145D6600365AE2 /* FollowUseCase.swift in Sources */,
 				BA6C6DFC2B05FFC500563B22 /* TabComponentView.swift in Sources */,
 				D263CA262B04147E00B4A144 /* TravelViewController.swift in Sources */,

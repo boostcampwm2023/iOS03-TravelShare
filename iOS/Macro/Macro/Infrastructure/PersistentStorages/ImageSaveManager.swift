@@ -14,18 +14,20 @@ struct ImageSaveManager {
         let provider = APIProvider(session: URLSession.shared)
         let uploadImageUseCase = UploadImage(provider: provider)
         var imageURLs = [String]()
-        
         imageDatas.forEach { imageData in
             uploadImageUseCase.execute(imageData: imageData)
                 .receive(on: DispatchQueue.global())
                 .sink { result in
                     if case let .failure(error) = result {
                         debugPrint("Image Upload Fail : ", error)
+                        print(12123)
                     } else if imageURLs.count == imageDatas.count {
                         completion(imageURLs)
+                        print(12145)
                     }
                 } receiveValue: { imageURLResponse in
                     imageURLs.append(imageURLResponse.url)
+                    print(imageURLResponse)
                 }
                 .store(in: &cancellables)
         }

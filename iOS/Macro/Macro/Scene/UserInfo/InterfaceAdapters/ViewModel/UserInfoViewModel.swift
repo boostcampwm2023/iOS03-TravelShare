@@ -13,7 +13,7 @@ final class UserInfoViewModel: ViewModelProtocol {
     // MARK: - Properties
     
     var posts: [PostFindResponse] = []
-    var userProfile: UserProfile = UserProfile(email: "", name: "", imageUrl: nil, introduce: nil, followersNum: 0, followeesNum: 0)
+    var userProfile: UserProfile = UserProfile(email: "", name: "", imageUrl: nil, introduce: nil, followersNum: 0, followeesNum: 0, followee: false, follower: false)
     var searchUserEmail = ""
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()

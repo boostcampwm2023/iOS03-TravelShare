@@ -22,14 +22,14 @@ final class TabBarViewModel {
     
     init() {
         let provider = APIProvider(session: URLSession.shared)
-        let searchViewModel = SearchViewModel(postSearcher: Searcher(provider: provider), patcher: Patcher(provider: provider))
+        let searchViewModel = SearchViewModel(searcher: Searcher(provider: provider), patcher: Patcher(provider: provider))
         let homeViewModel = HomeViewModel(postSearcher: Searcher(provider: provider), followFeature: FollowFeature(provider: provider), patcher: Patcher(provider: provider))
         let routeViewModel = RouteViewModel()
         let travelViewModel = TravelViewModel(
             routeRecorder: RouteRecorder(provider: provider),
             locationSearcher: Searcher(provider: provider),
             pinnedPlaceManager: PinnedPlaceManager(provider: provider))
-        let myPageViewModel = MyPageViewModel(patcher: Patcher(provider: provider), searcher: Searcher(provider: provider), confirmer: Confirmer())
+        let myPageViewModel = MyPageViewModel(patcher: Patcher(provider: provider), searcher: Searcher(provider: provider), confirmer: Confirmer(), uploader: UploadImage(provider: provider))
         let setComponentArray = [
         TabComponent(index: 1,
                      image: UIImage.appImage(.magnifyingglass),

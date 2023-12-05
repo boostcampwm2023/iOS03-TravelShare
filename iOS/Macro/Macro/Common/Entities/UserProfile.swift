@@ -14,4 +14,6 @@ struct UserProfile: Codable {
     let introduce: String?
     let followersNum: Int
     let followeesNum: Int
+    let followee: Bool
+    let follower: Bool
 }

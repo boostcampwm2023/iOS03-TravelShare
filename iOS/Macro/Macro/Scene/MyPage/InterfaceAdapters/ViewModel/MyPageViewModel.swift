@@ -22,13 +22,15 @@ class MyPageViewModel: ViewModelProtocol {
     let patcher: PatchUseCase
     let searcher: SearchUseCase
     let comfirmer: ConfirmUseCase
-    @Published var myInfo: UserProfile = UserProfile(email: "", name: "", imageUrl: "", introduce: "", followersNum: 0, followeesNum: 0)
+    let uploader : UploadImageUseCases
+    @Published var myInfo: UserProfile = UserProfile(email: "", name: "", imageUrl: "", introduce: "", followersNum: 0, followeesNum: 0, followee: false, follower: false)
     
     // MARK: - Init
-    init(patcher: PatchUseCase, searcher: SearchUseCase, confirmer: ConfirmUseCase) {
+    init(patcher: PatchUseCase, searcher: SearchUseCase, confirmer: ConfirmUseCase, uploader: UploadImageUseCases) {
         self.patcher = patcher
         self.searcher = searcher
         self.comfirmer = confirmer
+        self.uploader = uploader
     }
     
     // MARK: - Input
@@ -36,6 +38,7 @@ class MyPageViewModel: ViewModelProtocol {
     enum Input {
         case completeButtonTapped(Int, String)
         case getMyUserData(String)
+        case selectImage(Data)
     }
     
     // MARK: - Output
@@ -45,6 +48,7 @@ class MyPageViewModel: ViewModelProtocol {
         case sendMyUserData(UserProfile)
         case dissMissView
         case showAlert(String)
+        case profileEdit(String)
     }
     
 }
@@ -62,11 +66,25 @@ extension MyPageViewModel {
                     self?.getMyUserData(self?.email ?? "")
                 case let .getMyUserData(email):
                     self?.getMyUserData(email)
+                case let .selectImage(data):
+                    self?.uploadImage(data)
                 }
             }
             .store(in: &cancellables)
         
         return outputSubject.eraseToAnyPublisher()
+    }
+    
+    private func uploadImage(_ data: Data) {
+        uploader.execute(imageData: data).sink { completion in
+            if case let .failure(error) = completion {
+                Log.make().error("\(error)")
+            }
+        } receiveValue: {  [weak self] response in
+            self?.outputSubject.send(.profileEdit(response.url))
+            self?.modifyInformation(1, response.url)
+        }.store(in: &cancellables)
+
     }
     
     private func modifyInformation(_ cellIndex: Int, _ query: String) {
@@ -97,6 +115,7 @@ extension MyPageViewModel {
         } receiveValue: { [weak self] response in
             self?.outputSubject.send(.sendMyUserData(response))
             self?.myInfo = response
+            print(response)
         }.store(in: &cancellables)
     }
 }

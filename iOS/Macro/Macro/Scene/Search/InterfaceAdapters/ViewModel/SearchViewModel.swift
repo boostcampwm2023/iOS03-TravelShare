@@ -15,15 +15,16 @@ final class SearchViewModel: ViewModelProtocol {
     
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
-    private let postSearcher: SearchUseCase
-    private var searchType: SearchType = .post
-    var posts: [PostFindResponse] = []
-    var patcher: PatchUseCase
+    private let searcher: SearchUseCase
+    private (set) var searchType: SearchType = .account
+    private (set) var posts: [PostFindResponse] = []
+    private (set) var userList: [UserProfile] = []
+    private let patcher: PatchUseCase
     
     // MARK: - Init
     
-    init(postSearcher: SearchUseCase, patcher: PatchUseCase) {
-        self.postSearcher = postSearcher
+    init(searcher: SearchUseCase, patcher: PatchUseCase) {
+        self.searcher = searcher
         self.patcher = patcher
     }
     
@@ -37,11 +38,8 @@ final class SearchViewModel: ViewModelProtocol {
     // MARK: - Output
     
     enum Output {
-        case updateSearchResult([PostFindResponse])
-        case navigateToProfileView(String)
-        case navigateToReadView(Int)
-        case updatePostLike(LikePostResponse)
-        case updateUserFollow(FollowPatchResponse)
+        case updatePostSearchResult([PostFindResponse])
+        case updateUserSearchResult([UserProfile])
     }
     
 }
@@ -56,10 +54,10 @@ extension SearchViewModel {
                 case let .changeSelectType(searchType):
                     self?.changeSelectType(type: searchType)
                 case let .search(text):
-                    switch self?.searchType {
-                    case .account: self?.searchAccount(text: text)
-                    case .post: self?.searchPost(text: text)
-                    case .none: break
+                    guard let self = self else { return }
+                    switch self.searchType {
+                    case .account: self.searchUser(text: text)
+                    case .post: self.searchPost(text: text)
                     }
                 }
             }
@@ -71,20 +69,29 @@ extension SearchViewModel {
         searchType = type
     }
     
-    private func searchAccount(text: String) {
-        // TODO: 계정 검색
+    private func searchUser(text: String) {
+        searcher.searchAccountWord(query: text).sink { completion in
+            if case let .failure(error) = completion {
+                Log.make().error("\(error)")
+            }
+        } receiveValue: { [weak self] response in
+            self?.userList = response
+            let defaultValue = [UserProfile]()
+            self?.outputSubject.send(.updateUserSearchResult(self?.userList ?? defaultValue))
+        }.store(in: &cancellables)
+
     }
     
     private func searchPost(text: String) {
-        postSearcher.searchPostTitle(query: text)
+        searcher.searchPostTitle(query: text)
             .sink { completion in
                 if case let .failure(error) = completion {
-                    print(error)
+                    Log.make().error("\(error)")
                 }
             } receiveValue: { [weak self] response in
                 self?.posts = response
                 let defaultValue = [PostFindResponse]()
-                self?.outputSubject.send(.updateSearchResult(self?.posts ?? defaultValue))
+                self?.outputSubject.send(.updatePostSearchResult(self?.posts ?? defaultValue))
             }.store(in: &cancellables)
     }
     
@@ -94,7 +101,7 @@ extension SearchViewModel {
 
 extension SearchViewModel {
     private func searchMockPost(text: String) {
-        postSearcher.searchMockPost(query: text, json: "tempJson").sink { completion in
+        searcher.searchMockPost(query: text, json: "tempJson").sink { completion in
             if case let .failure(error) = completion {
                 print(error)
             }
@@ -104,7 +111,7 @@ extension SearchViewModel {
                 !post.title.contains(text)
             }
             let defaultValue = [PostFindResponse]()
-            self?.outputSubject.send(.updateSearchResult(self?.posts ?? defaultValue ))
+            self?.outputSubject.send(.updatePostSearchResult(self?.posts ?? defaultValue ))
         }.store(in: &cancellables)
     }
 }
