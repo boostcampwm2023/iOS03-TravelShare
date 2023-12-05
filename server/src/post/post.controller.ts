@@ -58,6 +58,18 @@ export class PostController {
     return await this.postService.popularList(query, user);
   }
 
+  @ApiOperation({
+    summary: '인기 게시글 조회 v2입니다.',
+    description: `
+# post/hits/v2
+
+- post/hits와 같은 기능입니다.
+- 알고리즘을 개선하였습니다.
+- 인덱싱 적용을 통한 속도 개선과 팔로워 정보도 반영이 되었습니다.
+
+    `,
+  })
+  @ApiResponse({ type: PostSearchResponse })
   @Get('hits/v2')
   async hitsV2(
     @Query() query: PostHitsQuery,
