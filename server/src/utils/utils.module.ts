@@ -8,6 +8,8 @@ import { addTransactionalDataSource } from 'typeorm-transactional';
 import { KeywordAutoCompleteService } from './keyword.autocomplete.service';
 import { RedisModule } from './redis/redis.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { LoggerInterceptor } from './logger.interceptor';
 
 @Global()
 @Module({
@@ -31,7 +33,13 @@ import { ScheduleModule } from '@nestjs/schedule';
     RedisModule,
     ScheduleModule.forRoot(),
   ],
-  providers: [KeywordAutoCompleteService],
+  providers: [
+    KeywordAutoCompleteService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggerInterceptor,
+    },
+  ],
   exports: [HttpModule, KeywordAutoCompleteService],
 })
 export class UtilsModule {}
