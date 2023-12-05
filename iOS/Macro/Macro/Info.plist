@@ -44,5 +44,8 @@
 	</array>
 	<key>UILaunchImageFile</key>
 	<string>LoginImage</string>
+    
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
 </dict>
 </plist>
