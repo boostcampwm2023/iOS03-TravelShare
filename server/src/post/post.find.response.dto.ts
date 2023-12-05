@@ -3,6 +3,7 @@ import { Transform, Type } from 'class-transformer';
 import {
   IsNumber,
   IsNumberString,
+  IsOptional,
   IsPhoneNumber,
   IsString,
   ValidateNested,
@@ -18,8 +19,9 @@ export class PostFindResponse {
   @IsString()
   placeName: string;
 
-  @ApiProperty({ description: '전화번호' })
+  @ApiProperty({ description: '전화번호', required: false })
   @IsPhoneNumber('KR')
+  @IsOptional()
   phoneNumber: string;
 
   @ApiProperty({ description: '카테고리' })
@@ -30,8 +32,9 @@ export class PostFindResponse {
   @IsString()
   address: string;
 
-  @ApiProperty({ description: '도로명 주소' })
+  @ApiProperty({ description: '도로명 주소', required: false })
   @IsString()
+  @IsOptional()
   roadAddress: string;
 
   @ApiProperty({ description: '좌표' })
