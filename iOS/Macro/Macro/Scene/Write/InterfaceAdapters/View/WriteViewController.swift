@@ -363,7 +363,7 @@ extension WriteViewController: UIImagePickerControllerDelegate, UINavigationCont
     
     /// 사용자가 이미지를 선택했을 때
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-        if let selectedImage = info[.originalImage] as? UIImage, let data = selectedImage.jpegData(compressionQuality: 1.0) {
+        if let selectedImage = info[.originalImage] as? UIImage, let data = selectedImage.jpegData(compressionQuality: 0.5) {
             self.inputSubject.send(.addImageData(imageData: data))
         }
         dismiss(animated: true, completion: nil)
