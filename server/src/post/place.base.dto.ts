@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsNumberString,
+  IsOptional,
   IsPhoneNumber,
   IsString,
   ValidateNested,
@@ -17,8 +18,13 @@ export class PlaceBase {
   @IsString()
   placeName: string;
 
-  @ApiProperty({ description: '매장 번호입니다.', example: '01012345678' })
+  @ApiProperty({
+    description: '매장 번호입니다.',
+    example: '01012345678',
+    required: false,
+  })
   @IsPhoneNumber('KR')
+  @IsOptional()
   phoneNumber: string;
 
   @ApiProperty({
@@ -32,8 +38,13 @@ export class PlaceBase {
   @IsString()
   address: string;
 
-  @ApiProperty({ description: '도로명 주소입니다.', example: '어디길' })
+  @ApiProperty({
+    description: '도로명 주소입니다.',
+    example: '어디길',
+    required: false,
+  })
   @IsString()
+  @IsOptional()
   roadAddress: string;
 
   @ApiProperty({ description: '핑 좌표' })
