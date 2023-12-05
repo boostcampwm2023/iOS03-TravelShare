@@ -18,6 +18,7 @@ final class MyPageViewController: TabViewController {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
+    private let myInfoHeaderView: UIView = UIView()
     
     private let myPageHeaderView: MyPageHeaderView = MyPageHeaderView()
     
@@ -61,17 +62,23 @@ final class MyPageViewController: TabViewController {
 extension MyPageViewController {
     
     private func setTranslatesAutoresizingMaskIntoConstraints() {
+        myInfoHeaderView.translatesAutoresizingMaskIntoConstraints = false
         myPageHeaderView.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func addsubviews() {
+        view.addSubview(myInfoHeaderView)
         view.addSubview(tableView)
     }
     
     private func setLayoutConstraints() {
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            myInfoHeaderView.topAnchor.constraint(equalTo: view.topAnchor),
+            myInfoHeaderView.heightAnchor.constraint(equalToConstant: 50),
+            myInfoHeaderView.widthAnchor.constraint(equalToConstant: UIScreen.width),
+            
+            tableView.topAnchor.constraint(equalTo: myInfoHeaderView.bottomAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Padding.tableViewSide),
             
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.tableViewSide),
