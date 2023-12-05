@@ -35,7 +35,7 @@ final class WriteViewController: TabViewController {
     
     private let isVisibilityButton: UIButton = {
         let button = UIButton()
-        let image = UIImage.appImage(.lockFill)?.withTintColor(UIColor.appColor(.statusRed), renderingMode: .alwaysOriginal)
+        let image = UIImage.appImage(.lockOpenFill)?.withTintColor(UIColor.appColor(.statusGreen), renderingMode: .alwaysOriginal)
         button.setImage(image, for: .normal)
         return button
     }()
@@ -232,6 +232,7 @@ private extension WriteViewController {
                 case .postUploadFail:
                     let alertController = UIAlertController(title: "", message: "글 작성 실패", preferredStyle: .alert)
                     let okAction = UIAlertAction(title: "확인", style: .default) { _ in
+                        self?.writeSubmitButton.isEnabled = true
                         self?.dismiss(animated: true)
                     }
                     alertController.addAction(okAction)
@@ -265,6 +266,7 @@ private extension WriteViewController {
     }
     
     @objc func writeSubmitButtonTouched() {
+        self.writeSubmitButton.isEnabled = false
         inputSubject.send(.writeSubmit)
     }
 }
@@ -363,7 +365,7 @@ extension WriteViewController: UIImagePickerControllerDelegate, UINavigationCont
     
     /// 사용자가 이미지를 선택했을 때
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-        if let selectedImage = info[.originalImage] as? UIImage, let data = selectedImage.jpegData(compressionQuality: 1.0) {
+        if let selectedImage = info[.originalImage] as? UIImage, let data = selectedImage.jpegData(compressionQuality: 0.5) {
             self.inputSubject.send(.addImageData(imageData: data))
         }
         dismiss(animated: true, completion: nil)

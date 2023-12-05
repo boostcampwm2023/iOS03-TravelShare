@@ -307,7 +307,7 @@ extension MyPageViewController: UIImagePickerControllerDelegate, UINavigationCon
     /// 사용자가 이미지를 선택했을 때
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-        guard let selectedImage = info[.originalImage] as? UIImage, let data = selectedImage.jpegData(compressionQuality: 1.0) else { return }
+        guard let selectedImage = info[.originalImage] as? UIImage, let data = selectedImage.jpegData(compressionQuality: 0.5) else { return }
         
         inputSubject.send(.selectImage(data))
         dismiss(animated: true, completion: nil)
