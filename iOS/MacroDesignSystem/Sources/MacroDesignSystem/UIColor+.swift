@@ -67,11 +67,11 @@ public extension UIColor {
     
     static func appColor(_ name: ColorAsset.PrimaryColor) -> UIColor {
         switch name {
-        case .green1: return UIColor(hexCode: "#AEE8CA")
-        case .green2: return UIColor(hexCode: "#9AB5A7")
-        case .green3: return UIColor(hexCode: "#55826B")
-        case .green4: return UIColor(hexCode: "#244F39")
-        case .green5: return UIColor(hexCode: "#0D331F")
+        case .green1: return UIColor(hexCode: "#C8FFBA")
+        case .green2: return UIColor(hexCode: "#6ACFC9")
+        case .green3: return UIColor(hexCode: "#26B6C6")
+        case .green4: return UIColor(hexCode: "#55826B")
+        case .green5: return UIColor(hexCode: "#244F39")
             
         case .blue1: return UIColor(hexCode: "#F7F8FC")
         case .blue2: return UIColor(hexCode: "#7D8CC9")
