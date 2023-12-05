@@ -19,7 +19,8 @@ class MyPageViewModel: ViewModelProtocol {
     let information = ["이름", "프로필 사진", "자기소개"]
     let post = ["작성한 글", "좋아요한 글"]
     let management = ["팔로우", "알림", "문의하기"]
-    private var followType: FollowType = .followers
+    private (set) var followType: FollowType = .followees
+    private (set) var followList: [FollowList] = []
     let patcher: PatchUseCase
     let searcher: SearchUseCase
     let comfirmer: ConfirmUseCase
@@ -51,7 +52,9 @@ class MyPageViewModel: ViewModelProtocol {
         case dissMissView
         case showAlert(String)
         case profileEdit(String)
-        case sendFollowResult([FollowList])
+        case sendFollowersCount(Int)
+        case sendFolloweesCount(Int)
+        case reloadData
     }
     
 }
@@ -81,19 +84,36 @@ extension MyPageViewModel {
     }
     
     private func getFollowInformation() {
-        searcher.searchUserFollow(type: followType, query: email ?? "").sink { completion in
+        
+        switch self.followType {
+        case .followees: self.followType = .followers
+        case .followers: self.followType = .followees
+        }
+        
+        searcher.searchUserFollow(type: .followees, query: email ?? "").sink { completion in
             if case let .failure(error) = completion {
                 Log.make().error("\(error)")
             }
         } receiveValue: { [weak self] response in
             guard let self = self else { return }
-            print(response)
-            self.outputSubject.send(.sendFollowResult(response))
-           
-            switch self.followType {
-            case .followees: self.followType = .followers
-            case .followers: self.followType = .followees
+            if self.followType == .followees {
+                self.followList = response
+                outputSubject.send(.reloadData)
             }
+            outputSubject.send(.sendFolloweesCount(response.count))
+        }.store(in: &cancellables)
+        
+        searcher.searchUserFollow(type: .followers, query: email ?? "").sink { completion in
+            if case let .failure(error) = completion {
+                Log.make().error("\(error)")
+            }
+        } receiveValue: { [weak self] response in
+            guard let self = self else { return }
+            if self.followType == .followers {
+                self.followList = response
+                outputSubject.send(.reloadData)
+            }
+            outputSubject.send(.sendFollowersCount(response.count))
         }.store(in: &cancellables)
 
     }

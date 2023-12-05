@@ -167,6 +167,8 @@
 		D2CAA5E32B1F11B600E825BA /* FollowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5E22B1F11B600E825BA /* FollowType.swift */; };
 		D2CAA5E52B1F140A00E825BA /* FollowList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5E42B1F140A00E825BA /* FollowList.swift */; };
 		D2CAA5E72B1F14BE00E825BA /* FollowListEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5E62B1F14BE00E825BA /* FollowListEndPoint.swift */; };
+		D2CAA5E92B1F23AA00E825BA /* FollowResultCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5E82B1F23AA00E825BA /* FollowResultCollectionView.swift */; };
+		D2CAA5EB2B1F23B700E825BA /* FollowResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5EA2B1F23B700E825BA /* FollowResultCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -332,6 +334,8 @@
 		D2CAA5E22B1F11B600E825BA /* FollowType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowType.swift; sourceTree = "<group>"; };
 		D2CAA5E42B1F140A00E825BA /* FollowList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowList.swift; sourceTree = "<group>"; };
 		D2CAA5E62B1F14BE00E825BA /* FollowListEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowListEndPoint.swift; sourceTree = "<group>"; };
+		D2CAA5E82B1F23AA00E825BA /* FollowResultCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowResultCollectionView.swift; sourceTree = "<group>"; };
+		D2CAA5EA2B1F23B700E825BA /* FollowResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowResultCell.swift; sourceTree = "<group>"; };
 		EFE56344E8979EDA80D9E782 /* libPods-Macro.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Macro.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE963544592A2BC35C2CD604 /* Pods-Macro.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Macro.release.xcconfig"; path = "Target Support Files/Pods-Macro/Pods-Macro.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -670,6 +674,8 @@
 				D21B100A2B1497E000F2F84E /* IntroductionEditView.swift */,
 				BABE98322B17C67300903F4F /* MyPageHeaderView.swift */,
 				D2CAA5E02B1F0F6D00E825BA /* FollowViewController.swift */,
+				D2CAA5E82B1F23AA00E825BA /* FollowResultCollectionView.swift */,
+				D2CAA5EA2B1F23B700E825BA /* FollowResultCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1575,6 +1581,7 @@
 				AAD0B2C02B0DA35B003B4D5F /* LoginEndPoint.swift in Sources */,
 				D241DC712B0DA0070037DDB6 /* CommonUIComponents.swift in Sources */,
 				AAD0B3132B14E394003B4D5F /* ReadProfileView.swift in Sources */,
+				D2CAA5EB2B1F23B700E825BA /* FollowResultCell.swift in Sources */,
 				BAB24EEA2B16DB79000991A1 /* RouteViewModel.swift in Sources */,
 				AAD0B3042B147CF5003B4D5F /* RefreshTokenUseCase.swift in Sources */,
 				BA8DC4072B0B5F0600929E01 /* SearchViewController.swift in Sources */,
@@ -1602,6 +1609,7 @@
 				D2CAA5CC2B1DA6A500E825BA /* PostCollectionViewModel.swift in Sources */,
 				D21B10492B19854900F2F84E /* UIViewController+.swift in Sources */,
 				BA32E1952B0DEBC500EA0EE2 /* LocationInfoViewController.swift in Sources */,
+				D2CAA5E92B1F23AA00E825BA /* FollowResultCollectionView.swift in Sources */,
 				BA6C6DF82B05FFC500563B22 /* TabComponent.swift in Sources */,
 				BA00A08B2B1732EF007F7BB9 /* MapCollectionViewCellContentView.swift in Sources */,
 			);

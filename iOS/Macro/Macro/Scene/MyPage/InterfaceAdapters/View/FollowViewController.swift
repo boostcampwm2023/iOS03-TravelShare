@@ -8,7 +8,7 @@
 import Combine
 import UIKit
 
-final class FollowViewController: UIViewController {
+final class FollowViewController: TouchableViewController {
     
     // MARK: - Properties
     
@@ -35,6 +35,10 @@ final class FollowViewController: UIViewController {
         return control
     }()
     
+    lazy var followResultCollectionView: FollowResultCollectionView = {
+        let collectionView = FollowResultCollectionView(frame: .zero, viewModel: viewModel)
+        return collectionView
+    }()
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -43,6 +47,7 @@ final class FollowViewController: UIViewController {
         bind()
         inputSubject.send(.getFollowInformation)
         segmentControl.addTarget(self, action: #selector(segmentValueChanged(_:)), for: .valueChanged)
+        followResultCollectionView.postDelegate = self
     }
     
     // MARK: - Init
@@ -65,11 +70,13 @@ extension FollowViewController {
     private func setTranslatesAutoresizingMaskIntoConstraints() {
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         segmentControl.translatesAutoresizingMaskIntoConstraints = false
+        followResultCollectionView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func addSubviews() {
         view.addSubview(nameLabel)
         view.addSubview(segmentControl)
+        view.addSubview(followResultCollectionView)
     }
     
     private func setLayoutConstraints() {
@@ -78,7 +85,12 @@ extension FollowViewController {
             nameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             nameLabel.heightAnchor.constraint(equalToConstant: Metrics.labelHeight),
             segmentControl.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Padding.segmentTop),
-            segmentControl.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            segmentControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            segmentControl.widthAnchor.constraint(equalToConstant: 250),
+            followResultCollectionView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: Padding.collectionViewTop),
+            followResultCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            followResultCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            followResultCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
         
     }
@@ -98,7 +110,12 @@ extension FollowViewController {
         let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
             switch output {
-            case let .sendFollowResult(response): break
+            case let .sendFolloweesCount(count):
+                self?.updateFolloweesCount(count)
+            case let .sendFollowersCount(count):
+                self?.updateFollowersCount(count)
+            case .reloadData:
+                self?.reloadData()
             default: break
             }
         }.store(in: &cancellables)
@@ -109,6 +126,19 @@ extension FollowViewController {
 // MARK: - Methods
 
 extension FollowViewController {
+    
+    private func updateFolloweesCount(_ count: Int) {
+        segmentControl.setTitle("\(count) 팔로잉", forSegmentAt: 1)
+    }
+    
+    private func updateFollowersCount(_ count: Int) {
+        segmentControl.setTitle("\(count) 팔로워", forSegmentAt: 0)
+    }
+    
+    private func reloadData() {
+        followResultCollectionView.reloadData()
+    }
+    
     @objc private func segmentValueChanged(_ sender: UISegmentedControl) {
         inputSubject.send(.getFollowInformation)
     }
@@ -124,5 +154,6 @@ extension FollowViewController {
     enum Padding {
         static let labelTop: CGFloat = 20
         static let segmentTop: CGFloat = 10
+        static let collectionViewTop: CGFloat = 20
     }
 }
