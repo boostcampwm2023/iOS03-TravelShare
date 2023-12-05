@@ -78,7 +78,7 @@ export class PostService {
   private async getPostUpdatedIds() {
     return (
       await this.redisService.setMembers(this.REDIS_POST_UPDATED_IDS_SETS_KEY)
-    ).map(parseInt);
+    ).map((value) => parseInt(value));
   }
 
   private async addPostViewdUsers(postId: number, ...email: string[]) {
@@ -200,6 +200,10 @@ export class PostService {
       likeNum: await this.getPostLikedUsersCount(postId),
     };
   }
+
+  // 게시물 캐싱
+
+  private REDIS_POST_TOP_SCORE_SORTED_SETS_KEY = 'post:topscore:sortedset';
 
   /**
    * 인기 게시글을 불러옵니다.<br>
@@ -560,8 +564,8 @@ ORDER BY
 
   @Transactional()
   async detail({ postId }: PostDetailQuery, { email }: Authentication) {
-    const [post] = await all([
-      this.postRepository.findOneOrFail({
+    const post = await this.postRepository
+      .findOneOrFail({
         where: { postId },
         relations: {
           contents: true,
@@ -569,17 +573,17 @@ ORDER BY
           route: true,
           pins: true,
         },
-      }),
-      await this.addPostViewdUsers(postId, email),
-    ]).catch((err) => {
-      this.logger.error(err);
-      throw new NotFoundException('post not found', { cause: err });
-    });
+      })
+      .catch((err) => {
+        this.logger.error(err);
+        throw new NotFoundException('post not found', { cause: err });
+      });
     if (post.writer.email !== email && !post.public) {
       if (!post.public) {
         throw new BadRequestException('비공개 게시글입니다.');
       }
     }
+    await this.addPostViewdUsers(postId, email);
     return plainToInstance(PostDetailResponse, {
       ...post,
       writer: {
