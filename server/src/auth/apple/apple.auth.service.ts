@@ -147,6 +147,7 @@ export class AppleAuthService {
       mergeMap((tokenBody) => {
         return this.httpService.request({ ...revokeRequest, data: tokenBody });
       }),
+      map(({ data }) => plainToInstance(AppleAuthTokenResponse, data)),
     );
   }
 
@@ -202,10 +203,12 @@ export class AppleAuthService {
 
   @Transactional()
   private async delete({ sub }: AppleIdentityTokenPayload) {
-    const user = await this.appleAuthRepository.findOneOrFail({
+    const { user } = await this.appleAuthRepository.findOneOrFail({
       where: { appleId: sub },
+      relations: { user: true },
     });
-    await this.userRepository.remove(user.user);
+    await this.appleAuthRepository.delete({ appleId: sub });
+    await this.userRepository.remove(user);
   }
 
   private createToken(user: Authentication) {
