@@ -133,8 +133,8 @@ extension TravelViewModel {
             category: $0.categoryName,
             address: $0.addressName,
             roadAddress: $0.roadAddressName,
-            coordinate: PinnedLocation(latitude: Double($0.mapx) ?? 0,
-                                       longitude: Double($0.mapy) ?? 0))
+            coordinate: PinnedLocation(latitude: Double($0.mapy) ?? 0,
+                                       longitude: Double($0.mapx) ?? 0))
         }
         self.currentTravel?.recordedLocation = transRoute
         self.currentTravel?.recordedPinnedLocations = pinnedTransRoute
