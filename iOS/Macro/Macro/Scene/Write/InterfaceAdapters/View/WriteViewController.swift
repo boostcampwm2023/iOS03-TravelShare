@@ -232,6 +232,7 @@ private extension WriteViewController {
                 case .postUploadFail:
                     let alertController = UIAlertController(title: "", message: "글 작성 실패", preferredStyle: .alert)
                     let okAction = UIAlertAction(title: "확인", style: .default) { _ in
+                        self?.writeSubmitButton.isEnabled = true
                         self?.dismiss(animated: true)
                     }
                     alertController.addAction(okAction)
@@ -265,6 +266,7 @@ private extension WriteViewController {
     }
     
     @objc func writeSubmitButtonTouched() {
+        self.writeSubmitButton.isEnabled = false
         inputSubject.send(.writeSubmit)
     }
 }
