@@ -268,7 +268,7 @@ private extension ReadViewController {
         updateMapWithLocation(routePoints: readPost.route.coordinates )
         
         // TODO: - 핀 로직 수정 후 작업
-//        updateMark(recordedPindedInfo: readPost.)
+        updateMark(recordedPindedInfo: readPost.pins)
     }
     
     func downloadImages(imageURLs: [String], completion: @escaping ([UIImage]) -> Void) {
@@ -304,8 +304,8 @@ private extension ReadViewController {
         var minLongitude = 180.0
         
         for point in routePoints {
-            let latitude = point.xPosition
-            let longitude = point.yPosition
+            let latitude = point.yPosition
+            let longitude = point.xPosition
             
             if latitude > maxLatitude {
                 maxLatitude = latitude
@@ -342,7 +342,7 @@ private extension ReadViewController {
     ///   - routePoints: 위도, 경도 배열 입니다.
     func updateMapWithLocation(routePoints: [Coordinate]) {
         routeOverlay?.mapView = nil
-        let coords = routePoints.map { NMGLatLng(lat: $0.xPosition, lng: $0.yPosition) }
+        let coords = routePoints.map { NMGLatLng(lat: $0.yPosition, lng: $0.xPosition) }
         routeOverlay = NMFPath(points: coords)
         routeOverlay?.color = UIColor.appColor(.purple1)
         routeOverlay?.mapView = mapView
@@ -352,11 +352,12 @@ private extension ReadViewController {
     /// Pin이 저장된 곳에  Mark를 찍습니다.
     /// - Parameters:
     ///   - recordedPindedInfo: Pin의 위도, 경도 배열 입니다.
-    func updateMark(recordedPindedInfo: [RecordedPinnedLocationInfomation]) {
+    func updateMark(recordedPindedInfo: [Pin]) {
         for (index, placeInfo) in recordedPindedInfo.enumerated() {
             let marker = NMFMarker()
-            guard let name = placeInfo.placeName?.first, let placeLocation = placeInfo.coordinate else { return }
-            marker.position = NMGLatLng(lat: placeLocation.latitude, lng: placeLocation.longitude)
+            let name = placeInfo.placeName
+            let placeLocation = placeInfo.coordinate
+            marker.position = NMGLatLng(lat: placeLocation.yPosition, lng: placeLocation.xPosition)
             marker.captionText = "\(index + 1). \(name)"
             marker.mapView = mapView
         }

@@ -15,5 +15,6 @@ struct ReadPost: Codable {
     let contents: [Content]
     let writer: Writer
     let route: Route
+    let pins: [Pin]
     let liked: Bool
 }
