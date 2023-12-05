@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from 'entities/post.entity';
-import { In, Raw, Repository } from 'typeorm';
+import { Equal, In, Not, Raw, Repository } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { PostHitsQuery } from './post.hits.query.dto';
 import { PostDetailResponse } from './post.detail.response.dto';
@@ -744,6 +744,7 @@ ORDER BY
         `ST_CONTAINS(ST_BUFFER(place.coordinate, 10000), ST_GEOMFROMTEXT(:point, 4326))`,
         { point: jsonToPoint(coordinate) },
       )
+      .andWhere({ placeId: Not(Equal(placeId)) })
       .orderBy('postNum', 'DESC')
       .getRawAndEntities();
 
