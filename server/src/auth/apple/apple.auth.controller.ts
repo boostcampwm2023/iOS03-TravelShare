@@ -11,6 +11,7 @@ import { AppleClientRevokeBody } from './apple.client.revoke.body.dto';
 import { AppleAuthService } from './apple.auth.service';
 import { Public } from '../auth.decorators';
 import { RestController } from 'utils/rest.controller.decorator';
+import { AppleClientRevokeResponse } from './apple.client.revoke.response';
 
 @ApiTags('Auth/Apple')
 @RestController('apple')
@@ -30,6 +31,7 @@ export class AppleAuthController {
   @ApiOperation({
     summary: 'Apple 회원탈퇴를 진행합니다. 테스트필요',
   })
+  @ApiResponse({ type: AppleClientRevokeResponse })
   @ApiBearerAuth('access-token')
   @Delete('revoke')
   async revoke(@Body() payload: AppleClientRevokeBody) {
