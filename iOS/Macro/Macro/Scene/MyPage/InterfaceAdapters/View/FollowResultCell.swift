@@ -81,7 +81,7 @@ extension FollowResultCell {
     func configure(with profile: FollowList) {
         userNameLabel.text = profile.name
         guard let imageUrl = profile.imageUrl else {
-            self.profileImageView.image = nil
+            self.profileImageView.image = UIImage.appImage(.ProfileDefaultImage)
             return
         }
         if let url = URL(string: imageUrl) {
@@ -91,7 +91,7 @@ extension FollowResultCell {
                         self.profileImageView.image = image
                     }
                 } else {
-                    self.profileImageView.image = nil
+                    self.profileImageView.image = UIImage.appImage(.ProfileDefaultImage)
                 }
             }.resume()
         }

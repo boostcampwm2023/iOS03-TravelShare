@@ -44,6 +44,11 @@ final class MyPageViewController: TabViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        viewModel.followType = .followees
+        viewModel.followList = []
+    }
     // MARK: - Init
     
     init(viewModel: MyPageViewModel) {

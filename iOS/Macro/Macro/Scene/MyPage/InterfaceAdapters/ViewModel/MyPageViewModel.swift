@@ -19,8 +19,8 @@ class MyPageViewModel: ViewModelProtocol {
     let information = ["이름", "프로필 사진", "자기소개"]
     let post = ["작성한 글", "좋아요한 글"]
     let management = ["팔로우", "알림", "문의하기"]
-    private (set) var followType: FollowType = .followees
-    private (set) var followList: [FollowList] = []
+    var followType: FollowType = .followees
+    var followList: [FollowList] = []
     let patcher: PatchUseCase
     let searcher: SearchUseCase
     let comfirmer: ConfirmUseCase
