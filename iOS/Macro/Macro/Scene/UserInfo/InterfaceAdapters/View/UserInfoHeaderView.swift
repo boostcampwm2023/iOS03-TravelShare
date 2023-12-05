@@ -107,13 +107,13 @@ extension UserInfoHeaderView {
         }
     }
     
-    func updateFollow(item: FollowResponse) {
-        switch item.followStatus {
-        case true:
+    func updateFollow(item: UserProfile) {
+        switch item.followee {
+        case false:
             followButton.backgroundColor = UIColor.appColor(.purple3)
             followButton.setTitleColor(UIColor.appColor(.purple1), for: .normal)
             followButton.setTitle(Label.unfollow, for: .normal)
-        case false:
+        case true:
             followButton.backgroundColor = UIColor.appColor(.purple1)
             followButton.setTitleColor(UIColor.appColor(.purple3), for: .normal)
             followButton.setTitle(Label.follow, for: .normal)
@@ -132,7 +132,7 @@ extension UIImageView {
 
 extension UserInfoHeaderView {
     @objc func tapFollowButton() {
-        inputSubject.send(.tapFollowButton(userId: "asdf"))
+        inputSubject.send(.tapFollowButton)
     }
 }
 
