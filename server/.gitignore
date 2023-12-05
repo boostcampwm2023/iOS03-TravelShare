@@ -41,3 +41,7 @@ production.yaml
 
 # Secret
 *.p8
+
+# redis
+
+redis.conf
