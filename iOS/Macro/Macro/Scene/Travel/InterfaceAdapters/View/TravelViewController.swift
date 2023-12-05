@@ -13,22 +13,22 @@ import UIKit
 
 protocol RouteTableViewControllerDelegate: AnyObject {
     func routeTableViewDidDragChange(heightChange: CGFloat)
+    func routeTableViewEndDragChange()
 }
 
-final class TravelViewController: TabViewController, RouteTableViewControllerDelegate, CLLocationManagerDelegate, NMFMapViewDelegate {
+final class TravelViewController: TabViewController,
+                                  RouteTableViewControllerDelegate,
+                                  CLLocationManagerDelegate,
+                                  NMFMapViewDelegate {
     
     // MARK: - Properties
-    
-    private let minimizedHeight: CGFloat = 200
-    private let maximizedHeight: CGFloat = UIScreen.main.bounds.height - 200
-    private var isModalViewExpanded = false
     private var routeTableViewHeightConstraint: NSLayoutConstraint?
     private var cancellables = Set<AnyCancellable>()
     private let inputSubject: PassthroughSubject<TravelViewModel.Input, Never> = .init()
     private let viewModel: TravelViewModel
     private var routeOverlay: NMFPolylineOverlay?
     private let locationManager = CLLocationManager()
-    private let routeTableViewController: RouteTableViewController
+    private let routeTableViewController: RouteModalViewController
     private var isTraveling = false {
         didSet {
             updateTravelButton()
@@ -45,13 +45,21 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
     
     private let searchBar: UITextField = CommonUIComponents.createSearchBar()
     
-    private let travelButton: UIButton = {
-        let button = UIButton()
+    private let travelButtonView: UIView = {
+        let button = UIView()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor.appColor(.statusGreen)
-        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .regular, scale: .default)
-        button.setImage(UIImage.appImage(.playCircle)?.withConfiguration(symbolConfig), for: .normal)
+        button.isUserInteractionEnabled = true
         button.layer.cornerRadius = 30
+        button.layer.borderWidth = 2
+        button.clipsToBounds = true
+        let gradientLayer: CAGradientLayer = CAGradientLayer.createGradientLayer(
+            top: UIColor.appColor(.green1),
+            bottom: UIColor.appColor(.green2),
+            bounds: CGRect(x: 0, y: 0, width: 60, height: 60))
+        
+        button.layer.insertSublayer(gradientLayer, at: 0)
+        button.layer.borderColor = UIColor.appColor(.green4).cgColor
+       
         return button
     }()
     
@@ -73,17 +81,18 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
         mapView.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
+        
     }
     
     override func viewWillLayoutSubviews() {
-        view.bringSubviewToFront(travelButton)
+        view.bringSubviewToFront(travelButtonView)
     }
     
     // MARK: - Init
     
     init(viewModel: TravelViewModel) {
         self.viewModel = viewModel
-        self.routeTableViewController = RouteTableViewController(viewModel: viewModel)
+        self.routeTableViewController = RouteModalViewController(viewModel: viewModel)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -100,7 +109,7 @@ extension TravelViewController {
     private func setUpLayouts() {
         view.addSubview(mapView)
         view.addSubview(searchBar)
-        view.addSubview(travelButton)
+        view.addSubview(travelButtonView)
     }
     
     private func setUpConstraints() {
@@ -109,24 +118,29 @@ extension TravelViewController {
             mapView.leftAnchor.constraint(equalTo: view.leftAnchor),
             mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             mapView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            
             searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             searchBar.heightAnchor.constraint(equalToConstant: 40),
-            travelButton.widthAnchor.constraint(equalToConstant: 60),
-            travelButton.heightAnchor.constraint(equalToConstant: 60),
-            travelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            travelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+            
+            travelButtonView.widthAnchor.constraint(equalToConstant: 60),
+            travelButtonView.heightAnchor.constraint(equalToConstant: 60),
+            travelButtonView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            travelButtonView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 20)
         ])
     }
     
     private func setupRouteTableViewController() {
+        
         addChild(routeTableViewController)
+        
         view.addSubview(routeTableViewController.view)
         routeTableViewController.view.translatesAutoresizingMaskIntoConstraints = false
         routeTableViewController.didMove(toParent: self)
         routeTableViewController.delegate = self
-        routeTableViewHeightConstraint = routeTableViewController.view.heightAnchor.constraint(equalToConstant: minimizedHeight)
+        routeTableViewHeightConstraint = routeTableViewController.view.heightAnchor.constraint(equalToConstant: ModalViewSize.minimumSize.sizeValue)
+        
         NSLayoutConstraint.activate([
             routeTableViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             routeTableViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -147,10 +161,6 @@ extension TravelViewController {
         
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
             switch output {
-            case .exchangeCell:
-                self?.tempMethod()
-            case .exchangeLocation:
-                self?.tempMethod()
             case let .updateSearchResult(locationDetails):
                 self?.getSearchResult(locationDetails)
             case let .addPinnedPlaceInMap(locationDetail):
@@ -173,7 +183,7 @@ extension TravelViewController {
 // MARK: - Methods
 
 extension TravelViewController {
-
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.first {
             let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: location.coordinate.latitude, lng: location.coordinate.longitude))
@@ -243,36 +253,66 @@ extension TravelViewController {
         }
     }
     
-    private func updateTravelButton() {
-        if isTraveling {
-            let symbolConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .regular, scale: .default)
-            travelButton.setImage(UIImage.appImage(.pauseCircle)?.withConfiguration(symbolConfig), for: .normal)
-            travelButton.tintColor = UIColor.appColor(.green4)
-            travelButton.removeTarget(self, action: #selector(travelButtonTapped), for: .touchUpInside)
-            travelButton.addTarget(self, action: #selector(endTravelButtonTapped), for: .touchUpInside)
+    private func generateTravelButtonImageView(isTravling: Bool) -> UIImageView {
+        
+        var image: UIImage?
+        if isTravling {
+            image = UIImage.appImage(.pauseCircle)
         } else {
-            travelButton.backgroundColor = UIColor.appColor(.statusGreen)
-            travelButton.layer.borderColor = UIColor.appColor(.green3).cgColor
-            travelButton.layer.borderWidth = 2
-            let symbolConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .regular, scale: .default)
-            travelButton.setImage(UIImage.appImage(.playCircle)?.withConfiguration(symbolConfig), for: .normal)
-            travelButton.tintColor = UIColor.appColor(.green4)
-            travelButton.removeTarget(self, action: #selector(endTravelButtonTapped), for: .touchUpInside)
-            travelButton.addTarget(self, action: #selector(travelButtonTapped), for: .touchUpInside)
+            image = UIImage.appImage(.playCircle)
+
+        }
+        
+        let gradientLayerFrame = CGRect(x: 0,
+                                        y: 0,
+                                        width: 30,
+                                        height: 30)
+        
+        let gradientLayer = CAGradientLayer.createGradientImageLayer(top: UIColor.appColor(.green3),
+                                                                     bottom: UIColor.appColor(.green4),
+                                                                     frame: gradientLayerFrame,
+                                                                     image: image)
+        
+        let travelImageView: UIImageView = UIImageView(image: image)
+        travelImageView.layer.addSublayer(gradientLayer)
+        travelImageView.tintColor = .clear
+        
+        return travelImageView
+    }
+    
+    private func updateTravelButton() {
+        let travelImageView = generateTravelButtonImageView(isTravling: isTraveling)
+        for subview in travelButtonView.subviews {
+            subview.removeFromSuperview()
+        }
+        
+        travelButtonView.addSubview(travelImageView)
+        travelImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            travelImageView.widthAnchor.constraint(equalToConstant: 30),
+            travelImageView.heightAnchor.constraint(equalToConstant: 30),
+            travelImageView.centerXAnchor.constraint(equalTo: travelButtonView.centerXAnchor),
+            travelImageView.centerYAnchor.constraint(equalTo: travelButtonView.centerYAnchor)
+        ])
+        let travelTapGesture = UITapGestureRecognizer(target: self, action: #selector(travelButtonTapped(_:)))
+        let endTravelTapGesture = UITapGestureRecognizer(target: self, action: #selector(endTravelButtonTapped(_:)))
+        if isTraveling {
+            travelButtonView.addGestureRecognizer(endTravelTapGesture)
+            travelButtonView.removeGestureRecognizer(travelTapGesture)
+        } else {
+            travelButtonView.addGestureRecognizer(travelTapGesture)
+            travelButtonView.removeGestureRecognizer(endTravelTapGesture)
         }
     }
     
-    @objc private func travelButtonTapped() {
+    @objc private func travelButtonTapped(_ sender: UITapGestureRecognizer) {
         inputSubject.send(.startTravel)
         isTraveling = true
     }
     
-    @objc private func endTravelButtonTapped() {
+    @objc private func endTravelButtonTapped(_ sender: UITapGestureRecognizer) {
         inputSubject.send(.endTravel)
         isTraveling = false
-    }
-    
-    private func tempMethod() {
     }
     
     private func getSearchResult(_ locationDetails: [LocationDetail]) {
@@ -289,26 +329,17 @@ extension TravelViewController {
         updateRouteTableViewPosition(heightChange)
     }
     
-    @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
-        switch gesture.state {
-        case .changed:
-            let translation = gesture.translation(in: view)
-            updateRouteTableViewPosition(translation.y)
-            gesture.setTranslation(.zero, in: view)
-        case .ended:
-            finalizeRouteTableViewPosition()
-        default:
-            break
-        }
+    func routeTableViewEndDragChange() {
+        finalizeRouteTableViewPosition()
     }
     
     private func updateRouteTableViewPosition(_ deltaY: CGFloat) {
         if let heightConstraint = routeTableViewHeightConstraint {
             var newHeight = heightConstraint.constant - deltaY
-            if newHeight < minimizedHeight {
-                newHeight = minimizedHeight
-            } else if newHeight > view.frame.height - minimizedHeight {
-                newHeight = view.frame.height - minimizedHeight
+            if newHeight < ModalViewSize.minimumSize.sizeValue {
+                newHeight = ModalViewSize.minimumSize.sizeValue
+            } else if newHeight > view.frame.height - ModalViewSize.minimumSize.sizeValue {
+                newHeight = view.frame.height - ModalViewSize.minimumSize.sizeValue
             }
             heightConstraint.constant = newHeight
         }
@@ -316,15 +347,21 @@ extension TravelViewController {
     
     private func finalizeRouteTableViewPosition() {
         guard let heightConstraint = routeTableViewHeightConstraint else { return }
+        var closestSize: CGFloat = ModalViewSize.maxSize.sizeValue
+        var chooseSize: CGFloat = ModalViewSize.maxSize.sizeValue
         
-        let shouldExpand = heightConstraint.constant > (maximizedHeight / 2)
-        let newHeight = shouldExpand ? maximizedHeight : minimizedHeight
+        for modalSize in ModalViewSize.allCases {
+            let sizeValue = modalSize.sizeValue
+            if closestSize > abs(sizeValue - heightConstraint.constant) {
+                closestSize = abs(sizeValue - heightConstraint.constant)
+                chooseSize = sizeValue
+            }
+        }
         
         UIView.animate(withDuration: 0.3) {
-            heightConstraint.constant = newHeight
+            heightConstraint.constant = chooseSize
             self.view.layoutIfNeeded()
         }
-        isModalViewExpanded = shouldExpand
     }
     
     private func mapView(_ mapView: NMFMapView, didTap mapObject: NMFOverlay) -> Bool {
