@@ -229,6 +229,14 @@ private extension WriteViewController {
                     self?.updateMapWithLocation(routePoints: recordedLocation)
                     
                     self?.updateMark(recordedPindedInfo: recordedPinedInfo)
+                case .postUploadFail:
+                    let alertController = UIAlertController(title: "", message: "글 작성 실패", preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "확인", style: .default) { _ in
+                        self?.dismiss(animated: true)
+                    }
+                    alertController.addAction(okAction)
+
+                    self?.present(alertController, animated: true)
                 }
             }
             .store(in: &subscriptions)

@@ -6,6 +6,7 @@
 //
 
 import Combine
+import MacroNetwork
 import UIKit.UIImage
 
 final class WriteViewModel: ViewModelProtocol, CarouselViewProtocol {
@@ -62,11 +63,11 @@ final class WriteViewModel: ViewModelProtocol, CarouselViewProtocol {
         case isVisibilityToggle(Bool)
         case outputImageData([Data])
         case postUploadSuccess
+        case postUploadFail
         case outputDescriptionString(String)
         case updatePageIndex(Int)
         case updateMap(TravelInfo)
     }
-    
 }
 
 // MARK: - Methods
@@ -113,21 +114,33 @@ extension WriteViewModel {
     }
     
     private func writeSubmit() {
-        ImageSaveManager().convertImageDataToImageURL(imageDatas: imageDatas) { imageURLs in
+        let imageSaveManager = ImageSaveManager()
+        
+        convertImageDataToImageURL(imageDatas: imageDatas) { imageURLs in
             imageURLs.enumerated().forEach {
                 self.contents[$0].imageURL = $1
             }
-            
+
             guard let startAt = self.travelInfo.startAt, let endAt = self.travelInfo.endAt else { return }
             guard let recordedLocation = self.travelInfo.recordedLocation else { return }
             let transRecordedLocation = recordedLocation.compactMap { position in
                 Coordinate(xPosition: position[1], yPosition: position[0])
             }
+            
+            let pins: [Pin] = self.travelInfo.recordedPinnedLocations?.compactMap { pin in
+                Pin(placeId: pin.placeId ?? "",
+                    placeName: pin.placeName ?? "",
+                    phoneNumber: pin.phoneNumber == "" ? nil : pin.phoneNumber,
+                    category: pin.category ?? "",
+                    address: pin.address ?? "",
+                    roadAddress: pin.roadAddress == "" ? nil : pin.roadAddress,
+                    coordinate: Coordinate(xPosition: pin.coordinate?.longitude ?? 0, yPosition: pin.coordinate?.latitude ?? 0))
+            } ?? []
+            
             let post = Post(title: self.title,
                             summary: self.summary,
                             route: Route(coordinates: transRecordedLocation),
-                            // TODO: pin CoreData 작업 후 수정해야합니다 :)
-                            pins: [],
+                            pins: pins,
                             contents: self.contents,
                             postPublic: self.postPublic,
                             startAt: startAt,
@@ -142,6 +155,7 @@ extension WriteViewModel {
                         self?.outputSubject.send(.postUploadSuccess)
                     case let .failure(error):
                         debugPrint("Post Upload Fail : ", error)
+                        self?.outputSubject.send(.postUploadFail)
                     }
                 } receiveValue: { postId in
                     debugPrint("Post Upload Success : ", postId)
@@ -156,5 +170,32 @@ extension WriteViewModel {
             return
         }
         outputSubject.send(.outputDescriptionString(self.contents[index].description ?? ""))
+    }
+}
+
+extension WriteViewModel {
+    func convertImageDataToImageURL(imageDatas: [Data], completion: @escaping (([String]) -> Void)) {
+        guard !imageDatas.isEmpty else {
+            completion([])
+            return
+        }
+        
+        let provider = APIProvider(session: URLSession.shared)
+        let uploadImageUseCase = UploadImage(provider: provider)
+        var imageURLs = [String]()
+        imageDatas.forEach { imageData in
+            uploadImageUseCase.execute(imageData: imageData)
+                .receive(on: DispatchQueue.global())
+                .sink { result in
+                    if case let .failure(error) = result {
+                        debugPrint("Image Upload Fail : ", error)
+                    } else if imageURLs.count == imageDatas.count {
+                        completion(imageURLs)
+                    }
+                } receiveValue: { imageURLResponse in
+                    imageURLs.append(imageURLResponse.url)
+                }
+                .store(in: &self.cancellables)
+        }
     }
 }
