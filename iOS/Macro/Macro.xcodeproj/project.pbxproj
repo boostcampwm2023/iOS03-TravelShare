@@ -114,6 +114,7 @@
 		BAB24EE82B16DB6F000991A1 /* RouteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB24EE72B16DB6F000991A1 /* RouteViewController.swift */; };
 		BAB24EEA2B16DB79000991A1 /* RouteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB24EE92B16DB79000991A1 /* RouteViewModel.swift */; };
 		BAB24EEC2B16DE55000991A1 /* MapCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB24EEB2B16DE55000991A1 /* MapCollectionViewCell.swift */; };
+		BAB7E8412B1FA9A5009AF1EE /* ModalViewSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB7E8402B1FA9A5009AF1EE /* ModalViewSize.swift */; };
 		BABE98332B17C67300903F4F /* MyPageHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BABE98322B17C67300903F4F /* MyPageHeaderView.swift */; };
 		BADB1F0C2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADB1F0B2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift */; };
 		BAE3C5862B1995D200BF9798 /* LikePostResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE3C5852B1995D200BF9798 /* LikePostResponse.swift */; };
@@ -142,7 +143,7 @@
 		D241DC782B0DA07E0037DDB6 /* PostFindEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC772B0DA07E0037DDB6 /* PostFindEndPoint.swift */; };
 		D241DC7A2B0DA0C00037DDB6 /* PostEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC792B0DA0C00037DDB6 /* PostEndPoint.swift */; };
 		D241DC7C2B0DA0DA0037DDB6 /* SearchType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC7B2B0DA0DA0037DDB6 /* SearchType.swift */; };
-		D263CA132B02DD8900B4A144 /* RouteTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA122B02DD8900B4A144 /* RouteTableViewController.swift */; };
+		D263CA132B02DD8900B4A144 /* RouteModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA122B02DD8900B4A144 /* RouteModalViewController.swift */; };
 		D263CA1C2B04074D00B4A144 /* LocationDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA1B2B04074D00B4A144 /* LocationDetail.swift */; };
 		D263CA1E2B0407E000B4A144 /* RouteRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA1D2B0407E000B4A144 /* RouteRecorder.swift */; };
 		D263CA222B040EBE00B4A144 /* TravelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA212B040EBE00B4A144 /* TravelViewModel.swift */; };
@@ -281,6 +282,7 @@
 		BAB24EE72B16DB6F000991A1 /* RouteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteViewController.swift; sourceTree = "<group>"; };
 		BAB24EE92B16DB79000991A1 /* RouteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteViewModel.swift; sourceTree = "<group>"; };
 		BAB24EEB2B16DE55000991A1 /* MapCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCollectionViewCell.swift; sourceTree = "<group>"; };
+		BAB7E8402B1FA9A5009AF1EE /* ModalViewSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalViewSize.swift; sourceTree = "<group>"; };
 		BABE98322B17C67300903F4F /* MyPageHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageHeaderView.swift; sourceTree = "<group>"; };
 		BADB1F0B2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUnresearchableViewController.swift; sourceTree = "<group>"; };
 		BAE3C5852B1995D200BF9798 /* LikePostResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikePostResponse.swift; sourceTree = "<group>"; };
@@ -309,7 +311,7 @@
 		D241DC772B0DA07E0037DDB6 /* PostFindEndPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostFindEndPoint.swift; sourceTree = "<group>"; };
 		D241DC792B0DA0C00037DDB6 /* PostEndPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostEndPoint.swift; sourceTree = "<group>"; };
 		D241DC7B2B0DA0DA0037DDB6 /* SearchType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchType.swift; sourceTree = "<group>"; };
-		D263CA122B02DD8900B4A144 /* RouteTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteTableViewController.swift; sourceTree = "<group>"; };
+		D263CA122B02DD8900B4A144 /* RouteModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteModalViewController.swift; sourceTree = "<group>"; };
 		D263CA1B2B04074D00B4A144 /* LocationDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetail.swift; sourceTree = "<group>"; };
 		D263CA1D2B0407E000B4A144 /* RouteRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteRecorder.swift; sourceTree = "<group>"; };
 		D263CA212B040EBE00B4A144 /* TravelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelViewModel.swift; sourceTree = "<group>"; };
@@ -1251,7 +1253,7 @@
 		D263CA0C2B02B24B00B4A144 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				D263CA122B02DD8900B4A144 /* RouteTableViewController.swift */,
+				D263CA122B02DD8900B4A144 /* RouteModalViewController.swift */,
 				D263CA252B04147E00B4A144 /* TravelViewController.swift */,
 				D263CA2E2B054A0E00B4A144 /* SearchResultViewController.swift */,
 			);
@@ -1266,6 +1268,7 @@
 				D263CA322B06C7B300B4A144 /* SavedRoute.swift */,
 				BA90CBC02B149E1700365AE2 /* TravelInfo.swift */,
 				BA24D7282B1DA1C000BA8EB5 /* PinnedLocation.swift */,
+				BAB7E8402B1FA9A5009AF1EE /* ModalViewSize.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -1478,6 +1481,7 @@
 				D263CA222B040EBE00B4A144 /* TravelViewModel.swift in Sources */,
 				D21B100E2B16E73200F2F84E /* UserProfile.swift in Sources */,
 				AAD0B3162B14E394003B4D5F /* ReadPostUseCase.swift in Sources */,
+				BAB7E8412B1FA9A5009AF1EE /* ModalViewSize.swift in Sources */,
 				BAE3C5922B1AF6F000BF9798 /* UpdateFollowEndPoint.swift in Sources */,
 				BA8DC40A2B0B5F7800929E01 /* TabViewController.swift in Sources */,
 				D241DC762B0DA00F0037DDB6 /* PostFindResponse.swift in Sources */,
@@ -1494,7 +1498,7 @@
 				D21B101F2B17994100F2F84E /* ConfirmError.swift in Sources */,
 				BA90CB872B0F3BF600365AE2 /* PostCollectionView.swift in Sources */,
 				AAD0B3272B176832003B4D5F /* PostUploadResponse.swift in Sources */,
-				D263CA132B02DD8900B4A144 /* RouteTableViewController.swift in Sources */,
+				D263CA132B02DD8900B4A144 /* RouteModalViewController.swift in Sources */,
 				D21B10092B14799C00F2F84E /* NameEditView.swift in Sources */,
 				D2CAA5D72B1E117600E825BA /* RelatedLocationCollectionView.swift in Sources */,
 				D21B10132B17610500F2F84E /* UpdateUserEndPoint.swift in Sources */,
@@ -1749,7 +1753,7 @@
 				CODE_SIGN_ENTITLEMENTS = Macro/Macro.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = B3PWYBKFUK;
+				DEVELOPMENT_TEAM = VYAAXRZFXH;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Macro/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "어디갈래";
@@ -1768,7 +1772,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcamp8.macro;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.boostcamp8.macro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1789,7 +1793,7 @@
 				CODE_SIGN_ENTITLEMENTS = Macro/Macro.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = B3PWYBKFUK;
+				DEVELOPMENT_TEAM = VYAAXRZFXH;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Macro/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "어디갈래";
@@ -1808,7 +1812,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcamp8.macro;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.boostcamp8.macro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
