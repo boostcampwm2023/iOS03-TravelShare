@@ -13,7 +13,7 @@ export class Migration1701750909254 implements MigrationInterface {
         `);
     await queryRunner.query(`
             ALTER TABLE \`post\`
-            DROP COLUMN \`view_num\`
+            DROP COLUMN \`like_num\`
         `);
   }
 
@@ -26,7 +26,7 @@ export class Migration1701750909254 implements MigrationInterface {
         `);
     await queryRunner.query(`
             ALTER TABLE \`post\`
-            ADD COLUMN \`view_num\`
+            ADD COLUMN \`like_num\`
         `);
   }
 }

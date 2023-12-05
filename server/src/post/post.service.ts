@@ -385,26 +385,23 @@ ORDER BY
    * @returns
    */
   async popularList(pagination: PostHitsQuery, { email }: Authentication) {
-    const posts = await this.postRepository
-      .createQueryBuilder('post')
-      .setFindOptions({
-        where: {
-          createdAt: Raw(
-            (alias) => `DATE_ADD(NOW(), INTERVAL -2 WEEK) <= ${alias}`,
-          ),
-          public: true,
-        },
-        ...(pagination ?? { take: 10 }),
-        relations: {
-          writer: true,
-        },
-      })
-      .addSelect(
-        `(post.viewNum * 0.2 + post.likeNum * 0.8) / (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(post.createdAt))`,
-        'oldScore',
-      )
-      .orderBy(pagination.sortBy === 'hot' ? 'oldScore' : 'post.postId', 'DESC')
-      .getMany();
+    const posts = await this.postRepository.find({
+      where: {
+        createdAt: Raw(
+          (alias) => `DATE_ADD(NOW(), INTERVAL -2 WEEK) <= ${alias}`,
+        ),
+        public: true,
+      },
+      ...(pagination ?? { take: 10 }),
+      relations: {
+        writer: true,
+      },
+      order: {
+        ...(pagination.sortBy === 'hot'
+          ? { score: 'DESC' }
+          : { postId: 'DESC' }),
+      },
+    });
 
     return plainToInstance(
       PostSearchResponse,
