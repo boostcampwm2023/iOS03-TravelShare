@@ -754,7 +754,7 @@ ORDER BY
     );
   }
 
-  @Cron('* * */10 * * *')
+  @Cron('0 0 * * * *')
   async updateTaskToViewsAndLikesAndScores() {
     const { alpha, beta, gamma } = this.postConfig;
     this.logger.debug(
