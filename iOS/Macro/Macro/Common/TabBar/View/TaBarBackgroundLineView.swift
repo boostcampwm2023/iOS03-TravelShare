@@ -25,11 +25,13 @@ final class TabBarBackgroundLineView: UIView {
         UIColor.appColor(.blue2).cgColor
     ]
     
+    private var gradientLayer: CAGradientLayer = CAGradientLayer()
+    private var colorAnimation: CABasicAnimation = CABasicAnimation()
     // MARK: - Initialization
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.clear
+        
     }
     
     required init?(coder: NSCoder) {
@@ -37,8 +39,6 @@ final class TabBarBackgroundLineView: UIView {
     }
     
     override func draw(_ rect: CGRect) {
-        super.draw(rect)
-        
         let path: UIBezierPath = generatePath()
         
         let shapeLayer: CAShapeLayer = {
@@ -50,7 +50,7 @@ final class TabBarBackgroundLineView: UIView {
             return layer
         }()
 
-        let gradientLayer: CAGradientLayer = {
+        self.gradientLayer = {
             let layer: CAGradientLayer = CAGradientLayer()
             layer.frame = bounds
             layer.colors = colors
@@ -60,7 +60,7 @@ final class TabBarBackgroundLineView: UIView {
             return layer
         }()
         
-        let colorAnimation: CABasicAnimation = {
+        self.colorAnimation = {
             let animation = CABasicAnimation(keyPath: ColorKey.colors)
             animation.toValue = changeColors
             animation.duration = 1
@@ -70,11 +70,22 @@ final class TabBarBackgroundLineView: UIView {
         }()
         
         layer.addSublayer(gradientLayer)
-        gradientLayer.add(colorAnimation, forKey: ColorKey.animaion)
+        addAnimation()
     }
 }
 
 // MARK: - Methods
+
+extension TabBarBackgroundLineView {
+    
+    func addAnimation() {
+        gradientLayer.add(colorAnimation, forKey: ColorKey.animaion)
+    }
+    
+    func removeAnimation() {
+        gradientLayer.removeAnimation(forKey: ColorKey.animaion)
+    }
+}
 
 private extension TabBarBackgroundLineView {
     
