@@ -201,10 +201,6 @@ export class PostService {
     };
   }
 
-  // 게시물 캐싱
-
-  private REDIS_POST_TOP_SCORE_SORTED_SETS_KEY = 'post:topscore:sortedset';
-
   /**
    * 인기 게시글을 불러옵니다.<br>
    * 한 달 이후 등록된 게시물 중,<br>
@@ -410,11 +406,17 @@ ORDER BY
     return plainToInstance(
       PostSearchResponse,
       await all(
-        posts.map(async (post) => ({
-          ...post,
-          liked: await this.isLiked(post.postId, email),
-          ...(await this.loadCacheAndGetCounts(post.postId)),
-        })),
+        posts.map(async (post) => {
+          const { viewNum, likeNum } = await this.loadCacheAndGetCounts(
+            post.postId,
+          );
+          return {
+            ...post,
+            liked: await this.isLiked(post.postId, email),
+            viewNum: post.viewNum + viewNum,
+            likeNum,
+          };
+        }),
       ),
     );
   }
@@ -445,11 +447,17 @@ ORDER BY
           ...topPosts.slice(0, floor(pagination.take / 2)),
           ...followeePosts.slice(0, floor(pagination.take / 2)),
         ]
-          .map(async (post) => ({
-            ...post,
-            liked: await this.isLiked(post.postId, email),
-            ...(await this.loadCacheAndGetCounts(post.postId)),
-          }))
+          .map(async (post) => {
+            const { viewNum, likeNum } = await this.loadCacheAndGetCounts(
+              post.postId,
+            );
+            return {
+              ...post,
+              liked: await this.isLiked(post.postId, email),
+              viewNum: post.viewNum + viewNum,
+              likeNum,
+            };
+          })
           .sort(() => random() - 0.5),
       ),
     );
@@ -553,11 +561,17 @@ ORDER BY
     return plainToInstance(
       PostSearchResponse,
       await all(
-        posts.map(async (post) => ({
-          ...post,
-          liked: await this.isLiked(post.postId, email),
-          ...(await this.loadCacheAndGetCounts(post.postId)),
-        })),
+        posts.map(async (post) => {
+          const { viewNum, likeNum } = await this.loadCacheAndGetCounts(
+            post.postId,
+          );
+          return {
+            ...post,
+            liked: await this.isLiked(post.postId, email),
+            viewNum: post.viewNum + viewNum,
+            likeNum,
+          };
+        }),
       ),
     );
   }
@@ -584,6 +598,7 @@ ORDER BY
       }
     }
     await this.addPostViewdUsers(postId, email);
+    const { viewNum, likeNum } = await this.loadCacheAndGetCounts(postId);
     return plainToInstance(PostDetailResponse, {
       ...post,
       writer: {
@@ -606,7 +621,8 @@ ORDER BY
         }),
       },
       liked: await this.isLiked(postId, email),
-      ...(await this.loadCacheAndGetCounts(postId)),
+      viewNum: post.viewNum + viewNum,
+      likeNum,
     });
   }
 
@@ -733,9 +749,11 @@ ORDER BY
       .innerJoinAndSelect(
         (qb) => {
           return qb
-            .select('COUNT(post_id)', 'postNum')
+            .select('COUNT(pins.post_id)', 'postNum')
             .addSelect('place_id')
             .from('pins', 'pins')
+            .innerJoin('post', 'post', 'pins.post_id=post.post_id')
+            .where('post.public=:true', { true: true })
             .groupBy('place_id');
         },
         'post_count',
