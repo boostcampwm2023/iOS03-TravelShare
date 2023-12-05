@@ -282,6 +282,10 @@ extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
         } else if indexPath.section == 2 && indexPath.row == 1 {
             inputSubject.send(.completeButtonTapped(3, ""))
         }
+        else if indexPath.section == 3 && indexPath.row == 0 {
+            let followViewController = FollowViewController(viewModel: viewModel)
+            navigationController?.pushViewController(followViewController, animated: true)
+        }
     }
 }
 

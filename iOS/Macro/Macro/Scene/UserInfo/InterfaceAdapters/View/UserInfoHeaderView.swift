@@ -109,11 +109,11 @@ extension UserInfoHeaderView {
     
     func updateFollow(item: UserProfile) {
         switch item.followee {
-        case false:
+        case true:
             followButton.backgroundColor = UIColor.appColor(.purple3)
             followButton.setTitleColor(UIColor.appColor(.purple1), for: .normal)
             followButton.setTitle(Label.unfollow, for: .normal)
-        case true:
+        case false:
             followButton.backgroundColor = UIColor.appColor(.purple1)
             followButton.setTitleColor(UIColor.appColor(.purple3), for: .normal)
             followButton.setTitle(Label.follow, for: .normal)
