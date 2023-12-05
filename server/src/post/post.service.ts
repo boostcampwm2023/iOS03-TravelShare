@@ -476,6 +476,9 @@ ORDER BY
     }: PostSearchQuery,
     { email: loginUser }: Authentication,
   ) {
+    if (!(title || content || keyword || username || email || placeId)) {
+      throw new BadRequestException(`One of query must be provided`);
+    }
     const posts = await this.postRepository.find({
       where: [
         {
@@ -567,7 +570,7 @@ ORDER BY
           );
           return {
             ...post,
-            liked: await this.isLiked(post.postId, email),
+            liked: await this.isLiked(post.postId, loginUser),
             viewNum: post.viewNum + viewNum,
             likeNum,
           };
