@@ -1,9 +1,13 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AppleClientAuthBody } from './apple.client.auth.body.dto';
 import { ConfigService } from '@nestjs/config';
-import { map, mergeMap } from 'rxjs';
+import { catchError, map, mergeMap, throwError } from 'rxjs';
 import { plainToInstance } from 'class-transformer';
 import {
   AppleIdentityTokenPublicKey,
@@ -24,6 +28,7 @@ import { AppleAuthTokenResponse } from './apple.auth.token.response.dto';
 import { AppleClientAuthResponse } from './apple.client.auth.response.dto';
 import { Transactional } from 'typeorm-transactional';
 import { getRandomNickName } from 'utils/namemaker';
+import { AppleClientRevokeResponse } from './apple.client.revoke.response';
 
 /**
  * ### AppleAuthService
@@ -33,6 +38,7 @@ import { getRandomNickName } from 'utils/namemaker';
  */
 @Injectable()
 export class AppleAuthService {
+  private readonly logger: Logger = new Logger(AppleAuthService.name);
   constructor(
     private readonly httpService: HttpService,
     private readonly jwtService: JwtService,
@@ -87,7 +93,7 @@ export class AppleAuthService {
   async revoke({ identityToken, authorizationCode }: AppleClientRevokeBody) {
     const {
       token: tokenRequest,
-      key: keysRequest,
+      keys: keysRequest,
       revoke: revokeRequest,
     } = this.configService.get('apple.auth');
     const { alg, kid } = this.extractJwtHeader(identityToken);
@@ -126,7 +132,7 @@ export class AppleAuthService {
         this.delete(identityTokenPayload);
         return plainToInstance(AppleAuthTokenBody, {
           client_secret: clientSecret,
-          client_id: payload.iss,
+          client_id: payload.sub,
           code: authorizationCode,
         }).toString();
       }),
@@ -138,7 +144,7 @@ export class AppleAuthService {
       }),
       map((refreshToken) => {
         return plainToInstance(AppleAuthRevokeBody, {
-          client_id: payload.iss,
+          client_id: payload.sub,
           client_secret: clientSecret,
           token: refreshToken,
           token_type_hint: 'refresh_token',
@@ -147,7 +153,13 @@ export class AppleAuthService {
       mergeMap((tokenBody) => {
         return this.httpService.request({ ...revokeRequest, data: tokenBody });
       }),
-      map(({ data }) => plainToInstance(AppleAuthTokenResponse, data)),
+      map(() => plainToInstance(AppleClientRevokeResponse, {})),
+      catchError((err) => {
+        this.logger.error(err);
+        return throwError(
+          () => new InternalServerErrorException('apple revoking error'),
+        );
+      }),
     );
   }
 
