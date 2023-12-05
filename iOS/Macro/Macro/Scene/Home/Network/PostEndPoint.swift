@@ -9,7 +9,7 @@ import Foundation
 import MacroNetwork
 
 enum PostEndPoint {
-    case search
+    case search(Int)
 }
 
 extension PostEndPoint: EndPoint {
@@ -26,8 +26,8 @@ extension PostEndPoint: EndPoint {
     
     var parameter: MacroNetwork.HTTPParameter {
         switch self {
-        case .search:
-            return .plain
+        case let .search(postCount):
+            return .query(["sortBy": "latest", "skip": "\(postCount)"])
         }
     }
     

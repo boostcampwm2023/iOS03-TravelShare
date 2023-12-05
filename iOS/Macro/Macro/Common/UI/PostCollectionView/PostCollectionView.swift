@@ -32,18 +32,40 @@ final class PostCollectionView: UICollectionView {
         self.showsVerticalScrollIndicator = false
         self.delegate = self
         self.dataSource = self
+        bind()
         initRefreshControl()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
+
+// MARK: - Bind
+
+private extension PostCollectionView {
+    func bind() {
+        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+        
+        outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
+            switch output {
+            case .updatePostContnet:
+                self?.updatePostContent()
+            default: break
+            }
+        }.store(in: &cancellables)
+    }
+}
+
+// MARK: - Methods
+
+extension PostCollectionView {
     
-    // MARK: - Methods
     @objc func refreshTable(refresh: UIRefreshControl) {
-        print("refreshTable")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.reloadData()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [self] in
+            viewModel.posts = []
+            inputSubject.send(.getNextPost(viewModel.posts.count))
+            self.viewModel.isLastPost = false
             refresh.endRefreshing()
         }
     }
@@ -54,9 +76,15 @@ final class PostCollectionView: UICollectionView {
         self.refreshControl = postRefreshControl
     }
     
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        if velocity.y < -0.1 {
-            self.refreshTable(refresh: self.postRefreshControl)
+    func updatePostContent() {
+        self.reloadData()
+    }
+}
+
+extension PostCollectionView: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if viewModel.posts.count - 3 == indexPath.row && !viewModel.isLastPost {
+            inputSubject.send(.getNextPost(viewModel.posts.count))
         }
     }
 }

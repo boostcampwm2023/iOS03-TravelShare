@@ -20,11 +20,13 @@ final class PostCollectionViewModel: ViewModelProtocol {
     let followFeatrue: FollowUseCase
     let patcher: PatchUseCase
     let postSearcher: SearchUseCase
+    var isLastPost: Bool = false
     
     enum Input {
         case navigateToReadView(Int)
         case touchLike(Int)
         case increaseView(Int)
+        case getNextPost(Int)
     }
     
     enum Output {
@@ -33,6 +35,7 @@ final class PostCollectionViewModel: ViewModelProtocol {
         case updatePostLike(LikePostResponse)
         case updateUserFollow(FollowPatchResponse)
         case updatePostView(Int, Int)
+        case updatePostContnet
     }
     
     init(posts: [PostFindResponse], followFeature: FollowUseCase, patcher: PatchUseCase, postSearcher: SearchUseCase) {
@@ -53,6 +56,8 @@ extension PostCollectionViewModel {
                 self?.touchLike(postId: postId)
             case let .increaseView(postId):
                 self?.increasePostView(postId)
+            case let .getNextPost(pageNum):
+                self?.getNextPost(pageNum)
             default: break
             }
         }.store(in: &cancellables)
@@ -67,6 +72,21 @@ extension PostCollectionViewModel {
         }
     }
 
+    func getNextPost(_ pageNum: Int) {
+        postSearcher.fetchHitPost(postCount: posts.count).sink { completion in
+            if case let .failure(error) = completion {
+                Log.make().error("\(error)")
+            }
+        } receiveValue: { [weak self] response in
+            if response.count < 10 {
+                self?.isLastPost = true
+            }
+            print(response.count, self?.isLastPost)
+            self?.posts += response
+            self?.outputSubject.send(.updatePostContnet)
+        }.store(in: &cancellables)
+    }
+    
     func navigateToProfileView(email: String) {
         self.outputSubject.send(.navigateToProfileView(email))
     }
