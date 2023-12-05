@@ -163,6 +163,12 @@
 		D2CAA5DB2B1E151800E825BA /* RelatedLocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5DA2B1E151800E825BA /* RelatedLocationCell.swift */; };
 		D2CAA5DD2B1E51C200E825BA /* UserResultCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5DC2B1E51C200E825BA /* UserResultCollectionView.swift */; };
 		D2CAA5DF2B1E51CF00E825BA /* UserResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5DE2B1E51CF00E825BA /* UserResultCell.swift */; };
+		D2CAA5E12B1F0F6E00E825BA /* FollowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5E02B1F0F6D00E825BA /* FollowViewController.swift */; };
+		D2CAA5E32B1F11B600E825BA /* FollowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5E22B1F11B600E825BA /* FollowType.swift */; };
+		D2CAA5E52B1F140A00E825BA /* FollowList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5E42B1F140A00E825BA /* FollowList.swift */; };
+		D2CAA5E72B1F14BE00E825BA /* FollowListEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5E62B1F14BE00E825BA /* FollowListEndPoint.swift */; };
+		D2CAA5E92B1F23AA00E825BA /* FollowResultCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5E82B1F23AA00E825BA /* FollowResultCollectionView.swift */; };
+		D2CAA5EB2B1F23B700E825BA /* FollowResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5EA2B1F23B700E825BA /* FollowResultCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -324,6 +330,12 @@
 		D2CAA5DA2B1E151800E825BA /* RelatedLocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedLocationCell.swift; sourceTree = "<group>"; };
 		D2CAA5DC2B1E51C200E825BA /* UserResultCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResultCollectionView.swift; sourceTree = "<group>"; };
 		D2CAA5DE2B1E51CF00E825BA /* UserResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResultCell.swift; sourceTree = "<group>"; };
+		D2CAA5E02B1F0F6D00E825BA /* FollowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowViewController.swift; sourceTree = "<group>"; };
+		D2CAA5E22B1F11B600E825BA /* FollowType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowType.swift; sourceTree = "<group>"; };
+		D2CAA5E42B1F140A00E825BA /* FollowList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowList.swift; sourceTree = "<group>"; };
+		D2CAA5E62B1F14BE00E825BA /* FollowListEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowListEndPoint.swift; sourceTree = "<group>"; };
+		D2CAA5E82B1F23AA00E825BA /* FollowResultCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowResultCollectionView.swift; sourceTree = "<group>"; };
+		D2CAA5EA2B1F23B700E825BA /* FollowResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowResultCell.swift; sourceTree = "<group>"; };
 		EFE56344E8979EDA80D9E782 /* libPods-Macro.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Macro.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE963544592A2BC35C2CD604 /* Pods-Macro.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Macro.release.xcconfig"; path = "Target Support Files/Pods-Macro/Pods-Macro.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -661,6 +673,9 @@
 				D21B10082B14799C00F2F84E /* NameEditView.swift */,
 				D21B100A2B1497E000F2F84E /* IntroductionEditView.swift */,
 				BABE98322B17C67300903F4F /* MyPageHeaderView.swift */,
+				D2CAA5E02B1F0F6D00E825BA /* FollowViewController.swift */,
+				D2CAA5E82B1F23AA00E825BA /* FollowResultCollectionView.swift */,
+				D2CAA5EA2B1F23B700E825BA /* FollowResultCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1144,6 +1159,7 @@
 			isa = PBXGroup;
 			children = (
 				D21B10122B17610500F2F84E /* UpdateUserEndPoint.swift */,
+				D2CAA5E62B1F14BE00E825BA /* FollowListEndPoint.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -1160,6 +1176,8 @@
 			isa = PBXGroup;
 			children = (
 				D21B101E2B17994100F2F84E /* ConfirmError.swift */,
+				D2CAA5E22B1F11B600E825BA /* FollowType.swift */,
+				D2CAA5E42B1F140A00E825BA /* FollowList.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -1484,6 +1502,7 @@
 				BAE3C5942B1C7F1C00BF9798 /* MacroCarouselViewCelladdPictureView.swift in Sources */,
 				BA6C6DF32B05FFC500563B22 /* CAGradientLayer+.swift in Sources */,
 				BA6C6DFE2B05FFC500563B22 /* TabBarOpacityView.swift in Sources */,
+				D2CAA5E32B1F11B600E825BA /* FollowType.swift in Sources */,
 				D2CAA5DB2B1E151800E825BA /* RelatedLocationCell.swift in Sources */,
 				BA00A0892B1732E6007F7BB9 /* MapCollectionViewCellHeaderView.swift in Sources */,
 				BAB24EEC2B16DE55000991A1 /* MapCollectionViewCell.swift in Sources */,
@@ -1526,6 +1545,7 @@
 				D21B104B2B1A22D500F2F84E /* Log.swift in Sources */,
 				BADB1F0C2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift in Sources */,
 				AAD0B2D52B0E04CA003B4D5F /* MacroCarouselViewCell.swift in Sources */,
+				D2CAA5E52B1F140A00E825BA /* FollowList.swift in Sources */,
 				BABE98332B17C67300903F4F /* MyPageHeaderView.swift in Sources */,
 				BA00A08D2B177113007F7BB9 /* DateFormatter.swift in Sources */,
 				BA90CB842B0F3BF600365AE2 /* PostCollectionViewCell.swift in Sources */,
@@ -1561,11 +1581,14 @@
 				AAD0B2C02B0DA35B003B4D5F /* LoginEndPoint.swift in Sources */,
 				D241DC712B0DA0070037DDB6 /* CommonUIComponents.swift in Sources */,
 				AAD0B3132B14E394003B4D5F /* ReadProfileView.swift in Sources */,
+				D2CAA5EB2B1F23B700E825BA /* FollowResultCell.swift in Sources */,
 				BAB24EEA2B16DB79000991A1 /* RouteViewModel.swift in Sources */,
 				AAD0B3042B147CF5003B4D5F /* RefreshTokenUseCase.swift in Sources */,
 				BA8DC4072B0B5F0600929E01 /* SearchViewController.swift in Sources */,
 				D2CAA5D52B1E0A1E00E825BA /* RelatedLocation.swift in Sources */,
+				D2CAA5E72B1F14BE00E825BA /* FollowListEndPoint.swift in Sources */,
 				BAB24EDD2B16390D000991A1 /* FollowResponse.swift in Sources */,
+				D2CAA5E12B1F0F6E00E825BA /* FollowViewController.swift in Sources */,
 				BA90CB852B0F3BF600365AE2 /* PostProfileView.swift in Sources */,
 				D21B10162B17636800F2F84E /* PatchUseCase.swift in Sources */,
 				BA6C6DFB2B05FFC500563B22 /* TabBarBackgroundLargeCirclceView.swift in Sources */,
@@ -1586,6 +1609,7 @@
 				D2CAA5CC2B1DA6A500E825BA /* PostCollectionViewModel.swift in Sources */,
 				D21B10492B19854900F2F84E /* UIViewController+.swift in Sources */,
 				BA32E1952B0DEBC500EA0EE2 /* LocationInfoViewController.swift in Sources */,
+				D2CAA5E92B1F23AA00E825BA /* FollowResultCollectionView.swift in Sources */,
 				BA6C6DF82B05FFC500563B22 /* TabComponent.swift in Sources */,
 				BA00A08B2B1732EF007F7BB9 /* MapCollectionViewCellContentView.swift in Sources */,
 			);

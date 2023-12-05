@@ -13,6 +13,7 @@ final class UserInfoHeaderView: UIView {
     // MARK: - Properties
     
     var inputSubject: PassthroughSubject<UserInfoViewModel.Input, Never> = .init()
+    private let viewModel: UserInfoViewModel
     
     // MARK: - UI Components
     
@@ -37,8 +38,9 @@ final class UserInfoHeaderView: UIView {
     
     // MARK: - Init
     
-    init(frame: CGRect, inputSubject: PassthroughSubject<UserInfoViewModel.Input, Never> = .init()) {
+    init(frame: CGRect, inputSubject: PassthroughSubject<UserInfoViewModel.Input, Never> = .init(), viewModel: UserInfoViewModel) {
         self.inputSubject = inputSubject
+        self.viewModel = viewModel
         super.init(frame: frame)
         followButton.addTarget(self, action: #selector(tapFollowButton), for: .touchUpInside)
         
@@ -96,10 +98,17 @@ extension UserInfoHeaderView {
     func configure(item: UserProfile) {
         self.userNameLabel.text = item.name
         userInfoProfileView.configure(item: item)
+        let myEmail = TokenManager.extractEmailFromJWTToken()
+        if item.email == myEmail {
+            followButton.isEnabled = false
+        }
+        else {
+            followButton.isEnabled = true
+        }
     }
     
-    func updateFollow(item: FollowResponse) {
-        switch item.followStatus {
+    func updateFollow(item: UserProfile) {
+        switch item.followee {
         case true:
             followButton.backgroundColor = UIColor.appColor(.purple3)
             followButton.setTitleColor(UIColor.appColor(.purple1), for: .normal)
@@ -123,7 +132,7 @@ extension UIImageView {
 
 extension UserInfoHeaderView {
     @objc func tapFollowButton() {
-        inputSubject.send(.tapFollowButton(userId: "asdf"))
+        inputSubject.send(.tapFollowButton)
     }
 }
 

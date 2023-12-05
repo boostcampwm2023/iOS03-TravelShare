@@ -33,7 +33,7 @@ final class UserInfoViewModel: ViewModelProtocol {
     
     enum Input {
         case searchUserProfile(email: String)
-        case tapFollowButton(userId: String)
+        case tapFollowButton
         
         // Mock
         case searchMockUserProfile(userId: String)
@@ -45,7 +45,7 @@ final class UserInfoViewModel: ViewModelProtocol {
         case appleLoginCompleted
         case navigateToProfileView(String)
         case navigateToReadView(Int)
-        case updateFollowResult(FollowResponse)
+        case updateFollowResult(FollowResponse, Bool)
         case updateUserProfile(UserProfile)
         case updateUserPost([PostFindResponse])
         case updatePostLike(LikePostResponse)
@@ -62,10 +62,10 @@ extension UserInfoViewModel {
         input
             .sink { [weak self] input in
                 switch input {
-                case let .tapFollowButton(userId):
-                    self?.tappedFollowButton(followUserId: userId)
+                case .tapFollowButton:
+                    self?.tappedFollowButton()
                 case .searchUserProfile:
-                    self?.searchUserProfile()
+                    self?.searchUser()
                 case let .searchMockUserProfile(userId):
                     self?.searchMockUserProfile(userId: userId)
                 }
@@ -74,28 +74,36 @@ extension UserInfoViewModel {
         return outputSubject.eraseToAnyPublisher()
     }
     
-    private func tappedFollowButton(followUserId: String) {
-        // TODO: - 통신코드 목파일 수정
-        followFeature.mockFollowUser(userId: "asdf", followUserId: followUserId, json: "FollowMock").sink { _ in
-        } receiveValue: { [weak self] response in
-            self?.outputSubject.send(.updateFollowResult(response))
+    private func tappedFollowButton() {
+        followFeature.followUser(email: searchUserEmail).sink { completion in
+            if case let .failure(error) = completion {
+                Log.make().error("\(error)")
+            }
+        } receiveValue: { [weak self] _ in
+            self?.searchUserProfile()
         }.store(in: &cancellables)
     }
     
+    private func searchUser() {
+        searchUserProfile()
+        searchPost()
+    }
+    
     private func searchUserProfile() {
-        
         searcher.searchUserProfile(query: searchUserEmail).sink { _ in
         } receiveValue: { [weak self] response in
             self?.userProfile = response
             self?.outputSubject.send(.updateUserProfile(response))
         }.store(in: &cancellables)
         
+    }
+    
+    private func searchPost() {
         searcher.searchPost(query: searchUserEmail).sink { _ in
         } receiveValue: { [weak self] response in
             self?.posts = response
             self?.outputSubject.send(.updateUserPost(response))
         }.store(in: &cancellables)
-        
     }
     
     private func searchMockUserProfile(userId: String) {

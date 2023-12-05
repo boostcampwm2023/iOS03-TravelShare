@@ -10,8 +10,7 @@ import Foundation
 import MacroNetwork
 
 protocol FollowUseCase {
-    func followUser(userId: String) -> AnyPublisher<FollowResponse, NetworkError>
-    func mockFollowUser(userId: String, followUserId: String, json: String) -> AnyPublisher<FollowResponse, NetworkError>
+    func followUser(email: String) -> AnyPublisher<FollowResponse, NetworkError>
 }
 
 final class FollowFeature: FollowUseCase {
@@ -25,11 +24,7 @@ final class FollowFeature: FollowUseCase {
         self.provider = provider
     }
     
-    func followUser(userId: String) -> AnyPublisher<FollowResponse, MacroNetwork.NetworkError> {
-        return provider.request(FollowEndPoint.follow(userId))
-    }
-    
-    func mockFollowUser(userId: String, followUserId: String, json: String) -> AnyPublisher<FollowResponse, MacroNetwork.NetworkError> {
-        return provider.mockRequest(FollowEndPoint.follow(userId), url: json)
+    func followUser(email: String) -> AnyPublisher<FollowResponse, MacroNetwork.NetworkError> {
+        return provider.request(FollowEndPoint.follow(email))
     }
 }

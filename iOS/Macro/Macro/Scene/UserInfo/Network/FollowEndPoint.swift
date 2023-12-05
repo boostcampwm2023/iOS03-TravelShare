@@ -19,24 +19,25 @@ extension FollowEndPoint: EndPoint {
     }
     
     var headers: MacroNetwork.HTTPHeaders {
-        return []
+        let token = KeyChainManager.load(key: "AccessToken") ?? ""
+            return ["Authorization": "Bearer \(token)"]
     }
     
     var parameter: MacroNetwork.HTTPParameter {
         switch self {
-        case let .follow(userId):
-            return .query(["userId": userId])
+        case let .follow(email):
+            return .query(["followee": email])
         }
     }
     
     var method: MacroNetwork.HTTPMethod {
         switch self {
         case .follow:
-            return .get
+            return .patch
         }
     }
     
     var path: String {
-        return "map/v2/searchByAccuracy"
+        return "user/follow"
     }
 }

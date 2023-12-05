@@ -109,13 +109,12 @@ extension UserInfoProfileView {
             self.userProfileImageView.image = image
         }
         
-    //    self.userFollowerCountLabel.text = "\(item.follower)"
         self.userIntroduceLabel.text = item.introduce
         self.userFollowerCountLabel.text = "\(item.followersNum)"
     }
     
-    func updateFollow(item: FollowResponse) {
-        self.userFollowerCountLabel.text = "\(item.followCount)"
+    func updateFollow(item: UserProfile) {
+        self.userFollowerCountLabel.text = "\(item.followersNum)"
     }
     
     func loadImage(profileImageStringURL: String, completion: @escaping (UIImage?) -> Void) {

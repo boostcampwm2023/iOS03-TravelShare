@@ -42,10 +42,13 @@ protocol SearchUseCase {
     
     /// postId를 기준으로, 해당 장소와 가장 많이 함께 간 장소를 보여줌
     func searchRelatedLocation(query: String) -> AnyPublisher<[RelatedLocation], NetworkError>
+    
+    /// 해당 유저의 follower, 혹은 followee 정보를 가져옴
+    func searchUserFollow(type: FollowType, query: String) -> AnyPublisher<[FollowList], NetworkError>
 }
 
 final class Searcher: SearchUseCase {
-    
+
     // MARK: - Properties
     
     private let provider: Requestable
@@ -100,5 +103,9 @@ final class Searcher: SearchUseCase {
     
     func searchRelatedLocation(query: String) -> AnyPublisher<[RelatedLocation], MacroNetwork.NetworkError> {
         return provider.request(LocationInfoEndPoint.relatedLocation(query))
+    }
+    
+    func searchUserFollow(type: FollowType, query: String) -> AnyPublisher<[FollowList], MacroNetwork.NetworkError> {
+        return provider.request(FollowListEndPoint.followType(type, query))
     }
 }

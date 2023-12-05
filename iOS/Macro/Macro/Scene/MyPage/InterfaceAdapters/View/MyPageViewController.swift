@@ -44,6 +44,11 @@ final class MyPageViewController: TabViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        viewModel.followType = .followees
+        viewModel.followList = []
+    }
     // MARK: - Init
     
     init(viewModel: MyPageViewModel) {
@@ -281,6 +286,10 @@ extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
             navigationController?.pushViewController(userInfoViewController, animated: true)
         } else if indexPath.section == 2 && indexPath.row == 1 {
             inputSubject.send(.completeButtonTapped(3, ""))
+        }
+        else if indexPath.section == 3 && indexPath.row == 0 {
+            let followViewController = FollowViewController(viewModel: viewModel)
+            navigationController?.pushViewController(followViewController, animated: true)
         }
     }
 }

@@ -19,10 +19,12 @@ class MyPageViewModel: ViewModelProtocol {
     let information = ["이름", "프로필 사진", "자기소개"]
     let post = ["작성한 글", "좋아요한 글"]
     let management = ["팔로우", "알림", "문의하기"]
+    var followType: FollowType = .followees
+    var followList: [FollowList] = []
     let patcher: PatchUseCase
     let searcher: SearchUseCase
     let comfirmer: ConfirmUseCase
-    let uploader : UploadImageUseCases
+    let uploader: UploadImageUseCases
     @Published var myInfo: UserProfile = UserProfile(email: "", name: "", imageUrl: "", introduce: "", followersNum: 0, followeesNum: 0, followee: false, follower: false)
     
     // MARK: - Init
@@ -39,6 +41,7 @@ class MyPageViewModel: ViewModelProtocol {
         case completeButtonTapped(Int, String)
         case getMyUserData(String)
         case selectImage(Data)
+        case getFollowInformation
     }
     
     // MARK: - Output
@@ -49,6 +52,9 @@ class MyPageViewModel: ViewModelProtocol {
         case dissMissView
         case showAlert(String)
         case profileEdit(String)
+        case sendFollowersCount(Int)
+        case sendFolloweesCount(Int)
+        case reloadData
     }
     
 }
@@ -68,11 +74,48 @@ extension MyPageViewModel {
                     self?.getMyUserData(email)
                 case let .selectImage(data):
                     self?.uploadImage(data)
+                case .getFollowInformation:
+                    self?.getFollowInformation()
                 }
             }
             .store(in: &cancellables)
         
         return outputSubject.eraseToAnyPublisher()
+    }
+    
+    private func getFollowInformation() {
+        
+        switch self.followType {
+        case .followees: self.followType = .followers
+        case .followers: self.followType = .followees
+        }
+        
+        searcher.searchUserFollow(type: .followees, query: email ?? "").sink { completion in
+            if case let .failure(error) = completion {
+                Log.make().error("\(error)")
+            }
+        } receiveValue: { [weak self] response in
+            guard let self = self else { return }
+            if self.followType == .followees {
+                self.followList = response
+                outputSubject.send(.reloadData)
+            }
+            outputSubject.send(.sendFolloweesCount(response.count))
+        }.store(in: &cancellables)
+        
+        searcher.searchUserFollow(type: .followers, query: email ?? "").sink { completion in
+            if case let .failure(error) = completion {
+                Log.make().error("\(error)")
+            }
+        } receiveValue: { [weak self] response in
+            guard let self = self else { return }
+            if self.followType == .followers {
+                self.followList = response
+                outputSubject.send(.reloadData)
+            }
+            outputSubject.send(.sendFollowersCount(response.count))
+        }.store(in: &cancellables)
+
     }
     
     private func uploadImage(_ data: Data) {
@@ -84,7 +127,6 @@ extension MyPageViewModel {
             self?.outputSubject.send(.profileEdit(response.url))
             self?.modifyInformation(1, response.url)
         }.store(in: &cancellables)
-
     }
     
     private func modifyInformation(_ cellIndex: Int, _ query: String) {
@@ -115,7 +157,6 @@ extension MyPageViewModel {
         } receiveValue: { [weak self] response in
             self?.outputSubject.send(.sendMyUserData(response))
             self?.myInfo = response
-            print(response)
         }.store(in: &cancellables)
     }
 }

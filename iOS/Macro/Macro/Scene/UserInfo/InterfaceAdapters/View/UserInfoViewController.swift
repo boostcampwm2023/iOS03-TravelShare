@@ -19,7 +19,7 @@ final class UserInfoViewController: TouchableViewController {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
-    lazy var userInfoHeaderView: UserInfoHeaderView = UserInfoHeaderView(frame: .zero, inputSubject: inputSubject)
+    lazy var userInfoHeaderView: UserInfoHeaderView = UserInfoHeaderView(frame: .zero, inputSubject: inputSubject, viewModel: viewModel)
     
     // MARK: - UI Components
     
@@ -97,8 +97,6 @@ private extension UserInfoViewController {
         
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
             switch output {
-            case let .updateFollowResult(result):
-                self?.updateFollowResult(result)
             case let .updateUserProfile(result):
                 self?.updateUserProfile(result)
             case let .updateUserPost(result):
@@ -114,12 +112,10 @@ private extension UserInfoViewController {
 
 private extension UserInfoViewController {
     
-    private func updateFollowResult(_ result: FollowResponse) {
-        userInfoHeaderView.updateFollow(item: result)
-    }
     
     private func updateUserProfile(_ result: UserProfile) {
         userInfoHeaderView.configure(item: result)
+        userInfoHeaderView.updateFollow(item: result)
     }
     
     private func updateUserPost(_ result: [PostFindResponse]) {
