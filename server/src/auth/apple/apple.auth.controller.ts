@@ -1,5 +1,10 @@
 import { Body, Delete, Post } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AppleClientAuthBody } from './apple.client.auth.body.dto';
 import { AppleClientAuthResponse } from './apple.client.auth.response.dto';
 import { AppleClientRevokeBody } from './apple.client.revoke.body.dto';
@@ -25,8 +30,9 @@ export class AppleAuthController {
   @ApiOperation({
     summary: 'Apple 회원탈퇴를 진행합니다. 테스트필요',
   })
+  @ApiBearerAuth('access-token')
   @Delete('revoke')
   async revoke(@Body() payload: AppleClientRevokeBody) {
-    await this.appleAuthService.revoke(payload);
+    return await this.appleAuthService.revoke(payload);
   }
 }
