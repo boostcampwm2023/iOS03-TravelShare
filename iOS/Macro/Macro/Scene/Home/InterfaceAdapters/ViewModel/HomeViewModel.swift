@@ -13,7 +13,7 @@ final class HomeViewModel: ViewModelProtocol {
     // MARK: - Input
     
     enum Input {
-        case searchPosts
+        case searchPosts(Int)
         case searchMockPost
     }
     
@@ -52,8 +52,8 @@ extension HomeViewModel {
     func transform(with input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         input.sink { [weak self] input in
             switch input {
-            case .searchPosts:
-              self?.searchPosts()
+            case let .searchPosts(postCount):
+                self?.searchPosts(postCount: postCount)
             case .searchMockPost:
                 self?.searchMockPost()
             }
@@ -62,8 +62,8 @@ extension HomeViewModel {
         return outputSubject.eraseToAnyPublisher()
     }
     
-    private func searchPosts() {
-        postSearcher.fetchHitPost().sink { completion in
+    private func searchPosts(postCount: Int) {
+        postSearcher.fetchHitPost(postCount: postCount).sink { completion in
             if case let .failure(error) = completion {
                 Log.make().error("\(error)")
             }

@@ -20,7 +20,7 @@ protocol SearchUseCase {
     func searchMockPost(query: String, json: String) -> AnyPublisher<[PostFindResponse], NetworkError>
     
     /// 가장 인기있는 게시물들을 받아오는 작업
-    func fetchHitPost() -> AnyPublisher<[PostFindResponse], NetworkError>
+    func fetchHitPost(postCount: Int) -> AnyPublisher<[PostFindResponse], NetworkError>
     
     /// 홈 화면의 게시글들을 해당 json 파일에서 모두 불러오는 작업
     func searchMockPost(json: String) -> AnyPublisher<[PostFindResponse], NetworkError>
@@ -70,12 +70,12 @@ final class Searcher: SearchUseCase {
         return provider.mockRequest(PostFindEndPoint.searchPost(query), url: json)
     }
     
-    func fetchHitPost() -> AnyPublisher<[PostFindResponse], MacroNetwork.NetworkError> {
-        return provider.request(PostEndPoint.search)
+    func fetchHitPost(postCount: Int) -> AnyPublisher<[PostFindResponse], MacroNetwork.NetworkError> {
+        return provider.request(PostEndPoint.search(postCount))
     }
     
     func searchMockPost(json: String) -> AnyPublisher<[PostFindResponse], MacroNetwork.NetworkError> {
-        return provider.mockRequest(PostEndPoint.search, url: json)
+        return provider.mockRequest(PostEndPoint.search(0), url: json)
     }
     
     func searchUserProfile(query: String) -> AnyPublisher<UserProfile, MacroNetwork.NetworkError> {
