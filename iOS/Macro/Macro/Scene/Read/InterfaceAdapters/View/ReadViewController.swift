@@ -107,6 +107,13 @@ final class ReadViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    // MARK: - Handle Gesture
+    
+    @objc private func likeImageViewTap(_ sender: UITapGestureRecognizer) {
+        likeImageView.isUserInteractionEnabled = false
+        inputSubject.send(.likeImageTap)
+    }
 }
 
 // MARK: - UI Settings
@@ -191,6 +198,13 @@ private extension ReadViewController {
         addSubviews()
         setLayoutConstraints()
         postProfile.setLayout()
+        addTapGesture()
+    }
+    
+    func addTapGesture() {
+        likeImageView.isUserInteractionEnabled = true
+        let likeImageViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(likeImageViewTap(_:)))
+        likeImageView.addGestureRecognizer(likeImageViewTapGesture)
     }
 }
 
@@ -210,6 +224,11 @@ private extension ReadViewController {
                     self?.navigateToProfileView(userID)
                 case let .updatePageIndex(index):
                     self?.updatePageIndex(index)
+                case let .updatePostLike(likePostResponse):
+                    self?.likeCountLabel.text = "\(likePostResponse.likeNum)"
+                    self?.likeImageView.image = likePostResponse.liked ? UIImage.appImage(.handThumbsupFill) : UIImage.appImage(.handThumbsup)
+                    self?.likeImageView.tintColor = likePostResponse.liked ? UIColor.appColor(.purple2) : UIColor.appColor(.purple5)
+                    self?.likeImageView.isUserInteractionEnabled = true
                 }
             }
             .store(in: &cancellables)
@@ -248,8 +267,6 @@ private extension ReadViewController {
         likeCountLabel.text = "\(readPost.likeNum)"
         
         viewCountLabel.text = "\(readPost.viewNum)"
-//        likeButton.setTitle("\(readPost.likeNum)", for: .normal)
-
         
         postProfile.updateProfil(readPost.writer)
         
