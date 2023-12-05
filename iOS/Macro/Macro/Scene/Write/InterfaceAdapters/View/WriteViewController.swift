@@ -35,7 +35,7 @@ final class WriteViewController: TabViewController {
     
     private let isVisibilityButton: UIButton = {
         let button = UIButton()
-        let image = UIImage.appImage(.lockFill)?.withTintColor(UIColor.appColor(.statusRed), renderingMode: .alwaysOriginal)
+        let image = UIImage.appImage(.lockOpenFill)?.withTintColor(UIColor.appColor(.statusGreen), renderingMode: .alwaysOriginal)
         button.setImage(image, for: .normal)
         return button
     }()

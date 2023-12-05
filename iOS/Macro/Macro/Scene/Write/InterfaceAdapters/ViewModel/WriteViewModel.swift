@@ -30,7 +30,7 @@ final class WriteViewModel: ViewModelProtocol, CarouselViewProtocol {
             outputSubject.send(.outputImageData(imageDatas))
         }
     }
-    private var postPublic: Bool = false
+    private var postPublic: Bool = true
     private var title: String = ""
     private var summary: String = ""
     private var route: Route = Route(coordinates: [])
