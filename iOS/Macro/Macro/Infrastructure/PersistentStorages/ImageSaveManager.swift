@@ -9,7 +9,7 @@ import Combine
 import Foundation
 import MacroNetwork
 
-class ImageSaveManager {
+final class ImageSaveManager {
     private var cancellables = Set<AnyCancellable>()
     
     func convertImageDataToImageURL(imageDatas: [Data], completion: @escaping (([String]) -> Void)) {
