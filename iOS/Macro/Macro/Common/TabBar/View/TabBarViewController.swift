@@ -33,6 +33,14 @@ final class TabBarViewController: UIViewController {
         super.viewDidLoad()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        tabBarBackgroundLineView.addAnimation()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        tabBarBackgroundLineView.removeAnimation()
+    }
+    
     init(viewModel: TabBarViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
