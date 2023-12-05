@@ -124,7 +124,7 @@ extension WriteViewModel {
             guard let startAt = self.travelInfo.startAt, let endAt = self.travelInfo.endAt else { return }
             guard let recordedLocation = self.travelInfo.recordedLocation else { return }
             let transRecordedLocation = recordedLocation.compactMap { position in
-                Coordinate(xPosition: position[1], yPosition: position[0])
+                Coordinate(xPosition: position[0], yPosition: position[1])
             }
             
             let pins: [Pin] = self.travelInfo.recordedPinnedLocations?.compactMap { pin in
