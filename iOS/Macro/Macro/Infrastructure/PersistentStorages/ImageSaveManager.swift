@@ -9,8 +9,15 @@ import Combine
 import Foundation
 import MacroNetwork
 
-struct ImageSaveManager {
-    static func convertImageDataToImageURL(imageDatas: [Data], cancellables: inout Set<AnyCancellable>, completion: @escaping (([String]) -> Void)) {
+final class ImageSaveManager {
+    private var cancellables = Set<AnyCancellable>()
+    
+    func convertImageDataToImageURL(imageDatas: [Data], completion: @escaping (([String]) -> Void)) {
+        guard !imageDatas.isEmpty else {
+            completion([])
+            return
+        }
+        
         let provider = APIProvider(session: URLSession.shared)
         let uploadImageUseCase = UploadImage(provider: provider)
         var imageURLs = [String]()
@@ -20,16 +27,13 @@ struct ImageSaveManager {
                 .sink { result in
                     if case let .failure(error) = result {
                         debugPrint("Image Upload Fail : ", error)
-                        print(12123)
                     } else if imageURLs.count == imageDatas.count {
                         completion(imageURLs)
-                        print(12145)
                     }
                 } receiveValue: { imageURLResponse in
                     imageURLs.append(imageURLResponse.url)
-                    print(imageURLResponse)
                 }
-                .store(in: &cancellables)
+                .store(in: &self.cancellables)
         }
     }
 }

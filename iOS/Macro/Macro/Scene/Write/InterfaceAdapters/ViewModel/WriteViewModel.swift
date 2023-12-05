@@ -113,7 +113,7 @@ extension WriteViewModel {
     }
     
     private func writeSubmit() {
-        ImageSaveManager.convertImageDataToImageURL(imageDatas: imageDatas, cancellables: &cancellables) { imageURLs in
+        ImageSaveManager().convertImageDataToImageURL(imageDatas: imageDatas) { imageURLs in
             imageURLs.enumerated().forEach {
                 self.contents[$0].imageURL = $1
             }
