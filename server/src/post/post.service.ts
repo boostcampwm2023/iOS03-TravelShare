@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from 'entities/post.entity';
-import { In, Raw, Repository } from 'typeorm';
+import { Equal, In, Not, Raw, Repository } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { PostHitsQuery } from './post.hits.query.dto';
 import { PostDetailResponse } from './post.detail.response.dto';
@@ -26,10 +26,19 @@ import { PostSearchResponse } from './post.search.response.dto';
 import { PostSearchQuery } from './post.search.query.dto';
 import { PostFindQuery } from './post.find.query.dto';
 import { PostFindResponse } from './post.find.response.dto';
+import { User } from 'entities/user.entity';
+import { RedisService } from 'utils/redis/redis.service';
+import { Cron } from '@nestjs/schedule';
+import { PostConfig } from './post.config.dto';
+
+const { all: allPromise } = Promise;
+const { min, random, floor } = Math;
+const all: typeof Promise.all = allPromise.bind(Promise);
 
 @Injectable()
 export class PostService {
   private readonly logger: Logger = new Logger(PostService.name);
+
   constructor(
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
@@ -39,7 +48,158 @@ export class PostService {
     private readonly routeRepository: Repository<Route>,
     @InjectRepository(Place)
     private readonly placeRepository: Repository<Place>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    private readonly redisService: RedisService,
+    private readonly postConfig: PostConfig,
   ) {}
+
+  private readonly REDIS_POST_UPDATED_IDS_SETS_KEY = 'post:updated:id:sets';
+
+  private readonly REDIS_POST_VIEWED_USERS_SETS_KEY = 'post:viewed:users:sets';
+
+  private readonly REDIS_POST_LIKED_USERS_SETS_KEY = 'post:liked:users:sets';
+
+  private getRedisPostViewdUsersSetsKey(postId: number) {
+    return `${this.REDIS_POST_VIEWED_USERS_SETS_KEY}:${postId}`;
+  }
+
+  private getRedisPostLikedUsersSetsKey(postId: number) {
+    return `${this.REDIS_POST_LIKED_USERS_SETS_KEY}:${postId}`;
+  }
+
+  private async addPostUpdatedId(postId: number) {
+    return await this.redisService.setAdd(
+      this.REDIS_POST_UPDATED_IDS_SETS_KEY,
+      postId.toString(),
+    );
+  }
+
+  private async getPostUpdatedIds() {
+    return (
+      await this.redisService.setMembers(this.REDIS_POST_UPDATED_IDS_SETS_KEY)
+    ).map(parseInt);
+  }
+
+  private async addPostViewdUsers(postId: number, ...email: string[]) {
+    await this.addPostUpdatedId(postId);
+    return await this.redisService.setAdd(
+      this.getRedisPostViewdUsersSetsKey(postId),
+      ...email,
+    );
+  }
+
+  private async addPostLikedUsers(postId: number, ...email: string[]) {
+    await this.addPostUpdatedId(postId);
+    return await this.redisService.setAdd(
+      this.getRedisPostLikedUsersSetsKey(postId),
+      ...email,
+    );
+  }
+
+  private async remPostLikedUsers(postId: number, ...email: string[]) {
+    return await this.redisService.setRem(
+      this.getRedisPostLikedUsersSetsKey(postId),
+      ...email,
+    );
+  }
+
+  private async isPostViewdUsersCached(postId: number) {
+    return await this.redisService.exists(
+      this.getRedisPostViewdUsersSetsKey(postId),
+    );
+  }
+
+  private async isPostLikedUsersCached(postId: number) {
+    return await this.redisService.exists(
+      this.getRedisPostLikedUsersSetsKey(postId),
+    );
+  }
+
+  private async loadPostLikedUsersAndGetCount(postId: number) {
+    const likedUsers = await this.userRepository.find({
+      where: { likedPosts: { postId } },
+    });
+    if (likedUsers.length === 0) {
+      return 0;
+    }
+    return await this.redisService.setAdd(
+      this.getRedisPostLikedUsersSetsKey(postId),
+      ...likedUsers.map(({ email }) => email),
+    );
+  }
+
+  private async getPostViewdUsersCount(postId: number) {
+    return await this.redisService.setCard(
+      this.getRedisPostViewdUsersSetsKey(postId),
+    );
+  }
+
+  private async getPostLikedUsersCount(postId: number) {
+    return await this.redisService.setCard(
+      this.getRedisPostLikedUsersSetsKey(postId),
+    );
+  }
+
+  private async getPostViewdUsersList(postId: number) {
+    return await this.redisService.setMembers(
+      this.getRedisPostViewdUsersSetsKey(postId),
+    );
+  }
+
+  private async getPostLikedUsersList(postId: number) {
+    return await this.redisService.setMembers(
+      this.getRedisPostLikedUsersSetsKey(postId),
+    );
+  }
+
+  private async isViewdUser(postId: number, email: string) {
+    return await this.redisService.setIsMember(
+      this.getRedisPostViewdUsersSetsKey(postId),
+      email,
+    );
+  }
+
+  private async isLikedUser(postId: number, email: string) {
+    return await this.redisService.setIsMember(
+      this.getRedisPostLikedUsersSetsKey(postId),
+      email,
+    );
+  }
+
+  private async isLikedUserWithCheckCache(postId: number, email: string) {
+    if (!(await this.isPostLikedUsersCached(postId))) {
+      await this.loadPostLikedUsersAndGetCount(postId);
+    }
+
+    return await this.isLikedUser(postId, email);
+  }
+
+  private async cleanPostUpdatedIds() {
+    return await this.redisService.del(this.REDIS_POST_UPDATED_IDS_SETS_KEY);
+  }
+
+  private async cleanPostViewdUsers(postId: number) {
+    return await this.redisService.del(
+      this.getRedisPostViewdUsersSetsKey(postId),
+    );
+  }
+
+  private async cleanPostLikedUsers(postId: number) {
+    return await this.redisService.del(
+      this.getRedisPostLikedUsersSetsKey(postId),
+    );
+  }
+
+  private async loadCacheAndGetCounts(postId: number) {
+    if (!(await this.isPostLikedUsersCached(postId))) {
+      await this.loadPostLikedUsersAndGetCount(postId);
+    }
+    return {
+      viewNum: await this.getPostViewdUsersCount(postId),
+      likeNum: await this.getPostLikedUsersCount(postId),
+    };
+  }
 
   /**
    * 인기 게시글을 불러옵니다.<br>
@@ -216,8 +376,10 @@ WHERE
 ORDER BY 
   `Post`.`like_num` DESC, 
   `Post`.`view_num` DESC
-
    * ```
+
+    $$ \frac{view}{b} $$
+
    * @param pagination
    * @param param1
    * @returns
@@ -237,25 +399,58 @@ ORDER BY
           writer: true,
         },
       })
-      .addSelect(`\`view_num\` * 0.2 + \`like_num\` * 0.8`, 'score')
-      .orderBy(pagination.sortBy === 'hot' ? 'score' : 'post.postId', 'DESC')
+      .addSelect(
+        `(post.viewNum * 0.2 + post.likeNum * 0.8) / (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(post.createdAt))`,
+        'oldScore',
+      )
+      .orderBy(pagination.sortBy === 'hot' ? 'oldScore' : 'post.postId', 'DESC')
       .getMany();
-    const isLikedPosts = await this.postRepository.find({
-      where: {
-        postId: In(posts.map(({ postId }) => postId)),
-        likedUsers: { email },
+
+    return plainToInstance(
+      PostSearchResponse,
+      await all(
+        posts.map(async (post) => ({
+          ...post,
+          liked: await this.isLiked(post.postId, email),
+          ...(await this.loadCacheAndGetCounts(post.postId)),
+        })),
+      ),
+    );
+  }
+
+  async hits(pagination: PostHitsQuery, { email }: Authentication) {
+    const topPosts = await this.postRepository.find({
+      where: { public: true },
+      relations: { writer: true },
+      order:
+        pagination.sortBy === 'hot' ? { score: 'DESC' } : { postId: 'DESC' },
+      ...pagination,
+    });
+
+    const followeePosts = await this.postRepository.find({
+      where: { writer: { followers: { email } } },
+      relations: { writer: true },
+      order: {
+        postId: 'DESC',
+        score: 'DESC',
       },
-      select: {
-        postId: true,
-      },
+      ...pagination,
     });
 
     return plainToInstance(
       PostSearchResponse,
-      posts.map((post) => ({
-        ...post,
-        liked: isLikedPosts.map(({ postId }) => postId).includes(post.postId),
-      })),
+      await all(
+        [
+          ...topPosts.slice(0, floor(pagination.take / 2)),
+          ...followeePosts.slice(0, floor(pagination.take / 2)),
+        ]
+          .map(async (post) => ({
+            ...post,
+            liked: await this.isLiked(post.postId, email),
+            ...(await this.loadCacheAndGetCounts(post.postId)),
+          }))
+          .sort(() => random() - 0.5),
+      ),
     );
   }
 
@@ -354,28 +549,21 @@ ORDER BY
       },
     });
 
-    const isLikedPosts = await this.postRepository.find({
-      where: {
-        postId: In(posts.map(({ postId }) => postId)),
-        likedUsers: { email: loginUser },
-      },
-      select: {
-        postId: true,
-      },
-    });
-
     return plainToInstance(
       PostSearchResponse,
-      posts.map((post) => ({
-        ...post,
-        liked: isLikedPosts.map(({ postId }) => postId).includes(post.postId),
-      })),
+      await all(
+        posts.map(async (post) => ({
+          ...post,
+          liked: await this.isLiked(post.postId, email),
+          ...(await this.loadCacheAndGetCounts(post.postId)),
+        })),
+      ),
     );
   }
 
   @Transactional()
   async detail({ postId }: PostDetailQuery, { email }: Authentication) {
-    const [post] = await Promise.all([
+    const [post] = await all([
       this.postRepository.findOneOrFail({
         where: { postId },
         relations: {
@@ -385,20 +573,39 @@ ORDER BY
           pins: true,
         },
       }),
-      this.postRepository.increment({ postId }, 'viewNum', 1),
+      await this.addPostViewdUsers(postId, email),
     ]).catch((err) => {
       this.logger.error(err);
       throw new NotFoundException('post not found', { cause: err });
     });
     if (post.writer.email !== email && !post.public) {
-      throw new BadRequestException('비공개 게시글입니다.');
+      if (!post.public) {
+        throw new BadRequestException('비공개 게시글입니다.');
+      }
     }
     return plainToInstance(PostDetailResponse, {
       ...post,
-      viewNum: post.viewNum + 1,
-      liked: await this.postRepository.exist({
-        where: { likedUsers: { email }, postId },
-      }),
+      writer: {
+        ...post.writer,
+        followee: await this.userRepository.exist({
+          where: {
+            email: email,
+            followees: {
+              email: post.writer.email,
+            },
+          },
+        }),
+        follower: await this.userRepository.exist({
+          where: {
+            email: email,
+            followers: {
+              email: post.writer.email,
+            },
+          },
+        }),
+      },
+      liked: await this.isLiked(postId, email),
+      ...(await this.loadCacheAndGetCounts(postId)),
     });
   }
 
@@ -456,62 +663,24 @@ ORDER BY
     } else {
       await this.likeInternal(postId, email);
     }
-    const { likeNum } = await this.postRepository
-      .findOneOrFail({
-        where: {
-          postId,
-        },
-        select: { likeNum: true },
-      })
-      .catch((err) => {
-        throw new NotFoundException('post not found', { cause: err });
-      });
 
     return plainToInstance(PostLikeResponse, {
-      likeNum,
+      likeNum: await this.getPostLikedUsersCount(postId),
       postId,
       liked: !liked,
     });
   }
 
   private async isLiked(postId: number, email: string) {
-    return await this.postRepository.exist({
-      where: {
-        postId,
-        likedUsers: { email },
-      },
-      lock: {
-        mode: 'pessimistic_write',
-      },
-    });
+    return await this.isLikedUserWithCheckCache(postId, email);
   }
 
   private async likeInternal(postId: number, email: string) {
-    await this.postRepository
-      .createQueryBuilder()
-      .relation('likedUsers')
-      .of(postId)
-      .add(email)
-      .catch((err) => {
-        throw new NotFoundException('post or user not found', { cause: err });
-      });
-    await this.postRepository.update(postId, {
-      likeNum: () => 'like_num + 1',
-    });
+    await this.addPostLikedUsers(postId, email);
   }
 
   private async unlikeInternal(postId: number, email: string) {
-    await this.postRepository
-      .createQueryBuilder()
-      .relation('likedUsers')
-      .of(postId)
-      .remove(email)
-      .catch((err) => {
-        throw new NotFoundException('post or user not found', { cause: err });
-      });
-    await this.postRepository.update(postId, {
-      likeNum: () => 'like_num - 1',
-    });
+    await this.remPostLikedUsers(postId, email);
   }
 
   /**
@@ -575,6 +744,7 @@ ORDER BY
         `ST_CONTAINS(ST_BUFFER(place.coordinate, 10000), ST_GEOMFROMTEXT(:point, 4326))`,
         { point: jsonToPoint(coordinate) },
       )
+      .andWhere({ placeId: Not(Equal(placeId)) })
       .orderBy('postNum', 'DESC')
       .getRawAndEntities();
 
@@ -586,25 +756,82 @@ ORDER BY
       })),
     );
   }
+
+  @Cron('* * */10 * * *')
+  async updateTaskToViewsAndLikesAndScores() {
+    const { alpha, beta, gamma } = this.postConfig;
+    this.logger.debug(
+      `cache persisting starts. alpha: ${alpha}, beta: ${beta}, gamma: ${gamma}`,
+    );
+
+    const updateList = await this.getPostUpdatedIds();
+    const posts = await this.postRepository.find({
+      where: { postId: In(updateList) },
+      relations: { likedUsers: true },
+      select: {
+        postId: true,
+        viewNum: true,
+        score: true,
+        likedUsers: {
+          email: true,
+        },
+      },
+    });
+
+    await all(
+      posts.map(async (post) => {
+        const incrementedViewNum = await this.getPostViewdUsersCount(
+          post.postId,
+        );
+        const incrementedlikeNum = min(
+          (await this.getPostLikedUsersCount(post.postId)) -
+            post.likedUsers.length,
+        );
+        //update score
+        this.postRepository.update(post.postId, {
+          viewNum: post.viewNum + incrementedViewNum,
+          score:
+            post.score !== 0
+              ? alpha * post.score +
+                (1 - alpha) *
+                  ((1 - beta) * incrementedViewNum +
+                    beta * incrementedlikeNum) *
+                  (gamma / post.score)
+              : (1 - beta) * incrementedViewNum + beta * incrementedlikeNum,
+        });
+
+        const oldLikedUsers = post.likedUsers.map(({ email }) => email);
+        const currentlyLikedUsers = await this.getPostLikedUsersList(
+          post.postId,
+        );
+
+        const unlikedUsers = oldLikedUsers.filter(
+          (email) => !currentlyLikedUsers.includes(email),
+        );
+        const likedUsers = currentlyLikedUsers.filter(
+          (email) => !oldLikedUsers.includes(email),
+        );
+
+        this.postRepository
+          .createQueryBuilder()
+          .relation('likedUsers')
+          .of(post.postId)
+          .remove(unlikedUsers);
+        this.postRepository
+          .createQueryBuilder()
+          .relation('likedUsers')
+          .of(post.postId)
+          .add(likedUsers);
+
+        this.cleanPostViewdUsers(post.postId);
+        this.cleanPostLikedUsers(post.postId);
+      }),
+    ).catch((err) => {
+      this.logger.error(err);
+    });
+
+    await this.cleanPostUpdatedIds();
+
+    this.logger.debug('cache persistenced');
+  }
 }
-
-/**
- * POINT(12 22)
- * PONINT
- *
- * Multi-Point(12 11, 1133 232, )
- */
-
-/**
- * SELECT * FROM place,
-      (SELECT place_id, count(post_id) AS countPlace
-      FROM pins
-      WHERE NOT place_id=? AND post_id IN (
-        SELECT post_id
-        FROM pins AS child
-        WHERE place_id=?
-      )
-      GROUP BY place_id
-      ORDER BY countPlace DESC) AS Temp
-      WHERE place.place_id=Temp.place_id
- */

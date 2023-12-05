@@ -6,6 +6,7 @@ import { plainToInstance } from 'class-transformer';
 import { SentimentAnalysisResponse } from './sentiment.analysis.response.dto';
 import { SentimentAnalysisQuery } from './sentiment.analysis.query.dto';
 import { SentimentAnalysisConfig } from './sentiment.analysis.config.dto';
+import { validateOrReject } from 'class-validator';
 
 @Injectable()
 export class SentimentService {
@@ -13,7 +14,7 @@ export class SentimentService {
     private readonly httpService: HttpService,
     private readonly sentimentAnalysisConfig: SentimentAnalysisConfig,
   ) {}
-  async SentimentAnalysis(query: SentimentAnalysisQuery) {
+  analysis(query: SentimentAnalysisQuery) {
     return this.httpService
       .request({
         ...this.sentimentAnalysisConfig.request,
@@ -21,8 +22,17 @@ export class SentimentService {
       })
       .pipe(
         map(({ data }: AxiosResponse) => {
-          return plainToInstance(SentimentAnalysisResponse, data as any[]);
+          return plainToInstance(SentimentAnalysisResponse, data);
         }),
       );
+  }
+
+  analysisWithValidation(query: SentimentAnalysisQuery) {
+    return this.analysis(query).pipe(
+      map(async (response) => {
+        await validateOrReject(response);
+        return response;
+      }),
+    );
   }
 }

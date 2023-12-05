@@ -14,4 +14,10 @@ export class UserProfileSimpleResponse {
   @IsUrl()
   @IsOptional()
   imageUrl?: string;
+
+  @ApiProperty({ description: '팔로우 여부', required: false })
+  followee?: boolean;
+
+  @ApiProperty({ description: '팔로워 여부', required: false })
+  follower?: boolean;
 }
