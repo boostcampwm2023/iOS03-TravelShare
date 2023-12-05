@@ -19,7 +19,7 @@ final class UserInfoViewController: TouchableViewController {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
-    lazy var userInfoHeaderView: UserInfoHeaderView = UserInfoHeaderView(frame: .zero, inputSubject: inputSubject)
+    lazy var userInfoHeaderView: UserInfoHeaderView = UserInfoHeaderView(frame: .zero, inputSubject: inputSubject, viewModel: viewModel)
     
     // MARK: - UI Components
     
