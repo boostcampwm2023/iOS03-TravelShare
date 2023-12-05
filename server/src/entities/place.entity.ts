@@ -14,7 +14,7 @@ export class Place {
   @Column({ name: 'place_name' })
   placeName: string;
 
-  @Column({ name: 'phone_number' })
+  @Column({ name: 'phone_number', nullable: true })
   phoneNumber: string;
 
   @Column()
@@ -23,7 +23,7 @@ export class Place {
   @Column()
   address: string;
 
-  @Column({ name: 'road_address' })
+  @Column({ name: 'road_address', nullable: true })
   roadAddress: string;
 
   @Column('geometry', {
