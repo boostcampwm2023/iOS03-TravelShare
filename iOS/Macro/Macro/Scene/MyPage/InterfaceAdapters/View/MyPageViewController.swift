@@ -286,10 +286,24 @@ extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
             navigationController?.pushViewController(userInfoViewController, animated: true)
         } else if indexPath.section == 2 && indexPath.row == 1 {
             inputSubject.send(.completeButtonTapped(3, ""))
-        }
-        else if indexPath.section == 3 && indexPath.row == 0 {
+        } else if indexPath.section == 3 && indexPath.row == 0 {
             let followViewController = FollowViewController(viewModel: viewModel)
             navigationController?.pushViewController(followViewController, animated: true)
+        } else if indexPath.section == 3 && indexPath.row == 1 {
+            guard let subject = "문의하기".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+                  let body = """
+                아래 내용을 적어주세요. 빠르게 답변 드리겠습니다.\n
+                • 이용 중인 기기/OS 버전:\n
+                • 닉네임: \n
+                • 문의 내용:
+                """.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+                  let url = URL(string: "mailto: jinhaday@gmail.com?subject=\(subject)&body=\(body)") else {
+                return
+            }
+            
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
         }
     }
 }
