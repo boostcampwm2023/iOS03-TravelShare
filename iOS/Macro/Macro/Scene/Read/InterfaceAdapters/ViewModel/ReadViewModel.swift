@@ -21,14 +21,16 @@ final class ReadViewModel: ViewModelProtocol, CarouselViewProtocol {
     var items: [UIImage?] = []
     private var cancellables = Set<AnyCancellable>()
     private let useCase: ReadPostUseCaseProtocol
+    private let pathcher: PatchUseCase
     private let outputSubject = PassthroughSubject<Output, Never>()
     private let postId: Int
     
     // MARK: - Init
     
-    init(useCase: ReadPostUseCaseProtocol, postId: Int) {
+    init(useCase: ReadPostUseCaseProtocol, postId: Int, pathcher: PatchUseCase) {
         self.useCase = useCase
         self.postId = postId
+        self.pathcher = pathcher
     }
     
     // MARK: - Input
@@ -36,6 +38,7 @@ final class ReadViewModel: ViewModelProtocol, CarouselViewProtocol {
     enum Input {
         case readPosts
         case searchUser(String)
+        case likeImageTap
     }
     
     // MARK: - Output
@@ -44,6 +47,7 @@ final class ReadViewModel: ViewModelProtocol, CarouselViewProtocol {
         case updatePost(post: ReadPost)
         case navigateToProfileView(String)
         case updatePageIndex(Int)
+        case updatePostLike(LikePostResponse)
     }
 }
 
@@ -59,6 +63,8 @@ extension ReadViewModel {
                     self?.updateReadViewItems()
                 case let .searchUser(userID):
                     self?.searchUser(id: userID)
+                case .likeImageTap:
+                    self?.like()
                 }
             }
             .store(in: &cancellables)
@@ -79,5 +85,13 @@ extension ReadViewModel {
     
     private func searchUser(id: String) {
         self.outputSubject.send(.navigateToProfileView(id))
+    }
+    
+    private func like() {
+        pathcher.patchPostLike(postId: postId).sink { _ in
+        } receiveValue: { [weak self] likePostResponse in
+            guard likePostResponse.postId == self?.postId else { return }
+            self?.outputSubject.send(.updatePostLike(likePostResponse))
+        }.store(in: &cancellables)
     }
 }

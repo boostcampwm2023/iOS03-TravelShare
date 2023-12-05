@@ -51,43 +51,34 @@ final class ReadViewController: UIViewController {
         inputSubject: inputSubject,
         viewModel: viewModel)
     
-    private let likeButton: UIButton = {
-        let button = UIButton()
-        var configure = UIButton.Configuration.plain()
-        let image = UIImage.appImage(.handThumbsup)?
-            .withTintColor(UIColor.appColor(.purple5))
-        configure.image = image
-        configure.imagePadding = 10
-        button.configuration = configure
-        button.titleLabel?.font = UIFont.appFont(.baeEunBody)
-        button.setTitle("0", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        return button
+    private let likeImageView: UIImageView = {
+        let image: UIImage? = UIImage.appImage(.handThumbsup)
+        let imageView: UIImageView = UIImageView()
+        imageView.image = image
+        imageView.tintColor = UIColor.appColor(.purple5)
+        return imageView
     }()
     
-    private let viewButton: UIButton = {
-        let button = UIButton()
-        var configure = UIButton.Configuration.plain()
-        let image = UIImage.appImage(.eyes)?
-            .withTintColor(UIColor.appColor(.purple5))
-        configure.image = image
-        configure.imagePadding = 10
-        button.configuration = configure
-        button.titleLabel?.font = UIFont.appFont(.baeEunBody)
-        button.setTitle("0", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        return button
+    private let likeCountLabel: UILabel = {
+        let label: UILabel = UILabel()
+        label.textColor = UIColor.appColor(.purple5)
+        label.font = UIFont.appFont(.baeEunBody)
+        return label
     }()
     
-    private let messageButton: UIButton = {
-        let button = UIButton()
-        var configure = UIButton.Configuration.plain()
-        let image = UIImage.appImage(.paperplane)?
-            .withTintColor(UIColor.appColor(.purple5))
-        configure.image = image
-        configure.imagePadding = 20
-        button.configuration = configure
-        return button
+    private let viewImageView: UIImageView = {
+        let image: UIImage? = UIImage.appImage(.eyes)
+        let imageView: UIImageView = UIImageView()
+        imageView.image = image
+        imageView.tintColor = UIColor.appColor(.purple5)
+        return imageView
+    }()
+    
+    private let viewCountLabel: UILabel = {
+        let label: UILabel = UILabel()
+        label.textColor = UIColor.appColor(.purple5)
+        label.font = UIFont.appFont(.baeEunBody)
+        return label
     }()
     
     private let mapView: NMFMapView = {
@@ -116,6 +107,13 @@ final class ReadViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    // MARK: - Handle Gesture
+    
+    @objc private func likeImageViewTap(_ sender: UITapGestureRecognizer) {
+        likeImageView.isUserInteractionEnabled = false
+        inputSubject.send(.likeImageTap)
+    }
 }
 
 // MARK: - UI Settings
@@ -128,9 +126,10 @@ private extension ReadViewController {
         postProfile.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         carouselView.translatesAutoresizingMaskIntoConstraints = false
-        likeButton.translatesAutoresizingMaskIntoConstraints = false
-        viewButton.translatesAutoresizingMaskIntoConstraints = false
-        messageButton.translatesAutoresizingMaskIntoConstraints = false
+        likeImageView.translatesAutoresizingMaskIntoConstraints = false
+        likeCountLabel.translatesAutoresizingMaskIntoConstraints = false
+        viewImageView.translatesAutoresizingMaskIntoConstraints = false
+        viewCountLabel.translatesAutoresizingMaskIntoConstraints = false
         mapView.translatesAutoresizingMaskIntoConstraints = false
     }
     
@@ -141,9 +140,10 @@ private extension ReadViewController {
             postProfile,
             titleLabel,
             carouselView,
-            likeButton,
-            viewButton,
-            messageButton,
+            likeImageView,
+            likeCountLabel,
+            viewImageView,
+            viewCountLabel,
             mapView
         ].forEach { self.scrollContentView.addSubview($0) }
     }
@@ -168,21 +168,24 @@ private extension ReadViewController {
             carouselView.heightAnchor.constraint(equalToConstant: 400),
             carouselView.widthAnchor.constraint(equalToConstant: UIScreen.width),
             
-            likeButton.topAnchor.constraint(equalTo: carouselView.bottomAnchor, constant: 40),
-            likeButton.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 10),
+            likeImageView.topAnchor.constraint(equalTo: carouselView.bottomAnchor, constant: 40),
+            likeImageView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 24),
             
-            viewButton.topAnchor.constraint(equalTo: carouselView.bottomAnchor, constant: 40),
-            viewButton.leadingAnchor.constraint(equalTo: likeButton.trailingAnchor, constant: 10),
+            likeCountLabel.centerYAnchor.constraint(equalTo: likeImageView.centerYAnchor),
+            likeCountLabel.leadingAnchor.constraint(equalTo: likeImageView.trailingAnchor, constant: 10),
             
-            messageButton.topAnchor.constraint(equalTo: carouselView.bottomAnchor, constant: 40),
-            messageButton.leadingAnchor.constraint(equalTo: viewButton.trailingAnchor, constant: 10),
+            viewImageView.topAnchor.constraint(equalTo: carouselView.bottomAnchor, constant: 40),
+            viewImageView.leadingAnchor.constraint(equalTo: likeCountLabel.trailingAnchor, constant: 10),
+            
+            viewCountLabel.centerYAnchor.constraint(equalTo: viewImageView.centerYAnchor),
+            viewCountLabel.leadingAnchor.constraint(equalTo: viewImageView.trailingAnchor, constant: 10),
             
             scrollContentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             scrollContentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             scrollContentView.widthAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.widthAnchor),
             scrollContentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             
-            mapView.topAnchor.constraint(equalTo: likeButton.bottomAnchor, constant: 10),
+            mapView.topAnchor.constraint(equalTo: likeImageView.bottomAnchor, constant: 10),
             mapView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 24),
             mapView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -24),
             mapView.heightAnchor.constraint(equalToConstant: UIScreen.width - 48),
@@ -195,6 +198,13 @@ private extension ReadViewController {
         addSubviews()
         setLayoutConstraints()
         postProfile.setLayout()
+        addTapGesture()
+    }
+    
+    func addTapGesture() {
+        likeImageView.isUserInteractionEnabled = true
+        let likeImageViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(likeImageViewTap(_:)))
+        likeImageView.addGestureRecognizer(likeImageViewTapGesture)
     }
 }
 
@@ -214,6 +224,11 @@ private extension ReadViewController {
                     self?.navigateToProfileView(userID)
                 case let .updatePageIndex(index):
                     self?.updatePageIndex(index)
+                case let .updatePostLike(likePostResponse):
+                    self?.likeCountLabel.text = "\(likePostResponse.likeNum)"
+                    self?.likeImageView.image = likePostResponse.liked ? UIImage.appImage(.handThumbsupFill) : UIImage.appImage(.handThumbsup)
+                    self?.likeImageView.tintColor = likePostResponse.liked ? UIColor.appColor(.purple2) : UIColor.appColor(.purple5)
+                    self?.likeImageView.isUserInteractionEnabled = true
                 }
             }
             .store(in: &cancellables)
@@ -249,9 +264,9 @@ private extension ReadViewController {
     func updatePost(_ readPost: ReadPost) {
         self.readPost = readPost
         
-        likeButton.setTitle("\(readPost.likeNum)", for: .normal)
+        likeCountLabel.text = "\(readPost.likeNum)"
         
-        viewButton.setTitle("\(readPost.viewNum)", for: .normal)
+        viewCountLabel.text = "\(readPost.viewNum)"
         
         postProfile.updateProfil(readPost.writer)
         
