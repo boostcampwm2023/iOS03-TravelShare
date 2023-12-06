@@ -95,7 +95,7 @@ export class Post {
   })
   pins: Place[];
 
-  @Column({ default: 0 })
+  @Column('double', { default: 0 })
   @Index()
   score: number;
 }
