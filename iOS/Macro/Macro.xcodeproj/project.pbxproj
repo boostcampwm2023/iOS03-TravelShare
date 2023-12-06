@@ -1518,6 +1518,7 @@
 				BA8DC3FA2B0B5DD100929E01 /* BaseViewControllerProtocol.swift in Sources */,
 				AAD0B3142B14E394003B4D5F /* ReadViewController.swift in Sources */,
 				AAD0B2DB2B0FB5A5003B4D5F /* ImageUploadEndPoint.swift in Sources */,
+				D2CAA5EF2B208F5D00E825BA /* SceneType.swift in Sources */,
 				BA33AA8C2B0AF9F30065D1E0 /* HomeHeaderView.swift in Sources */,
 				BA32E1762B0DC2F900EA0EE2 /* UserInfoViewModel.swift in Sources */,
 				BA8DC4132B0B602000929E01 /* WriteViewModel.swift in Sources */,
