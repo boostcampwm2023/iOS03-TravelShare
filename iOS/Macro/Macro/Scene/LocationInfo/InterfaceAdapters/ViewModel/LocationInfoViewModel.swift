@@ -67,7 +67,7 @@ extension LocationInfoViewModel {
     private func getRelatedPost() {
         var placeId = locationDetail.id
         // TODO: 임시로 불러온 값을 확인할 수 있게 지정했음.
-        placeId = "1234567"
+        placeId = "7963969"
         searcher.searchRelatedPost(query: placeId).sink { _ in
         } receiveValue: { [weak self] response in
             self?.posts = response
@@ -78,7 +78,7 @@ extension LocationInfoViewModel {
     private func getRelatedLocation() {
         var placeId = locationDetail.id
         // TODO: 임시로 불러온 값을 확인할 수 있게 지정했음.
-        placeId = "1234567"
+        placeId = "7963969"
         searcher.searchRelatedLocation(query: placeId).sink { _ in
         } receiveValue: { [weak self] response in
             self?.relatedLocation = response

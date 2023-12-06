@@ -12,6 +12,7 @@ import UIKit
 final class PostContentView: UIView {
     
     // MARK: - Properties
+    private var imageUrl: String?
     private var cancellables = Set<AnyCancellable>()
     var viewModel: PostCollectionViewModel?
     private let provider = APIProvider(session: URLSession.shared)
@@ -80,7 +81,7 @@ extension PostContentView {
     func bind() {
         guard let viewModel = self.viewModel else { return }
         _ = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
-     
+        
     }
 }
 // MARK: - UI Settings
@@ -150,14 +151,26 @@ extension PostContentView {
     func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?) {
         self.viewModel = viewModel
         guard let viewModel = self.viewModel else { return }
-        viewModel.loadImage(profileImageStringURL: item.imageUrl ?? "https://user-images.githubusercontent.com/118811606/285184604-1e5983fd-0b07-4bfe-9c17-8b147f237517.png") { image in
-            DispatchQueue.main.async { [self] in
-                mainImageView.image = image
-                title.text = item.title
-                summary.text = item.summary
-                postId = item.postId
+        // 이미지 URL 저장
+        self.imageUrl = item.imageUrl ?? "default_url"
+        
+        viewModel.loadImage(profileImageStringURL: self.imageUrl!) { [weak self] image in
+            DispatchQueue.main.async {
+                // 여기서 URL이 현재 뷰에 표시해야 할 URL과 일치하는지 확인
+                if self?.imageUrl == item.imageUrl {
+                    self?.mainImageView.image = image
+                }
             }
         }
+        
+        title.text = item.title
+        summary.text = item.summary
+        postId = item.postId
     }
-    
+    func resetContents() {
+        mainImageView.image = nil
+        title.text = ""
+        summary.text = ""
+        postId = nil
+    }
 }

@@ -14,6 +14,7 @@ final class PostProfileView: UIView {
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
     var viewModel: PostCollectionViewModel?
+    private var imageUrl: String?
     var indexPath: IndexPath?
     private let provider = APIProvider(session: URLSession.shared)
     private let inputSubject: PassthroughSubject<PostCollectionViewModel.Input, Never> = .init()
@@ -29,7 +30,7 @@ final class PostProfileView: UIView {
         return label
     }()
     
-    var userNameLabel: UILabel = {
+    private let userNameLabel: UILabel = {
         let label: UILabel = UILabel()
         label.textColor = UIColor.appColor(.purple5)
         label.font = UIFont.appFont(.baeEunBody)
@@ -195,22 +196,29 @@ extension PostProfileView {
     func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?) {
         self.viewModel = viewModel
         guard let viewModel = self.viewModel else { return }
-        viewModel.loadImage(profileImageStringURL: item.writer.imageUrl ?? "https://user-images.githubusercontent.com/118811606/285184604-1e5983fd-0b07-4bfe-9c17-8b147f237517.png") { profileImage in
-            DispatchQueue.main.async { [self] in
-                if let image = profileImage {
-                    profileImageView.image = image
-                } else {
-                    let defaultImage = UIImage.appImage(.ProfileDefaultImage)
-                    profileImageView.image = defaultImage
+        // 이미지 URL 저장
+        self.imageUrl = item.writer.imageUrl ?? "default_url"
+        
+        viewModel.loadImage(profileImageStringURL: self.imageUrl!) { [weak self] image in
+            DispatchQueue.main.async {
+                // 여기서 URL이 현재 뷰에 표시해야 할 URL과 일치하는지 확인
+                if self?.imageUrl == item.imageUrl {
+                    self?.profileImageView.image = image
                 }
-                profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
             }
         }
         userNameLabel.text = item.writer.name
-        likeCountLabel.text = "\(item.likeNum)"
-        viewCountLabel.text = "\(item.viewNum)"
-        
-        self.postId = item.postId
+                likeCountLabel.text = "\(item.likeNum)"
+                viewCountLabel.text = "\(item.viewNum)"
+        postId = item.postId
     }
+    func resetContents() {
+        profileImageView.image = nil
+        userNameLabel.text = ""
+        likeCountLabel.text = ""
+        viewCountLabel.text = ""
+        postId = nil
+    }
+    
     
 }
