@@ -69,8 +69,6 @@ final class TravelViewController: TabViewController,
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        locationManager.requestWhenInUseAuthorization()
         setUpLayouts()
         setUpConstraints()
         setupRouteTableViewController()
@@ -79,9 +77,7 @@ final class TravelViewController: TabViewController,
         searchBar.addTarget(self, action: #selector(searchBarReturnPressed), for: .editingDidEndOnExit)
         locationManager.delegate = self
         mapView.delegate = self
-        locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
-        
     }
     
     override func viewWillLayoutSubviews() {

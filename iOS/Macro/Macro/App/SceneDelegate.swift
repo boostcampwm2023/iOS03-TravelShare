@@ -7,6 +7,7 @@
 
 import AuthenticationServices
 import Combine
+import CoreLocation
 import Network
 import MacroNetwork
 import UIKit
@@ -15,8 +16,6 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
     var navigationController: UINavigationController?
-    
-    
     private let queue = DispatchQueue(label: Label.queueLabel)
     private let monitor = NWPathMonitor()
     private let networkStatusSubject = PassthroughSubject<Bool, Never>()
