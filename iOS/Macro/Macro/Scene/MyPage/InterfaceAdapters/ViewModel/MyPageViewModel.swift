@@ -22,17 +22,24 @@ class MyPageViewModel: ViewModelProtocol {
     var followType: FollowType = .followees
     var followList: [FollowList] = []
     let patcher: PatchUseCase
+    let revoker: RevokeUseCase
     let searcher: SearchUseCase
     let comfirmer: ConfirmUseCase
     let uploader: UploadImageUseCases
     @Published var myInfo: UserProfile = UserProfile(email: "", name: "", imageUrl: "", introduce: "", followersNum: 0, followeesNum: 0, followee: false, follower: false)
     
     // MARK: - Init
-    init(patcher: PatchUseCase, searcher: SearchUseCase, confirmer: ConfirmUseCase, uploader: UploadImageUseCases) {
+    init(patcher: PatchUseCase, 
+         searcher: SearchUseCase,
+         confirmer: ConfirmUseCase,
+         uploader: UploadImageUseCases,
+         revoker: RevokeUseCase
+    ) {
         self.patcher = patcher
         self.searcher = searcher
         self.comfirmer = confirmer
         self.uploader = uploader
+        self.revoker = revoker
     }
     
     // MARK: - Input
@@ -42,6 +49,7 @@ class MyPageViewModel: ViewModelProtocol {
         case getMyUserData(String)
         case selectImage(Data)
         case getFollowInformation
+        case appleLogout(identityToken: String, authorizationCode: String)
     }
     
     // MARK: - Output
@@ -55,6 +63,7 @@ class MyPageViewModel: ViewModelProtocol {
         case sendFollowersCount(Int)
         case sendFolloweesCount(Int)
         case reloadData
+        case completeRevoke
     }
     
 }
@@ -76,14 +85,30 @@ extension MyPageViewModel {
                     self?.uploadImage(data)
                 case .getFollowInformation:
                     self?.getFollowInformation()
+                case let .appleLogout(identityToken, authorizationCode):
+                    self?.appleLogout(identityToken, authorizationCode)
                 }
             }
             .store(in: &cancellables)
         
         return outputSubject.eraseToAnyPublisher()
     }
+
+}
+
+private extension MyPageViewModel {
     
-    private func getFollowInformation() {
+    func appleLogout(_ identityToken: String, _ authorizationCode: String) {
+        print("----------\n\(identityToken), identityToken\n")
+        print("\(authorizationCode), authorizationCode\n---------------")
+        revoker.withdraw(identityToken: identityToken, authorizationCode: authorizationCode)
+            .sink { _ in
+        } receiveValue: { [weak self] _ in
+            self?.outputSubject.send(.completeRevoke)
+        }.store(in: &cancellables)
+    }
+    
+    func getFollowInformation() {
         
         switch self.followType {
         case .followees: self.followType = .followers
@@ -118,7 +143,7 @@ extension MyPageViewModel {
 
     }
     
-    private func uploadImage(_ data: Data) {
+    func uploadImage(_ data: Data) {
         uploader.execute(imageData: data).sink { completion in
             if case let .failure(error) = completion {
                 Log.make().error("\(error)")
@@ -129,14 +154,14 @@ extension MyPageViewModel {
         }.store(in: &cancellables)
     }
     
-    private func modifyInformation(_ cellIndex: Int, _ query: String) {
+    func modifyInformation(_ cellIndex: Int, _ query: String) {
         patcher.patchUser(cellIndex: cellIndex, query: query).sink { _ in
         } receiveValue: { [weak self] _ in
             self?.outputSubject.send(.patchCompleted(cellIndex, query))
         }.store(in: &cancellables)
     }
     
-    private func checkValidInput(_ cellIndex: Int, _ query: String) {
+    func checkValidInput(_ cellIndex: Int, _ query: String) {
         let result: Result<Void, ConfirmError>
         switch cellIndex {
         case 0: result = self.comfirmer.confirmNickName(text: query)
@@ -152,11 +177,12 @@ extension MyPageViewModel {
         }
     }
     
-    private func getMyUserData(_ email: String) {
+    func getMyUserData(_ email: String) {
         searcher.searchUserProfile(query: email).sink { _ in
         } receiveValue: { [weak self] response in
             self?.outputSubject.send(.sendMyUserData(response))
             self?.myInfo = response
         }.store(in: &cancellables)
     }
+
 }

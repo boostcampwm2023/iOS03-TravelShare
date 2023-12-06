@@ -128,7 +128,13 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
         switch authorization.credential {
         case let appleIDCredential as ASAuthorizationAppleIDCredential:
             if let identityToken = appleIDCredential.identityToken,
-                let identityTokenString = String(data: identityToken, encoding: .utf8) {
+               let identityTokenString = String(data: identityToken, encoding: .utf8),
+               let authorizationCode = appleIDCredential.authorizationCode,
+               let authorizationCodeString = String(data: authorizationCode, encoding: .utf8) {
+                
+                KeyChainManager.save(key: KeychainKey.identityToken, token: identityTokenString)
+                KeyChainManager.save(key: KeychainKey.authorizationCode, token: authorizationCodeString)
+                
                 inputSubject.send(
                     .appleLogin(identityToken: identityTokenString))
             }
@@ -152,5 +158,13 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
         authorizationController.delegate = self
         authorizationController.presentationContextProvider = self
         authorizationController.performRequests()
+    }
+}
+
+// MARK: - LayoutMetrics
+private extension LoginViewController {
+    enum KeychainKey {
+        static let identityToken: String = "IdentityToken"
+        static let authorizationCode: String = "AuthorizationCode"
     }
 }

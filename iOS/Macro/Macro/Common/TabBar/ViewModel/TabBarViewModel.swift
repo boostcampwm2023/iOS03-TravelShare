@@ -29,7 +29,11 @@ final class TabBarViewModel {
             routeRecorder: RouteRecorder(provider: provider),
             locationSearcher: Searcher(provider: provider),
             pinnedPlaceManager: PinnedPlaceManager(provider: provider))
-        let myPageViewModel = MyPageViewModel(patcher: Patcher(provider: provider), searcher: Searcher(provider: provider), confirmer: Confirmer(), uploader: UploadImage(provider: provider))
+        let myPageViewModel = MyPageViewModel(patcher: Patcher(provider: provider), 
+                                              searcher: Searcher(provider: provider),
+                                              confirmer: Confirmer(),
+                                              uploader: UploadImage(provider: provider),
+                                              revoker: Revoker(provider: provider))
         let setComponentArray = [
         TabComponent(index: 1,
                      image: UIImage.appImage(.magnifyingglass),
