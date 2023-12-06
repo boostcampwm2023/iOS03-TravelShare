@@ -229,6 +229,8 @@ extension LocationInfoViewController {
         categoryNameLabel.text = locationDetail.categoryName.isEmpty == true ? "-" : locationDetail.categoryName
         categoryGroupLabel.text = locationDetail.categoryGroupName.isEmpty == true ? "-" : "(\(locationDetail.categoryGroupName))"
         phoneLabel.text = locationDetail.phone?.isEmpty == true ? "-" : (locationDetail.phone ?? "-")
+        
+        postCollectionViewModel.query = detail?.id
     }
     
     @objc private func segmentValueChanged(_ sender: UISegmentedControl) {

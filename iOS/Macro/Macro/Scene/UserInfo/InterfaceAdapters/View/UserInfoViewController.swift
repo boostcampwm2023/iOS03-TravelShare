@@ -31,13 +31,15 @@ final class UserInfoViewController: TouchableViewController {
     }()
     
     // MARK: - Life Cycle
+    
     override func viewDidLoad() {
+        super.viewDidLoad()
         self.view.backgroundColor = UIColor.appColor(.blue1)
         bind()
         inputSubject.send(.searchUserProfile(email: viewModel.searchUserEmail))
         setUpLayout()
-        super.viewDidLoad()
         postCollectionView.postDelegate = self
+        print(1)
     }
     
     // MARK: - Init
@@ -45,6 +47,7 @@ final class UserInfoViewController: TouchableViewController {
     init(viewModel: UserInfoViewModel, userInfo: String) {
         self.viewModel = viewModel
         viewModel.searchUserEmail = userInfo
+        postCollectionViewModel.query = userInfo
         super.init(nibName: nil, bundle: nil)
     }
     

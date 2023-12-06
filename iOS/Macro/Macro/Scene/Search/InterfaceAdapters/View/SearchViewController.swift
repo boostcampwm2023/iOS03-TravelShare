@@ -160,6 +160,7 @@ extension SearchViewController {
     
     @objc private func searchBarReturnPressed() {
         let text = searchBar.text ?? ""
+        postCollectionViewModel.query = text
         inputSubject.send(.search(text))
     }
     

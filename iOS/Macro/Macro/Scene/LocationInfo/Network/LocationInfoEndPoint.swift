@@ -10,7 +10,7 @@ import Foundation
 import MacroNetwork
 
 enum LocationInfoEndPoint {
-    case relatedPost(String)
+    case relatedPost(String, Int)
     case relatedLocation(String)
     
 }
@@ -28,8 +28,9 @@ extension LocationInfoEndPoint: EndPoint {
     
     var parameter: MacroNetwork.HTTPParameter {
         switch self {
-        case .relatedPost(let postId):
-            return .query(["placeId": postId])
+        case let .relatedPost(postId, skip):
+            return .query(["placeId": postId, "skip": "\(skip)"])
+            
         case .relatedLocation(let postId):
             return .query(["placeId": postId])
         }

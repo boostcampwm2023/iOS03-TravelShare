@@ -9,7 +9,7 @@ import Foundation
 import MacroNetwork
 
 enum PostSearchEndPoint {
-    case search(String)
+    case search(String, Int)
 }
 
 extension PostSearchEndPoint: EndPoint {
@@ -25,8 +25,8 @@ extension PostSearchEndPoint: EndPoint {
     
     var parameter: MacroNetwork.HTTPParameter {
         switch self {
-        case let .search(email):
-            return .query(["email": email])
+        case let .search(email, skip):
+            return .query(["email": email, "skip": "\(skip)"])
         }
     }
     
