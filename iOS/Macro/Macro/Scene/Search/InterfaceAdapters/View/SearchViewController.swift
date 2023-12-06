@@ -70,6 +70,7 @@ final class SearchViewController: TouchableViewController {
         userResultCollectionView.postDelegate = self
         searchSegment.addTarget(self, action: #selector(segmentValueChanged(_:)), for: .valueChanged)
         searchBar.addTarget(self, action: #selector(searchBarReturnPressed), for: .editingDidEndOnExit)
+        hideKeyboardWhenTappedAround()
     }
     
     // MARK: Init
