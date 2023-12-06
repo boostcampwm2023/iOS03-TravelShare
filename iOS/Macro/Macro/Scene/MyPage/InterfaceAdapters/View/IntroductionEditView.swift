@@ -5,9 +5,14 @@
 //  Created by 김나훈 on 11/27/23.
 //
 
+import Combine
 import UIKit
 
 final class IntroductionEditView: UIView {
+    
+    // MARK: - Properties
+    
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
     
@@ -65,10 +70,24 @@ extension IntroductionEditView {
             introductionTextView.heightAnchor.constraint(equalToConstant: Metrics.textFieldHeight)
         ])
     }
+    
     private func setUpLayout() {
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
+    }
+}
+
+// MARK: - Methods
+
+extension IntroductionEditView {
+    func configure(with viewModel: MyPageViewModel) {
+        viewModel.$myInfo
+            .receive(on: RunLoop.main)
+            .sink { [weak self] myInfo in
+                self?.introductionTextView.text = myInfo.introduce
+            }
+            .store(in: &cancellables)
     }
 }
 

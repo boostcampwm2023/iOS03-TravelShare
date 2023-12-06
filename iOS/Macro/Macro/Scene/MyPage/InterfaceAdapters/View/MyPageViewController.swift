@@ -266,7 +266,6 @@ extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
         
         if indexPath.section == 1 && (indexPath.row == 0 || indexPath.row == 2) {
             let myInfoVC = MyInfoViewController(viewModel: viewModel, selectedIndex: indexPath.row)
-            
             if #available(iOS 15.0, *) {
                 myInfoVC.sheetPresentationController?.detents = [.large()]
                 myInfoVC.sheetPresentationController?.prefersGrabberVisible = true

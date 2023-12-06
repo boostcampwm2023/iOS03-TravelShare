@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-class MyPageViewModel: ViewModelProtocol {
+final class MyPageViewModel: ViewModelProtocol {
     
     // MARK: - Properties
     
@@ -69,7 +69,6 @@ extension MyPageViewModel {
                 switch input {
                 case let .completeButtonTapped(cellIndex, query):
                     self?.checkValidInput(cellIndex, query)
-                    self?.getMyUserData(self?.email ?? "")
                 case let .getMyUserData(email):
                     self?.getMyUserData(email)
                 case let .selectImage(data):
@@ -132,7 +131,14 @@ extension MyPageViewModel {
     private func modifyInformation(_ cellIndex: Int, _ query: String) {
         patcher.patchUser(cellIndex: cellIndex, query: query).sink { _ in
         } receiveValue: { [weak self] _ in
-            self?.outputSubject.send(.patchCompleted(cellIndex, query))
+            switch cellIndex {
+            case 0:
+                self?.myInfo.name = query
+            case 1:
+                self?.myInfo.imageUrl = query
+            default: self?.myInfo.introduce = query
+            }
+            self?.getMyUserData(self?.email ?? "")
         }.store(in: &cancellables)
     }
     
@@ -142,7 +148,6 @@ extension MyPageViewModel {
         case 0: result = self.comfirmer.confirmNickName(text: query)
         default: result = self.comfirmer.confirmIntroduce(text: query)
         }
-        
         switch result {
         case .success:
             modifyInformation(cellIndex, query)
