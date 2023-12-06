@@ -25,9 +25,10 @@ final class TabBarBackgroundLargeCirclceView: UIView, CircularViewProtocol {
     }
 
     private func setUpLayout() {
-        let gradientLayer: CAGradientLayer = CAGradientLayer.createGradientLayer(top: Color.topColor,
-                                                                                 bottom: Color.bottomColor,
-                                                                                 bounds: bounds)
+        let gradientLayer: CAGradientLayer = CAGradientLayer.createGradientLayer(
+            top: Color.topColor,
+            bottom: Color.bottomColor,
+            bounds: bounds)
         
         self.layer.insertSublayer(gradientLayer, at: 0)
         self.layer.borderColor = UIColor.appColor(.purple2).cgColor
@@ -40,7 +41,7 @@ final class TabBarBackgroundLargeCirclceView: UIView, CircularViewProtocol {
     }
 }
 
-// MARK: - Properties
+// MARK: - LayoutMetrics
 extension TabBarBackgroundLargeCirclceView {
     enum Metrics {
         static let width: CGFloat = 280

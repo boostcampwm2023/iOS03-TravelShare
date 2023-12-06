@@ -81,7 +81,6 @@ extension PostCollectionViewModel {
             if response.count < 10 {
                 self?.isLastPost = true
             }
-            print(response.count, self?.isLastPost)
             self?.posts += response
             self?.outputSubject.send(.updatePostContnet)
         }.store(in: &cancellables)

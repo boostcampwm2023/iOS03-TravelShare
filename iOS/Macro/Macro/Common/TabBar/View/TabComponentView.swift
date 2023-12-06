@@ -54,10 +54,11 @@ final class TabComponentView: UIView {
                                         width: Metrics.imageWidth,
                                         height: Metrics.imageHeight)
         
-        let gradientLayer = CAGradientLayer.createGradientImageLayer(top: Color.imageTopColor,
-                                                                     bottom: Color.imageBottomColor,
-                                                                     frame: gradientLayerFrame,
-                                                                     image: image)
+        let gradientLayer = CAGradientLayer.createGradientImageLayer(
+            top: Color.imageTopColor,
+            bottom: Color.imageBottomColor,
+            frame: gradientLayerFrame,
+            image: image)
         
         let imageLabel: UILabel = {
             let label: UILabel = UILabel()

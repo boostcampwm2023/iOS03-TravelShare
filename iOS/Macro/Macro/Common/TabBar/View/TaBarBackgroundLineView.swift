@@ -105,7 +105,6 @@ private extension TabBarBackgroundLineView {
                     clockwise: false)
         
         path.addLine(to: CGPoint(x: Metrics.shapeMaxX, y: Metrics.shapeMinY))
-        
         path.addLine(to: CGPoint(x: Metrics.shapeMaxX, y: Metrics.shapeMaxY))
         path.addLine(to: CGPoint(x: Metrics.shapeMinX, y: Metrics.shapeMaxY))
         path.close()

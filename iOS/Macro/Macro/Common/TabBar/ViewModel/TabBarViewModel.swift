@@ -33,7 +33,7 @@ final class TabBarViewModel {
         let setComponentArray = [
         TabComponent(index: 1,
                      image: UIImage.appImage(.magnifyingglass),
-                     text: "주변 탐색",
+                     text: "검색",
                      viewController: SearchViewController(viewModel: searchViewModel)),
         TabComponent(index: 2,
                      image: UIImage.appImage(.personCircle),
@@ -41,7 +41,7 @@ final class TabBarViewModel {
                      viewController: MyPageViewController(viewModel: myPageViewModel)),
         TabComponent(index: 3,
                      image: UIImage.appImage(.squareAndPencil),
-                     text: "일지 작성",
+                     text: "기록",
                      viewController: RouteViewController(viewModel: routeViewModel)),
         TabComponent(index: 4,
                      image: UIImage.appImage(.map),

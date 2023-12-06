@@ -27,9 +27,10 @@ final class TabBarCenterView: UIView, CircularViewProtocol {
         
         makeCircular()
         
-        let gradientLayer: CAGradientLayer = CAGradientLayer.createGradientLayer(top: Color.topColor,
-                                                                                 bottom: Color.bottomColor,
-                                                                                 bounds: self.bounds)
+        let gradientLayer: CAGradientLayer = CAGradientLayer.createGradientLayer(
+            top: Color.topColor,
+            bottom: Color.bottomColor,
+            bounds: self.bounds)
         
         self.layer.insertSublayer(gradientLayer, at: 0)
         
