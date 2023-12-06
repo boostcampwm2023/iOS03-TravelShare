@@ -170,6 +170,7 @@
 		D2CAA5E72B1F14BE00E825BA /* FollowListEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5E62B1F14BE00E825BA /* FollowListEndPoint.swift */; };
 		D2CAA5E92B1F23AA00E825BA /* FollowResultCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5E82B1F23AA00E825BA /* FollowResultCollectionView.swift */; };
 		D2CAA5EB2B1F23B700E825BA /* FollowResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5EA2B1F23B700E825BA /* FollowResultCell.swift */; };
+		D2CAA5EF2B208F5D00E825BA /* SceneType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5EE2B208F5D00E825BA /* SceneType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -338,6 +339,7 @@
 		D2CAA5E62B1F14BE00E825BA /* FollowListEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowListEndPoint.swift; sourceTree = "<group>"; };
 		D2CAA5E82B1F23AA00E825BA /* FollowResultCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowResultCollectionView.swift; sourceTree = "<group>"; };
 		D2CAA5EA2B1F23B700E825BA /* FollowResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowResultCell.swift; sourceTree = "<group>"; };
+		D2CAA5EE2B208F5D00E825BA /* SceneType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneType.swift; sourceTree = "<group>"; };
 		EFE56344E8979EDA80D9E782 /* libPods-Macro.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Macro.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE963544592A2BC35C2CD604 /* Pods-Macro.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Macro.release.xcconfig"; path = "Target Support Files/Pods-Macro/Pods-Macro.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1218,6 +1220,7 @@
 				AAD0B31B2B171171003B4D5F /* Cotent.swift */,
 				AAD0B31D2B171187003B4D5F /* Coordinate.swift */,
 				BAE3C5852B1995D200BF9798 /* LikePostResponse.swift */,
+				D2CAA5EE2B208F5D00E825BA /* SceneType.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";

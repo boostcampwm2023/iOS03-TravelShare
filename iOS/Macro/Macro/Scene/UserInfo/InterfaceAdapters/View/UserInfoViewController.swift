@@ -14,7 +14,7 @@ final class UserInfoViewController: TouchableViewController {
     // MARK: - Properties
     
     private let viewModel: UserInfoViewModel
-    let postCollectionViewModel = PostCollectionViewModel(posts: [], followFeature: FollowFeature(provider: APIProvider(session: URLSession.shared)), patcher: Patcher(provider: APIProvider(session: URLSession.shared)), postSearcher: Searcher(provider: APIProvider(session: URLSession.shared)))
+    let postCollectionViewModel = PostCollectionViewModel(followFeature: FollowFeature(provider: APIProvider(session: URLSession.shared)), patcher: Patcher(provider: APIProvider(session: URLSession.shared)), postSearcher: Searcher(provider: APIProvider(session: URLSession.shared)), sceneType: .userInfoPost)
     private let inputSubject: PassthroughSubject<UserInfoViewModel.Input, Never> = .init()
     private var cancellables = Set<AnyCancellable>()
     

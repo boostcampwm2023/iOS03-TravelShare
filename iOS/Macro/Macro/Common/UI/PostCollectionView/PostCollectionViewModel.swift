@@ -21,6 +21,7 @@ final class PostCollectionViewModel: ViewModelProtocol {
     let patcher: PatchUseCase
     let postSearcher: SearchUseCase
     var isLastPost: Bool = false
+    private let sceneType: SceneType
     
     enum Input {
         case navigateToReadView(Int)
@@ -38,11 +39,11 @@ final class PostCollectionViewModel: ViewModelProtocol {
         case updatePostContnet
     }
     
-    init(posts: [PostFindResponse], followFeature: FollowUseCase, patcher: PatchUseCase, postSearcher: SearchUseCase) {
-        self.posts = posts
+    init(followFeature: FollowUseCase, patcher: PatchUseCase, postSearcher: SearchUseCase, sceneType: SceneType) {
         self.followFeatrue = followFeature
         self.patcher = patcher
         self.postSearcher = postSearcher
+        self.sceneType = sceneType
     }
     
 }

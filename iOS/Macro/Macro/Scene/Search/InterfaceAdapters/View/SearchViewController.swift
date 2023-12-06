@@ -16,7 +16,7 @@ final class SearchViewController: TouchableViewController {
     let viewModel: SearchViewModel
     private var cancellables = Set<AnyCancellable>()
     private let inputSubject: PassthroughSubject<SearchViewModel.Input, Never> = .init()
-    let postCollectionViewModel = PostCollectionViewModel(posts: [], followFeature: FollowFeature(provider: APIProvider(session: URLSession.shared)), patcher: Patcher(provider: APIProvider(session: URLSession.shared)), postSearcher: Searcher(provider: APIProvider(session: URLSession.shared)))
+    let postCollectionViewModel = PostCollectionViewModel(followFeature: FollowFeature(provider: APIProvider(session: URLSession.shared)), patcher: Patcher(provider: APIProvider(session: URLSession.shared)), postSearcher: Searcher(provider: APIProvider(session: URLSession.shared)), sceneType: .searchPostTitle)
     
     // MARK: - UI Components
     
