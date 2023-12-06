@@ -14,6 +14,7 @@ final class PostProfileView: UIView {
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
     var viewModel: PostCollectionViewModel?
+    private var imageUrl: String?
     var indexPath: IndexPath?
     private let provider = APIProvider(session: URLSession.shared)
     private let inputSubject: PassthroughSubject<PostCollectionViewModel.Input, Never> = .init()
@@ -29,7 +30,7 @@ final class PostProfileView: UIView {
         return label
     }()
     
-    var userNameLabel: UILabel = {
+    private let userNameLabel: UILabel = {
         let label: UILabel = UILabel()
         label.textColor = UIColor.appColor(.purple5)
         label.font = UIFont.appFont(.baeEunBody)
@@ -174,15 +175,15 @@ extension PostProfileView {
 extension PostProfileView {
     func bind() {
         guard let viewModel = self.viewModel, let postId = self.postId else { return }
-                
+        
         let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
         
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
             switch output {
             case .updatePostLike(let likePostResponse) where likePostResponse.postId == postId:
-                                self?.likeCountLabel.text = "\(likePostResponse.likeNum)"
+                self?.likeCountLabel.text = "\(likePostResponse.likeNum)"
             case .updatePostView(let updatedPostId, let updatedViewNum) where updatedPostId == postId:
-                           self?.viewCountLabel.text = "\(updatedViewNum)"
+                self?.viewCountLabel.text = "\(updatedViewNum)"
             default: break
             }
         }.store(in: &cancellables)
@@ -195,22 +196,31 @@ extension PostProfileView {
     func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?) {
         self.viewModel = viewModel
         guard let viewModel = self.viewModel else { return }
-        viewModel.loadImage(profileImageStringURL: item.writer.imageUrl ?? "https://user-images.githubusercontent.com/118811606/285184604-1e5983fd-0b07-4bfe-9c17-8b147f237517.png") { profileImage in
-            DispatchQueue.main.async { [self] in
-                if let image = profileImage {
-                    profileImageView.image = image
-                } else {
-                    let defaultImage = UIImage.appImage(.ProfileDefaultImage)
-                    profileImageView.image = defaultImage
+        self.imageUrl = item.writer.imageUrl ?? "default_url"
+        guard let imageUrl = self.imageUrl else { return }
+        viewModel.loadImage(profileImageStringURL: imageUrl) { [weak self] image in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                if self.imageUrl == item.writer.imageUrl {
+                    self.profileImageView.image = image
                 }
-                profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
+                else {
+                    let defaultImage = UIImage.appImage(.ProfileDefaultImage)
+                    self.profileImageView.image = defaultImage
+                }
+                self.profileImageView.layer.cornerRadius = self.profileImageView.frame.width / 2
             }
         }
         userNameLabel.text = item.writer.name
         likeCountLabel.text = "\(item.likeNum)"
         viewCountLabel.text = "\(item.viewNum)"
-        
-        self.postId = item.postId
+        postId = item.postId
     }
-    
+    func resetContents() {
+        profileImageView.image = nil
+        userNameLabel.text = ""
+        likeCountLabel.text = ""
+        viewCountLabel.text = ""
+        postId = nil
+    }
 }
