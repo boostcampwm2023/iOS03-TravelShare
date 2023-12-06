@@ -391,44 +391,55 @@ ORDER BY
    */
   async popularList(pagination: PostHitsQuery, { email }: Authentication) {
     let posts: Post[];
-    if (pagination.skip + pagination.take >= 100) {
-      posts = await this.postRepository.find({
-        where: {
-          public: true,
-        },
-        ...(pagination ?? { take: 10 }),
-        relations: {
-          writer: true,
-        },
-        order: {
-          ...(pagination.sortBy === 'hot'
-            ? { score: 'DESC' }
-            : { postId: 'DESC' }),
-        },
-      });
-    } else {
-      const { skip, take } = pagination;
-      const isCached = await this.cacheManager.get<Post[]>('post:hits');
-      if (isCached) {
-        posts = isCached.slice(skip, skip + take);
-      } else {
+    if (pagination.sortBy === 'hot') {
+      if (pagination.skip + pagination.take >= 100) {
         posts = await this.postRepository.find({
           where: {
             public: true,
           },
-          take: 100,
+          ...(pagination ?? { take: 10 }),
           relations: {
             writer: true,
           },
           order: {
-            ...(pagination.sortBy === 'hot'
-              ? { score: 'DESC' }
-              : { postId: 'DESC' }),
+            score: 'DESC',
           },
         });
-        await this.cacheManager.set('post:hits', posts, 60 * 60 * 1000);
-        posts = posts.slice(skip, skip + take);
+      } else {
+        const { skip, take } = pagination;
+        const isCached = await this.cacheManager.get<Post[]>('post:hits');
+        if (isCached) {
+          posts = isCached.slice(skip, skip + take);
+        } else {
+          posts = await this.postRepository.find({
+            where: {
+              public: true,
+            },
+            take: 100,
+            relations: {
+              writer: true,
+            },
+            order: {
+              score: 'DESC',
+            },
+          });
+          await this.cacheManager.set('post:hits', posts, 60 * 60 * 1000);
+          posts = posts.slice(skip, skip + take);
+        }
       }
+    } else {
+      posts = await this.postRepository.find({
+        where: {
+          public: true,
+        },
+        relations: {
+          writer: true,
+        },
+        order: {
+          postId: 'DESC',
+        },
+        ...pagination,
+      });
     }
 
     return plainToInstance(
