@@ -286,20 +286,20 @@ private extension ReadViewController {
         updateMark(recordedPindedInfo: readPost.pins)
     }
     
-    func downloadImages(imageURLs: [String], completion: @escaping ([UIImage]) -> Void) {
+    func downloadImages(imageURLs: [String], completion: @escaping ([UIImage?]) -> Void) {
         let dispatchGroup = DispatchGroup()
-        var images = [UIImage]()
+        var images: [UIImage?] = Array(repeating: nil, count: imageURLs.count)
         
-        imageURLs.forEach {
+        imageURLs.enumerated().forEach { index, imageURL in
             dispatchGroup.enter()
             
-            if let url = URL(string: $0) {
+            if let url = URL(string: imageURL) {
                 URLSession.shared.dataTask(with: url) { (data, _, _) in
                     defer {
                         dispatchGroup.leave()
                     }
                     if let data = data, let image = UIImage(data: data) {
-                        images.append(image)
+                        images[index] = image
                     } else {
                         debugPrint("Failed to download image form \(url)")
                     }
