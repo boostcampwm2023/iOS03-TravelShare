@@ -182,18 +182,21 @@ extension WriteViewModel {
         
         let provider = APIProvider(session: URLSession.shared)
         let uploadImageUseCase = UploadImage(provider: provider)
-        var imageURLs = [String]()
-        imageDatas.forEach { imageData in
+        var imageURLs = Array(repeating: "", count: imageDatas.count)
+        var count = 0
+        
+        imageDatas.enumerated().forEach { index, imageData in
             uploadImageUseCase.execute(imageData: imageData)
                 .receive(on: DispatchQueue.global())
                 .sink { result in
                     if case let .failure(error) = result {
                         debugPrint("Image Upload Fail : ", error)
-                    } else if imageURLs.count == imageDatas.count {
+                    } else if count == imageDatas.count {
                         completion(imageURLs)
                     }
                 } receiveValue: { imageURLResponse in
-                    imageURLs.append(imageURLResponse.url)
+                    count += 1
+                    imageURLs[index] = imageURLResponse.url
                 }
                 .store(in: &self.cancellables)
         }
