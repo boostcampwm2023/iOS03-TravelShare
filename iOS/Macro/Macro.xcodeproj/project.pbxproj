@@ -171,6 +171,7 @@
 		D2CAA5E92B1F23AA00E825BA /* FollowResultCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5E82B1F23AA00E825BA /* FollowResultCollectionView.swift */; };
 		D2CAA5EB2B1F23B700E825BA /* FollowResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5EA2B1F23B700E825BA /* FollowResultCell.swift */; };
 		D2CAA5EF2B208F5D00E825BA /* SceneType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5EE2B208F5D00E825BA /* SceneType.swift */; };
+		D2EDFAAE2B212B9B00723E7E /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2EDFAAD2B212B9B00723E7E /* UIView+.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -340,6 +341,7 @@
 		D2CAA5E82B1F23AA00E825BA /* FollowResultCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowResultCollectionView.swift; sourceTree = "<group>"; };
 		D2CAA5EA2B1F23B700E825BA /* FollowResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowResultCell.swift; sourceTree = "<group>"; };
 		D2CAA5EE2B208F5D00E825BA /* SceneType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneType.swift; sourceTree = "<group>"; };
+		D2EDFAAD2B212B9B00723E7E /* UIView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
 		EFE56344E8979EDA80D9E782 /* libPods-Macro.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Macro.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE963544592A2BC35C2CD604 /* Pods-Macro.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Macro.release.xcconfig"; path = "Target Support Files/Pods-Macro/Pods-Macro.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -787,6 +789,7 @@
 				BA90CB3A2B0EF88700365AE2 /* LocationManager.swift */,
 				D21B10482B19854900F2F84E /* UIViewController+.swift */,
 				D21B104A2B1A22D500F2F84E /* Log.swift */,
+				D2EDFAAD2B212B9B00723E7E /* UIView+.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -1528,6 +1531,7 @@
 				AAD0B3252B17477A003B4D5F /* PostUploadEndPoint.swift in Sources */,
 				D21B10102B16FDA000F2F84E /* PostSearchEndPoint.swift in Sources */,
 				BA90CB9E2B145CDE00365AE2 /* FollowEndPoint.swift in Sources */,
+				D2EDFAAE2B212B9B00723E7E /* UIView+.swift in Sources */,
 				BA6C6DF42B05FFC500563B22 /* CircularViewProtocol.swift in Sources */,
 				D2CAA5C72B1D7E3700E825BA /* LocationInfoViewModel.swift in Sources */,
 				BA90CB982B1450A200365AE2 /* UserInfoProfileView.swift in Sources */,

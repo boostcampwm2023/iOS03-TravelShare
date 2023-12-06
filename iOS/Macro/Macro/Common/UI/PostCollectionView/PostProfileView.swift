@@ -197,12 +197,6 @@ extension PostProfileView {
         profileImageView.image = image
         profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
     }
-    private func isValidUrl(urlString: String) -> Bool {
-        if let url = URL(string: urlString) {
-            return UIApplication.shared.canOpenURL(url)
-        }
-        return false
-    }
     
     func resetContents() {
         profileImageView.image = nil

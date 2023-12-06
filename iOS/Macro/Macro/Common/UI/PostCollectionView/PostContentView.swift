@@ -166,13 +166,6 @@ extension PostContentView {
         mainImageView.image = image
     }
     
-    private func isValidUrl(urlString: String) -> Bool {
-        if let url = URL(string: urlString) {
-            return UIApplication.shared.canOpenURL(url)
-        }
-        return false
-    }
-    
     func resetContents() {
         mainImageView.image = nil
         title.text = ""
