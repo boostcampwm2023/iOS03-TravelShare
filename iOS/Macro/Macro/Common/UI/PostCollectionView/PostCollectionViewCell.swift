@@ -70,13 +70,7 @@ extension PostCollectionViewCell {
             
         ])
     }
-    
-    func componetConfigure(item: PostFindResponse) {
-        postContentView.setLayout()
-        postContentView.configure(item: item, viewModel: self.viewModel)
-        postProfileView.setLayout()
-        postProfileView.configure(item: item, viewModel: self.viewModel)
-    }
+
 }
 
 // MARK: - Methods
@@ -87,15 +81,14 @@ extension PostCollectionViewCell {
         self.viewModel = viewModel
         postContentView.configure(item: item, viewModel: viewModel)
         postProfileView.configure(item: item, viewModel: viewModel)
+        postContentView.setLayout()
+        postProfileView.setLayout()
         postProfileView.indexPath = indexPath
         postContentView.delegate = delegate
         postProfileView.delegate = delegate
-        postProfileView.bind()
-        postContentView.bind()
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
-        componetConfigure(item: item)
     }
     
 }

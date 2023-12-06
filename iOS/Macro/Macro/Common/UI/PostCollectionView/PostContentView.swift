@@ -77,13 +77,6 @@ final class PostContentView: UIView {
     
 }
 
-extension PostContentView {
-    func bind() {
-        guard let viewModel = self.viewModel else { return }
-        _ = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
-        
-    }
-}
 // MARK: - UI Settings
 
 private extension PostContentView {
@@ -131,12 +124,6 @@ private extension PostContentView {
     }
     
 }
-
-// MARK: - Bind
-
-extension PostContentView {
-    
-}
 // MARK: - Methods
 
 extension PostContentView {
@@ -151,25 +138,41 @@ extension PostContentView {
     func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?) {
         self.viewModel = viewModel
         guard let viewModel = self.viewModel else { return }
-        self.imageUrl = item.imageUrl ?? "default_url"
-        guard let imageUrl = self.imageUrl else { return }
-        viewModel.loadImage(profileImageStringURL: imageUrl) { [weak self] image in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                if self.imageUrl == item.imageUrl {
-                    self.mainImageView.image = image
-                }
-                else {
-                    let defaultImage = UIImage.appImage(.ProfileDefaultImage)
-                    self.mainImageView.image = defaultImage
+        
+        if let imageUrl = item.imageUrl, isValidUrl(urlString: imageUrl) {
+            viewModel.loadImage(profileImageStringURL: imageUrl) { [weak self] image in
+                DispatchQueue.main.async {
+                    if let image = image {
+                        self?.setProfileImage(image)
+                    } else {
+                        self?.setDefaultProfileImage()
+                    }
                 }
             }
+        } else {
+            setDefaultProfileImage()
         }
         
         title.text = item.title
         summary.text = item.summary
         postId = item.postId
     }
+    private func setDefaultProfileImage() {
+        let defaultImage = UIImage.appImage(.ProfileDefaultImage)
+        setProfileImage(defaultImage)
+    }
+    
+    private func setProfileImage(_ image: UIImage?) {
+        mainImageView.image = image
+    }
+    
+    private func isValidUrl(urlString: String) -> Bool {
+        if let url = URL(string: urlString) {
+            return UIApplication.shared.canOpenURL(url)
+        }
+        return false
+    }
+    
     func resetContents() {
         mainImageView.image = nil
         title.text = ""
