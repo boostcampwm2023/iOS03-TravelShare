@@ -644,6 +644,9 @@ ORDER BY
                 writer: true,
               },
               ...pagination,
+              order: {
+                postId: 'DESC'
+              }
             });
             await this.cacheManager.set(emailCacheKey, posts, 1000 * 60 * 10);
           }
@@ -756,6 +759,14 @@ ORDER BY
         relations: {
           writer: true,
         },
+        ...(email
+          ? {
+            orderBy: {
+              postId: 'DESC'
+            }
+          }
+          : {}
+        )
       });
     }
 
