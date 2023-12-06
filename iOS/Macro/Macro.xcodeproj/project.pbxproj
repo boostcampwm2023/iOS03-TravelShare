@@ -68,6 +68,10 @@
 		BA33AA852B0AF9F30065D1E0 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA742B0AF9F20065D1E0 /* HomeViewModel.swift */; };
 		BA33AA892B0AF9F30065D1E0 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA792B0AF9F20065D1E0 /* HomeViewController.swift */; };
 		BA33AA8C2B0AF9F30065D1E0 /* HomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA7C2B0AF9F20065D1E0 /* HomeHeaderView.swift */; };
+		BA57BB642B20635D00171F4E /* MyPageViewController+AuthenticationServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA57BB632B20635D00171F4E /* MyPageViewController+AuthenticationServices.swift */; };
+		BA57BB682B2068AF00171F4E /* RevokeUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA57BB672B2068AF00171F4E /* RevokeUseCase.swift */; };
+		BA57BB6A2B20696200171F4E /* RevokeEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA57BB692B20696200171F4E /* RevokeEndPoint.swift */; };
+		BA57BB6C2B206AE200171F4E /* AppleRevokeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA57BB6B2B206AE200171F4E /* AppleRevokeResponse.swift */; };
 		BA6C6DF32B05FFC500563B22 /* CAGradientLayer+.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DE22B05FFC400563B22 /* CAGradientLayer+.swift */; };
 		BA6C6DF42B05FFC500563B22 /* CircularViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DE32B05FFC400563B22 /* CircularViewProtocol.swift */; };
 		BA6C6DF52B05FFC500563B22 /* UIScreen+.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DE42B05FFC400563B22 /* UIScreen+.swift */; };
@@ -80,6 +84,9 @@
 		BA6C6DFC2B05FFC500563B22 /* TabComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DF02B05FFC500563B22 /* TabComponentView.swift */; };
 		BA6C6DFD2B05FFC500563B22 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DF12B05FFC500563B22 /* TabBarViewController.swift */; };
 		BA6C6DFE2B05FFC500563B22 /* TabBarOpacityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DF22B05FFC500563B22 /* TabBarOpacityView.swift */; };
+		BA8742F02B204C2800DBDE03 /* CustomAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8742EF2B204C2800DBDE03 /* CustomAlertViewController.swift */; };
+		BA8742F32B204CA800DBDE03 /* AddAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8742F22B204CA800DBDE03 /* AddAction.swift */; };
+		BA8742F52B204D0B00DBDE03 /* AlertBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8742F42B204D0B00DBDE03 /* AlertBuilder.swift */; };
 		BA8DC3F62B0B5D6000929E01 /* MacroDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = BA8DC3F52B0B5D6000929E01 /* MacroDesignSystem */; };
 		BA8DC3F82B0B5D6400929E01 /* MacroNetwork in Frameworks */ = {isa = PBXBuildFile; productRef = BA8DC3F72B0B5D6400929E01 /* MacroNetwork */; };
 		BA8DC3FA2B0B5DD100929E01 /* BaseViewControllerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8DC3F92B0B5DD100929E01 /* BaseViewControllerProtocol.swift */; };
@@ -238,6 +245,10 @@
 		BA33AA752B0AF9F20065D1E0 /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		BA33AA792B0AF9F20065D1E0 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		BA33AA7C2B0AF9F20065D1E0 /* HomeHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeHeaderView.swift; sourceTree = "<group>"; };
+		BA57BB632B20635D00171F4E /* MyPageViewController+AuthenticationServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MyPageViewController+AuthenticationServices.swift"; sourceTree = "<group>"; };
+		BA57BB672B2068AF00171F4E /* RevokeUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevokeUseCase.swift; sourceTree = "<group>"; };
+		BA57BB692B20696200171F4E /* RevokeEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevokeEndPoint.swift; sourceTree = "<group>"; };
+		BA57BB6B2B206AE200171F4E /* AppleRevokeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleRevokeResponse.swift; sourceTree = "<group>"; };
 		BA6C6DE22B05FFC400563B22 /* CAGradientLayer+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CAGradientLayer+.swift"; sourceTree = "<group>"; };
 		BA6C6DE32B05FFC400563B22 /* CircularViewProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularViewProtocol.swift; sourceTree = "<group>"; };
 		BA6C6DE42B05FFC400563B22 /* UIScreen+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScreen+.swift"; sourceTree = "<group>"; };
@@ -250,6 +261,9 @@
 		BA6C6DF02B05FFC500563B22 /* TabComponentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabComponentView.swift; sourceTree = "<group>"; };
 		BA6C6DF12B05FFC500563B22 /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		BA6C6DF22B05FFC500563B22 /* TabBarOpacityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarOpacityView.swift; sourceTree = "<group>"; };
+		BA8742EF2B204C2800DBDE03 /* CustomAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlertViewController.swift; sourceTree = "<group>"; };
+		BA8742F22B204CA800DBDE03 /* AddAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAction.swift; sourceTree = "<group>"; };
+		BA8742F42B204D0B00DBDE03 /* AlertBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertBuilder.swift; sourceTree = "<group>"; };
 		BA8DC3F32B0B5D3F00929E01 /* MacroDesignSystem */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = MacroDesignSystem; path = ../MacroDesignSystem; sourceTree = "<group>"; };
 		BA8DC3F42B0B5D4300929E01 /* MacroNetwork */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = MacroNetwork; path = ../MacroNetwork; sourceTree = "<group>"; };
 		BA8DC3F92B0B5DD100929E01 /* BaseViewControllerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewControllerProtocol.swift; sourceTree = "<group>"; };
@@ -671,6 +685,7 @@
 			isa = PBXGroup;
 			children = (
 				BA32E17D2B0DC3CB00EA0EE2 /* MyPageViewController.swift */,
+				BA57BB632B20635D00171F4E /* MyPageViewController+AuthenticationServices.swift */,
 				D21B10062B14660600F2F84E /* MyInfoViewController.swift */,
 				D21B10082B14799C00F2F84E /* NameEditView.swift */,
 				D21B100A2B1497E000F2F84E /* IntroductionEditView.swift */,
@@ -785,6 +800,7 @@
 				BA90CB3A2B0EF88700365AE2 /* LocationManager.swift */,
 				D21B10482B19854900F2F84E /* UIViewController+.swift */,
 				D21B104A2B1A22D500F2F84E /* Log.swift */,
+				BA8742F42B204D0B00DBDE03 /* AlertBuilder.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -843,6 +859,22 @@
 				BA6C6DF22B05FFC500563B22 /* TabBarOpacityView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		BA8742EE2B204C0700DBDE03 /* AlertView */ = {
+			isa = PBXGroup;
+			children = (
+				BA8742EF2B204C2800DBDE03 /* CustomAlertViewController.swift */,
+			);
+			path = AlertView;
+			sourceTree = "<group>";
+		};
+		BA8742F12B204C9900DBDE03 /* CustomAlert */ = {
+			isa = PBXGroup;
+			children = (
+				BA8742F22B204CA800DBDE03 /* AddAction.swift */,
+			);
+			path = CustomAlert;
 			sourceTree = "<group>";
 		};
 		BA8DC3FC2B0B5E0A00929E01 /* Search */ = {
@@ -1162,6 +1194,7 @@
 			children = (
 				D21B10122B17610500F2F84E /* UpdateUserEndPoint.swift */,
 				D2CAA5E62B1F14BE00E825BA /* FollowListEndPoint.swift */,
+				BA57BB692B20696200171F4E /* RevokeEndPoint.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -1170,6 +1203,7 @@
 			isa = PBXGroup;
 			children = (
 				D21B101B2B1792EA00F2F84E /* ComfirmUseCase.swift */,
+				BA57BB672B2068AF00171F4E /* RevokeUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -1180,6 +1214,7 @@
 				D21B101E2B17994100F2F84E /* ConfirmError.swift */,
 				D2CAA5E22B1F11B600E825BA /* FollowType.swift */,
 				D2CAA5E42B1F140A00E825BA /* FollowList.swift */,
+				BA57BB6B2B206AE200171F4E /* AppleRevokeResponse.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -1197,6 +1232,7 @@
 			isa = PBXGroup;
 			children = (
 				D241DC702B0DA0070037DDB6 /* CommonUIComponents.swift */,
+				BA8742EE2B204C0700DBDE03 /* AlertView */,
 				BAE3C5972B1C7F6E00BF9798 /* CarouselView */,
 				BAB24EDE2B16D3D7000991A1 /* MapCollectionView */,
 				BA90CB7F2B0F3BF500365AE2 /* PostCollectionView */,
@@ -1207,6 +1243,7 @@
 		D241DC722B0DA00F0037DDB6 /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				BA8742F12B204C9900DBDE03 /* CustomAlert */,
 				BA1181882B1D30A2008D151C /* CarouselEntities */,
 				BAE3C58C2B1AF58000BF9798 /* FollowPatchResponse */,
 				D241DC732B0DA00F0037DDB6 /* Writer.swift */,
@@ -1485,6 +1522,7 @@
 				BAE3C5922B1AF6F000BF9798 /* UpdateFollowEndPoint.swift in Sources */,
 				BA8DC40A2B0B5F7800929E01 /* TabViewController.swift in Sources */,
 				D241DC762B0DA00F0037DDB6 /* PostFindResponse.swift in Sources */,
+				BA8742F02B204C2800DBDE03 /* CustomAlertViewController.swift in Sources */,
 				D2CAA5CE2B1DC85300E825BA /* PostCollectionViewDelegate.swift in Sources */,
 				AAD0B2C22B0DA35B003B4D5F /* LoginResponse.swift in Sources */,
 				D241DC7A2B0DA0C00037DDB6 /* PostEndPoint.swift in Sources */,
@@ -1495,6 +1533,7 @@
 				BA24D7432B1E52F200BA8EB5 /* RecordedPinnedLocation.swift in Sources */,
 				BA33AA892B0AF9F30065D1E0 /* HomeViewController.swift in Sources */,
 				D2CAA5CA2B1D8D1700E825BA /* InfoType.swift in Sources */,
+				BA8742F32B204CA800DBDE03 /* AddAction.swift in Sources */,
 				D21B101F2B17994100F2F84E /* ConfirmError.swift in Sources */,
 				BA90CB872B0F3BF600365AE2 /* PostCollectionView.swift in Sources */,
 				AAD0B3272B176832003B4D5F /* PostUploadResponse.swift in Sources */,
@@ -1545,6 +1584,7 @@
 				AAD0B3152B14E394003B4D5F /* ReadEndPoint.swift in Sources */,
 				AAD0B2992B0B0841003B4D5F /* KeyChainManager.swift in Sources */,
 				BA6C6DF62B05FFC500563B22 /* TabBarViewModel.swift in Sources */,
+				BA8742F52B204D0B00DBDE03 /* AlertBuilder.swift in Sources */,
 				D2CAA5D02B1E047400E825BA /* MacroCarouselViewCelladdPictureComponentView.swift in Sources */,
 				D21B104B2B1A22D500F2F84E /* Log.swift in Sources */,
 				BADB1F0C2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift in Sources */,
@@ -1562,6 +1602,7 @@
 				D2CAA5DD2B1E51C200E825BA /* UserResultCollectionView.swift in Sources */,
 				AAD0B3232B17474D003B4D5F /* UploadPost.swift in Sources */,
 				BA32E17F2B0DC3CB00EA0EE2 /* MyPageViewController.swift in Sources */,
+				BA57BB642B20635D00171F4E /* MyPageViewController+AuthenticationServices.swift in Sources */,
 				D2CAA5DF2B1E51CF00E825BA /* UserResultCell.swift in Sources */,
 				BA90CBA02B145D6600365AE2 /* FollowUseCase.swift in Sources */,
 				BA6C6DFC2B05FFC500563B22 /* TabComponentView.swift in Sources */,
@@ -1579,6 +1620,8 @@
 				BA24D7292B1DA1C000BA8EB5 /* PinnedLocation.swift in Sources */,
 				AAD0B3122B14E394003B4D5F /* ReadViewModel.swift in Sources */,
 				AAD0B31E2B171187003B4D5F /* Coordinate.swift in Sources */,
+				BA57BB6A2B20696200171F4E /* RevokeEndPoint.swift in Sources */,
+				BA57BB6C2B206AE200171F4E /* AppleRevokeResponse.swift in Sources */,
 				AAD0B2A42B0B0857003B4D5F /* DefaultLoginRepository.swift in Sources */,
 				D2CAA5D32B1E073300E825BA /* LocationInfoEndPoint.swift in Sources */,
 				AA46C4BA2B02304400856628 /* SceneDelegate.swift in Sources */,
@@ -1596,6 +1639,7 @@
 				BA90CB852B0F3BF600365AE2 /* PostProfileView.swift in Sources */,
 				D21B10162B17636800F2F84E /* PatchUseCase.swift in Sources */,
 				BA6C6DFB2B05FFC500563B22 /* TabBarBackgroundLargeCirclceView.swift in Sources */,
+				BA57BB682B2068AF00171F4E /* RevokeUseCase.swift in Sources */,
 				BAE3C5862B1995D200BF9798 /* LikePostResponse.swift in Sources */,
 				BA11818A2B1D30B9008D151C /* CarouselViewType.swift in Sources */,
 				BA33AA852B0AF9F30065D1E0 /* HomeViewModel.swift in Sources */,
