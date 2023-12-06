@@ -175,15 +175,15 @@ extension PostProfileView {
 extension PostProfileView {
     func bind() {
         guard let viewModel = self.viewModel, let postId = self.postId else { return }
-                
+        
         let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
         
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
             switch output {
             case .updatePostLike(let likePostResponse) where likePostResponse.postId == postId:
-                                self?.likeCountLabel.text = "\(likePostResponse.likeNum)"
+                self?.likeCountLabel.text = "\(likePostResponse.likeNum)"
             case .updatePostView(let updatedPostId, let updatedViewNum) where updatedPostId == postId:
-                           self?.viewCountLabel.text = "\(updatedViewNum)"
+                self?.viewCountLabel.text = "\(updatedViewNum)"
             default: break
             }
         }.store(in: &cancellables)
@@ -196,20 +196,24 @@ extension PostProfileView {
     func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?) {
         self.viewModel = viewModel
         guard let viewModel = self.viewModel else { return }
-        // 이미지 URL 저장
         self.imageUrl = item.writer.imageUrl ?? "default_url"
-        
-        viewModel.loadImage(profileImageStringURL: self.imageUrl!) { [weak self] image in
+        guard let imageUrl = self.imageUrl else { return }
+        viewModel.loadImage(profileImageStringURL: imageUrl) { [weak self] image in
+            guard let self = self else { return }
             DispatchQueue.main.async {
-                // 여기서 URL이 현재 뷰에 표시해야 할 URL과 일치하는지 확인
-                if self?.imageUrl == item.imageUrl {
-                    self?.profileImageView.image = image
+                if self.imageUrl == item.writer.imageUrl {
+                    self.profileImageView.image = image
                 }
+                else {
+                    let defaultImage = UIImage.appImage(.ProfileDefaultImage)
+                    self.profileImageView.image = defaultImage
+                }
+                self.profileImageView.layer.cornerRadius = self.profileImageView.frame.width / 2
             }
         }
         userNameLabel.text = item.writer.name
-                likeCountLabel.text = "\(item.likeNum)"
-                viewCountLabel.text = "\(item.viewNum)"
+        likeCountLabel.text = "\(item.likeNum)"
+        viewCountLabel.text = "\(item.viewNum)"
         postId = item.postId
     }
     func resetContents() {
@@ -219,6 +223,4 @@ extension PostProfileView {
         viewCountLabel.text = ""
         postId = nil
     }
-    
-    
 }

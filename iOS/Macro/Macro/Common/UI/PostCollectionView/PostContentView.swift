@@ -151,14 +151,17 @@ extension PostContentView {
     func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?) {
         self.viewModel = viewModel
         guard let viewModel = self.viewModel else { return }
-        // 이미지 URL 저장
         self.imageUrl = item.imageUrl ?? "default_url"
-        
-        viewModel.loadImage(profileImageStringURL: self.imageUrl!) { [weak self] image in
+        guard let imageUrl = self.imageUrl else { return }
+        viewModel.loadImage(profileImageStringURL: imageUrl) { [weak self] image in
+            guard let self = self else { return }
             DispatchQueue.main.async {
-                // 여기서 URL이 현재 뷰에 표시해야 할 URL과 일치하는지 확인
-                if self?.imageUrl == item.imageUrl {
-                    self?.mainImageView.image = image
+                if self.imageUrl == item.imageUrl {
+                    self.mainImageView.image = image
+                }
+                else {
+                    let defaultImage = UIImage.appImage(.ProfileDefaultImage)
+                    self.mainImageView.image = defaultImage
                 }
             }
         }
