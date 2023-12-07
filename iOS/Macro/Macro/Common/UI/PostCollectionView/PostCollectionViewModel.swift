@@ -111,14 +111,24 @@ extension PostCollectionViewModel {
     
     func loadImage(profileImageStringURL: String, completion: @escaping (UIImage?) -> Void) {
         guard let url = URL(string: profileImageStringURL) else { return }
-        URLSession.shared.dataTask(with: url) { data, _, _ in
-            if let data = data, let image = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    completion(image)
-                }
-            } else {
-                completion(nil)
+        
+        if let cachedResponse = URLCache.shared.cachedResponse(for: URLRequest(url: url)) {
+            let image = UIImage(data: cachedResponse.data)
+            DispatchQueue.main.async {
+                completion(image)
             }
-        }.resume()
+        } else {
+            URLSession.shared.dataTask(with: url) { data, response, _ in
+                if let data = data, let image = UIImage(data: data) {
+                    let cachedResponse = CachedURLResponse(response: response!, data: data)
+                                       URLCache.shared.storeCachedResponse(cachedResponse, for: URLRequest(url: url))
+                    DispatchQueue.main.async {
+                        completion(image)
+                    }
+                } else {
+                    completion(nil)
+                }
+            }.resume()
+        }
     }
 }

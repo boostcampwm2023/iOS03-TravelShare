@@ -126,19 +126,26 @@ extension MyPageViewController {
 extension MyPageViewController {
     
     private func downloadImage(_ imageURL: String) {
+        guard let url = URL(string: imageURL) else { return }
         
-        if let url = URL(string: imageURL) {
-            URLSession.shared.dataTask(with: url) { (data, _, _) in
+        if let cachedResponse = URLCache.shared.cachedResponse(for: URLRequest(url: url)) {
+            let image = UIImage(data: cachedResponse.data)
+            DispatchQueue.main.async {
+                self.myPageHeaderView.configure(profileImage: image)
+            }
+        } else {
+            URLSession.shared.dataTask(with: url) { data, response, _ in
                 if let data = data, let image = UIImage(data: data) {
+                    let cachedResponse = CachedURLResponse(response: response!, data: data)
+                                       URLCache.shared.storeCachedResponse(cachedResponse, for: URLRequest(url: url))
                     DispatchQueue.main.async {
                         self.myPageHeaderView.configure(profileImage: image)
                     }
                 } else {
-                    debugPrint("Failed to download image form \(url)")
+                    self.myPageHeaderView.configure(profileImage: UIImage.appImage(.ProfileDefaultImage))
                 }
             }.resume()
         }
-        
     }
     
     private func updateUserProfile(_ userProfile: UserProfile) {
@@ -313,7 +320,6 @@ extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
                 .setTitle("회원탈퇴")
                 .setMessage("정말 회원탈퇴 하시겠어요? :(")
                 .addActionConfirm("확인") {
-                    print("확인을 눌렀습니다.")
                     self.tryRevoke()
                 }
                 .addActionCancel("취소") {

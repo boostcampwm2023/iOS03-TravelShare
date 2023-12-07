@@ -109,16 +109,23 @@ extension UserInfoProfileView {
             self.userProfileImageView.image = UIImage.appImage(.ProfileDefaultImage)
             return
         }
-        if let url = URL(string: imageUrl) {
-            URLSession.shared.dataTask(with: url) { [weak self] (data, _, _) in
+        guard let url = URL(string: imageUrl) else { return }
+        
+        if let cachedResponse = URLCache.shared.cachedResponse(for: URLRequest(url: url)) {
+            let image = UIImage(data: cachedResponse.data)
+            DispatchQueue.main.async {
+                self.userProfileImageView.image = image
+            }
+        } else {
+            URLSession.shared.dataTask(with: url) { data, response, _ in
                 if let data = data, let image = UIImage(data: data) {
+                    let cachedResponse = CachedURLResponse(response: response!, data: data)
+                                       URLCache.shared.storeCachedResponse(cachedResponse, for: URLRequest(url: url))
                     DispatchQueue.main.async {
-                        self?.userProfileImageView.image = image
+                        self.userProfileImageView.image = image
                     }
                 } else {
-                    DispatchQueue.main.async {
-                        self?.userProfileImageView.image = UIImage.appImage(.ProfileDefaultImage)
-                    }
+                    self.userProfileImageView.image =  UIImage.appImage(.ProfileDefaultImage)
                 }
             }.resume()
         }

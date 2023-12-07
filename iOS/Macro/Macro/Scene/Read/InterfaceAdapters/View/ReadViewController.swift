@@ -296,15 +296,26 @@ private extension ReadViewController {
         imageURLs.enumerated().forEach { index, imageURL in
             dispatchGroup.enter()
             
-            if let url = URL(string: imageURL) {
-                URLSession.shared.dataTask(with: url) { (data, _, _) in
+            guard let url = URL(string: imageURL) else { return }
+            if let cachedResponse = URLCache.shared.cachedResponse(for: URLRequest(url: url)) {
+                let image = UIImage(data: cachedResponse.data)
+                DispatchQueue.main.async {
+                    images[index] = image
+                }
+                
+            } else {
+                URLSession.shared.dataTask(with: url) { (data, response, _) in
                     defer {
                         dispatchGroup.leave()
                     }
                     if let data = data, let image = UIImage(data: data) {
-                        images[index] = image
+                        let cachedResponse = CachedURLResponse(response: response!, data: data)
+                                           URLCache.shared.storeCachedResponse(cachedResponse, for: URLRequest(url: url))
+                        DispatchQueue.main.async {
+                            images[index] = image
+                        }
                     } else {
-                        debugPrint("Failed to download image form \(url)")
+                        images[index] = UIImage.appImage(.ProfileDefaultImage)
                     }
                 }.resume()
             }
@@ -350,7 +361,7 @@ private extension ReadViewController {
         let zoomLevelLongitude = log2(90 / distanceLongitude)
         let zoomLevel = min(zoomLevelLatitude, zoomLevelLongitude)
         mapView.zoomLevel = zoomLevel
-       
+        
         let cameraUpdate = NMFCameraUpdate(scrollTo: centerLocation )
         mapView.moveCamera(cameraUpdate)
     }
