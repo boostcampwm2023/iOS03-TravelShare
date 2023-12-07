@@ -208,7 +208,13 @@ extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
         let numberOfRowsInSection = tableView.numberOfRows(inSection: indexPath.section)
         let isEndOfSection = indexPath.row == numberOfRowsInSection - 1
         
-        if isStartOfSection {
+        if isStartOfSection && isEndOfSection {
+            cell.layer.maskedCorners = [.layerMinXMinYCorner,
+                                        .layerMaxXMinYCorner,
+                                        .layerMinXMaxYCorner,
+                                        .layerMaxXMaxYCorner]
+            cell.layer.cornerRadius = 10
+        } else if isStartOfSection {
             cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
             cell.layer.cornerRadius = 10
         } else if isEndOfSection {
