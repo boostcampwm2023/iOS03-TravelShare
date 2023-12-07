@@ -42,7 +42,10 @@ export class PostController {
   })
   @ApiResponse({ type: [PostSearchResponse] })
   @Get('list')
-  async list(query: PostListQuery, user: Authentication) {
+  async list(
+    @Query() query: PostListQuery,
+    @AuthenticatedUser() user: Authentication,
+  ) {
     return await this.postService.list(query, user);
   }
 
