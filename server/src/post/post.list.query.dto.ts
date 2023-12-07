@@ -1,17 +1,14 @@
-import { IsIn, IsInt, IsOptional, Max, Min } from 'class-validator';
+import { IsIn, IsOptional } from 'class-validator';
+import { PostPagination } from './post.pagination.dto';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class PostListQuery {
-  @IsInt()
-  @Min(0)
-  @IsOptional()
-  skip: number = 0;
-
-  @IsInt()
-  @Min(0)
-  @Max(30)
-  @IsOptional()
-  take: number = 10;
-
+export class PostListQuery extends PostPagination {
+  @ApiProperty({
+    description: '분류 기준(top = hot)',
+    default: 'top',
+    required: false,
+    enum: ['top', 'latest'],
+  })
   @IsIn(['latest', 'top'])
   @IsOptional()
   sortBy: 'latest' | 'top' = 'top';
