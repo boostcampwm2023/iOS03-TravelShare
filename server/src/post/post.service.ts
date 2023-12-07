@@ -703,7 +703,7 @@ export class PostService {
                 (1 - alpha) *
                   ((1 - beta) * incrementedViewNum +
                     beta * incrementedlikeNum) *
-                  (gamma / post.score)
+                  (gamma / (post.score + 1))
               : (1 - beta) * incrementedViewNum + beta * incrementedlikeNum,
         });
 
