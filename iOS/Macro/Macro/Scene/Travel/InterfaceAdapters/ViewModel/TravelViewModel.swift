@@ -46,7 +46,7 @@ final class TravelViewModel: ViewModelProtocol {
         case updatePinnedPlacesTableView([LocationDetail])
         case addPinnedPlaceInMap(LocationDetail)
         case removePinnedPlaceInMap(LocationDetail)
-        case updateRoute([CLLocation])
+        case updateRoute(CLLocation)
         case updateMarkers([LocationDetail])
         case showLocationInfo(LocationDetail)
     }
@@ -103,13 +103,14 @@ extension TravelViewModel {
          routeRecorder.startRecording()
          routeRecorder.locationPublisher
          */
-        locationManager = LocationManager()
+        locationManager = LocationManager.shared
         
         generateTravel()
         locationManager?.locationPublisher
             .sink { [weak self] location in
-                self?.savedRoute.routePoints.append(contentsOf: location)
-                self?.outputSubject.send(.updateRoute(self?.savedRoute.routePoints ?? []))
+                guard let self = self else { return }
+                self.savedRoute.routePoints.append(location)
+                self.outputSubject.send(.updateRoute(location))
             }
             .store(in: &cancellables)
     }

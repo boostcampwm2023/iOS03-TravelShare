@@ -800,7 +800,6 @@
 				BA6C6DE22B05FFC400563B22 /* CAGradientLayer+.swift */,
 				BA00A08C2B177113007F7BB9 /* DateFormatter.swift */,
 				BA6C6DE42B05FFC400563B22 /* UIScreen+.swift */,
-				BA90CB3A2B0EF88700365AE2 /* LocationManager.swift */,
 				D21B10482B19854900F2F84E /* UIViewController+.swift */,
 				D21B104A2B1A22D500F2F84E /* Log.swift */,
 				D2EDFAAD2B212B9B00723E7E /* UIView+.swift */,
@@ -1277,6 +1276,7 @@
 		D263CA092B02B22D00B4A144 /* Travel */ = {
 			isa = PBXGroup;
 			children = (
+				D2EDFAB22B22165B00723E7E /* Service */,
 				D263CA182B0404D700B4A144 /* InterfaceAdapters */,
 				D263CA2B2B052EAA00B4A144 /* Network */,
 				D263CA172B0404BE00B4A144 /* UseCases */,
@@ -1357,6 +1357,14 @@
 				D2CAA5D22B1E073300E825BA /* LocationInfoEndPoint.swift */,
 			);
 			path = Network;
+			sourceTree = "<group>";
+		};
+		D2EDFAB22B22165B00723E7E /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				BA90CB3A2B0EF88700365AE2 /* LocationManager.swift */,
+			);
+			path = Service;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

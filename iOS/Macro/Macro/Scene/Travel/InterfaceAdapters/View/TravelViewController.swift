@@ -18,7 +18,6 @@ protocol RouteTableViewControllerDelegate: AnyObject {
 
 final class TravelViewController: TabViewController,
                                   RouteTableViewControllerDelegate,
-                                  CLLocationManagerDelegate,
                                   NMFMapViewDelegate {
     
     // MARK: - Properties
@@ -26,8 +25,8 @@ final class TravelViewController: TabViewController,
     private var cancellables = Set<AnyCancellable>()
     private let inputSubject: PassthroughSubject<TravelViewModel.Input, Never> = .init()
     private let viewModel: TravelViewModel
-    private var routeOverlay: NMFPolylineOverlay?
-    private let locationManager = CLLocationManager()
+    private var polyline: NMFPolylineOverlay?
+    private let locationManager = LocationManager.shared
     private let routeTableViewController: RouteModalViewController
     private var isTraveling = false {
         didSet {
@@ -59,7 +58,7 @@ final class TravelViewController: TabViewController,
         
         button.layer.insertSublayer(gradientLayer, at: 0)
         button.layer.borderColor = UIColor.appColor(.green4).cgColor
-       
+        
         return button
     }()
     
@@ -75,9 +74,16 @@ final class TravelViewController: TabViewController,
         bind()
         updateTravelButton()
         searchBar.addTarget(self, action: #selector(searchBarReturnPressed), for: .editingDidEndOnExit)
-        locationManager.delegate = self
         mapView.delegate = self
-        locationManager.startUpdatingLocation()
+        hideKeyboardWhenTappedAround()
+        
+        LocationManager.shared.locationPublisher
+            .sink { [weak self] location in
+                let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: location.coordinate.latitude, lng: location.coordinate.longitude))
+                cameraUpdate.animation = .easeIn
+                self?.mapView.moveCamera(cameraUpdate)
+            }
+            .store(in: &cancellables)
     }
     
     override func viewWillLayoutSubviews() {
@@ -185,15 +191,22 @@ extension TravelViewController {
             let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: location.coordinate.latitude, lng: location.coordinate.longitude))
             cameraUpdate.animation = .easeIn
             mapView.moveCamera(cameraUpdate)
-            locationManager.stopUpdatingLocation()
+            //   locationManager.stopUpdatingLocation()
         }
     }
     
-    private func updateMapWithLocation(_ routePoints: [CLLocation]) {
-        routeOverlay?.mapView = nil
-        let coords = routePoints.map { NMGLatLng(lat: $0.coordinate.latitude, lng: $0.coordinate.longitude) }
-        routeOverlay = NMFPolylineOverlay(coords)
-        routeOverlay?.mapView = mapView
+    private func updateMapWithLocation(_ newLocation: CLLocation) {
+        let newCoord = NMGLatLng(lat: newLocation.coordinate.latitude, lng: newLocation.coordinate.longitude)
+        
+        if polyline == nil {
+            polyline = NMFPolylineOverlay([newCoord, newCoord])
+            polyline?.mapView = mapView
+        } else {
+            guard let line = polyline?.line else { return }
+            line.addPoint(newCoord)
+            polyline?.line = line
+            polyline?.mapView = mapView
+        }
     }
     
     private func addMarker(for locationDetail: LocationDetail) {
@@ -256,7 +269,7 @@ extension TravelViewController {
             image = UIImage.appImage(.pauseCircle)
         } else {
             image = UIImage.appImage(.playCircle)
-
+            
         }
         
         let gradientLayerFrame = CGRect(x: 0,
