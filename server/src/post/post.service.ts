@@ -738,7 +738,8 @@ export class PostService {
     });
 
     await this.cleanPostUpdatedIds();
-
+    await this.onModuleInit();
+    
     this.logger.debug('cache persistenced');
   }
 
