@@ -30,6 +30,7 @@ final class SearchViewController: TouchableViewController {
     
     lazy var userResultCollectionView: UserResultCollectionView = {
         let collectionView = UserResultCollectionView(frame: .zero, viewModel: viewModel)
+        collectionView.backgroundColor = UIColor.appColor(.blue1)
         return collectionView
     }()
     
