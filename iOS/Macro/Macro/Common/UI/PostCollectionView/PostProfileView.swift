@@ -38,10 +38,10 @@ final class PostProfileView: UIView {
     }()
     
     private let likeImageView: UIImageView = {
-        let image: UIImage? = UIImage.appImage(.handThumbsup)
+        let image: UIImage? = LikeImage.unliked
         let imageView: UIImageView = UIImageView()
         imageView.image = image
-        imageView.tintColor = UIColor.appColor(.purple5)
+        imageView.tintColor = LikeColor.unliked
         return imageView
     }()
     
@@ -184,6 +184,8 @@ extension PostProfileView {
         }
 
         userNameLabel.text = item.writer.name
+        likeImageView.image = item.liked ? LikeImage.liked : LikeImage.unliked
+        likeImageView.tintColor = item.liked ? LikeColor.liked : LikeColor.unliked
         likeCountLabel.text = "\(item.likeNum)"
         viewCountLabel.text = "\(item.viewNum)"
         postId = item.postId
@@ -204,5 +206,18 @@ extension PostProfileView {
         likeCountLabel.text = ""
         viewCountLabel.text = ""
         postId = nil
+    }
+}
+
+// MARK: - Layout Metrics
+
+extension PostProfileView {
+    enum LikeImage {
+        static let liked: UIImage? = UIImage.appImage(.handThumbsupFill)
+        static let unliked: UIImage? = UIImage.appImage(.handThumbsup)
+    }
+    enum LikeColor {
+        static let liked: UIColor? = UIColor.appColor(.purple2)
+        static let unliked: UIColor? = UIColor.appColor(.purple5)
     }
 }
