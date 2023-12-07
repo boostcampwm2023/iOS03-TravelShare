@@ -46,8 +46,11 @@ final class HomeViewController: TouchableViewController {
         self.view.backgroundColor = UIColor.appColor(.blue1)
         bind()
         postCollectionView.postDelegate = self
-        inputSubject.send(.searchPosts(0))
         setUpLayout()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        inputSubject.send(.searchPosts(0))
     }
     
 }
