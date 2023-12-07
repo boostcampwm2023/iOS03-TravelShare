@@ -30,6 +30,7 @@ public enum ImageAsset {
         case pauseCircle
         case trash
         case listBulletIndent
+        case location
     }
     
     public enum CustomImage {
@@ -85,6 +86,8 @@ public extension UIImage {
             return UIImage(systemName: "trash")
         case .listBulletIndent:
             return UIImage(systemName: "list.bullet.indent")
+        case .location:
+            return UIImage(systemName: "location")
         }
     }
     

@@ -16,9 +16,7 @@ protocol RouteTableViewControllerDelegate: AnyObject {
     func routeTableViewEndDragChange()
 }
 
-final class TravelViewController: TabViewController,
-                                  RouteTableViewControllerDelegate,
-                                  NMFMapViewDelegate {
+final class TravelViewController: TabViewController, RouteTableViewControllerDelegate {
     
     // MARK: - Properties
     private var routeTableViewHeightConstraint: NSLayoutConstraint?
@@ -62,6 +60,24 @@ final class TravelViewController: TabViewController,
         return button
     }()
     
+    private let myLocationButtonView: UIView = {
+        let button = UIView()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.isUserInteractionEnabled = true
+        button.layer.cornerRadius = 30
+        button.layer.borderWidth = 2
+        button.clipsToBounds = true
+        let gradientLayer: CAGradientLayer = CAGradientLayer.createGradientLayer(
+            top: UIColor.appColor(.blue1),
+            bottom: UIColor.appColor(.blue2),
+            bounds: CGRect(x: 0, y: 0, width: 60, height: 60))
+        
+        button.layer.insertSublayer(gradientLayer, at: 0)
+        button.layer.borderColor = UIColor.appColor(.blue4 ).cgColor
+        
+        return button
+    }()
+    
     private var markers: [LocationDetail: NMFMarker] = [:]
     
     // MARK: - Life Cycle
@@ -73,21 +89,14 @@ final class TravelViewController: TabViewController,
         setupRouteTableViewController()
         bind()
         updateTravelButton()
+        updateMyLocationButton()
         searchBar.addTarget(self, action: #selector(searchBarReturnPressed), for: .editingDidEndOnExit)
-        mapView.delegate = self
         hideKeyboardWhenTappedAround()
-        
-        LocationManager.shared.locationPublisher
-            .sink { [weak self] location in
-                let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: location.coordinate.latitude, lng: location.coordinate.longitude))
-                cameraUpdate.animation = .easeIn
-                self?.mapView.moveCamera(cameraUpdate)
-            }
-            .store(in: &cancellables)
     }
     
     override func viewWillLayoutSubviews() {
         view.bringSubviewToFront(travelButtonView)
+        view.bringSubviewToFront(myLocationButtonView)
     }
     
     // MARK: - Init
@@ -112,6 +121,7 @@ extension TravelViewController {
         view.addSubview(mapView)
         view.addSubview(searchBar)
         view.addSubview(travelButtonView)
+        view.addSubview(myLocationButtonView)
     }
     
     private func setUpConstraints() {
@@ -129,7 +139,12 @@ extension TravelViewController {
             travelButtonView.widthAnchor.constraint(equalToConstant: 60),
             travelButtonView.heightAnchor.constraint(equalToConstant: 60),
             travelButtonView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            travelButtonView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 20)
+            travelButtonView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 20),
+            
+            myLocationButtonView.widthAnchor.constraint(equalToConstant: 60),
+            myLocationButtonView.heightAnchor.constraint(equalToConstant: 60),
+            myLocationButtonView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            myLocationButtonView.topAnchor.constraint(equalTo: travelButtonView.bottomAnchor, constant: 10)
         ])
     }
     
@@ -151,6 +166,77 @@ extension TravelViewController {
         ])
     }
     
+    private func generateTravelButtonImageView(isTravling: Bool) -> UIImageView {
+        
+        var image: UIImage?
+        if isTravling {
+            image = UIImage.appImage(.pauseCircle)
+        } else {
+            image = UIImage.appImage(.playCircle)
+            
+        }
+        
+        let gradientLayerFrame = CGRect(x: 0,
+                                        y: 0,
+                                        width: 30,
+                                        height: 30)
+        
+        let gradientLayer = CAGradientLayer.createGradientImageLayer(top: UIColor.appColor(.green3),
+                                                                     bottom: UIColor.appColor(.green4),
+                                                                     frame: gradientLayerFrame,
+                                                                     image: image)
+        
+        let travelImageView: UIImageView = UIImageView(image: image)
+        travelImageView.layer.addSublayer(gradientLayer)
+        travelImageView.tintColor = .clear
+        
+        return travelImageView
+    }
+    
+    private func updateTravelButton() {
+        
+        let travelImageView = generateTravelButtonImageView(isTravling: isTraveling)
+        for subview in travelButtonView.subviews {
+            subview.removeFromSuperview()
+        }
+        travelButtonView.addSubview(travelImageView)
+        travelImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            travelImageView.widthAnchor.constraint(equalToConstant: 30),
+            travelImageView.heightAnchor.constraint(equalToConstant: 30),
+            travelImageView.centerXAnchor.constraint(equalTo: travelButtonView.centerXAnchor),
+            travelImageView.centerYAnchor.constraint(equalTo: travelButtonView.centerYAnchor)
+        ])
+        let travelTapGesture = UITapGestureRecognizer(target: self, action: #selector(travelButtonTapped(_:)))
+        let endTravelTapGesture = UITapGestureRecognizer(target: self, action: #selector(endTravelButtonTapped(_:)))
+        if isTraveling {
+            travelButtonView.addGestureRecognizer(endTravelTapGesture)
+            travelButtonView.removeGestureRecognizer(travelTapGesture)
+        } else {
+            travelButtonView.addGestureRecognizer(travelTapGesture)
+            travelButtonView.removeGestureRecognizer(endTravelTapGesture)
+        }
+    }
+    
+    func updateMyLocationButton() {
+        let locationImage = UIImage.appImage(.location)?.withRenderingMode(.alwaysTemplate)
+        let locationImageView = UIImageView(image: locationImage)
+        
+        locationImageView.translatesAutoresizingMaskIntoConstraints = false
+        myLocationButtonView.addSubview(locationImageView)
+        
+        NSLayoutConstraint.activate([
+            locationImageView.widthAnchor.constraint(equalToConstant: 30),
+            locationImageView.heightAnchor.constraint(equalToConstant: 30),
+            locationImageView.centerXAnchor.constraint(equalTo: myLocationButtonView.centerXAnchor),
+            locationImageView.centerYAnchor.constraint(equalTo: myLocationButtonView.centerYAnchor)
+        ])
+        
+        locationImageView.tintColor = UIColor.appColor(.blue5)
+        
+        let myLocationTapGesture = UITapGestureRecognizer(target: self, action: #selector(myLocationButtonTapped(_:)))
+        myLocationButtonView.addGestureRecognizer(myLocationTapGesture)
+    }
 }
 
 // MARK: - Bind
@@ -191,7 +277,6 @@ extension TravelViewController {
             let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: location.coordinate.latitude, lng: location.coordinate.longitude))
             cameraUpdate.animation = .easeIn
             mapView.moveCamera(cameraUpdate)
-            //   locationManager.stopUpdatingLocation()
         }
     }
     
@@ -262,58 +347,6 @@ extension TravelViewController {
         }
     }
     
-    private func generateTravelButtonImageView(isTravling: Bool) -> UIImageView {
-        
-        var image: UIImage?
-        if isTravling {
-            image = UIImage.appImage(.pauseCircle)
-        } else {
-            image = UIImage.appImage(.playCircle)
-            
-        }
-        
-        let gradientLayerFrame = CGRect(x: 0,
-                                        y: 0,
-                                        width: 30,
-                                        height: 30)
-        
-        let gradientLayer = CAGradientLayer.createGradientImageLayer(top: UIColor.appColor(.green3),
-                                                                     bottom: UIColor.appColor(.green4),
-                                                                     frame: gradientLayerFrame,
-                                                                     image: image)
-        
-        let travelImageView: UIImageView = UIImageView(image: image)
-        travelImageView.layer.addSublayer(gradientLayer)
-        travelImageView.tintColor = .clear
-        
-        return travelImageView
-    }
-    
-    private func updateTravelButton() {
-        let travelImageView = generateTravelButtonImageView(isTravling: isTraveling)
-        for subview in travelButtonView.subviews {
-            subview.removeFromSuperview()
-        }
-        
-        travelButtonView.addSubview(travelImageView)
-        travelImageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            travelImageView.widthAnchor.constraint(equalToConstant: 30),
-            travelImageView.heightAnchor.constraint(equalToConstant: 30),
-            travelImageView.centerXAnchor.constraint(equalTo: travelButtonView.centerXAnchor),
-            travelImageView.centerYAnchor.constraint(equalTo: travelButtonView.centerYAnchor)
-        ])
-        let travelTapGesture = UITapGestureRecognizer(target: self, action: #selector(travelButtonTapped(_:)))
-        let endTravelTapGesture = UITapGestureRecognizer(target: self, action: #selector(endTravelButtonTapped(_:)))
-        if isTraveling {
-            travelButtonView.addGestureRecognizer(endTravelTapGesture)
-            travelButtonView.removeGestureRecognizer(travelTapGesture)
-        } else {
-            travelButtonView.addGestureRecognizer(travelTapGesture)
-            travelButtonView.removeGestureRecognizer(endTravelTapGesture)
-        }
-    }
-    
     @objc private func travelButtonTapped(_ sender: UITapGestureRecognizer) {
         inputSubject.send(.startTravel)
         isTraveling = true
@@ -322,6 +355,13 @@ extension TravelViewController {
     @objc private func endTravelButtonTapped(_ sender: UITapGestureRecognizer) {
         inputSubject.send(.endTravel)
         isTraveling = false
+    }
+    
+    @objc private func myLocationButtonTapped(_ sender: UITapGestureRecognizer) {
+        let currentLocation = LocationManager.shared.locationPublisher.value
+          let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: currentLocation.coordinate.latitude, lng: currentLocation.coordinate.longitude))
+          cameraUpdate.animation = .easeIn
+          mapView.moveCamera(cameraUpdate)
     }
     
     private func getSearchResult(_ locationDetails: [LocationDetail]) {
