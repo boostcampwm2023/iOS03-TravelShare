@@ -282,6 +282,9 @@ private extension ReadViewController {
             self?.carouselView.updateData(images)
         }
         
+        self.likeImageView.image = readPost.liked ? UIImage.appImage(.handThumbsupFill) : UIImage.appImage(.handThumbsup)
+        self.likeImageView.tintColor = readPost.liked ? UIColor.appColor(.purple2) : UIColor.appColor(.purple5)
+        
         calculateCenterLocation(routePoints: readPost.route.coordinates)
         updateMapWithLocation(routePoints: readPost.route.coordinates )
         
