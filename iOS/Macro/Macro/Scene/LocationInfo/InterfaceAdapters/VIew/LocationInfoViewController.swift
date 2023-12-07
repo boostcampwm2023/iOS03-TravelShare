@@ -158,22 +158,35 @@ extension LocationInfoViewController {
         NSLayoutConstraint.activate([
             placeNameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Padding.nameTop),
             placeNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.labelSide),
+            placeNameLabel.trailingAnchor.constraint(lessThanOrEqualTo: pinLabel.leadingAnchor, constant: -10),
+            
             addressLabel.topAnchor.constraint(equalTo: placeNameLabel.bottomAnchor, constant: Padding.addressTop),
             addressLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.labelSide),
+            addressLabel.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -10),
+            
             categoryNameLabel.topAnchor.constraint(equalTo: addressLabel.bottomAnchor, constant: Padding.categoryNameTop),
             categoryNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.labelSide),
+            categoryNameLabel.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -10),
+            
             categoryGroupLabel.topAnchor.constraint(equalTo: categoryNameLabel.bottomAnchor, constant: Padding.categoryGroupTop),
             categoryGroupLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.labelSide),
+            categoryGroupLabel.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -10),
+            
             phoneLabel.topAnchor.constraint(equalTo: categoryGroupLabel.bottomAnchor, constant: Padding.phoneTop),
             phoneLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.labelSide),
+            phoneLabel.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -10),
+            
             pinLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Padding.pinSide),
             pinLabel.centerYAnchor.constraint(equalTo: placeNameLabel.centerYAnchor),
+            
             segmentControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             segmentControl.topAnchor.constraint(equalTo: phoneLabel.bottomAnchor, constant: Padding.segmentTop),
+            
             postCollectionView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: Padding.postCollectionViewTop),
             postCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             postCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             postCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
             relatedLocationCollectionView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: Padding.postCollectionViewTop),
             relatedLocationCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             relatedLocationCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
