@@ -77,7 +77,8 @@ class MacroCarouselCollectionView<T: CarouselViewProtocol>: UICollectionView,
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 45, bottom: 0, right: 45)
+        let inset = (UIScreen.width - Const.itemSize.width) / 2
+        return UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
     }
     
     func scrollViewWillEndDragging(
