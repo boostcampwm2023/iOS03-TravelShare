@@ -148,9 +148,9 @@ extension MapCollectionViewCellContentView {
         calculateCenterLocation(routePoints: recordedLocation)
         updateMapWithLocation(routePoints: recordedLocation)
         
-        guard let recordedPindedInfo = item.recordedPinnedLocations else { return }
+        guard let recordedPinnedInfo = item.recordedPinnedLocations else { return }
         
-        updateMark(recordedPindedInfo: recordedPindedInfo)
+        updateMark(recordedPindedInfo: recordedPinnedInfo)
     }
     
     /// Center 좌표를 센터값을 구하고, 좌표간 거리를 기반으로 Zoom Level을 설정합니다.
