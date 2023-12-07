@@ -228,14 +228,12 @@ private extension WriteViewController {
                     
                     self?.updateMark(recordedPindedInfo: recordedPinedInfo)
                 case .postUploadFail:
-                    let alertController = UIAlertController(title: "", message: "글 작성 실패", preferredStyle: .alert)
-                    let okAction = UIAlertAction(title: "확인", style: .default) { _ in
-                        self?.writeSubmitButton.isEnabled = true
-                        self?.dismiss(animated: true)
-                    }
-                    alertController.addAction(okAction)
-
-                    self?.present(alertController, animated: true)
+                    AlertBuilder(viewController: self!)
+                        .setTitle("글 작성")
+                        .setMessage("글 작성 실패")
+                        .addActionCancel("확인") {
+                        }
+                        .show()
                 }
             }
             .store(in: &subscriptions)

@@ -127,7 +127,7 @@ private extension CustomAlertViewController {
             horizontalDividerView.heightAnchor.constraint(equalToConstant: 1),
             horizontalDividerView.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 30),
             
-            cancelButton.widthAnchor.constraint(equalToConstant: 150),
+            cancelButton.widthAnchor.constraint(equalToConstant: addActionConfirm == nil ? 300 : 150),
             cancelButton.leadingAnchor.constraint(equalTo: alertView.leadingAnchor),
             cancelButton.heightAnchor.constraint(equalToConstant: 50),
             cancelButton.topAnchor.constraint(equalTo: horizontalDividerView.bottomAnchor),
