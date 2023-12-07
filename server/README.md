@@ -55,16 +55,16 @@ $ docker compose up
 
 아래에서 사용할 용어는 다음과 같습니다.
 
-$ {score}: 인기도 $ 
+$`{score}: 인기도`$ 
 
-$ {like}: 좋아요수 $
+$`{like}: 좋아요수`$
 
-$ {view}: 조회수 $ 
+$`{view}: 조회수`$ 
 
 - 게시글의 인기도를 종합하기 위해 초기에 생각한 모델은 아래와 같습니다.
 
-  $ {score} = \alpha * {like} + (1-\alpha) * {view} \newline $
-  $ {where} \space 0 < \alpha < 1 $ 
+  $`{score} = \alpha * {like} + (1-\alpha) * {view} \newline`$
+  $`{where} \space 0 < \alpha < 1`$ 
   
   좋아요 수와 조회수 간에 가중치를 주어
   1. 사용자에게 노출이 많을 수록
@@ -85,7 +85,7 @@ $ {view}: 조회수 $
   
   1. 우선 Haker News라는 플랫폼에선 아래와 같은 모델을 사용한다고 합니다.
 
-  > $ {score} = {{pageviews} - 1}/({age} + 2)^{gravity} $
+  > $`{score} = {{pageviews} - 1}/({age} + 2)^{gravity}`$
 
   age는 말 그래도 게시글이 업로드된 시간을 의미하며, gravity는 시간에 영향을 받을 속도를 결정합니다.
 
@@ -93,7 +93,7 @@ $ {view}: 조회수 $
 
   2. 다음으론 Reddit의 모델을 살펴보겠습니다.
 
-  > $ {score} = \log_{10}(ups - downs) + (sign(ups - downs) * {seconds})/45000 $
+  > $`{score} = \log_{10}(ups - downs) + (sign(ups - downs) * {seconds})/45000`$
 
   ups는 추천, downs는 비추천, seconds는 업로드된 절대 시간초입니다.
   첫 항에 로그를 취해 초기 추천수가 늘어날 때 score의 증가속도가 빠르고
@@ -141,24 +141,24 @@ $ {view}: 조회수 $
 
 인기도의 측정은 일정 주기로 업데이트되며, 매 구간을 순서대로 나열하여 임의로 n번째라고 대충 칭하겠습니다.
 
-$ {score}_{n} $ : n 번째 인기도 
+$`{score}_{n}`$ : n 번째 인기도 
 
-$ {view}_{n} $ : n 번째 interval에 올라간 조회수
+$`{view}_{n}`$ : n 번째 interval에 올라간 조회수
 
-$ {like}_{n} $ : n 번째 interval 날 좋아요 수
+$`{like}_{n}`$ : n 번째 interval 날 좋아요 수
 
-$ {score}_{n} = \alpha*{score}_{n-1} + (1 - \alpha)*({{view}_{n}} + \beta * ({like}_{n})) $
+$`{score}_{n} = \alpha*{score}_{n-1} + (1 - \alpha)*({{view}_{n}} + \beta * ({like}_{n}))`$
 
-$ 0<\alpha<1, \space 0<\beta $
+$`0<\alpha<1, \space 0<\beta`$
 
-n-th interval 동안 각 게시글의 인기도는 $ {score}_{n} $으로 평가받습니다.
+n-th interval 동안 각 게시글의 인기도는 $`{score}_{n}`$으로 평가받습니다.
 
-첫 항은 이전 동안 누적된 인기도를 의미합니다. $ \alpha $가 1보다 작기 때문에 누적된 인기도는 반드시 시간이 지날 수록 줄어듭니다.
+첫 항은 이전 동안 누적된 인기도를 의미합니다. $`\alpha`$가 1보다 작기 때문에 누적된 인기도는 반드시 시간이 지날 수록 줄어듭니다.
 
 가장 최신에 기록된 좋아요와 조회수는 두 번째 항으로 반영됩니다.
 모든 좋아요와 조회수는 기록된 직후에 가장 큰 영향력을 가지고 시간이 지날 수록 영향력이 작아집니다.
 
-좋아요와 조회수가 다른 영향력을 가져야 한다고 생각했기 때문에 $ \beta $를 따로 추가했습니다.
+좋아요와 조회수가 다른 영향력을 가져야 한다고 생각했기 때문에 $`\beta`$를 따로 추가했습니다.
 
 이제 적절한 time interval로 서비스에 지장이 가지 않게 게시글의 인기도를 업데이트해주면 됩니다.
 
@@ -168,7 +168,7 @@ n-th interval 동안 각 게시글의 인기도는 $ {score}_{n} $으로 평가�
 
   이 부분에 대해선,
 
-  $ score_0 = view_0 + \beta * like_0 $
+  $`score_0 = view_0 + \beta * like_0`$
 
   와 같이 초항을 넣어 초기 조회수에는 특별히 가산점을 주는 것이 좋겠다고 생각이 들었습니다.
 
@@ -185,5 +185,5 @@ n-th interval 동안 각 게시글의 인기도는 $ {score}_{n} $으로 평가�
   현재 생각한 모델은 아래와 같습니다.
 
 
-  $ let \space {score}_{0} = {view}_{0} + \beta * {like}_{0} \newline $
-  $ {score}_{n} = \alpha * {score}_{n-1} + (1 - \alpha) * ({view}_{n} + \beta * {like}_{n}) * \frac{\gamma}{{score}_{n-1} + 1} $
+  $`let \space {score}_{0} = {view}_{0} + \beta * {like}_{0} \newline`$
+  $`{score}_{n} = \alpha * {score}_{n-1} + (1 - \alpha) * ({view}_{n} + \beta * {like}_{n}) * \frac{\gamma}{{score}_{n-1} + 1}`$
