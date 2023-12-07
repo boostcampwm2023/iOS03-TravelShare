@@ -9,7 +9,7 @@ import Foundation
 import MacroNetwork
 
 enum RevokeEndPoint {
-    case withdraw(identityToken: String, authorizationCode: String)
+    case withdraw(identityToken: String, authorizationCode: String, acccessToken: String)
 }
 
 extension RevokeEndPoint: EndPoint {
@@ -19,13 +19,20 @@ extension RevokeEndPoint: EndPoint {
     }
     
     var headers: MacroNetwork.HTTPHeaders {
-        let token = KeyChainManager.load(key: "AccessToken") ?? ""
-            return ["Authorization": "Bearer \(token)"]
+        switch self {
+        case let .withdraw(identityToken, authorizationCode, acccessToken):
+            return [
+                "Authorization": "Bearer \(acccessToken)",
+                "Host": "jijihuny.store",
+                "Content-Type": "application/json",
+                "Content-Length": "\(identityToken.count + authorizationCode.count + acccessToken.count)"
+            ]
+        }
     }
     
     var parameter: MacroNetwork.HTTPParameter {
         switch self {
-        case let .withdraw(identityToken, authorizationCode):
+        case let .withdraw(identityToken, authorizationCode, _):
             return .body(["identityToken": identityToken,
                           "authorizationCode": authorizationCode])
         }

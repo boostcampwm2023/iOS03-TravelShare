@@ -5,6 +5,7 @@
 //  Created by Byeon jinha on 11/21/23.
 //
 
+import AuthenticationServices
 import Combine
 import MacroNetwork
 import UIKit
@@ -112,6 +113,8 @@ extension MyPageViewController {
                 self?.downloadImage(image)
             case .completeRevoke:
                 self?.completeRevoke()
+            case .failureRevoke:
+                self?.failureRevoke()
             default: break
             }
         }.store(in: &cancellables)
@@ -345,6 +348,48 @@ extension MyPageViewController: UIImagePickerControllerDelegate, UINavigationCon
     }
 }
 
+// MARK: - Authentication
+
+extension MyPageViewController {
+    private func tryRevoke() {
+        guard let identityToken = KeyChainManager.load(key: KeychainKey.identityToken),
+              let authorizationCode = KeyChainManager.load(key: KeychainKey.authorizationCode),
+              let accessToken = KeyChainManager.load(key: KeychainKey.accessToken)
+        else { return }
+        inputSubject.send(.appleLogout(identityToken: identityToken, authorizationCode: authorizationCode, accessToken: accessToken))
+    }
+    
+    private func completeRevoke() {
+        KeyChainManager.delete(key: KeychainKey.accessToken)
+        KeyChainManager.delete(key: KeychainKey.authorizationCode)
+        KeyChainManager.delete(key: KeychainKey.identityToken)
+        
+        do {
+            try CoreDataManager.shared.fetchTravel { travels in
+                if let travels {
+                    travels.forEach {
+                        CoreDataManager.shared.deleteTravel(travelUUID: $0.id)
+                    }
+                }
+            }
+        } catch {
+            debugPrint("코어 데이터 삭제에 실패했습니다.")
+        }
+        
+        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+        sceneDelegate.switchViewController(for: .loggedOut)
+    }
+    
+    private func failureRevoke() {
+        AlertBuilder(viewController: self)
+            .setTitle("회원탈퇴")
+            .setMessage("회원탈퇴에 실패했습니다.")
+            .addActionCancel("확인") {
+            }
+            .show()
+    }
+}
+
 // MARK: - Layout Metrics
 
 extension MyPageViewController {
@@ -352,5 +397,11 @@ extension MyPageViewController {
         static let tableViewTop: CGFloat = 10
         static let tableViewSide: CGFloat = 38
         static let tableViewBottom: CGFloat = 75
+    }
+    
+    enum KeychainKey {
+        static let accessToken: String = "AccessToken"
+        static let authorizationCode: String = "AuthorizationCode"
+        static let identityToken: String = "IdentityToken"
     }
 }

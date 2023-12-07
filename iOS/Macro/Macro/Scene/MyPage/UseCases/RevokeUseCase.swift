@@ -9,7 +9,7 @@ import Combine
 import MacroNetwork
 
 protocol RevokeUseCase {
-    func withdraw(identityToken: String, authorizationCode: String) -> AnyPublisher<AppleRevokeResponse, MacroNetwork.NetworkError>
+    func withdraw(identityToken: String, authorizationCode: String, accessToken: String) -> AnyPublisher<AppleRevokeResponse, MacroNetwork.NetworkError>
 }
 
 struct Revoker: RevokeUseCase {
@@ -26,8 +26,7 @@ struct Revoker: RevokeUseCase {
     
     // MARK: - Methods
     
-    func withdraw(identityToken: String, authorizationCode: String) -> AnyPublisher<AppleRevokeResponse, MacroNetwork.NetworkError> {
-        
-        return provider.request(RevokeEndPoint.withdraw(identityToken: identityToken, authorizationCode: authorizationCode))
+    func withdraw(identityToken: String, authorizationCode: String, accessToken: String) -> AnyPublisher<AppleRevokeResponse, MacroNetwork.NetworkError> {
+        return provider.request(RevokeEndPoint.withdraw(identityToken: identityToken, authorizationCode: authorizationCode, acccessToken: accessToken))
     }
 }
