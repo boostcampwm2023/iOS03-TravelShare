@@ -68,7 +68,6 @@
 		BA33AA852B0AF9F30065D1E0 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA742B0AF9F20065D1E0 /* HomeViewModel.swift */; };
 		BA33AA892B0AF9F30065D1E0 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA792B0AF9F20065D1E0 /* HomeViewController.swift */; };
 		BA33AA8C2B0AF9F30065D1E0 /* HomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA7C2B0AF9F20065D1E0 /* HomeHeaderView.swift */; };
-		BA57BB642B20635D00171F4E /* MyPageViewController+AuthenticationServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA57BB632B20635D00171F4E /* MyPageViewController+AuthenticationServices.swift */; };
 		BA57BB682B2068AF00171F4E /* RevokeUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA57BB672B2068AF00171F4E /* RevokeUseCase.swift */; };
 		BA57BB6A2B20696200171F4E /* RevokeEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA57BB692B20696200171F4E /* RevokeEndPoint.swift */; };
 		BA57BB6C2B206AE200171F4E /* AppleRevokeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA57BB6B2B206AE200171F4E /* AppleRevokeResponse.swift */; };
@@ -247,7 +246,6 @@
 		BA33AA752B0AF9F20065D1E0 /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		BA33AA792B0AF9F20065D1E0 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		BA33AA7C2B0AF9F20065D1E0 /* HomeHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeHeaderView.swift; sourceTree = "<group>"; };
-		BA57BB632B20635D00171F4E /* MyPageViewController+AuthenticationServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MyPageViewController+AuthenticationServices.swift"; sourceTree = "<group>"; };
 		BA57BB672B2068AF00171F4E /* RevokeUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevokeUseCase.swift; sourceTree = "<group>"; };
 		BA57BB692B20696200171F4E /* RevokeEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevokeEndPoint.swift; sourceTree = "<group>"; };
 		BA57BB6B2B206AE200171F4E /* AppleRevokeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleRevokeResponse.swift; sourceTree = "<group>"; };
@@ -689,7 +687,6 @@
 			isa = PBXGroup;
 			children = (
 				BA32E17D2B0DC3CB00EA0EE2 /* MyPageViewController.swift */,
-				BA57BB632B20635D00171F4E /* MyPageViewController+AuthenticationServices.swift */,
 				D21B10062B14660600F2F84E /* MyInfoViewController.swift */,
 				D21B10082B14799C00F2F84E /* NameEditView.swift */,
 				D21B100A2B1497E000F2F84E /* IntroductionEditView.swift */,
@@ -1610,7 +1607,6 @@
 				D2CAA5DD2B1E51C200E825BA /* UserResultCollectionView.swift in Sources */,
 				AAD0B3232B17474D003B4D5F /* UploadPost.swift in Sources */,
 				BA32E17F2B0DC3CB00EA0EE2 /* MyPageViewController.swift in Sources */,
-				BA57BB642B20635D00171F4E /* MyPageViewController+AuthenticationServices.swift in Sources */,
 				D2CAA5DF2B1E51CF00E825BA /* UserResultCell.swift in Sources */,
 				BA90CBA02B145D6600365AE2 /* FollowUseCase.swift in Sources */,
 				BA6C6DFC2B05FFC500563B22 /* TabComponentView.swift in Sources */,

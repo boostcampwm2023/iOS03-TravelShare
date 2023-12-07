@@ -49,7 +49,7 @@ final class MyPageViewModel: ViewModelProtocol {
         case getMyUserData(String)
         case selectImage(Data)
         case getFollowInformation
-        case appleLogout(identityToken: String, authorizationCode: String)
+        case appleLogout(identityToken: String, authorizationCode: String, accessToken: String)
     }
     
     // MARK: - Output
@@ -64,6 +64,7 @@ final class MyPageViewModel: ViewModelProtocol {
         case sendFolloweesCount(Int)
         case reloadData
         case completeRevoke
+        case failureRevoke
     }
     
 }
@@ -84,8 +85,8 @@ extension MyPageViewModel {
                     self?.uploadImage(data)
                 case .getFollowInformation:
                     self?.getFollowInformation()
-                case let .appleLogout(identityToken, authorizationCode):
-                    self?.appleLogout(identityToken, authorizationCode)
+                case let .appleLogout(identityToken, authorizationCode, accessToken):
+                    self?.appleLogout(identityToken, authorizationCode, accessToken)
                 }
             }
             .store(in: &cancellables)
@@ -97,11 +98,18 @@ extension MyPageViewModel {
 
 private extension MyPageViewModel {
     
-    func appleLogout(_ identityToken: String, _ authorizationCode: String) {
+    func appleLogout(_ identityToken: String, _ authorizationCode: String, _ accessToken: String) {
         print("----------\n\(identityToken), identityToken\n")
         print("\(authorizationCode), authorizationCode\n---------------")
-        revoker.withdraw(identityToken: identityToken, authorizationCode: authorizationCode)
-            .sink { _ in
+        revoker.withdraw(identityToken: identityToken, authorizationCode: authorizationCode, accessToken: accessToken)
+            .sink { [weak self] completion in
+                switch completion {
+                case let .failure(error):
+                    Log.make().error("\(error)")
+                    self?.outputSubject.send(.failureRevoke)
+                case .finished:
+                    self?.outputSubject.send(.completeRevoke)
+                }
         } receiveValue: { [weak self] _ in
             self?.outputSubject.send(.completeRevoke)
         }.store(in: &cancellables)
