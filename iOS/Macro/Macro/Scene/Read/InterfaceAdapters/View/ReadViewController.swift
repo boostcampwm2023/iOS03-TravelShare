@@ -295,11 +295,13 @@ private extension ReadViewController {
     func downloadImages(imageURLs: [String], completion: @escaping ([UIImage?]) -> Void) {
         let dispatchGroup = DispatchGroup()
         var images: [UIImage?] = Array(repeating: nil, count: imageURLs.count)
-        
         imageURLs.enumerated().forEach { index, imageURL in
             dispatchGroup.enter()
             
             guard let url = URL(string: imageURL) else { return }
+            defer {
+                dispatchGroup.leave()
+            }
             if let cachedResponse = URLCache.shared.cachedResponse(for: URLRequest(url: url)) {
                 let image = UIImage(data: cachedResponse.data)
                 DispatchQueue.main.async {
@@ -308,12 +310,10 @@ private extension ReadViewController {
                 
             } else {
                 URLSession.shared.dataTask(with: url) { (data, response, _) in
-                    defer {
-                        dispatchGroup.leave()
-                    }
+
                     if let data = data, let image = UIImage(data: data) {
                         let cachedResponse = CachedURLResponse(response: response!, data: data)
-                                           URLCache.shared.storeCachedResponse(cachedResponse, for: URLRequest(url: url))
+                        URLCache.shared.storeCachedResponse(cachedResponse, for: URLRequest(url: url))
                         DispatchQueue.main.async {
                             images[index] = image
                         }
