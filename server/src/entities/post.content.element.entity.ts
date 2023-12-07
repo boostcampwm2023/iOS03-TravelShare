@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { Post } from './post.entity';
 
-const POINT_COORDINATES_EXTRACT_REGEXP = /POINT\(([\d\.]+ [\d\.]+)\)/;
+const POINT_COORDINATES_EXTRACT_REGEXP = /POINT\((\-?[\d\.]+ \-?[\d\.]+)\)/;
 
 export type Coordinate = {
   x: number;

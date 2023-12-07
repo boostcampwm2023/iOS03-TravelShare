@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 
 const LINESTRING_COORDINATES_EXTRACT_REGEXP =
-  /LINESTRING\((([\d\.]+ [\d\.]+,?)+)\)/;
+  /LINESTRING\(((\-?[\d\.]+ \-?[\d\.]+,?)+)\)/;
 
 export type LineString = { x: number; y: number }[];
 
