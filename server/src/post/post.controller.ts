@@ -25,6 +25,7 @@ import { PostKeywordAutoCompleteResponse } from './post.keyword.autocomplete.res
 import { PostSearchResponse } from './post.search.response.dto';
 import { PostSearchQuery } from './post.search.query.dto';
 import { PostFindQuery } from './post.find.query.dto';
+import { PostListQuery } from './post.list.query.dto';
 
 @ApiTags('Post')
 @ApiBearerAuth('access-token')
@@ -34,6 +35,16 @@ export class PostController {
     private readonly postService: PostService,
     private readonly autoCompleteService: KeywordAutoCompleteService,
   ) {}
+
+  @ApiOperation({
+    summary: '인기 게시글 조회 v3',
+    description: '',
+  })
+  @ApiResponse({ type: [PostSearchResponse] })
+  @Get('list')
+  async list(query: PostListQuery, user: Authentication) {
+    return await this.postService.list(query, user);
+  }
 
   @ApiOperation({
     summary: '인기 게시글 리스트 조회',

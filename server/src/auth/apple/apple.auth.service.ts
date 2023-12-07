@@ -137,8 +137,8 @@ export class AppleAuthService {
           this.jwtService.verify(identityToken, { secret: publicKey }),
         );
       }),
-      map((identityTokenPayload) => {
-        this.delete(identityTokenPayload);
+      map(async (identityTokenPayload) => {
+        await this.delete(identityTokenPayload);
         return plainToInstance(AppleAuthTokenBody, {
           client_secret: clientSecret,
           client_id: payload.sub,
@@ -217,7 +217,7 @@ export class AppleAuthService {
   private async signup({ sub, email }: AppleIdentityTokenPayload) {
     const user = await this.userRepository.save(
       {
-        email,
+        email: email ?? `${randomUUID()}@macrogenerated.com`,
         password: randomUUID(),
         name: getRandomNickName(),
       },
@@ -249,6 +249,7 @@ export class AppleAuthService {
       relations: { user: true },
     });
     await this.appleAuthRepository.delete({ appleId: sub });
+
     await this.userRepository.remove(user);
   }
 

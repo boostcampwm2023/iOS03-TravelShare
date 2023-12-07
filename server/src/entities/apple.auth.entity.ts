@@ -14,7 +14,7 @@ export class AppleAuth {
   @PrimaryColumn({ name: 'apple_id' })
   appleId: string;
 
-  @OneToOne(() => User, { cascade: ['remove'] })
+  @OneToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({
     name: 'user_id',
   })

@@ -39,7 +39,7 @@ export class PostContentElement {
   @PrimaryGeneratedColumn({ name: 'post_content_element_id' })
   postContentElemntId?: number;
 
-  @ManyToOne(() => Post, ({ contents }) => contents)
+  @ManyToOne(() => Post, ({ contents }) => contents, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'post_id' })
   post: Post;
 

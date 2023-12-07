@@ -25,7 +25,7 @@ export class Post {
   postId: number;
 
   @ManyToOne(() => User, ({ writedPosts }) => writedPosts, {
-    cascade: ['remove', 'soft-remove', 'update', 'recover'],
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'user_email', referencedColumnName: 'email' })
   writer: User;
@@ -95,7 +95,7 @@ export class Post {
   })
   pins: Place[];
 
-  @Column({ default: 0 })
+  @Column('double', { default: 0 })
   @Index()
   score: number;
 }

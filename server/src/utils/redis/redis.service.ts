@@ -47,6 +47,12 @@ export class RedisService {
     return await this.client.json.set(key, path ?? '.', object);
   }
 
+  async jsonMSet(items: { key: string; value: any; path?: string }[]) {
+    return await this.client.json.mSet(
+      items.map((item) => ({ path: '.', ...item })),
+    );
+  }
+
   async jsonGet(key: string, path?: string): Promise<any>;
   async jsonGet(key: string, ...paths: string[]): Promise<any[]> {
     if (paths.length === 0) {
@@ -56,6 +62,10 @@ export class RedisService {
       path: paths,
     });
     return paths.length === 1 ? result?.[0] : result;
+  }
+
+  async jsonMGet(keys: string[]) {
+    return await this.client.json.mGet(keys, '.');
   }
 
   async jsonExists(key: string, path?: string) {
@@ -134,6 +144,10 @@ export class RedisService {
       score,
       value,
     });
+  }
+
+  async zMAdd(key: string, members: { value: any; score: number }[]) {
+    await this.client.zAdd(key, members);
   }
 
   async zIncrBy(key: string, value: any, incrementScore: number) {
