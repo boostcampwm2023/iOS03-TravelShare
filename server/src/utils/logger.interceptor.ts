@@ -5,7 +5,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { Observable, tap } from 'rxjs';
+import { Observable, catchError, tap, throwError } from 'rxjs';
 
 export class LoggerInterceptor implements NestInterceptor {
   private readonly logger: Logger = new Logger(LoggerInterceptor.name);
@@ -27,6 +27,12 @@ export class LoggerInterceptor implements NestInterceptor {
           Date.now() - now
         }ms. response value: ${value}
                             `);
+      }),
+      catchError((err) => {
+        this.logger.error(err);
+        return throwError(() => {
+          throw err;
+        });
       }),
     );
   }

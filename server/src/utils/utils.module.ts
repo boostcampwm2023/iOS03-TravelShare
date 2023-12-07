@@ -10,6 +10,7 @@ import { RedisModule } from './redis/redis.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggerInterceptor } from './logger.interceptor';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Global()
 @Module({
@@ -32,6 +33,10 @@ import { LoggerInterceptor } from './logger.interceptor';
     }),
     RedisModule,
     ScheduleModule.forRoot(),
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 1000,
+    }),
   ],
   providers: [
     KeywordAutoCompleteService,

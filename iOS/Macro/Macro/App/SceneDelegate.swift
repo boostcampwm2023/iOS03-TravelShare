@@ -36,8 +36,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 
 // MARK: - Methods
-private extension SceneDelegate {
-    
+extension SceneDelegate {
     func switchViewController(for loginState: LoginState) {
         
         switch loginState {
@@ -60,6 +59,9 @@ private extension SceneDelegate {
         
         self.window?.makeKeyAndVisible()
     }
+}
+
+private extension SceneDelegate {
     
     func bind() {
         networkStatusSubject

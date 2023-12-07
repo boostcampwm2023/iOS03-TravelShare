@@ -14,7 +14,7 @@ final class MyPageViewController: TabViewController {
     // MARK: - Properties
     
     private let viewModel: MyPageViewModel
-    private let inputSubject: PassthroughSubject<MyPageViewModel.Input, Never> = .init()
+    internal let inputSubject: PassthroughSubject<MyPageViewModel.Input, Never> = .init()
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
@@ -110,6 +110,8 @@ extension MyPageViewController {
                 self?.updateUserProfile(userProfile)
             case let .profileEdit(image):
                 self?.downloadImage(image)
+            case .completeRevoke:
+                self?.completeRevoke()
             default: break
             }
         }.store(in: &cancellables)
@@ -303,6 +305,17 @@ extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
             if UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
+        } else if indexPath.section == 3 && indexPath.row == 2 {
+            AlertBuilder(viewController: self)
+                .setTitle("회원탈퇴")
+                .setMessage("정말 회원탈퇴 하시겠어요? :(")
+                .addActionConfirm("확인") {
+                    print("확인을 눌렀습니다.")
+                    self.tryRevoke()
+                }
+                .addActionCancel("취소") {
+                }
+                .show()
         }
     }
 }

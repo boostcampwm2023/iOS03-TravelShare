@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   Logger,
   NotFoundException,
@@ -30,6 +31,8 @@ import { User } from 'entities/user.entity';
 import { RedisService } from 'utils/redis/redis.service';
 import { Cron } from '@nestjs/schedule';
 import { PostConfig } from './post.config.dto';
+import { Cache } from 'cache-manager';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 const { all: allPromise } = Promise;
 const { min, random, floor } = Math;
@@ -51,6 +54,8 @@ export class PostService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly redisService: RedisService,
+    @Inject(CACHE_MANAGER)
+    private readonly cacheManager: Cache,
     private readonly postConfig: PostConfig,
   ) {}
 
@@ -385,23 +390,57 @@ ORDER BY
    * @returns
    */
   async popularList(pagination: PostHitsQuery, { email }: Authentication) {
-    const posts = await this.postRepository.find({
-      where: {
-        createdAt: Raw(
-          (alias) => `DATE_ADD(NOW(), INTERVAL -2 WEEK) <= ${alias}`,
-        ),
-        public: true,
-      },
-      ...(pagination ?? { take: 10 }),
-      relations: {
-        writer: true,
-      },
-      order: {
-        ...(pagination.sortBy === 'hot'
-          ? { score: 'DESC' }
-          : { postId: 'DESC' }),
-      },
-    });
+    let posts: Post[];
+    if (pagination.sortBy === 'hot') {
+      if (pagination.skip + pagination.take >= 100) {
+        posts = await this.postRepository.find({
+          where: {
+            public: true,
+          },
+          ...(pagination ?? { take: 10 }),
+          relations: {
+            writer: true,
+          },
+          order: {
+            score: 'DESC',
+          },
+        });
+      } else {
+        const { skip, take } = pagination;
+        const isCached = await this.cacheManager.get<Post[]>('post:hits');
+        if (isCached) {
+          posts = isCached.slice(skip, skip + take);
+        } else {
+          posts = await this.postRepository.find({
+            where: {
+              public: true,
+            },
+            take: 100,
+            relations: {
+              writer: true,
+            },
+            order: {
+              score: 'DESC',
+            },
+          });
+          await this.cacheManager.set('post:hits', posts, 60 * 60 * 1000);
+          posts = posts.slice(skip, skip + take);
+        }
+      }
+    } else {
+      posts = await this.postRepository.find({
+        where: {
+          public: true,
+        },
+        relations: {
+          writer: true,
+        },
+        order: {
+          postId: 'DESC',
+        },
+        ...pagination,
+      });
+    }
 
     return plainToInstance(
       PostSearchResponse,
@@ -463,7 +502,6 @@ ORDER BY
     );
   }
 
-  @Transactional()
   async search(
     {
       title,
@@ -476,24 +514,40 @@ ORDER BY
     }: PostSearchQuery,
     { email: loginUser }: Authentication,
   ) {
-    if (!(title || content || keyword || username || email || placeId)) {
-      throw new BadRequestException(`One of query must be provided`);
-    }
-    const posts = await this.postRepository.find({
-      where: [
-        {
-          ...(title
-            ? {
+    let posts: Post[];
+    if (pagination.skip === 0 && pagination.take === 10) {
+      switch (true) {
+        case Boolean(title):
+          const titleCacheKey = `post:search:title:${title}`;
+          const isTitleCached =
+            await this.cacheManager.get<Post[]>(titleCacheKey);
+          if (isTitleCached) {
+            posts = isTitleCached;
+          } else {
+            posts = await this.postRepository.find({
+              where: {
                 public: true,
                 title: Raw((alias) => `MATCH(${alias}) AGAINST(:title)`, {
                   title,
                 }),
-              }
-            : {}),
-        },
-        {
-          ...(content
-            ? {
+              },
+              relations: {
+                writer: true,
+              },
+              ...pagination,
+            });
+            await this.cacheManager.set(titleCacheKey, posts, 10000);
+          }
+          break;
+        case Boolean(content):
+          const contentCacheKey = `post:search:content:${content}`;
+          const isContentCached =
+            await this.cacheManager.get<Post[]>(contentCacheKey);
+          if (isContentCached) {
+            posts = isContentCached;
+          } else {
+            posts = await this.postRepository.find({
+              where: {
                 public: true,
                 contents: {
                   description: Raw(
@@ -503,63 +557,218 @@ ORDER BY
                     },
                   ),
                 },
-              }
-            : {}),
-        },
-        ...(keyword
-          ? [
-              {
-                public: true,
-                title: Raw((alias) => `MATCH(${alias}) AGAINST(:title)`, {
-                  title: keyword,
-                }),
               },
-              {
-                contents: {
-                  description: Raw(
-                    (alias) => `MATCH(${alias}) AGAINST(:description)`,
-                    {
-                      description: keyword,
-                    },
-                  ),
+              relations: {
+                writer: true,
+              },
+              ...pagination,
+            });
+            await this.cacheManager.set(contentCacheKey, posts, 10000);
+          }
+          break;
+        case Boolean(keyword):
+          const keywordCacheKey = `post:search:keyword:${keyword}`;
+          const isKeywordCached =
+            await this.cacheManager.get<Post[]>(keywordCacheKey);
+          if (isKeywordCached) {
+            posts = isKeywordCached;
+          } else {
+            posts = await this.postRepository.find({
+              where: [
+                {
+                  public: true,
+                  title: Raw((alias) => `MATCH(${alias}) AGAINST(:title)`, {
+                    title: keyword,
+                  }),
                 },
+                {
+                  contents: {
+                    description: Raw(
+                      (alias) => `MATCH(${alias}) AGAINST(:description)`,
+                      {
+                        description: keyword,
+                      },
+                    ),
+                  },
+                },
+              ],
+              relations: {
+                writer: true,
               },
-            ]
-          : []),
-        {
-          ...(username
-            ? {
+              ...pagination,
+            });
+            await this.cacheManager.set(keywordCacheKey, posts, 10000);
+          }
+          break;
+        case Boolean(username):
+          const usernameCacheKey = `post:search:username:${username}`;
+          const isUsernameCached =
+            await this.cacheManager.get<Post[]>(usernameCacheKey);
+          if (isUsernameCached) {
+            posts = isUsernameCached;
+          } else {
+            posts = await this.postRepository.find({
+              where: {
                 public: true,
                 writer: {
                   name: Raw((alias) => `MATCH(${alias}) AGAINST(:username)`, {
                     username,
                   }),
                 },
-              }
-            : {}),
-        },
-        {
-          ...(email
-            ? {
+              },
+              relations: {
+                writer: true,
+              },
+              ...pagination,
+            });
+            await this.cacheManager.set(
+              usernameCacheKey,
+              posts,
+              1000 * 60 * 10,
+            );
+          }
+          break;
+        case Boolean(email):
+          const emailCacheKey = `post:search:email:${email}`;
+          const isEmailCached =
+            await this.cacheManager.get<Post[]>(emailCacheKey);
+          if (isEmailCached) {
+            posts = isEmailCached;
+          } else {
+            posts = await this.postRepository.find({
+              where: {
                 public: email === loginUser ? null : true,
                 writer: { email },
+              },
+              relations: {
+                writer: true,
+              },
+              ...pagination,
+              order: {
+                postId: 'DESC'
               }
-            : {}),
-        },
-        {
-          ...(placeId
-            ? {
+            });
+            await this.cacheManager.set(emailCacheKey, posts, 1000 * 60 * 10);
+          }
+          break;
+        case Boolean(placeId):
+          const placeIdCacheKey = `post:search:placeId:${placeId}`;
+          const isPlaceIdCached =
+            await this.cacheManager.get<Post[]>(placeIdCacheKey);
+          if (isPlaceIdCached) {
+            posts = isPlaceIdCached;
+          } else {
+            posts = await this.postRepository.find({
+              where: {
                 public: email === loginUser ? null : true,
                 pins: { placeId },
-              }
-            : {}),
+              },
+              relations: {
+                writer: true,
+              },
+              ...pagination,
+            });
+            await this.cacheManager.set(placeIdCacheKey, posts, 1000 * 60 * 10);
+          }
+          break;
+        default:
+          this.logger.error('invalid search query');
+          throw new BadRequestException(`One of query must be provided`);
+      }
+    } else {
+      if (!(title || content || keyword || username || email || placeId)) {
+        throw new BadRequestException(`One of query must be provided`);
+      }
+      posts = await this.postRepository.find({
+        where: [
+          {
+            ...(title
+              ? {
+                  public: true,
+                  title: Raw((alias) => `MATCH(${alias}) AGAINST(:title)`, {
+                    title,
+                  }),
+                }
+              : {}),
+          },
+          {
+            ...(content
+              ? {
+                  public: true,
+                  contents: {
+                    description: Raw(
+                      (alias) => `MATCH(${alias}) AGAINST(:content)`,
+                      {
+                        content,
+                      },
+                    ),
+                  },
+                }
+              : {}),
+          },
+          ...(keyword
+            ? [
+                {
+                  public: true,
+                  title: Raw((alias) => `MATCH(${alias}) AGAINST(:title)`, {
+                    title: keyword,
+                  }),
+                },
+                {
+                  contents: {
+                    description: Raw(
+                      (alias) => `MATCH(${alias}) AGAINST(:description)`,
+                      {
+                        description: keyword,
+                      },
+                    ),
+                  },
+                },
+              ]
+            : []),
+          {
+            ...(username
+              ? {
+                  public: true,
+                  writer: {
+                    name: Raw((alias) => `MATCH(${alias}) AGAINST(:username)`, {
+                      username,
+                    }),
+                  },
+                }
+              : {}),
+          },
+          {
+            ...(email
+              ? {
+                  public: email === loginUser ? null : true,
+                  writer: { email },
+                }
+              : {}),
+          },
+          {
+            ...(placeId
+              ? {
+                  public: email === loginUser ? null : true,
+                  pins: { placeId },
+                }
+              : {}),
+          },
+        ],
+        ...pagination,
+        relations: {
+          writer: true,
         },
-      ],
-      ...pagination,
-      relations: {
-        writer: true,
-      },
-    });
+        ...(email
+          ? {
+            orderBy: {
+              postId: 'DESC'
+            }
+          }
+          : {}
+        )
+      });
+    }
 
     return plainToInstance(
       PostSearchResponse,

@@ -7,7 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { AppleClientAuthBody } from './apple.client.auth.body.dto';
 import { ConfigService } from '@nestjs/config';
-import { catchError, map, mergeMap, throwError } from 'rxjs';
+import { catchError, identity, map, mergeMap, throwError } from 'rxjs';
 import { plainToInstance } from 'class-transformer';
 import {
   AppleIdentityTokenPublicKey,
@@ -102,6 +102,15 @@ export class AppleAuthService {
     );
     const clientSecret = this.jwtService.sign(payload, { header, secret });
     return this.httpService.request(keysRequest).pipe(
+      catchError((err) => {
+        this.logger.error(err);
+        return throwError(
+          () =>
+            new InternalServerErrorException('apple revoking error on /keys', {
+              cause: err,
+            }),
+        );
+      }),
       map(({ data }) => {
         return plainToInstance(
           AppleIdentityTokenPublicKeys,
@@ -137,7 +146,19 @@ export class AppleAuthService {
         }).toString();
       }),
       mergeMap((data) => {
-        return this.httpService.request({ ...tokenRequest, data });
+        return this.httpService.request({ ...tokenRequest, data }).pipe(
+          catchError((err) => {
+            this.logger.error(JSON.stringify(err));
+            return throwError(
+              () =>
+                new InternalServerErrorException(
+                  'apple revoking error on /token',
+                  { cause: err },
+                ),
+            );
+          }),
+          identity,
+        );
       }),
       map(({ data }) => {
         return plainToInstance(AppleAuthTokenResponse, data).refresh_token;
@@ -151,15 +172,23 @@ export class AppleAuthService {
         }).toString();
       }),
       mergeMap((tokenBody) => {
-        return this.httpService.request({ ...revokeRequest, data: tokenBody });
+        return this.httpService
+          .request({ ...revokeRequest, data: tokenBody })
+          .pipe(
+            catchError((err) => {
+              this.logger.error(JSON.stringify(err));
+              return throwError(
+                () =>
+                  new InternalServerErrorException(
+                    'apple request error on /revoke',
+                    { cause: err },
+                  ),
+              );
+            }),
+            identity,
+          );
       }),
       map(() => plainToInstance(AppleClientRevokeResponse, {})),
-      catchError((err) => {
-        this.logger.error(err);
-        return throwError(
-          () => new InternalServerErrorException('apple revoking error'),
-        );
-      }),
     );
   }
 
