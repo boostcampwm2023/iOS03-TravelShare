@@ -41,11 +41,14 @@ extension SceneDelegate {
         
         switch loginState {
         case .loggedIn:
-            TokenManager.refreshToken(cancellables: &cancellables)
-            let tabbarViewModel = TabBarViewModel()
-            let tabbarViewController = TabBarViewController(viewModel: tabbarViewModel)
-            self.navigationController = UINavigationController(rootViewController: tabbarViewController)
-            self.window?.rootViewController = self.navigationController
+            if TokenManager.refreshToken(cancellables: &cancellables) {
+                let tabbarViewModel = TabBarViewModel()
+                let tabbarViewController = TabBarViewController(viewModel: tabbarViewModel)
+                self.navigationController = UINavigationController(rootViewController: tabbarViewController)
+                self.window?.rootViewController = self.navigationController
+            } else {
+                loginStateSubject.value = .loggedOut
+            }
         case .loggedOut:
             let provider = APIProvider(session: URLSession.shared)
             let repository = LoginRepository(provider: provider)

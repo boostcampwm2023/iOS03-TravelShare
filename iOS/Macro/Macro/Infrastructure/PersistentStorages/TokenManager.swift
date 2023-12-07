@@ -31,20 +31,22 @@ struct TokenManager {
         return currentTimeInterval < tokenExp ? LoginState.loggedIn : LoginState.loggedOut
     }
     
-    static func refreshToken(cancellables: inout Set<AnyCancellable>) {
+    static func refreshToken(cancellables: inout Set<AnyCancellable>) -> Bool {
         let provider = APIProvider(session: URLSession.shared)
         let refreshTokenUseCase: RefreshTokenUseCaseProtocol = RefreshTokenUseCase(provider: provider)
-        
+        var flag = true
         refreshTokenUseCase.execute()
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 if case let .failure(error) = completion {
                     debugPrint("Refresh Token Get Fail : ", error)
+                    flag = false
                 }
             } receiveValue: { refreshTokenResponse in
                 KeyChainManager.save(key: KeyChainManager.Keywords.accessToken, token: refreshTokenResponse.accessToken)
             }
             .store(in: &cancellables)
+        return flag
     }
     
     static func extractEmailFromJWTToken() -> String? {
