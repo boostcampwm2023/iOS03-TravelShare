@@ -15,7 +15,7 @@ final class LocationInfoViewController: TouchableViewController {
     // MARK: - Properties
     
     let viewModel: LocationInfoViewModel
-    let postCollectionViewModel = PostCollectionViewModel(posts: [], followFeature: FollowFeature(provider: APIProvider(session: URLSession.shared)), patcher: Patcher(provider: APIProvider(session: URLSession.shared)), postSearcher: Searcher(provider: APIProvider(session: URLSession.shared)))
+    let postCollectionViewModel = PostCollectionViewModel(followFeature: FollowFeature(provider: APIProvider(session: URLSession.shared)), patcher: Patcher(provider: APIProvider(session: URLSession.shared)), postSearcher: Searcher(provider: APIProvider(session: URLSession.shared)), sceneType: .relatedPost)
     private var cancellables = Set<AnyCancellable>()
     private let inputSubject: PassthroughSubject<LocationInfoViewModel.Input, Never> = .init()
     
@@ -229,6 +229,8 @@ extension LocationInfoViewController {
         categoryNameLabel.text = locationDetail.categoryName.isEmpty == true ? "-" : locationDetail.categoryName
         categoryGroupLabel.text = locationDetail.categoryGroupName.isEmpty == true ? "-" : "(\(locationDetail.categoryGroupName))"
         phoneLabel.text = locationDetail.phone?.isEmpty == true ? "-" : (locationDetail.phone ?? "-")
+        
+        postCollectionViewModel.query = detail?.id
     }
     
     @objc private func segmentValueChanged(_ sender: UISegmentedControl) {

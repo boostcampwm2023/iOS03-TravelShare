@@ -1,6 +1,10 @@
+import Combine
 import UIKit
 
 final class NameEditView: UIView {
+    
+    // MARK: - Properties
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
     
@@ -62,6 +66,21 @@ extension NameEditView {
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
+    }
+    
+}
+
+// MARK: - Methods
+
+extension NameEditView {
+    
+    func configure(with viewModel: MyPageViewModel) {
+        viewModel.$myInfo
+            .receive(on: RunLoop.main)
+            .sink { [weak self] myInfo in
+                self?.nameTextField.text = myInfo.name
+            }
+            .store(in: &cancellables)
     }
     
 }

@@ -21,11 +21,11 @@ final class UserResultCell: UICollectionViewCell {
     
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
-           imageView.contentMode = .scaleAspectFill
-           imageView.clipsToBounds = true
-           imageView.layer.cornerRadius = imageView.frame.width / 2
-           imageView.layer.masksToBounds = true
-           return imageView
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = imageView.frame.width / 2
+        imageView.layer.masksToBounds = true
+        return imageView
     }()
     
     override init(frame: CGRect) {
@@ -80,18 +80,20 @@ extension UserResultCell {
     
     func configure(with profile: UserProfile) {
         userNameLabel.text = profile.name
-        guard let imageUrl = profile.imageUrl else { 
-            self.profileImageView.image = nil
+        guard let imageUrl = profile.imageUrl else {
+            self.profileImageView.image = UIImage.appImage(.ProfileDefaultImage)
             return
         }
         if let url = URL(string: imageUrl) {
-            URLSession.shared.dataTask(with: url) { (data, _, _) in
+            URLSession.shared.dataTask(with: url) { [weak self] (data, _, _) in
                 if let data = data, let image = UIImage(data: data) {
                     DispatchQueue.main.async {
-                        self.profileImageView.image = image
+                        self?.profileImageView.image = image
                     }
                 } else {
-                    self.profileImageView.image = nil
+                    DispatchQueue.main.async {
+                        self?.profileImageView.image = UIImage.appImage(.ProfileDefaultImage)
+                    }
                 }
             }.resume()
         }

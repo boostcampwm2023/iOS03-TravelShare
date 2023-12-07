@@ -8,8 +8,6 @@
 import Combine
 import Foundation
 import MacroNetwork
-
-// TODO: ViewModel에서 UIKit 지우기. 현재 loadImage 부분 때문에 import 중입니다.
 import UIKit
 
 final class PostCollectionViewModel: ViewModelProtocol {
@@ -21,6 +19,8 @@ final class PostCollectionViewModel: ViewModelProtocol {
     let patcher: PatchUseCase
     let postSearcher: SearchUseCase
     var isLastPost: Bool = false
+    private let sceneType: SceneType
+    var query: String?
     
     enum Input {
         case navigateToReadView(Int)
@@ -38,11 +38,11 @@ final class PostCollectionViewModel: ViewModelProtocol {
         case updatePostContnet
     }
     
-    init(posts: [PostFindResponse], followFeature: FollowUseCase, patcher: PatchUseCase, postSearcher: SearchUseCase) {
-        self.posts = posts
+    init(followFeature: FollowUseCase, patcher: PatchUseCase, postSearcher: SearchUseCase, sceneType: SceneType) {
         self.followFeatrue = followFeature
         self.patcher = patcher
         self.postSearcher = postSearcher
+        self.sceneType = sceneType
     }
     
 }
@@ -71,9 +71,21 @@ extension PostCollectionViewModel {
             outputSubject.send(.updatePostView(postId, posts[index].viewNum))
         }
     }
-
+    
     func getNextPost(_ pageNum: Int) {
-        postSearcher.fetchHitPost(postCount: posts.count).sink { completion in
+        let publisher: AnyPublisher<[PostFindResponse], NetworkError>
+        
+        switch sceneType {
+        case .home: 
+            publisher = postSearcher.fetchHitPost(postCount: posts.count)
+        case .relatedPost: 
+            publisher = postSearcher.searchRelatedPost(query: query ?? "", postCount: posts.count)
+        case .searchPostTitle:
+            publisher = postSearcher.searchPostTitle(query: query ?? "", postCount: posts.count)
+        case .userInfoPost:
+            publisher = postSearcher.searchPost(query: query ?? "", postCount: posts.count)
+        }
+        publisher.sink { completion in
             if case let .failure(error) = completion {
                 Log.make().error("\(error)")
             }

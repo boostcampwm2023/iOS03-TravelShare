@@ -6,6 +6,7 @@
 //
 
 import CoreData
+import CoreLocation
 import UIKit
 
 @main
@@ -16,6 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        let locationManager = CLLocationManager()
+        locationManager.requestWhenInUseAuthorization()
+
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
     

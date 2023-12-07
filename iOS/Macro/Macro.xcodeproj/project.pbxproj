@@ -177,6 +177,8 @@
 		D2CAA5E72B1F14BE00E825BA /* FollowListEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5E62B1F14BE00E825BA /* FollowListEndPoint.swift */; };
 		D2CAA5E92B1F23AA00E825BA /* FollowResultCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5E82B1F23AA00E825BA /* FollowResultCollectionView.swift */; };
 		D2CAA5EB2B1F23B700E825BA /* FollowResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5EA2B1F23B700E825BA /* FollowResultCell.swift */; };
+		D2CAA5EF2B208F5D00E825BA /* SceneType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA5EE2B208F5D00E825BA /* SceneType.swift */; };
+		D2EDFAAE2B212B9B00723E7E /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2EDFAAD2B212B9B00723E7E /* UIView+.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -352,6 +354,8 @@
 		D2CAA5E62B1F14BE00E825BA /* FollowListEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowListEndPoint.swift; sourceTree = "<group>"; };
 		D2CAA5E82B1F23AA00E825BA /* FollowResultCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowResultCollectionView.swift; sourceTree = "<group>"; };
 		D2CAA5EA2B1F23B700E825BA /* FollowResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowResultCell.swift; sourceTree = "<group>"; };
+		D2CAA5EE2B208F5D00E825BA /* SceneType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneType.swift; sourceTree = "<group>"; };
+		D2EDFAAD2B212B9B00723E7E /* UIView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
 		EFE56344E8979EDA80D9E782 /* libPods-Macro.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Macro.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE963544592A2BC35C2CD604 /* Pods-Macro.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Macro.release.xcconfig"; path = "Target Support Files/Pods-Macro/Pods-Macro.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -800,6 +804,7 @@
 				BA90CB3A2B0EF88700365AE2 /* LocationManager.swift */,
 				D21B10482B19854900F2F84E /* UIViewController+.swift */,
 				D21B104A2B1A22D500F2F84E /* Log.swift */,
+				D2EDFAAD2B212B9B00723E7E /* UIView+.swift */,
 				BA8742F42B204D0B00DBDE03 /* AlertBuilder.swift */,
 			);
 			path = Util;
@@ -1255,6 +1260,7 @@
 				AAD0B31B2B171171003B4D5F /* Cotent.swift */,
 				AAD0B31D2B171187003B4D5F /* Coordinate.swift */,
 				BAE3C5852B1995D200BF9798 /* LikePostResponse.swift */,
+				D2CAA5EE2B208F5D00E825BA /* SceneType.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -1554,6 +1560,7 @@
 				BA8DC3FA2B0B5DD100929E01 /* BaseViewControllerProtocol.swift in Sources */,
 				AAD0B3142B14E394003B4D5F /* ReadViewController.swift in Sources */,
 				AAD0B2DB2B0FB5A5003B4D5F /* ImageUploadEndPoint.swift in Sources */,
+				D2CAA5EF2B208F5D00E825BA /* SceneType.swift in Sources */,
 				BA33AA8C2B0AF9F30065D1E0 /* HomeHeaderView.swift in Sources */,
 				BA32E1762B0DC2F900EA0EE2 /* UserInfoViewModel.swift in Sources */,
 				BA8DC4132B0B602000929E01 /* WriteViewModel.swift in Sources */,
@@ -1563,6 +1570,7 @@
 				AAD0B3252B17477A003B4D5F /* PostUploadEndPoint.swift in Sources */,
 				D21B10102B16FDA000F2F84E /* PostSearchEndPoint.swift in Sources */,
 				BA90CB9E2B145CDE00365AE2 /* FollowEndPoint.swift in Sources */,
+				D2EDFAAE2B212B9B00723E7E /* UIView+.swift in Sources */,
 				BA6C6DF42B05FFC500563B22 /* CircularViewProtocol.swift in Sources */,
 				D2CAA5C72B1D7E3700E825BA /* LocationInfoViewModel.swift in Sources */,
 				BA90CB982B1450A200365AE2 /* UserInfoProfileView.swift in Sources */,

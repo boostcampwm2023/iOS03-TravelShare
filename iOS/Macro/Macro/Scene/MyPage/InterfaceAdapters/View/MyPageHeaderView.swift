@@ -77,7 +77,7 @@ private extension MyPageHeaderView {
 
 extension MyPageHeaderView {
     
-    func configure(userProfile: UserProfile) {
+    func configure(userProfile: UserProfile) { 
         if let url = userProfile.imageUrl {
             loadImage(profileImageStringURL: url) { image in
                 DispatchQueue.main.async { [self] in

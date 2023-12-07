@@ -99,7 +99,7 @@ extension UserInfoViewModel {
     }
     
     private func searchPost() {
-        searcher.searchPost(query: searchUserEmail).sink { _ in
+        searcher.searchPost(query: searchUserEmail, postCount: posts.count).sink { _ in
         } receiveValue: { [weak self] response in
             self?.posts = response
             self?.outputSubject.send(.updateUserPost(response))

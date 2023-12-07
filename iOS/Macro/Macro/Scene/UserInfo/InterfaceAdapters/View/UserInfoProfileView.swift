@@ -104,9 +104,23 @@ extension UserInfoProfileView {
 
 extension UserInfoProfileView {
     func configure(item: UserProfile) {
-        // TODO: nil 일 경우 default 이미지
-        loadImage(profileImageStringURL: item.imageUrl ?? "") { image in
-            self.userProfileImageView.image = image
+     
+        guard let imageUrl = item.imageUrl else {
+            self.userProfileImageView.image = UIImage.appImage(.ProfileDefaultImage)
+            return
+        }
+        if let url = URL(string: imageUrl) {
+            URLSession.shared.dataTask(with: url) { [weak self] (data, _, _) in
+                if let data = data, let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        self?.userProfileImageView.image = image
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self?.userProfileImageView.image = UIImage.appImage(.ProfileDefaultImage)
+                    }
+                }
+            }.resume()
         }
         
         self.userIntroduceLabel.text = item.introduce
@@ -115,19 +129,6 @@ extension UserInfoProfileView {
     
     func updateFollow(item: UserProfile) {
         self.userFollowerCountLabel.text = "\(item.followersNum)"
-    }
-    
-    func loadImage(profileImageStringURL: String, completion: @escaping (UIImage?) -> Void) {
-        guard let url = URL(string: profileImageStringURL) else { return }
-        URLSession.shared.dataTask(with: url) { data, _, _ in
-            if let data = data, let image = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    completion(image)
-                }
-            } else {
-                completion(nil)
-            }
-        }.resume()
     }
     
 }

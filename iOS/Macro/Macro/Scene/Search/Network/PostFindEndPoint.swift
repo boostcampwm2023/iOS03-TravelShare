@@ -9,7 +9,7 @@ import Foundation
 import MacroNetwork
 
 enum PostFindEndPoint {
-    case searchPost(String)
+    case searchPost(String, Int)
     case searchAccount(String)
 }
 
@@ -26,8 +26,8 @@ extension PostFindEndPoint: EndPoint {
     
     var parameter: MacroNetwork.HTTPParameter {
         switch self {
-        case let .searchPost(text):
-            return .query(["title": text])
+        case let .searchPost(text, skip):
+            return .query(["title": text, "skip": "\(skip)"])
         case let .searchAccount(text):
             return .query(["name": text])
         }

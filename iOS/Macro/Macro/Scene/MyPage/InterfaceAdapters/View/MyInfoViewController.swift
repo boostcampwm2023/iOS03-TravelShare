@@ -19,7 +19,7 @@ final class MyInfoViewController: UIViewController {
     
     // MARK: - UI Components
     
-    lazy var guideLabel: UILabel = {
+    private lazy var guideLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.appFont(.baeEunLargeTitle)
         label.text = viewModel.information[selectedIndex]
@@ -29,14 +29,12 @@ final class MyInfoViewController: UIViewController {
     private lazy var nameEditView: NameEditView = {
         let view = NameEditView()
         view.optionLabel.text = viewModel.information[selectedIndex]
-        view.nameTextField.text = viewModel.myInfo.name
         return view
     }()
     
     private lazy var introductionEditView: IntroductionEditView = {
         let view = IntroductionEditView()
         view.optionLabel.text = viewModel.information[selectedIndex]
-        view.introductionTextView.text = viewModel.myInfo.introduce
         return view
     }()
     
@@ -56,6 +54,8 @@ final class MyInfoViewController: UIViewController {
         setUpLayout()
         saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         bind()
+        introductionEditView.configure(with: viewModel)
+        nameEditView.configure(with: viewModel)
         hideKeyboardWhenTappedAround()
     }
     
@@ -139,8 +139,10 @@ extension MyInfoViewController {
         let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
             switch output {
-            case .dissMissView: self?.dissMissView()
-            case let .showAlert(failError): self?.showAlert(failError)
+            case .dissMissView:
+                self?.dissMissView()
+            case let .showAlert(failError): 
+                self?.showAlert(failError)
             default: break
             }
         }.store(in: &cancellables)
@@ -151,6 +153,7 @@ extension MyInfoViewController {
 // MARK: - Methods
 
 extension MyInfoViewController {
+    
     private func dissMissView() {
         self.dismiss(animated: true, completion: nil)
     }

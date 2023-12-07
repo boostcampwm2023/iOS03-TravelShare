@@ -195,7 +195,7 @@ extension TravelViewModel {
     }
     
     func isPinned(_ locationDetail: LocationDetail) -> Bool {
-        return savedRoute.pinnedPlaces.contains(where: { $0.placeName == locationDetail.placeName })
+        return savedRoute.pinnedPlaces.contains(where: { $0.id == locationDetail.id })
     }
     
 }

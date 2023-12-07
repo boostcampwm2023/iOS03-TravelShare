@@ -93,12 +93,6 @@ final class PostProfileView: UIView {
         delegate?.didTapProfile(viewController: userInfoViewController)
     }
     
-    @objc private func likeImageViewTap(_ sender: UITapGestureRecognizer) {
-        guard let _ = viewModel else { return }
-        guard let postId: Int = self.postId else { return }
-        inputSubject.send(.touchLike(postId))
-    }
-    
 }
 
 // MARK: - UI Settings
@@ -164,30 +158,8 @@ extension PostProfileView {
         profileImageView.isUserInteractionEnabled = true
         let profileImageViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(profileImageTap(_:)))
         profileImageView.addGestureRecognizer(profileImageViewTapGesture)
-        
-        likeImageView.isUserInteractionEnabled = true
-        let likeImageViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(likeImageViewTap(_:)))
-        likeImageView.addGestureRecognizer(likeImageViewTapGesture)
     }
     
-}
-
-extension PostProfileView {
-    func bind() {
-        guard let viewModel = self.viewModel, let postId = self.postId else { return }
-        
-        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
-        
-        outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
-            switch output {
-            case .updatePostLike(let likePostResponse) where likePostResponse.postId == postId:
-                self?.likeCountLabel.text = "\(likePostResponse.likeNum)"
-            case .updatePostView(let updatedPostId, let updatedViewNum) where updatedPostId == postId:
-                self?.viewCountLabel.text = "\(updatedViewNum)"
-            default: break
-            }
-        }.store(in: &cancellables)
-    }
 }
 
 // MARK: - Method
@@ -196,26 +168,36 @@ extension PostProfileView {
     func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?) {
         self.viewModel = viewModel
         guard let viewModel = self.viewModel else { return }
-        self.imageUrl = item.writer.imageUrl ?? "default_url"
-        guard let imageUrl = self.imageUrl else { return }
-        viewModel.loadImage(profileImageStringURL: imageUrl) { [weak self] image in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                if self.imageUrl == item.writer.imageUrl {
-                    self.profileImageView.image = image
+
+        if let imageUrl = item.writer.imageUrl, isValidUrl(urlString: imageUrl) {
+            viewModel.loadImage(profileImageStringURL: imageUrl) { [weak self] image in
+                DispatchQueue.main.async {
+                    if let image = image {
+                        self?.setProfileImage(image)
+                    } else {
+                        self?.setDefaultProfileImage()
+                    }
                 }
-                else {
-                    let defaultImage = UIImage.appImage(.ProfileDefaultImage)
-                    self.profileImageView.image = defaultImage
-                }
-                self.profileImageView.layer.cornerRadius = self.profileImageView.frame.width / 2
             }
+        } else {
+            setDefaultProfileImage()
         }
+
         userNameLabel.text = item.writer.name
         likeCountLabel.text = "\(item.likeNum)"
         viewCountLabel.text = "\(item.viewNum)"
         postId = item.postId
     }
+    private func setDefaultProfileImage() {
+        let defaultImage = UIImage.appImage(.ProfileDefaultImage)
+        setProfileImage(defaultImage)
+    }
+
+    private func setProfileImage(_ image: UIImage?) {
+        profileImageView.image = image
+        profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
+    }
+    
     func resetContents() {
         profileImageView.image = nil
         userNameLabel.text = ""
