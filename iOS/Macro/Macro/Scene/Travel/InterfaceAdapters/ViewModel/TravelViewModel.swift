@@ -160,6 +160,8 @@ extension TravelViewModel {
         routeRecorder.stopRecording()
         
         locationManager = nil
+        LocationManager.shared.stopRecording()
+        
     }
     
     private func searchPlace(with text: String) {

@@ -28,10 +28,11 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(updateLocation), userInfo: nil, repeats: true)
     }
-
-    deinit {
+    
+    func stopRecording() {
         timer?.invalidate()
         timer = nil
+        locationManager.allowsBackgroundLocationUpdates = false
     }
     
     // MARK: - Methods
