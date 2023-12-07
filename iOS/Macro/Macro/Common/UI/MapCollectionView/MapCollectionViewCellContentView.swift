@@ -48,6 +48,7 @@ final class MapCollectionViewCellContentView<T: MapCollectionViewProtocol>: UIVi
     private let mapView: NMFMapView = {
         let mapView = NMFMapView()
         mapView.positionMode = .disabled
+        mapView.layer.cornerRadius = 20
         return mapView
     }()
     

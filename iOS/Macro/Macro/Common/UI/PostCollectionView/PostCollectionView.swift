@@ -100,8 +100,11 @@ extension PostCollectionView: UICollectionViewDataSource {
         else { return UICollectionViewCell() }
         
         cell.delegate = postDelegate
-        let item = viewModel.posts[indexPath.row]
-        cell.configure(item: item, viewModel: viewModel, indexPath: indexPath)
+        if !viewModel.posts.isEmpty {
+            let item = viewModel.posts[indexPath.row]
+            cell.configure(item: item, viewModel: viewModel, indexPath: indexPath)
+        }
+        
         return cell
     }
     

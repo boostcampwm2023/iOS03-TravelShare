@@ -62,6 +62,9 @@ final class WriteViewController: TabViewController {
     private let mapView: NMFMapView = {
         let mapView = NMFMapView()
         mapView.positionMode = .normal
+        mapView.layer.cornerRadius = 20
+        mapView.layer.borderWidth = 1
+        mapView.layer.borderColor = UIColor.appColor(.purple1).cgColor
         return mapView
     }()
     
@@ -205,17 +208,12 @@ private extension WriteViewController {
                     self?.carouselView.updateData(images)
                 // Submit 버튼 눌러진 경우
                 case .postUploadSuccess:
-                    let alertController = UIAlertController(title: "", message: "글 작성 완료", preferredStyle: .alert)
-                    let okAction = UIAlertAction(title: "확인", style: .default) { _ in
-                        if let navigationController = self?.navigationController {
-                            navigationController.popViewController(animated: true)
-                        } else {
-                            self?.dismiss(animated: true)
+                    AlertBuilder(viewController: self!)
+                        .setTitle("글 작성")
+                        .setMessage("글 작성 완료")
+                        .addActionConfirm("확인") {
                         }
-                    }
-                    alertController.addAction(okAction)
-
-                    self?.present(alertController, animated: true)
+                        .show()
                 case let .outputDescriptionString(description):
                     DispatchQueue.main.async {
                         self?.carouselView.descriptionTextField.text = description

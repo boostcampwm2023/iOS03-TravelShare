@@ -84,6 +84,9 @@ final class ReadViewController: UIViewController {
     private let mapView: NMFMapView = {
         let mapView = NMFMapView()
         mapView.positionMode = .normal
+        mapView.layer.cornerRadius = 20
+        mapView.layer.borderWidth = 1
+        mapView.layer.borderColor = UIColor.appColor(.purple1).cgColor
         return mapView
     }()
     
