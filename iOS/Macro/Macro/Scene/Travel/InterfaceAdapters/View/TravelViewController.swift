@@ -33,7 +33,7 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
     }
     // MARK: - UI Components
     
-    private let mapView: NMFMapView = {
+    lazy var mapView: NMFMapView = {
         let mapView = NMFMapView()
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.positionMode = .normal
@@ -282,7 +282,6 @@ extension TravelViewController {
     
     private func updateMapWithLocation(_ newLocation: CLLocation) {
         let newCoord = NMGLatLng(lat: newLocation.coordinate.latitude, lng: newLocation.coordinate.longitude)
-        
         if polyline == nil {
             polyline = NMFPolylineOverlay([newCoord, newCoord])
             polyline?.mapView = mapView
@@ -358,6 +357,10 @@ extension TravelViewController {
     }
     
     @objc private func myLocationButtonTapped(_ sender: UITapGestureRecognizer) {
+       moveCamera()
+    }
+    
+    private func moveCamera() {
         let currentLocation = LocationManager.shared.locationPublisher.value
           let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: currentLocation.coordinate.latitude, lng: currentLocation.coordinate.longitude))
           cameraUpdate.animation = .easeIn
