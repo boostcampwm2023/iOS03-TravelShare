@@ -8,9 +8,10 @@ import { addTransactionalDataSource } from 'typeorm-transactional';
 import { KeywordAutoCompleteService } from './keyword.autocomplete.service';
 import { RedisModule } from './redis/redis.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggerInterceptor } from './logger.interceptor';
 import { CacheModule } from '@nestjs/cache-manager';
+import { TypeOrmExceptionFilter } from './typeorm.exception.filter';
 
 @Global()
 @Module({
@@ -43,6 +44,10 @@ import { CacheModule } from '@nestjs/cache-manager';
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggerInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: TypeOrmExceptionFilter,
     },
   ],
   exports: [HttpModule, KeywordAutoCompleteService],
