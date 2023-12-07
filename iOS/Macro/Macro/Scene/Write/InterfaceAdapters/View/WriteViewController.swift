@@ -146,7 +146,7 @@ private extension WriteViewController {
             carouselView.topAnchor.constraint(equalTo: summaryTextView.bottomAnchor, constant: 20),
             carouselView.heightAnchor.constraint(equalToConstant: 400),
             carouselView.widthAnchor.constraint(equalToConstant: UIScreen.width),
-
+            
             mapView.topAnchor.constraint(equalTo: carouselView.bottomAnchor, constant: 30),
             mapView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 24),
             mapView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -24),
@@ -197,7 +197,7 @@ private extension WriteViewController {
                         let image = (isVisibility ? UIImage.appImage(.lockOpenFill) : UIImage.appImage(.lockFill))?.withTintColor(isVisibility ? UIColor.appColor(.statusGreen) : UIColor.appColor(.statusRed), renderingMode: .alwaysOriginal)
                         self?.isVisibilityButton.setImage(image, for: .normal)
                     }
-                // imageData Cell에 추가
+                    // imageData Cell에 추가
                 case let .outputImageData(imageDatas):
                     var images = [UIImage?]()
                     
@@ -206,12 +206,18 @@ private extension WriteViewController {
                     }
                     
                     self?.carouselView.updateData(images)
-                // Submit 버튼 눌러진 경우
+                    // Submit 버튼 눌러진 경우
                 case .postUploadSuccess:
                     AlertBuilder(viewController: self!)
                         .setTitle("글 작성")
                         .setMessage("글 작성 완료")
                         .addActionConfirm("확인") {
+                            if let navigationController = self?.navigationController {
+                                                        navigationController.popViewController(animated: true)
+                            } else {
+                                self?.dismiss(animated: true)
+                                self?.writeSubmitButton.isEnabled = true
+                            }
                         }
                         .show()
                 case let .outputDescriptionString(description):
@@ -228,14 +234,14 @@ private extension WriteViewController {
                     
                     self?.updateMark(recordedPindedInfo: recordedPinedInfo)
                 case .postUploadFail:
-                    let alertController = UIAlertController(title: "", message: "글 작성 실패", preferredStyle: .alert)
-                    let okAction = UIAlertAction(title: "확인", style: .default) { _ in
-                        self?.writeSubmitButton.isEnabled = true
-                        self?.dismiss(animated: true)
-                    }
-                    alertController.addAction(okAction)
-
-                    self?.present(alertController, animated: true)
+                    AlertBuilder(viewController: self!)
+                        .setTitle("글 작성")
+                        .setMessage("글 작성 실패")
+                        .addActionCancel("확인") {
+                            self?.dismiss(animated: true)
+                            self?.writeSubmitButton.isEnabled = true
+                        }
+                        .show()
                 }
             }
             .store(in: &subscriptions)
@@ -318,7 +324,7 @@ extension WriteViewController {
         let zoomLevelLongitude = log2(90 / distanceLongitude)
         let zoomLevel = min(zoomLevelLatitude, zoomLevelLongitude)
         mapView.zoomLevel = zoomLevel
-       
+        
         let cameraUpdate = NMFCameraUpdate(scrollTo: centerLocation )
         mapView.moveCamera(cameraUpdate)
     }

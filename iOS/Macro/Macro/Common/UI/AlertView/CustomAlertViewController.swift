@@ -13,8 +13,8 @@ class CustomAlertViewController: UIViewController {
     
     var alertTitle: String?
     var message: String?
-    var addActionConfirm: AddAction?
-    var addActionCancel: AddAction?
+    var addActionConfirm: ConfirmAction?
+    var addActionCancel: CancelAction?
     
     // MARK: -
     private lazy var alertView = {
@@ -51,9 +51,9 @@ class CustomAlertViewController: UIViewController {
     private lazy var confirmButton = {
         let button = UIButton()
         button.setTitleColor(.label, for: .normal)
+        button.setTitleColor(UIColor.appColor(.statusGreen), for: .normal)
         button.titleLabel?.font = UIFont.appFont(.baeEunCallout)
         button.setTitle(addActionConfirm?.text, for: .normal)
-        button.setTitleColor(UIColor.appColor(.statusGreen), for: .normal)
         button.addTarget(self, action: #selector(confirmPressed), for: .touchUpInside)
         return button
     }()
@@ -127,7 +127,7 @@ private extension CustomAlertViewController {
             horizontalDividerView.heightAnchor.constraint(equalToConstant: 1),
             horizontalDividerView.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 30),
             
-            cancelButton.widthAnchor.constraint(equalToConstant: 150),
+            cancelButton.widthAnchor.constraint(equalToConstant: addActionConfirm == nil ? 300 : 150),
             cancelButton.leadingAnchor.constraint(equalTo: alertView.leadingAnchor),
             cancelButton.heightAnchor.constraint(equalToConstant: 50),
             cancelButton.topAnchor.constraint(equalTo: horizontalDividerView.bottomAnchor),

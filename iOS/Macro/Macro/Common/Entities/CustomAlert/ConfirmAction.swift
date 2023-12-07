@@ -1,13 +1,13 @@
 //
-//  AddAction.swift
+//  ConfirmAction.swift
 //  Macro
 //
-//  Created by Byeon jinha on 12/6/23.
+//  Created by Byeon jinha on 12/7/23.
 //
 
 import Foundation
 
-struct AddAction {
+struct ConfirmAction {
     var text: String?
     var action: (() -> Void)?
 }

@@ -13,8 +13,8 @@ class AlertBuilder {
     
     private var alertTitle: String?
     private var message: String?
-    private var addActionConfirm: AddAction?
-    private var addActionCancel: AddAction?
+    private var addActionConfirm: ConfirmAction?
+    private var addActionCancel: CancelAction?
     
     init(viewController: UIViewController) {
         baseViewController = viewController
@@ -31,12 +31,12 @@ class AlertBuilder {
     }
     
     func addActionCancel(_ text: String, action: (() -> Void)? = nil) -> AlertBuilder {
-        addActionCancel = AddAction(text: text, action: action)
+        addActionCancel = CancelAction(text: text, action: action)
         return self
     }
     
     func addActionConfirm(_ text: String, action: (() -> Void)? = nil) -> AlertBuilder {
-        addActionConfirm = AddAction(text: text, action: action)
+        addActionConfirm = ConfirmAction(text: text, action: action)
         return self
     }
     
@@ -47,8 +47,9 @@ class AlertBuilder {
         
         alertViewController.alertTitle = alertTitle
         alertViewController.message = message
-        alertViewController.addActionConfirm = addActionConfirm
         alertViewController.addActionCancel = addActionCancel
+        alertViewController.addActionConfirm = addActionConfirm
+
         baseViewController.present(alertViewController, animated: true)
         return self
     }

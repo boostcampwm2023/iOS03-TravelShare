@@ -84,7 +84,7 @@
 		BA6C6DFD2B05FFC500563B22 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DF12B05FFC500563B22 /* TabBarViewController.swift */; };
 		BA6C6DFE2B05FFC500563B22 /* TabBarOpacityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DF22B05FFC500563B22 /* TabBarOpacityView.swift */; };
 		BA8742F02B204C2800DBDE03 /* CustomAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8742EF2B204C2800DBDE03 /* CustomAlertViewController.swift */; };
-		BA8742F32B204CA800DBDE03 /* AddAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8742F22B204CA800DBDE03 /* AddAction.swift */; };
+		BA8742F32B204CA800DBDE03 /* CancelAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8742F22B204CA800DBDE03 /* CancelAction.swift */; };
 		BA8742F52B204D0B00DBDE03 /* AlertBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8742F42B204D0B00DBDE03 /* AlertBuilder.swift */; };
 		BA8DC3F62B0B5D6000929E01 /* MacroDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = BA8DC3F52B0B5D6000929E01 /* MacroDesignSystem */; };
 		BA8DC3F82B0B5D6400929E01 /* MacroNetwork in Frameworks */ = {isa = PBXBuildFile; productRef = BA8DC3F72B0B5D6400929E01 /* MacroNetwork */; };
@@ -122,6 +122,7 @@
 		BAB24EEC2B16DE55000991A1 /* MapCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB24EEB2B16DE55000991A1 /* MapCollectionViewCell.swift */; };
 		BAB7E8412B1FA9A5009AF1EE /* ModalViewSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB7E8402B1FA9A5009AF1EE /* ModalViewSize.swift */; };
 		BABE98332B17C67300903F4F /* MyPageHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BABE98322B17C67300903F4F /* MyPageHeaderView.swift */; };
+		BADAC4CA2B21DBE40010BBAD /* ConfirmAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADAC4C92B21DBE40010BBAD /* ConfirmAction.swift */; };
 		BADB1F0C2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADB1F0B2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift */; };
 		BAE3C5862B1995D200BF9798 /* LikePostResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE3C5852B1995D200BF9798 /* LikePostResponse.swift */; };
 		BAE3C5892B1996B200BF9798 /* UpdateLikeEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE3C5882B1996B200BF9798 /* UpdateLikeEndPoint.swift */; };
@@ -262,7 +263,7 @@
 		BA6C6DF12B05FFC500563B22 /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		BA6C6DF22B05FFC500563B22 /* TabBarOpacityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarOpacityView.swift; sourceTree = "<group>"; };
 		BA8742EF2B204C2800DBDE03 /* CustomAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlertViewController.swift; sourceTree = "<group>"; };
-		BA8742F22B204CA800DBDE03 /* AddAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAction.swift; sourceTree = "<group>"; };
+		BA8742F22B204CA800DBDE03 /* CancelAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelAction.swift; sourceTree = "<group>"; };
 		BA8742F42B204D0B00DBDE03 /* AlertBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertBuilder.swift; sourceTree = "<group>"; };
 		BA8DC3F32B0B5D3F00929E01 /* MacroDesignSystem */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = MacroDesignSystem; path = ../MacroDesignSystem; sourceTree = "<group>"; };
 		BA8DC3F42B0B5D4300929E01 /* MacroNetwork */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = MacroNetwork; path = ../MacroNetwork; sourceTree = "<group>"; };
@@ -298,6 +299,7 @@
 		BAB24EEB2B16DE55000991A1 /* MapCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCollectionViewCell.swift; sourceTree = "<group>"; };
 		BAB7E8402B1FA9A5009AF1EE /* ModalViewSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalViewSize.swift; sourceTree = "<group>"; };
 		BABE98322B17C67300903F4F /* MyPageHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageHeaderView.swift; sourceTree = "<group>"; };
+		BADAC4C92B21DBE40010BBAD /* ConfirmAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmAction.swift; sourceTree = "<group>"; };
 		BADB1F0B2B0B72AE0001CCD9 /* NetworkUnresearchableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUnresearchableViewController.swift; sourceTree = "<group>"; };
 		BAE3C5852B1995D200BF9798 /* LikePostResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikePostResponse.swift; sourceTree = "<group>"; };
 		BAE3C5882B1996B200BF9798 /* UpdateLikeEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateLikeEndPoint.swift; sourceTree = "<group>"; };
@@ -874,7 +876,8 @@
 		BA8742F12B204C9900DBDE03 /* CustomAlert */ = {
 			isa = PBXGroup;
 			children = (
-				BA8742F22B204CA800DBDE03 /* AddAction.swift */,
+				BA8742F22B204CA800DBDE03 /* CancelAction.swift */,
+				BADAC4C92B21DBE40010BBAD /* ConfirmAction.swift */,
 			);
 			path = CustomAlert;
 			sourceTree = "<group>";
@@ -1531,12 +1534,13 @@
 				D241DC7A2B0DA0C00037DDB6 /* PostEndPoint.swift in Sources */,
 				BA90CB862B0F3BF600365AE2 /* PostContentView.swift in Sources */,
 				BAB24ED72B15D3D7000991A1 /* CoreDataManager.swift in Sources */,
+				BADAC4CA2B21DBE40010BBAD /* ConfirmAction.swift in Sources */,
 				AAD0B31C2B171171003B4D5F /* Cotent.swift in Sources */,
 				D241DC752B0DA00F0037DDB6 /* Writer.swift in Sources */,
 				BA24D7432B1E52F200BA8EB5 /* RecordedPinnedLocation.swift in Sources */,
 				BA33AA892B0AF9F30065D1E0 /* HomeViewController.swift in Sources */,
 				D2CAA5CA2B1D8D1700E825BA /* InfoType.swift in Sources */,
-				BA8742F32B204CA800DBDE03 /* AddAction.swift in Sources */,
+				BA8742F32B204CA800DBDE03 /* CancelAction.swift in Sources */,
 				D21B101F2B17994100F2F84E /* ConfirmError.swift in Sources */,
 				BA90CB872B0F3BF600365AE2 /* PostCollectionView.swift in Sources */,
 				AAD0B3272B176832003B4D5F /* PostUploadResponse.swift in Sources */,
