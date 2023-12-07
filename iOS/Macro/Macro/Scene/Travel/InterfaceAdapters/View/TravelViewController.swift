@@ -24,7 +24,6 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
     private let inputSubject: PassthroughSubject<TravelViewModel.Input, Never> = .init()
     private let viewModel: TravelViewModel
     private var polyline: NMFPolylineOverlay?
-    private let locationManager = LocationManager.shared
     private let routeTableViewController: RouteModalViewController
     private var isTraveling = false {
         didSet {
@@ -348,7 +347,7 @@ extension TravelViewController {
     }
     
     private func waitForValidLocation() {
-        locationManager.locationPublisher
+        LocationManager.shared.locationPublisher
             .filter { $0.horizontalAccuracy > 0 && $0.horizontalAccuracy < 100 }
             .first()
             .receive(on: RunLoop.main)
