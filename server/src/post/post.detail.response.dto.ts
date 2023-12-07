@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
   IsBoolean,
-  IsDate,
+  IsDateString,
   IsInt,
   IsObject,
   IsOptional,
@@ -11,11 +11,11 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { UserProfileSimpleResponse } from 'user/user.profile.simple.response.dto';
-import { RouteCoordinates } from '../route/route.coordinates.dto';
-import { PostContentElementBase } from './post.content.element.base.dto';
-import { PlaceBase } from './place.base.dto';
+import { PostContentElementBase } from 'post/post.content.element.base.dto';
+import { RouteCoordinates } from 'route/route.coordinates.dto';
+import { PlaceBase } from 'post/place.base.dto';
 
 export class PostDetailElement extends PostContentElementBase {}
 
@@ -80,11 +80,17 @@ export class PostDetailResponse {
   viewNum: number;
 
   @ApiProperty({ description: '생성' })
-  @IsDate()
+  @Transform(({ value }) =>
+    value instanceof Date ? value.toISOString() : value,
+  )
+  @IsDateString()
   createdAt: Date;
 
   @ApiProperty({ description: '수정' })
-  @IsDate()
+  @Transform(({ value }) =>
+    value instanceof Date ? value.toISOString() : value,
+  )
+  @IsDateString()
   modifiedAt: Date;
 
   @ApiProperty({ description: '좋아요 여부' })
