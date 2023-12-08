@@ -285,8 +285,9 @@ export class PostCacheRepository {
     return (
       await this.redisService.zRange(
         this.REDIS_POST_TOP_SCORE_ZSET_KEY,
-        -(skip + take),
-        -skip
+        skip,
+        skip + take,
+        { reverse: true },
       )
     ).map((value) => parseInt(value));
   }
