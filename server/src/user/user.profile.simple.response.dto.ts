@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsOptional, IsString, IsUrl } from 'class-validator';
+import { IsBoolean, IsEmail, IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class UserProfileSimpleResponse {
   @ApiProperty({ description: '작성자 email' })
@@ -17,9 +17,11 @@ export class UserProfileSimpleResponse {
 
   @ApiProperty({ description: '팔로우 여부', required: false })
   @IsOptional()
+  @IsBoolean()
   followee?: boolean;
 
   @ApiProperty({ description: '팔로워 여부', required: false })
   @IsOptional()
+  @IsBoolean()
   follower?: boolean;
 }
