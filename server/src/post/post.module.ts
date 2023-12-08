@@ -9,6 +9,7 @@ import { Place } from 'entities/place.entity';
 import { User } from 'entities/user.entity';
 import { ConfigManagerModule } from 'config/config.manager.module';
 import { PostConfig } from './post.config.dto';
+import { PostCacheRepository } from './post.cache.repository';
 
 @Module({
   imports: [
@@ -19,6 +20,6 @@ import { PostConfig } from './post.config.dto';
     }),
   ],
   controllers: [PostController],
-  providers: [PostService],
+  providers: [PostService, PostCacheRepository],
 })
 export class PostModule {}
