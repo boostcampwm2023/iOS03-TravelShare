@@ -68,6 +68,7 @@
 		BA33AA852B0AF9F30065D1E0 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA742B0AF9F20065D1E0 /* HomeViewModel.swift */; };
 		BA33AA892B0AF9F30065D1E0 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA792B0AF9F20065D1E0 /* HomeViewController.swift */; };
 		BA33AA8C2B0AF9F30065D1E0 /* HomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AA7C2B0AF9F20065D1E0 /* HomeHeaderView.swift */; };
+		BA4928E32B22B0C4009FC354 /* PostFindResponse+Hashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4928E22B22B0C4009FC354 /* PostFindResponse+Hashable.swift */; };
 		BA57BB682B2068AF00171F4E /* RevokeUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA57BB672B2068AF00171F4E /* RevokeUseCase.swift */; };
 		BA57BB6A2B20696200171F4E /* RevokeEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA57BB692B20696200171F4E /* RevokeEndPoint.swift */; };
 		BA57BB6C2B206AE200171F4E /* AppleRevokeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA57BB6B2B206AE200171F4E /* AppleRevokeResponse.swift */; };
@@ -247,6 +248,7 @@
 		BA33AA752B0AF9F20065D1E0 /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		BA33AA792B0AF9F20065D1E0 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		BA33AA7C2B0AF9F20065D1E0 /* HomeHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeHeaderView.swift; sourceTree = "<group>"; };
+		BA4928E22B22B0C4009FC354 /* PostFindResponse+Hashable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PostFindResponse+Hashable.swift"; sourceTree = "<group>"; };
 		BA57BB672B2068AF00171F4E /* RevokeUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevokeUseCase.swift; sourceTree = "<group>"; };
 		BA57BB692B20696200171F4E /* RevokeEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevokeEndPoint.swift; sourceTree = "<group>"; };
 		BA57BB6B2B206AE200171F4E /* AppleRevokeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleRevokeResponse.swift; sourceTree = "<group>"; };
@@ -1252,6 +1254,7 @@
 				BAE3C58C2B1AF58000BF9798 /* FollowPatchResponse */,
 				D241DC732B0DA00F0037DDB6 /* Writer.swift */,
 				D241DC742B0DA00F0037DDB6 /* PostFindResponse.swift */,
+				BA4928E22B22B0C4009FC354 /* PostFindResponse+Hashable.swift */,
 				BAB24EDA2B1633B2000991A1 /* ProfileGetResponse.swift */,
 				D21B100D2B16E73200F2F84E /* UserProfile.swift */,
 				D21B10182B176B2700F2F84E /* PatchResponse.swift */,
@@ -1622,6 +1625,7 @@
 				D2CAA5DF2B1E51CF00E825BA /* UserResultCell.swift in Sources */,
 				BA90CBA02B145D6600365AE2 /* FollowUseCase.swift in Sources */,
 				BA6C6DFC2B05FFC500563B22 /* TabComponentView.swift in Sources */,
+				BA4928E32B22B0C4009FC354 /* PostFindResponse+Hashable.swift in Sources */,
 				D263CA262B04147E00B4A144 /* TravelViewController.swift in Sources */,
 				BAB24ED82B15D3D7000991A1 /* CoreDataStack.swift in Sources */,
 				BA90CB932B10997D00365AE2 /* UserInfoHeaderView.swift in Sources */,

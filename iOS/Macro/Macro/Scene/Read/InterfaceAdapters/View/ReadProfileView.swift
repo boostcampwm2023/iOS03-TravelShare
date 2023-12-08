@@ -95,8 +95,7 @@ extension ReadProfileView {
                 if let image = profileImage {
                     self?.profileImageView.image = image
                 } else {
-                    let defaultImage = UIImage.appImage(.ProfileDefaultImage)
-                    self?.profileImageView.image = defaultImage
+                    self?.profileImageView.image = UIImage.appImage(.ProfileDefaultImage)
                 }
             }
             self?.userNameLabel.text = writer.name
@@ -137,7 +136,8 @@ extension ReadProfileView {
 
 private extension ReadProfileView {
     @objc private func profileImageTap(_ sender: UITapGestureRecognizer) {
-        inputSubject.send(.searchUser)
+        guard let userId: String = self.userNameLabel.text else { return }
+        inputSubject.send(.searchUser(userId))
     }
 }
 

@@ -225,7 +225,7 @@ extension LocationInfoViewController {
 
 extension LocationInfoViewController {
     
-    private func updateRelatedPost(_ posts: [PostFindResponse]) {
+    private func updateRelatedPost(_ posts: [PostFindResponseHashable]) {
         postCollectionView.viewModel.posts = posts
         postCollectionView.reloadData()
     }
