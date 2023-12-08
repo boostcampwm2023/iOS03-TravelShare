@@ -117,22 +117,25 @@ extension PostCollectionViewModel {
         guard let url = URL(string: profileImageStringURL) else { return }
         
         let urlRequest = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad)
-        
         if let cachedResponse = URLCache.shared.cachedResponse(for: URLRequest(url: url)) {
             let image = UIImage(data: cachedResponse.data)
             DispatchQueue.main.async {
                 completion(image)
             }
         } else {
-            self.dataTask = URLSession.shared.dataTask(with: urlRequest) { data, response, _ in
+            self.dataTask = URLSession.shared.dataTask(with: urlRequest) { data, response, error in
                 if let data = data, let image = UIImage(data: data) {
+                    
                     let cachedResponse = CachedURLResponse(response: response!, data: data)
                                        URLCache.shared.storeCachedResponse(cachedResponse, for: URLRequest(url: url))
                     DispatchQueue.main.async {
                         completion(image)
                     }
                 } else {
-                    completion(nil)
+                    Log.make().debug("IsCancel \(error)")
+                    self.startDataLoading(url: urlRequest) { image in
+                        completion(image)
+                    }
                 }
             }
             self.dataTask?.resume()
@@ -140,9 +143,31 @@ extension PostCollectionViewModel {
     }
     
     func cancelLoadingImage(itemName: String?) {
-        print("cancel \(itemName)")
         dataTask?.cancel()
         dataTask = nil
+    }
+    
+    func startDataLoading(url: URLRequest, completion: @escaping (UIImage?) -> Void) {
+        if dataTask?.state == .canceling {
+            let newDataTask = URLSession.shared.dataTask(with: url) { data, response, error in
+                if let data = data, let image = UIImage(data: data) {
+                    
+                    let cachedResponse = CachedURLResponse(response: response!, data: data)
+                                       URLCache.shared.storeCachedResponse(cachedResponse, for: url)
+                    DispatchQueue.main.async {
+                        completion(image)
+                    }
+                } else {
+                    Log.make().debug("IsCancel \(error)")
+                }
+            }
+            newDataTask.resume()
+            dataTask = newDataTask
+        } else {
+            DispatchQueue.main.async {
+                completion(UIImage.appImage(.DisConnectWifi))
+            }
+        }
     }
 }
 

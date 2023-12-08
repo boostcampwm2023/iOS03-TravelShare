@@ -93,12 +93,11 @@ extension PostCollectionView: UICollectionViewDelegate {
 
 // MARK: - UICollectionViewDataSource Delegate
 
-extension PostCollectionView {
+private extension PostCollectionView {
     func configureDataSource() {
         let cellRegistration = UICollectionView.CellRegistration
         <PostCollectionViewCell, PostFindResponseHashable> { (cell, indexPath, item) in
             cell.delegate = self.postDelegate
-            print("configure: \(item.postFindResponse.title)")
             cell.configure(item: item, viewModel: self.viewModel)
         }
         
@@ -109,6 +108,9 @@ extension PostCollectionView {
         
     }
     
+}
+
+internal extension PostCollectionView {
     func performQuery() {
         let posts: [PostFindResponseHashable] = viewModel.posts
         var snapshot = NSDiffableDataSourceSnapshot<Section, PostFindResponseHashable>()
