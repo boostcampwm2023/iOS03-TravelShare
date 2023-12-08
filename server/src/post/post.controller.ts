@@ -92,7 +92,10 @@ export class PostController {
     @Query() query: PostHitsQuery,
     @AuthenticatedUser() user: Authentication,
   ) {
-    return await this.postService.hits(query, user);
+    return await this.postService.list(
+      { ...query, sortBy: query.sortBy === 'hot' ? 'top' : 'latest' },
+      user,
+    );
   }
 
   @ApiOperation({
