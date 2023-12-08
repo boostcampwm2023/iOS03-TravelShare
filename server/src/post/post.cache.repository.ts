@@ -304,6 +304,7 @@ export class PostCacheRepository {
         },
       })
     ).map(({ postId, score }) => ({ value: postId, score }));
+    await this.redisService.del(this.REDIS_POST_TOP_SCORE_ZSET_KEY);
     await this.redisService.zAdd(
       this.REDIS_POST_TOP_SCORE_ZSET_KEY,
       ...postIdAndScores,
