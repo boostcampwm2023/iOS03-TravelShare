@@ -12,7 +12,7 @@ final class UserInfoViewModel: ViewModelProtocol {
     
     // MARK: - Properties
     
-    var posts: [PostFindResponse] = []
+    var posts: [PostFindResponseHashable] = []
     var userProfile: UserProfile = UserProfile(email: "", name: "", imageUrl: nil, introduce: nil, followersNum: 0, followeesNum: 0, followee: false, follower: false)
     var searchUserEmail = ""
     private var cancellables = Set<AnyCancellable>()
@@ -47,7 +47,7 @@ final class UserInfoViewModel: ViewModelProtocol {
         case navigateToReadView(Int)
         case updateFollowResult(FollowResponse, Bool)
         case updateUserProfile(UserProfile)
-        case updateUserPost([PostFindResponse])
+        case updateUserPost([PostFindResponseHashable])
         case updatePostLike(LikePostResponse)
         case updateUserFollow(FollowPatchResponse)
     }
@@ -101,8 +101,10 @@ extension UserInfoViewModel {
     private func searchPost() {
         searcher.searchPost(query: searchUserEmail, postCount: posts.count).sink { _ in
         } receiveValue: { [weak self] response in
-            self?.posts = response
-            self?.outputSubject.send(.updateUserPost(response))
+            let sortedResponse = response.sorted { $0.postId > $1.postId }
+            let sortedResponseHashable = sortedResponse.map { PostFindResponseHashable(postFindResponse: $0) }
+            self?.posts = sortedResponseHashable
+            self?.outputSubject.send(.updateUserPost(sortedResponseHashable))
         }.store(in: &cancellables)
     }
     

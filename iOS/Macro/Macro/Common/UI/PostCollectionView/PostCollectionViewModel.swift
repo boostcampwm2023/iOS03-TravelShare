@@ -12,7 +12,9 @@ import UIKit
 
 final class PostCollectionViewModel: ViewModelProtocol {
     
-    var posts: [PostFindResponse] = []
+    var dataSource: UICollectionViewDiffableDataSource<Section, PostFindResponseHashable>!
+    private var dataTask: URLSessionDataTask?
+    var posts: [PostFindResponseHashable] = []
     private let outputSubject = PassthroughSubject<Output, Never>()
     private var cancellables = Set<AnyCancellable>()
     let followFeatrue: FollowUseCase
@@ -66,9 +68,9 @@ extension PostCollectionViewModel {
     }
     
     func increasePostView(_ postId: Int) {
-        if let index = posts.firstIndex(where: { $0.postId == postId }) {
-            posts[index].viewNum += 1
-            outputSubject.send(.updatePostView(postId, posts[index].viewNum))
+        if let index = posts.firstIndex(where: { $0.postFindResponse.postId == postId }) {
+            posts[index].postFindResponse.viewNum += 1
+            outputSubject.send(.updatePostView(postId, posts[index].postFindResponse.viewNum))
         }
     }
     
@@ -76,9 +78,9 @@ extension PostCollectionViewModel {
         let publisher: AnyPublisher<[PostFindResponse], NetworkError>
         
         switch sceneType {
-        case .home: 
+        case .home:
             publisher = postSearcher.fetchHitPost(postCount: posts.count)
-        case .relatedPost: 
+        case .relatedPost:
             publisher = postSearcher.searchRelatedPost(query: query ?? "", postCount: posts.count)
         case .searchPostTitle:
             publisher = postSearcher.searchPostTitle(query: query ?? "", postCount: posts.count)
@@ -90,10 +92,12 @@ extension PostCollectionViewModel {
                 Log.make().error("\(error)")
             }
         } receiveValue: { [weak self] response in
-            if response.count < 10 {
+            let sortedResponse = response.sorted { $0.postId > $1.postId }
+            let sortedResponseHashable = sortedResponse.map { PostFindResponseHashable(postFindResponse: $0) }
+            if sortedResponseHashable.count < 10 {
                 self?.isLastPost = true
             }
-            self?.posts += response
+            self?.posts += sortedResponseHashable
             self?.outputSubject.send(.updatePostContnet)
         }.store(in: &cancellables)
     }
@@ -112,13 +116,15 @@ extension PostCollectionViewModel {
     func loadImage(profileImageStringURL: String, completion: @escaping (UIImage?) -> Void) {
         guard let url = URL(string: profileImageStringURL) else { return }
         
+        let urlRequest = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad)
+        
         if let cachedResponse = URLCache.shared.cachedResponse(for: URLRequest(url: url)) {
             let image = UIImage(data: cachedResponse.data)
             DispatchQueue.main.async {
                 completion(image)
             }
         } else {
-            URLSession.shared.dataTask(with: url) { data, response, _ in
+            self.dataTask = URLSession.shared.dataTask(with: urlRequest) { data, response, _ in
                 if let data = data, let image = UIImage(data: data) {
                     let cachedResponse = CachedURLResponse(response: response!, data: data)
                                        URLCache.shared.storeCachedResponse(cachedResponse, for: URLRequest(url: url))
@@ -128,7 +134,18 @@ extension PostCollectionViewModel {
                 } else {
                     completion(nil)
                 }
-            }.resume()
+            }
+            self.dataTask?.resume()
         }
     }
+    
+    func cancelLoadingImage(itemName: String?) {
+        print("cancel \(itemName)")
+        dataTask?.cancel()
+        dataTask = nil
+    }
 }
+
+    enum Section {
+        case main
+    }
