@@ -137,8 +137,7 @@ extension ReadProfileView {
 
 private extension ReadProfileView {
     @objc private func profileImageTap(_ sender: UITapGestureRecognizer) {
-        guard let userId: String = self.userNameLabel.text else { return }
-        inputSubject.send(.searchUser(userId))
+        inputSubject.send(.searchUser)
     }
 }
 

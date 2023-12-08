@@ -14,7 +14,6 @@ final class TravelViewModel: ViewModelProtocol {
     
     // MARK: - Properties
     
-    private var locationManager: LocationManager?
     private var currentTravel: TravelInfo?
     private let outputSubject = PassthroughSubject<Output, Never>()
     private let routeRecorder: RouteRecordUseCase
@@ -103,10 +102,8 @@ extension TravelViewModel {
          routeRecorder.startRecording()
          routeRecorder.locationPublisher
          */
-        locationManager = LocationManager.shared
-        
         generateTravel()
-        locationManager?.locationPublisher
+        LocationManager.shared.locationPublisher
             .sink { [weak self] location in
                 guard let self = self else { return }
                 self.savedRoute.routePoints.append(location)
@@ -158,8 +155,9 @@ extension TravelViewModel {
                                           startAt: startAt,
                                           endAt: endAt)
         routeRecorder.stopRecording()
+    
+        LocationManager.shared.stopRecording()
         
-        locationManager = nil
     }
     
     private func searchPlace(with text: String) {

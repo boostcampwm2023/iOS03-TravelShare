@@ -24,7 +24,6 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
     private let inputSubject: PassthroughSubject<TravelViewModel.Input, Never> = .init()
     private let viewModel: TravelViewModel
     private var polyline: NMFPolylineOverlay?
-    private let locationManager = LocationManager.shared
     private let routeTableViewController: RouteModalViewController
     private var isTraveling = false {
         didSet {
@@ -33,7 +32,7 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
     }
     // MARK: - UI Components
     
-    private let mapView: NMFMapView = {
+    lazy var mapView: NMFMapView = {
         let mapView = NMFMapView()
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.positionMode = .normal
@@ -92,6 +91,7 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
         updateMyLocationButton()
         searchBar.addTarget(self, action: #selector(searchBarReturnPressed), for: .editingDidEndOnExit)
         hideKeyboardWhenTappedAround()
+      //  waitForValidLocation()
     }
     
     override func viewWillLayoutSubviews() {
@@ -282,7 +282,6 @@ extension TravelViewController {
     
     private func updateMapWithLocation(_ newLocation: CLLocation) {
         let newCoord = NMGLatLng(lat: newLocation.coordinate.latitude, lng: newLocation.coordinate.longitude)
-        
         if polyline == nil {
             polyline = NMFPolylineOverlay([newCoord, newCoord])
             polyline?.mapView = mapView
@@ -347,6 +346,18 @@ extension TravelViewController {
         }
     }
     
+    private func waitForValidLocation() {
+        LocationManager.shared.locationPublisher
+            .filter { $0.horizontalAccuracy > 0 && $0.horizontalAccuracy < 100 }
+            .first()
+            .receive(on: RunLoop.main)
+            .sink { [weak self] location in
+                guard location.coordinate.latitude != 0.0, location.coordinate.longitude != 0.0 else { return }
+                self?.moveCamera()
+            }
+            .store(in: &cancellables)
+    }
+    
     @objc private func travelButtonTapped(_ sender: UITapGestureRecognizer) {
         inputSubject.send(.startTravel)
         isTraveling = true
@@ -358,8 +369,12 @@ extension TravelViewController {
     }
     
     @objc private func myLocationButtonTapped(_ sender: UITapGestureRecognizer) {
+       moveCamera()
+    }
+    
+    private func moveCamera() {
         let currentLocation = LocationManager.shared.locationPublisher.value
-          let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: currentLocation.coordinate.latitude, lng: currentLocation.coordinate.longitude))
+        let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: currentLocation.coordinate.latitude, lng: currentLocation.coordinate.longitude))
           cameraUpdate.animation = .easeIn
           mapView.moveCamera(cameraUpdate)
     }
