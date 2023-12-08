@@ -91,7 +91,7 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
         updateMyLocationButton()
         searchBar.addTarget(self, action: #selector(searchBarReturnPressed), for: .editingDidEndOnExit)
         hideKeyboardWhenTappedAround()
-        waitForValidLocation()
+      //  waitForValidLocation()
     }
     
     override func viewWillLayoutSubviews() {
