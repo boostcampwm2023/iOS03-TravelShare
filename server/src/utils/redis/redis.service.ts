@@ -146,8 +146,15 @@ export class RedisService {
     );
   }
 
-  async zRange(key: string, min: number, max: number) {
-    return await this.client.zRange(key, min, max);
+  async zRange(
+    key: string,
+    min: number,
+    max: number,
+    options?: { reverse?: boolean },
+  ) {
+    return await this.client.zRange(key, min, max, {
+      REV: options?.reverse ? true : undefined,
+    });
   }
 
   async zScore(key: string, member: any) {
