@@ -63,6 +63,8 @@ final class PostProfileView: UIView {
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
+        
+        imageView.layer.cornerRadius = 18
         imageView.clipsToBounds = true
         return imageView
     }()
@@ -83,7 +85,7 @@ final class PostProfileView: UIView {
     @objc private func profileImageTap(_ sender: UITapGestureRecognizer) {
         guard let indexPath = indexPath else { return }
         guard let viewModel = viewModel else { return }
-        let email = viewModel.posts[indexPath.row].writer.email
+        let email = viewModel.posts[indexPath.row].postFindResponse.writer.email
         viewModel.navigateToProfileView(email: email)
         
         let userInfoViewModel = UserInfoViewModel(postSearcher: viewModel.postSearcher,
@@ -165,11 +167,11 @@ extension PostProfileView {
 // MARK: - Method
 
 extension PostProfileView {
-    func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?) {
+    func configure(item: PostFindResponseHashable, viewModel: PostCollectionViewModel?) {
         self.viewModel = viewModel
         guard let viewModel = self.viewModel else { return }
 
-        if let imageUrl = item.writer.imageUrl, isValidUrl(urlString: imageUrl) {
+        if let imageUrl = item.postFindResponse.writer.imageUrl, isValidUrl(urlString: imageUrl) {
             viewModel.loadImage(profileImageStringURL: imageUrl) { [weak self] image in
                 DispatchQueue.main.async {
                     if let image = image {
@@ -183,12 +185,12 @@ extension PostProfileView {
             setDefaultProfileImage()
         }
 
-        userNameLabel.text = item.writer.name
-        likeImageView.image = item.liked ? LikeImage.liked : LikeImage.unliked
-        likeImageView.tintColor = item.liked ? LikeColor.liked : LikeColor.unliked
-        likeCountLabel.text = "\(item.likeNum)"
-        viewCountLabel.text = "\(item.viewNum)"
-        postId = item.postId
+        userNameLabel.text = item.postFindResponse.writer.name
+        likeImageView.image = item.postFindResponse.liked ? LikeImage.liked : LikeImage.unliked
+        likeImageView.tintColor = item.postFindResponse.liked ? LikeColor.liked : LikeColor.unliked
+        likeCountLabel.text = "\(item.postFindResponse.likeNum)"
+        viewCountLabel.text = "\(item.postFindResponse.viewNum)"
+        postId = item.postFindResponse.postId
     }
     private func setDefaultProfileImage() {
         let defaultImage = UIImage.appImage(.ProfileDefaultImage)
@@ -197,7 +199,6 @@ extension PostProfileView {
 
     private func setProfileImage(_ image: UIImage?) {
         profileImageView.image = image
-        profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
     }
     
     func resetContents() {

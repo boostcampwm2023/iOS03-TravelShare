@@ -12,6 +12,7 @@ import UIKit
 final class PostContentView: UIView {
     
     // MARK: - Properties
+    
     private var imageUrl: String?
     private var cancellables = Set<AnyCancellable>()
     var viewModel: PostCollectionViewModel?
@@ -135,17 +136,17 @@ extension PostContentView {
         addTapGesture()
     }
     
-    func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?) {
+    func configure(item: PostFindResponseHashable, viewModel: PostCollectionViewModel?) {
         self.viewModel = viewModel
         guard let viewModel = self.viewModel else { return }
         
-        if let imageUrl = item.imageUrl, isValidUrl(urlString: imageUrl) {
-            viewModel.loadImage(profileImageStringURL: imageUrl) { [weak self] image in
+        if let imageUrl = item.postFindResponse.imageUrl {
+            viewModel.loadImage(profileImageStringURL: imageUrl) { image in
                 DispatchQueue.main.async {
                     if let image = image {
-                        self?.setProfileImage(image)
+                        self.setProfileImage(image)
                     } else {
-                        self?.setDefaultProfileImage()
+                        self.setDefaultProfileImage()
                     }
                 }
             }
@@ -153,9 +154,9 @@ extension PostContentView {
             setDefaultProfileImage()
         }
         
-        title.text = item.title
-        summary.text = item.summary
-        postId = item.postId
+        title.text = item.postFindResponse.title
+        summary.text = item.postFindResponse.summary
+        postId = item.postFindResponse.postId
     }
     private func setDefaultProfileImage() {
         let defaultImage = UIImage.appImage(.ProfileDefaultImage)

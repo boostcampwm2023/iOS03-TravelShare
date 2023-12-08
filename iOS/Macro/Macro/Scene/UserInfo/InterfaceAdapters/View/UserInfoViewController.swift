@@ -121,7 +121,7 @@ private extension UserInfoViewController {
         userInfoHeaderView.updateFollow(item: result)
     }
     
-    private func updateUserPost(_ result: [PostFindResponse]) {
+    private func updateUserPost(_ result: [PostFindResponseHashable]) {
         postCollectionView.viewModel.posts = result
         postCollectionView.reloadData()
     }

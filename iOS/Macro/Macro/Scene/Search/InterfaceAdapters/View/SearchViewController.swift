@@ -167,7 +167,9 @@ extension SearchViewController {
     }
     
     func updatePostSearchResult(_ result: [PostFindResponse]) {
-        postCollectionView.viewModel.posts = result
+        let sortedResult = result.sorted { $0.postId > $1.postId }
+        let sortedResultHashable = sortedResult.map { PostFindResponseHashable(postFindResponse: $0) }
+        postCollectionView.viewModel.posts = sortedResultHashable
         postCollectionView.reloadData()
     }
     
