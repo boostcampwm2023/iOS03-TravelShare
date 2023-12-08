@@ -11,6 +11,7 @@ import { RouteModule } from './route/route.module';
 import { LoggerModule } from 'logger/logger.module';
 import { SentimentModule } from 'sentiment/sentiment.module';
 import { ConfigManagerModule } from 'config/config.manager.module';
+import { ReportModule } from 'report/report.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ConfigManagerModule } from 'config/config.manager.module';
     FileModule,
     LoggerModule,
     SentimentModule,
+    ReportModule,
   ],
   controllers: [AppController],
   providers: [AppService],
