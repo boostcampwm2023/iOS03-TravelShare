@@ -31,7 +31,7 @@ export class KeywordAutoCompleteService {
         typeof (await this.redisService.zScore(this.context, word)) === 'number'
       )
     ) {
-      await this.redisService.zAdd(this.context, word, 0);
+      await this.redisService.zAdd(this.context, { value: word, score: 0 });
     }
   }
 
