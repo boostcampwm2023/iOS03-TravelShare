@@ -46,6 +46,14 @@ final class ReadViewController: UIViewController {
         return label
     }()
     
+    private lazy var reportButtomImageView: UIImageView = {
+        let image: UIImage? = UIImage.appImage(.exclamationmarkBubble)
+        let imageView = UIImageView(image: image)
+        imageView.tintColor = UIColor.appColor(.purple4)
+        return imageView
+    }()
+    
+    
     private lazy var carouselView: MacroCarouselView = MacroCarouselView(
         didScrollOutputSubject: didScrollSubject,
         inputSubject: inputSubject,
@@ -117,6 +125,17 @@ final class ReadViewController: UIViewController {
         likeImageView.isUserInteractionEnabled = false
         inputSubject.send(.likeImageTap)
     }
+    
+    @objc private func reportButtonTouched(_ sender: UITapGestureRecognizer) {
+        AlertBuilder(viewController: self)
+            .setTitle("신고하기")
+            .setMessage("정말 게시물을 신고 되었습니다.")
+            .addActionConfirm("확인") {
+                guard let userId = self.readPost?.writer.email, let postId = self.readPost?.postId else { return }
+                self.inputSubject.send(.reportPost(userId, "\(postId)"))
+            }
+            .show()
+    }
 }
 
 // MARK: - UI Settings
@@ -134,6 +153,7 @@ private extension ReadViewController {
         viewImageView.translatesAutoresizingMaskIntoConstraints = false
         viewCountLabel.translatesAutoresizingMaskIntoConstraints = false
         mapView.translatesAutoresizingMaskIntoConstraints = false
+        reportButtomImageView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     func addSubviews() {
@@ -147,7 +167,8 @@ private extension ReadViewController {
             likeCountLabel,
             viewImageView,
             viewCountLabel,
-            mapView
+            mapView,
+            reportButtomImageView
         ].forEach { self.scrollContentView.addSubview($0) }
     }
     
@@ -162,6 +183,11 @@ private extension ReadViewController {
             postProfile.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 10),
             postProfile.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -10),
             postProfile.heightAnchor.constraint(equalToConstant: 50),
+            
+            reportButtomImageView.topAnchor.constraint(equalTo: scrollContentView.topAnchor),
+            reportButtomImageView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -20),
+            reportButtomImageView.heightAnchor.constraint(equalToConstant: 30),
+            reportButtomImageView.widthAnchor.constraint(equalToConstant: 30),
             
             titleLabel.topAnchor.constraint(equalTo: postProfile.bottomAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor),
@@ -208,6 +234,10 @@ private extension ReadViewController {
         likeImageView.isUserInteractionEnabled = true
         let likeImageViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(likeImageViewTap(_:)))
         likeImageView.addGestureRecognizer(likeImageViewTapGesture)
+        
+        reportButtomImageView.isUserInteractionEnabled = true
+        let reportTapGesture = UITapGestureRecognizer(target: self, action: #selector(reportButtonTouched(_:)))
+        reportButtomImageView.addGestureRecognizer(reportTapGesture)
     }
 }
 
