@@ -199,6 +199,7 @@ extension PostProfileView {
 
     private func setProfileImage(_ image: UIImage?) {
         profileImageView.image = image
+        profileImageView.layer.cornerRadius = 18
     }
     
     func resetContents() {
