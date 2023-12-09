@@ -219,14 +219,14 @@ extension TravelViewController {
     }
     
     func updateMyLocationButton() {
-        let locationImage = UIImage.appImage(.location)?.withRenderingMode(.alwaysTemplate)
+        let locationImage = UIImage.appImage(.scope)?.withRenderingMode(.alwaysTemplate)
         let locationImageView = UIImageView(image: locationImage)
         
         locationImageView.translatesAutoresizingMaskIntoConstraints = false
         myLocationButtonView.addSubview(locationImageView)
         
         NSLayoutConstraint.activate([
-            locationImageView.widthAnchor.constraint(equalToConstant: 30),
+            locationImageView.widthAnchor.constraint(equalToConstant: 35),
             locationImageView.heightAnchor.constraint(equalToConstant: 30),
             locationImageView.centerXAnchor.constraint(equalTo: myLocationButtonView.centerXAnchor),
             locationImageView.centerYAnchor.constraint(equalTo: myLocationButtonView.centerYAnchor)
