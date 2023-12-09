@@ -260,6 +260,8 @@ extension TravelViewController {
                 self?.updateMarkers()
             case let .showLocationInfo(locationDetail):
                 self?.showLocationInfo(locationDetail)
+            case let .moveCamera(mapX, mapY):
+                self?.moveCameraToCoordinates(latitude: mapY, longitude: mapX)
             default: break
             }
         }.store(in: &cancellables)
@@ -277,6 +279,13 @@ extension TravelViewController {
             cameraUpdate.animation = .easeIn
             mapView.moveCamera(cameraUpdate)
         }
+    }
+    
+    private func moveCameraToCoordinates(latitude: Double, longitude: Double) {
+        let position = NMGLatLng(lat: latitude, lng: longitude)
+        let cameraUpdate = NMFCameraUpdate(scrollTo: position)
+        cameraUpdate.animation = .easeIn
+        mapView.moveCamera(cameraUpdate)
     }
     
     private func updateMapWithLocation(_ newLocation: CLLocation) {
@@ -324,7 +333,7 @@ extension TravelViewController {
             marker.position = NMGLatLng(lat: Double(place.mapy) ?? 0.0, lng: Double(place.mapx) ?? 0.0)
             marker.captionText = "\(index + 1). \(place.placeName)"
             marker.mapView = mapView
-
+            
             marker.touchHandler = { [weak self] _ in
                 self?.handleMarkerTap(marker)
                 return true
@@ -358,14 +367,14 @@ extension TravelViewController {
     }
     
     @objc private func myLocationButtonTapped(_ sender: UITapGestureRecognizer) {
-       moveCamera()
+        moveCamera()
     }
     
     private func moveCamera() {
         guard let currentLocation = LocationManager.shared.sendLocation else { return }
         let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: currentLocation.coordinate.latitude, lng: currentLocation.coordinate.longitude))
-          cameraUpdate.animation = .easeIn
-          mapView.moveCamera(cameraUpdate)
+        cameraUpdate.animation = .easeIn
+        mapView.moveCamera(cameraUpdate)
     }
     
     private func getSearchResult(_ locationDetails: [LocationDetail]) {

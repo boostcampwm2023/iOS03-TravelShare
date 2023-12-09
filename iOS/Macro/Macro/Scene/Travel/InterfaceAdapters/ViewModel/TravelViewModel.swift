@@ -34,6 +34,7 @@ final class TravelViewModel: ViewModelProtocol {
         case deleteLocation
         case togglePinnedPlaces(LocationDetail)
         case selectLocation(LocationDetail)
+        case selectSearchedcell(Double, Double)
     }
     
     // MARK: - Output
@@ -48,6 +49,7 @@ final class TravelViewModel: ViewModelProtocol {
         case updateRoute(CLLocation)
         case updateMarkers
         case showLocationInfo(LocationDetail)
+        case moveCamera(Double, Double)
     }
     
     // MARK: - Init
@@ -80,6 +82,8 @@ extension TravelViewModel {
                 self?.togglePinnedPlaces(locationDetail)
             case let .selectLocation(locationDetail):
                 self?.outputSubject.send(.showLocationInfo(locationDetail))
+            case let .selectSearchedcell(mapX, mapY):
+                self?.outputSubject.send(.moveCamera(mapX, mapY))
             }
         }.store(in: &cancellables)
         

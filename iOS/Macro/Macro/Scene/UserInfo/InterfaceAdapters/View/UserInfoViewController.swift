@@ -39,7 +39,6 @@ final class UserInfoViewController: TouchableViewController {
         inputSubject.send(.searchUserProfile(email: viewModel.searchUserEmail))
         setUpLayout()
         postCollectionView.postDelegate = self
-        print(1)
     }
     
     // MARK: - Init

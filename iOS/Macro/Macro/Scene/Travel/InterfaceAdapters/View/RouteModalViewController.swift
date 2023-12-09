@@ -201,4 +201,10 @@ extension RouteModalViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 40
     }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let locationInfo = viewModel.savedRoute.pinnedPlaces[indexPath.row]
+        guard let mapX = Double(locationInfo.mapx) else { return }
+        guard let mapY = Double(locationInfo.mapy) else { return }
+        inputSubject.send(.selectSearchedcell(mapX, mapY))
+    }
 }
