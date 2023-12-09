@@ -23,7 +23,6 @@ final class TravelViewModel: ViewModelProtocol {
     private (set) var savedRoute: SavedRoute = SavedRoute()
     private (set) var searchedResult: [LocationDetail] = []
     private var searchPageNum = 1
-    var firstSend: Bool = false
     
     // MARK: - Input
     

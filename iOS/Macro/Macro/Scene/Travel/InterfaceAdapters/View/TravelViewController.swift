@@ -352,8 +352,22 @@ extension TravelViewController {
     }
     
     @objc private func endTravelButtonTapped(_ sender: UITapGestureRecognizer) {
+        if viewModel.savedRoute.routePoints.isEmpty {
+            requireMoreLocation()
+            return
+        }
+        
         inputSubject.send(.endTravel)
         isTraveling = false
+    }
+    
+    private func requireMoreLocation() {
+        AlertBuilder(viewController: self)
+            .setTitle("경로")
+            .setMessage("이동하신 경로가 너무 짧습니다. 5초 이상 기록해주세요.")
+            .addActionCancel("확인") {
+            }
+            .show()
     }
     
     @objc private func myLocationButtonTapped(_ sender: UITapGestureRecognizer) {
