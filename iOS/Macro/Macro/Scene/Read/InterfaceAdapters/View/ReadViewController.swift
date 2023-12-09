@@ -53,7 +53,6 @@ final class ReadViewController: UIViewController {
         return imageView
     }()
     
-    
     private lazy var carouselView: MacroCarouselView = MacroCarouselView(
         didScrollOutputSubject: didScrollSubject,
         inputSubject: inputSubject,
@@ -131,8 +130,12 @@ final class ReadViewController: UIViewController {
             .setTitle("신고하기")
             .setMessage("정말 게시물을 신고 되었습니다.")
             .addActionConfirm("확인") {
-                guard let userId = self.readPost?.writer.email, let postId = self.readPost?.postId else { return }
-                self.inputSubject.send(.reportPost(userId, "\(postId)"))
+                guard let postId = self.readPost?.postId,
+                      let title = self.readPost?.title,
+                      let description = self.readPost?.writer.email
+                else { return }
+                self.inputSubject.send(.reportPost("\(postId)", title, description))
+              
             }
             .show()
     }
