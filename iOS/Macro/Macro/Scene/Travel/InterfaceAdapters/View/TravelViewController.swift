@@ -317,28 +317,18 @@ extension TravelViewController {
     }
     
     private func updateMarkers() {
-        // 기존 마커를 지도에서 제거하고 딕셔너리에서 삭제
         markers.values.forEach { $0.mapView = nil }
         markers.removeAll()
-
-        // 새로운 핀된 장소에 대한 마커 생성 및 설정
         for (index, place) in viewModel.savedRoute.pinnedPlaces.enumerated() {
             let marker = NMFMarker()
-            // 마커의 위치 설정
             marker.position = NMGLatLng(lat: Double(place.mapy) ?? 0.0, lng: Double(place.mapx) ?? 0.0)
-            // 마커의 캡션 설정
             marker.captionText = "\(index + 1). \(place.placeName)"
-            // 마커를 지도에 추가
             marker.mapView = mapView
 
-            // 선택적: 마커 터치 핸들러 설정
             marker.touchHandler = { [weak self] _ in
-                // 마커가 터치될 때 수행할 작업 (예: 상세 정보 표시)
                 self?.handleMarkerTap(marker)
                 return true
             }
-
-            // 마커를 딕셔너리에 저장
             markers[place] = marker
         }
     }
