@@ -90,7 +90,7 @@ extension TravelViewModel {
     }
     
     func togglePinnedPlaces(_ locationDetail: LocationDetail) {
-        if savedRoute.pinnedPlaces.contains(where: { $0.placeName == locationDetail.placeName }) {
+        if savedRoute.pinnedPlaces.contains(where: { $0.id == locationDetail.id}) {
             removePinnedPlace(locationDetail)
         } else {
             addPinnedPlace(locationDetail)
