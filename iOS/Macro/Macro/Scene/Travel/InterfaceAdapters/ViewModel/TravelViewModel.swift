@@ -23,6 +23,7 @@ final class TravelViewModel: ViewModelProtocol {
     private (set) var savedRoute: SavedRoute = SavedRoute()
     private (set) var searchedResult: [LocationDetail] = []
     private var searchPageNum = 1
+    var firstSend: Bool = false
     
     // MARK: - Input
     
@@ -106,6 +107,7 @@ extension TravelViewModel {
         LocationManager.shared.locationPublisher
             .sink { [weak self] location in
                 guard let self = self else { return }
+                guard let location = location else { return }
                 self.savedRoute.routePoints.append(location)
                 self.outputSubject.send(.updateRoute(location))
             }

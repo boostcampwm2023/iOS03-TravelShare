@@ -14,9 +14,9 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
     static let shared = LocationManager()
     private let locationManager = CLLocationManager()
     private var timer: Timer?
-    private var sendLocation: CLLocation?
+    var sendLocation: CLLocation?
     
-    var locationPublisher = CurrentValueSubject<CLLocation, Never>(.init())
+    lazy var locationPublisher = CurrentValueSubject<CLLocation?, Never>(sendLocation)
 
     // MARK: - Init
     private override init() {
