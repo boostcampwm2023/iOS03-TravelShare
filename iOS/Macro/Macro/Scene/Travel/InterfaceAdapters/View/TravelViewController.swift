@@ -170,7 +170,7 @@ extension TravelViewController {
         
         var image: UIImage?
         if isTravling {
-            image = UIImage.appImage(.pauseCircle)
+            image = UIImage.appImage(.stopCircle)
         } else {
             image = UIImage.appImage(.playCircle)
             
