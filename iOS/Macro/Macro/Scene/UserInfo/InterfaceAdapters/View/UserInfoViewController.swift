@@ -115,7 +115,6 @@ private extension UserInfoViewController {
 
 private extension UserInfoViewController {
     
-    
     private func updateUserProfile(_ result: UserProfile) {
         userInfoHeaderView.configure(item: result)
         userInfoHeaderView.updateFollow(item: result)

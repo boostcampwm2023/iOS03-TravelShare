@@ -100,10 +100,10 @@ extension UserInfoHeaderView {
         userInfoProfileView.configure(item: item)
         let myEmail = TokenManager.extractEmailFromJWTToken()
         if item.email == myEmail {
-            followButton.isEnabled = false
+            followButton.isHidden = true
         }
         else {
-            followButton.isEnabled = true
+            followButton.isEnabled = false
         }
     }
     

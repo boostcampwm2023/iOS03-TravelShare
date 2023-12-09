@@ -75,8 +75,9 @@ extension SearchResultViewController {
     }
 }
 
+// MARK: - Methods
+
 extension SearchResultViewController {
-    // MARK: - Methods
     
     @objc func pinLocation(_ sender: UIButton) {
         let location = viewModel.searchedResult[sender.tag]
