@@ -63,6 +63,10 @@ final class SearchViewController: TouchableViewController {
         return segmentControl
     }()
     
+    lazy var dataEmptyView: DataEmptyView = DataEmptyView(
+        emptyTitle: "검색 정보가 없습니다."
+    )
+    
     // MARK: - Life Cycle
         override func viewDidLoad() {
         super.viewDidLoad()
@@ -97,6 +101,7 @@ extension SearchViewController {
         searchSegment.translatesAutoresizingMaskIntoConstraints = false
         postCollectionView.translatesAutoresizingMaskIntoConstraints = false
         userResultCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        dataEmptyView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func addsubviews() {
@@ -104,6 +109,7 @@ extension SearchViewController {
         view.addSubview(searchSegment)
         view.addSubview(postCollectionView)
         view.addSubview(userResultCollectionView)
+        view.addSubview(dataEmptyView)
     }
     
     private func setLayoutConstraints() {
@@ -120,10 +126,17 @@ extension SearchViewController {
             postCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             postCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             postCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
             userResultCollectionView.topAnchor.constraint(equalTo: searchSegment.bottomAnchor, constant: Padding.postCollectionViewTop),
             userResultCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             userResultCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            userResultCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            userResultCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
+            dataEmptyView.topAnchor.constraint(equalTo: searchSegment.bottomAnchor, constant: Padding.postCollectionViewTop),
+            dataEmptyView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            dataEmptyView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            dataEmptyView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+
         ])
     }
     
@@ -148,6 +161,10 @@ extension SearchViewController {
                 self?.updateUserSearchResult(result)
             case let .transView(destinationViewType):
                 self?.transView(destinationViewType)
+            case let .transViewByUserListCount(isEmpty):
+                self?.transViewByUserListCount(isEmpty)
+            case let .transViewByPostsCount(isEmpty):
+                self?.transViewByPostsCount(isEmpty)
             }
         }.store(in: &cancellables)
         
@@ -159,9 +176,11 @@ extension SearchViewController {
     @objc private func segmentValueChanged(_ sender: UISegmentedControl) {
         
         let selectedType = sender.selectedSegmentIndex == 0 ? SearchType.account : SearchType.post
-        
-        postCollectionView.isHidden = selectedType != .post
-        userResultCollectionView.isHidden = selectedType != .account
+        DispatchQueue.main.async {
+            self.postCollectionView.isHidden = selectedType != .post || self.viewModel.posts.isEmpty
+            self.userResultCollectionView.isHidden = selectedType != .account || self.viewModel.userList.isEmpty
+            self.dataEmptyView.isHidden = (selectedType == .post && !self.viewModel.posts.isEmpty) || (selectedType == .account && !self.viewModel.userList.isEmpty)
+        }
         inputSubject.send(.changeSelectType(selectedType))
     }
     
@@ -182,6 +201,21 @@ extension SearchViewController {
     
     func transView(_ changeTabbarType: TabbarType) {
         tabBarOutputSubject.send(.changeTap(changeTabbarType))
+    }
+    
+    func transViewByUserListCount(_ isEmpty: Bool) {
+        DispatchQueue.main.async {
+            self.userResultCollectionView.isHidden = isEmpty
+            self.dataEmptyView.isHidden = !isEmpty
+        }
+        
+    }
+    
+    func transViewByPostsCount(_ isEmpty: Bool) {
+        DispatchQueue.main.async {
+            self.postCollectionView.isHidden = isEmpty
+            self.dataEmptyView.isHidden = !isEmpty
+        }
     }
 }
 

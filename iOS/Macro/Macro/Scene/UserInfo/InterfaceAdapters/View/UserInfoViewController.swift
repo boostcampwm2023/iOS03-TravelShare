@@ -21,14 +21,16 @@ final class UserInfoViewController: TouchableViewController {
     // MARK: - UI Components
     lazy var userInfoHeaderView: UserInfoHeaderView = UserInfoHeaderView(frame: .zero, inputSubject: inputSubject, viewModel: viewModel)
     
-    // MARK: - UI Components
-    
     private let homeHeaderView: HomeHeaderView = HomeHeaderView()
     
     lazy var postCollectionView: PostCollectionView = {
         let collectionView = PostCollectionView(frame: .zero, viewModel: postCollectionViewModel)
         return collectionView
     }()
+    
+    lazy var dataEmptyView: DataEmptyView = DataEmptyView(
+        emptyTitle: "여행 정보가 없습니다."
+    )
     
     // MARK: - Life Cycle
     
@@ -62,11 +64,13 @@ private extension UserInfoViewController {
     private func setTranslatesAutoresizingMaskIntoConstraints() {
         userInfoHeaderView.translatesAutoresizingMaskIntoConstraints = false
         postCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        dataEmptyView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func addSubviews() {
         self.view.addSubview(userInfoHeaderView)
         self.view.addSubview(postCollectionView)
+        self.view.addSubview(dataEmptyView)
     }
     
     private func setLayoutConstraints() {
@@ -79,7 +83,12 @@ private extension UserInfoViewController {
             postCollectionView.topAnchor.constraint(equalTo: userInfoHeaderView.bottomAnchor, constant: 20),
             postCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             postCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            postCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            postCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
+            dataEmptyView.topAnchor.constraint(equalTo: userInfoHeaderView.bottomAnchor, constant: 20),
+            dataEmptyView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            dataEmptyView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            dataEmptyView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
     }
     
@@ -103,6 +112,8 @@ private extension UserInfoViewController {
                 self?.updateUserProfile(result)
             case let .updateUserPost(result):
                 self?.updateUserPost(result)
+            case let .transViewByPostsCount(isEmpty):
+                self?.transViewByPostsCount(isEmpty)
             default: break
             }
         }.store(in: &cancellables)
@@ -122,5 +133,10 @@ private extension UserInfoViewController {
     private func updateUserPost(_ result: [PostFindResponse]) {
         postCollectionView.viewModel.posts = result
         postCollectionView.reloadData()
+    }
+    
+    private func transViewByPostsCount(_ isEmpty: Bool) {
+        postCollectionView.isHidden = isEmpty
+        dataEmptyView.isHidden = !isEmpty
     }
 }

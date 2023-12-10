@@ -20,7 +20,11 @@ final class TravelViewModel: ViewModelProtocol {
     private let pinnedPlaceManager: PinnedPlaceManageUseCase
     private var cancellables = Set<AnyCancellable>()
     private (set) var savedRoute: SavedRoute = SavedRoute()
-    private (set) var searchedResult: [LocationDetail] = []
+    private (set) var searchedResult: [LocationDetail] = [] {
+        didSet {
+            outputSubject.send(.transViewBySearchedResultCount(searchedResult.isEmpty))
+        }
+    }
     private var searchPageNum = 1
     
     // MARK: - Input
@@ -48,6 +52,7 @@ final class TravelViewModel: ViewModelProtocol {
         case showLocationInfo(LocationDetail)
         case moveCamera(Double, Double)
         case removeMapLocation
+        case transViewBySearchedResultCount(Bool)
     }
     
     // MARK: - Init
