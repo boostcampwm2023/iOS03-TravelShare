@@ -17,6 +17,7 @@ final class PostContentView: UIView {
     var viewModel: PostCollectionViewModel?
     private let provider = APIProvider(session: URLSession.shared)
     private let inputSubject: PassthroughSubject<PostCollectionViewModel.Input, Never> = .init()
+    var readViewDisappear: PassthroughSubject<LikePostResponse, Never> = .init()
     weak var delegate: PostCollectionViewDelegate?
     var postId: Int?
     
@@ -69,7 +70,7 @@ final class PostContentView: UIView {
         let provider = APIProvider(session: URLSession.shared)
         let readuseCase = ReadPostUseCase(provider: provider)
         let readViewModel = ReadViewModel(useCase: readuseCase, postId: postId, pathcher: Patcher(provider: APIProvider(session: URLSession.shared)), reporter: Reporter(provider: provider))
-        let readViewController = ReadViewController(viewModel: readViewModel)
+        let readViewController = ReadViewController(viewModel: readViewModel, readViewDisappear: readViewDisappear)
         delegate?.didTapContent(viewController: readViewController)
         
         inputSubject.send(.increaseView(postId))
@@ -135,8 +136,9 @@ extension PostContentView {
         addTapGesture()
     }
     
-    func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?) {
+    func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?, readViewDisappear: PassthroughSubject<LikePostResponse, Never>) {
         self.viewModel = viewModel
+        self.readViewDisappear = readViewDisappear
         guard let viewModel = self.viewModel else { return }
         
         if let imageUrl = item.imageUrl, isValidUrl(urlString: imageUrl) {

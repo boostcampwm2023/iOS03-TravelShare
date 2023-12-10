@@ -17,6 +17,7 @@ final class HomeViewController: TouchableViewController {
     private let inputSubject: PassthroughSubject<HomeViewModel.Input, Never> = .init()
     private let provider = APIProvider(session: URLSession.shared)
     private var cancellables = Set<AnyCancellable>()
+    private let readViewDisappear: PassthroughSubject<LikePostResponse, Never> = .init()
     let postCollectionViewModel = PostCollectionViewModel( followFeature: FollowFeature(provider: APIProvider(session: URLSession.shared)), patcher: Patcher(provider: APIProvider(session: URLSession.shared)), postSearcher: Searcher(provider: APIProvider(session: URLSession.shared)), sceneType: .home)
     
     // MARK: - UI Components
@@ -46,12 +47,9 @@ final class HomeViewController: TouchableViewController {
         self.view.backgroundColor = UIColor.appColor(.blue1)
         bind()
         postCollectionView.postDelegate = self
+        postCollectionView.readViewDisappear = self.readViewDisappear
         setUpLayout()
         inputSubject.send(.searchPosts(0))
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        
     }
     
 }
@@ -104,6 +102,13 @@ private extension HomeViewController {
             default: break
             }
         }.store(in: &cancellables)
+        
+        readViewDisappear
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] likeInfo in
+                self?.updateLikeInfo(likeInfo)
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -115,6 +120,19 @@ extension HomeViewController {
         _ = result.sorted { $0.postId < $1.postId }
         postCollectionView.viewModel.posts = result
         postCollectionView.reloadData()
+    }
+    
+    private func updateLikeInfo(_ likeInfo: LikePostResponse) {
+        postCollectionView.viewModel.posts.enumerated().forEach {
+            if $1.postId == likeInfo.postId {
+                var post = postCollectionView.viewModel.posts[$0]
+                post.likeNum = likeInfo.likeNum
+                post.liked = likeInfo.liked
+                
+                postCollectionView.viewModel.posts[$0] = post
+                postCollectionView.reloadData()
+            }
+        }
     }
     
 }
