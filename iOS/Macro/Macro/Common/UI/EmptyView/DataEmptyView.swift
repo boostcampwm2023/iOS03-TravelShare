@@ -84,7 +84,7 @@ private extension DataEmptyView {
             imageView.heightAnchor.constraint(equalToConstant: 300),
             imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             
-            confirmButton.widthAnchor.constraint(equalToConstant: 300),
+            confirmButton.widthAnchor.constraint(equalToConstant: addActionConfirm == nil ? 0 : 300),
             confirmButton.heightAnchor.constraint(equalToConstant: 40),
             confirmButton.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 50),
             confirmButton.centerXAnchor.constraint(equalTo: self.centerXAnchor)
