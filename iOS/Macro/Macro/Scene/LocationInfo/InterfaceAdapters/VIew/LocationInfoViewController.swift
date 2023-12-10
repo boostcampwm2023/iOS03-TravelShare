@@ -30,17 +30,11 @@ final class LocationInfoViewController: TouchableViewController {
         return label
     }()
     
-    private let pinLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.appFont(.baeEunLargeTitle)
-        let symbolImage = UIImage.appImage(.pinFill)?.withTintColor(UIColor.appColor(.purple3))
-        let attachment = NSTextAttachment()
-        attachment.image = symbolImage
-        let attachmentString = NSAttributedString(attachment: attachment)
-        let mutableAttributedString = NSMutableAttributedString(string: " ")
-        mutableAttributedString.append(attachmentString)
-        label.attributedText = mutableAttributedString
-        return label
+    private let pinImage: UIImageView = {
+        let image = UIImage.appImage(.pinFill)
+        let imageView = UIImageView(image: image)
+        imageView.tintColor = UIColor.appColor(.purple4)
+        return imageView
     }()
     
     // TODO: 글자 제한 수를 넘을경우 다음 줄로 넘어가게 처리
@@ -101,6 +95,10 @@ final class LocationInfoViewController: TouchableViewController {
         return control
     }()
     
+    lazy var dataEmptyView: DataEmptyView = DataEmptyView(
+        emptyTitle: "여행 정보가 없습니다."
+    )
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -136,7 +134,7 @@ extension LocationInfoViewController {
         categoryNameLabel.translatesAutoresizingMaskIntoConstraints = false
         categoryGroupLabel.translatesAutoresizingMaskIntoConstraints = false
         phoneLabel.translatesAutoresizingMaskIntoConstraints = false
-        pinLabel.translatesAutoresizingMaskIntoConstraints = false
+        pinImage.translatesAutoresizingMaskIntoConstraints = false
         segmentControl.translatesAutoresizingMaskIntoConstraints = false
         postCollectionView.translatesAutoresizingMaskIntoConstraints = false
         relatedLocationCollectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -148,7 +146,7 @@ extension LocationInfoViewController {
         view.addSubview(categoryNameLabel)
         view.addSubview(categoryGroupLabel)
         view.addSubview(phoneLabel)
-        view.addSubview(pinLabel)
+        view.addSubview(pinImage)
         view.addSubview(segmentControl)
         view.addSubview(postCollectionView)
         view.addSubview(relatedLocationCollectionView)
@@ -158,7 +156,7 @@ extension LocationInfoViewController {
         NSLayoutConstraint.activate([
             placeNameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Padding.nameTop),
             placeNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.labelSide),
-            placeNameLabel.trailingAnchor.constraint(lessThanOrEqualTo: pinLabel.leadingAnchor, constant: -10),
+            placeNameLabel.trailingAnchor.constraint(lessThanOrEqualTo: pinImage.leadingAnchor, constant: -10),
             
             addressLabel.topAnchor.constraint(equalTo: placeNameLabel.bottomAnchor, constant: Padding.addressTop),
             addressLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.labelSide),
@@ -176,8 +174,8 @@ extension LocationInfoViewController {
             phoneLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.labelSide),
             phoneLabel.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -10),
             
-            pinLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Padding.pinSide),
-            pinLabel.centerYAnchor.constraint(equalTo: placeNameLabel.centerYAnchor),
+            pinImage.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Padding.pinSide),
+            pinImage.centerYAnchor.constraint(equalTo: placeNameLabel.centerYAnchor),
             
             segmentControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             segmentControl.topAnchor.constraint(equalTo: phoneLabel.bottomAnchor, constant: Padding.segmentTop),
