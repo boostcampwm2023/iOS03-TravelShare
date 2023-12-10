@@ -61,7 +61,6 @@ export class PostService implements OnModuleInit {
     } = await this.postRepository.insert({
       ...post,
       writer: { email },
-      route: { routeId },
     });
     await this.postContentElementRepository.insert(
       post.contents.map((content) => ({
@@ -84,6 +83,11 @@ export class PostService implements OnModuleInit {
       .relation('pins')
       .of(postId)
       .add([...places.map(({ placeId }) => placeId), ...placeIds]);
+    await this.postRepository
+      .createQueryBuilder()
+      .relation('route')
+      .of(postId)
+      .set(routeId);
     return plainToInstance(PostUploadResponse, {
       postId,
     });
