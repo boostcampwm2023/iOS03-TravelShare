@@ -101,7 +101,9 @@ extension FollowResultCell {
                         self.profileImageView.image = image
                     }
                 } else {
-                    self.profileImageView.image =  UIImage.appImage(.ProfileDefaultImage)
+                    DispatchQueue.main.async {
+                        self.profileImageView.image =  UIImage.appImage(.ProfileDefaultImage)
+                    }
                 }
             }.resume()
         }
