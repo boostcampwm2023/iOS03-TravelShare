@@ -24,11 +24,15 @@ class RouteViewController: UIViewController {
         return label
     }()
     
-    let button: UIView = {
-        let button = UIView()
-        button.backgroundColor = .red
-        return button
-    }()
+    lazy var dataEmptyView: DataEmptyView = DataEmptyView(
+        emptyTitle: "여행 정보가 없습니다.",
+        addActionConfirm: ConfirmAction(
+            text: "여행 하러 가기",
+            action: {
+                self.transView(.travel)
+            }
+        )
+    )
     
     let viewModel: RouteViewModel
     lazy var routeCollectionView: MapCollectionView = MapCollectionView(frame: .zero, viewModel: viewModel)
@@ -63,13 +67,13 @@ private extension RouteViewController {
     func setTranslatesAutoresizingMaskIntoConstraints() {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         routeCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        button.translatesAutoresizingMaskIntoConstraints = false
+        dataEmptyView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     func addsubviews() {
         self.view.addSubview(titleLabel)
         self.view.addSubview(routeCollectionView)
-        self.view.addSubview(button)
+        self.view.addSubview(dataEmptyView)
     }
     
     func setLayoutConstraints() {
@@ -82,10 +86,10 @@ private extension RouteViewController {
             routeCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             routeCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             
-            button.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
-            button.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            button.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            button.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            dataEmptyView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 50),
+            dataEmptyView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            dataEmptyView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            dataEmptyView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
     }
     
@@ -93,7 +97,6 @@ private extension RouteViewController {
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
-        addTapGesture()
     }
 }
 
@@ -123,17 +126,7 @@ private extension RouteViewController {
     
     func changeInnerView(_ isRouteEmpty: Bool) {
             routeCollectionView.isHidden = isRouteEmpty
-            button.isHidden = !isRouteEmpty
-    }
-    
-    func addTapGesture() {
-        button.isUserInteractionEnabled = true
-        let addPictrueViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(tappedButton(_:)))
-        button.addGestureRecognizer(addPictrueViewTapGesture)
-    }
-    
-    @objc private func tappedButton(_ sender: UITapGestureRecognizer) {
-        transView(.travel)
+        dataEmptyView.isHidden = !isRouteEmpty
     }
     
     func transView(_ changeTabbarType: TabbarType) {
