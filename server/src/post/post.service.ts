@@ -445,6 +445,11 @@ export class PostService implements OnModuleInit {
     this.logger.debug('cache persistenced');
   }
 
+  @Cron('0 */10 * * * *')
+  async updateTaskTopPostScores() {
+    await this.postCacheRepository.updateTopPostsScoreZSet();
+  }
+
   async onModuleInit() {
     await this.postCacheRepository.updateTopPostsScoreZSet();
   }
