@@ -135,6 +135,7 @@
 		BAE3C5902B1AF5CC00BF9798 /* FollowPatchFollower.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE3C58F2B1AF5CC00BF9798 /* FollowPatchFollower.swift */; };
 		BAE3C5922B1AF6F000BF9798 /* UpdateFollowEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE3C5912B1AF6F000BF9798 /* UpdateFollowEndPoint.swift */; };
 		BAE3C5942B1C7F1C00BF9798 /* MacroCarouselViewCelladdPictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE3C5932B1C7F1C00BF9798 /* MacroCarouselViewCelladdPictureView.swift */; };
+		BAEA834F2B25D4FF000B52D4 /* DataEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEA834E2B25D4FF000B52D4 /* DataEmptyView.swift */; };
 		D21B10072B14660600F2F84E /* MyInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B10062B14660600F2F84E /* MyInfoViewController.swift */; };
 		D21B10092B14799C00F2F84E /* NameEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B10082B14799C00F2F84E /* NameEditView.swift */; };
 		D21B100B2B1497E000F2F84E /* IntroductionEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21B100A2B1497E000F2F84E /* IntroductionEditView.swift */; };
@@ -315,6 +316,7 @@
 		BAE3C58F2B1AF5CC00BF9798 /* FollowPatchFollower.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowPatchFollower.swift; sourceTree = "<group>"; };
 		BAE3C5912B1AF6F000BF9798 /* UpdateFollowEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateFollowEndPoint.swift; sourceTree = "<group>"; };
 		BAE3C5932B1C7F1C00BF9798 /* MacroCarouselViewCelladdPictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacroCarouselViewCelladdPictureView.swift; sourceTree = "<group>"; };
+		BAEA834E2B25D4FF000B52D4 /* DataEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataEmptyView.swift; sourceTree = "<group>"; };
 		D21B10062B14660600F2F84E /* MyInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoViewController.swift; sourceTree = "<group>"; };
 		D21B10082B14799C00F2F84E /* NameEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameEditView.swift; sourceTree = "<group>"; };
 		D21B100A2B1497E000F2F84E /* IntroductionEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroductionEditView.swift; sourceTree = "<group>"; };
@@ -1203,6 +1205,14 @@
 			path = CarouselView;
 			sourceTree = "<group>";
 		};
+		BAEA834D2B25D4CB000B52D4 /* EmptyView */ = {
+			isa = PBXGroup;
+			children = (
+				BAEA834E2B25D4FF000B52D4 /* DataEmptyView.swift */,
+			);
+			path = EmptyView;
+			sourceTree = "<group>";
+		};
 		D21B10112B1760C800F2F84E /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -1246,6 +1256,7 @@
 			isa = PBXGroup;
 			children = (
 				D241DC702B0DA0070037DDB6 /* CommonUIComponents.swift */,
+				BAEA834D2B25D4CB000B52D4 /* EmptyView */,
 				BA8742EE2B204C0700DBDE03 /* AlertView */,
 				BAE3C5972B1C7F6E00BF9798 /* CarouselView */,
 				BAB24EDE2B16D3D7000991A1 /* MapCollectionView */,
@@ -1659,6 +1670,7 @@
 				D2CAA5EB2B1F23B700E825BA /* FollowResultCell.swift in Sources */,
 				BAB24EEA2B16DB79000991A1 /* RouteViewModel.swift in Sources */,
 				AAD0B3042B147CF5003B4D5F /* RefreshTokenUseCase.swift in Sources */,
+				BAEA834F2B25D4FF000B52D4 /* DataEmptyView.swift in Sources */,
 				BA8DC4072B0B5F0600929E01 /* SearchViewController.swift in Sources */,
 				D2CAA5D52B1E0A1E00E825BA /* RelatedLocation.swift in Sources */,
 				D2CAA5E72B1F14BE00E825BA /* FollowListEndPoint.swift in Sources */,

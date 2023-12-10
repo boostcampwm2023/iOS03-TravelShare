@@ -87,7 +87,7 @@ extension MyPageHeaderView {
                     if let image = image {
                         profileImageView.image = image
                     } else {
-                        let defaultImage = UIImage.appImage(.ProfileDefaultImage)
+                        let defaultImage = UIImage.appImage(.profileDefaultImage)
                         profileImageView.image = defaultImage
                     }
                 }

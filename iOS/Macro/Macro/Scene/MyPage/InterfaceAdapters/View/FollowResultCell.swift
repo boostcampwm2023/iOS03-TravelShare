@@ -81,7 +81,7 @@ extension FollowResultCell {
     func configure(with profile: FollowList) {
         userNameLabel.text = profile.name
         guard let imageUrl = profile.imageUrl else {
-            self.profileImageView.image = UIImage.appImage(.ProfileDefaultImage)
+            self.profileImageView.image = UIImage.appImage(.profileDefaultImage)
             return
         }
         
@@ -102,7 +102,7 @@ extension FollowResultCell {
                     }
                 } else {
                     DispatchQueue.main.async {
-                        self.profileImageView.image =  UIImage.appImage(.ProfileDefaultImage)
+                        self.profileImageView.image =  UIImage.appImage(.profileDefaultImage)
                     }
                 }
             }.resume()

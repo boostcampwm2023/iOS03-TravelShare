@@ -30,7 +30,7 @@ final class NetworkUnresearchableViewController: UIViewController {
     
     private let networkUnresearchableImageView: UIImageView = {
         let imageView = UIImageView()
-        let image = UIImage.appImage(.InternetDisconnectedImage)
+        let image = UIImage.appImage(.internetDisconnectedImage)
         imageView.image = image
         return imageView
     }()

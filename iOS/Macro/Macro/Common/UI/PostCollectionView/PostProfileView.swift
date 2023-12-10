@@ -192,7 +192,7 @@ extension PostProfileView {
         postId = item.postId
     }
     private func setDefaultProfileImage() {
-        let defaultImage = UIImage.appImage(.ProfileDefaultImage)
+        let defaultImage = UIImage.appImage(.profileDefaultImage)
         setProfileImage(defaultImage)
     }
 

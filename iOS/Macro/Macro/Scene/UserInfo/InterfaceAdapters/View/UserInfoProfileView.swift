@@ -106,7 +106,7 @@ extension UserInfoProfileView {
     func configure(item: UserProfile) {
      
         guard let imageUrl = item.imageUrl else {
-            self.userProfileImageView.image = UIImage.appImage(.ProfileDefaultImage)
+            self.userProfileImageView.image = UIImage.appImage(.profileDefaultImage)
             return
         }
         guard let url = URL(string: imageUrl) else { return }
@@ -125,7 +125,7 @@ extension UserInfoProfileView {
                         self.userProfileImageView.image = image
                     }
                 } else {
-                    self.userProfileImageView.image =  UIImage.appImage(.ProfileDefaultImage)
+                    self.userProfileImageView.image =  UIImage.appImage(.profileDefaultImage)
                 }
             }.resume()
         }

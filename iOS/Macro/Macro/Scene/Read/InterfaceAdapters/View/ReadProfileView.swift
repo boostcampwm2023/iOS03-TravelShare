@@ -28,7 +28,7 @@ final class ReadProfileView: UIView {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         
-        imageView.image = UIImage.appImage(.ProfileDefaultImage)
+        imageView.image = UIImage.appImage(.profileDefaultImage)
         return imageView
     }()
     
@@ -95,7 +95,7 @@ extension ReadProfileView {
                 if let image = profileImage {
                     self?.profileImageView.image = image
                 } else {
-                    let defaultImage = UIImage.appImage(.ProfileDefaultImage)
+                    let defaultImage = UIImage.appImage(.profileDefaultImage)
                     self?.profileImageView.image = defaultImage
                 }
             }
