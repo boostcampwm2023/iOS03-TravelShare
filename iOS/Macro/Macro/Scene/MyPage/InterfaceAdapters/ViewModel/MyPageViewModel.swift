@@ -18,7 +18,7 @@ final class MyPageViewModel: ViewModelProtocol {
     let sections = ["프로필", "나의 정보", "글 목록", "계정 관리"]
     let information = ["이름", "프로필 사진", "자기소개"]
     let post = ["작성한 글"/*, "좋아요한 글"*/]
-    let management = ["팔로우", /*"알림",*/ "문의하기", "회원탈퇴"]
+    let management = ["팔로우", /*"알림",*/ "문의하기", "로그아웃", "회원탈퇴"]
     var followType: FollowType = .followees
     var followList: [FollowList] = []
     let patcher: PatchUseCase
@@ -50,6 +50,7 @@ final class MyPageViewModel: ViewModelProtocol {
         case selectImage(Data)
         case getFollowInformation
         case appleLogout(identityToken: String, authorizationCode: String, accessToken: String)
+        case appleRevoke(identityToken: String, authorizationCode: String, accessToken: String)
     }
     
     // MARK: - Output
@@ -87,6 +88,8 @@ extension MyPageViewModel {
                     self?.getFollowInformation()
                 case let .appleLogout(identityToken, authorizationCode, accessToken):
                     self?.appleLogout(identityToken, authorizationCode, accessToken)
+                case .appleRevoke(identityToken: let identityToken, authorizationCode: let authorizationCode, accessToken: let accessToken):
+                    self?.appleRevoke(identityToken, authorizationCode, accessToken)
                 }
             }
             .store(in: &cancellables)
@@ -99,6 +102,9 @@ extension MyPageViewModel {
 private extension MyPageViewModel {
     
     func appleLogout(_ identityToken: String, _ authorizationCode: String, _ accessToken: String) {
+    }
+    
+    func appleRevoke(_ identityToken: String, _ authorizationCode: String, _ accessToken: String) {
         print("----------\n\(identityToken), identityToken\n")
         print("\(authorizationCode), authorizationCode\n---------------")
         revoker.withdraw(identityToken: identityToken, authorizationCode: authorizationCode, accessToken: accessToken)

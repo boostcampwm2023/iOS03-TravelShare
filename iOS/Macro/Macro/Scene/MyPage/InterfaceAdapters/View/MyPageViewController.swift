@@ -8,6 +8,7 @@
 import AuthenticationServices
 import Combine
 import MacroNetwork
+import Photos
 import UIKit
 
 final class MyPageViewController: TabViewController {
@@ -111,8 +112,8 @@ extension MyPageViewController {
                 self?.updateUserProfile(userProfile)
             case let .profileEdit(image):
                 self?.downloadImage(image)
-            case .completeRevoke:
-                self?.completeRevoke()
+//            case .completeRevoke:
+//                self?.completeRevoke()
             case .failureRevoke:
                 self?.failureRevoke()
             default: break
@@ -282,6 +283,20 @@ extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
             }
             present(myInfoVC, animated: true)
         } else if indexPath.section == 1 && indexPath.row == 1 {
+            
+            // MARK: - 사진 read 동의가 필요할지 몰라 남겨 놓은 코드입니다.
+//            let requiredAccessLevel: PHAccessLevel = .readWrite
+//            PHPhotoLibrary.requestAuthorization(for: requiredAccessLevel) { authorizationStatus in
+//                switch authorizationStatus {
+//                case .limited:
+//                    print("limited authorization granted")
+//                case .authorized:
+//                    print("authorization granted")
+//                default:
+//                    print("Unimplemented")
+//            
+//                }
+//            }
             presentImagePickerController()
         } else if indexPath.section == 2 && indexPath.row == 0 {
             guard let email = viewModel.email else { return }
@@ -313,7 +328,17 @@ extension MyPageViewController: UITableViewDelegate, UITableViewDataSource {
             if UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
-        } else if indexPath.section == 3 && indexPath.row == 2 {
+        }  else if indexPath.section == 3 && indexPath.row == 2 {
+            AlertBuilder(viewController: self)
+                .setTitle("로그아웃")
+                .setMessage("로그아웃 하시겠어요? :(")
+                .addActionConfirm("확인") {
+                    self.tryLogout()
+                }
+                .addActionCancel("취소") {
+                }
+                .show()
+        } else if indexPath.section == 3 && indexPath.row == 3 {
             AlertBuilder(viewController: self)
                 .setTitle("회원탈퇴")
                 .setMessage("정말 회원탈퇴 하시겠어요? :(")
@@ -355,15 +380,8 @@ extension MyPageViewController: UIImagePickerControllerDelegate, UINavigationCon
 // MARK: - Authentication
 
 extension MyPageViewController {
-    private func tryRevoke() {
-        guard let identityToken = KeyChainManager.load(key: KeychainKey.identityToken),
-              let authorizationCode = KeyChainManager.load(key: KeychainKey.authorizationCode),
-              let accessToken = KeyChainManager.load(key: KeychainKey.accessToken)
-        else { return }
-        inputSubject.send(.appleLogout(identityToken: identityToken, authorizationCode: authorizationCode, accessToken: accessToken))
-    }
     
-    private func completeRevoke() {
+    private func tryLogout() {
         KeyChainManager.delete(key: KeychainKey.accessToken)
         KeyChainManager.delete(key: KeychainKey.authorizationCode)
         KeyChainManager.delete(key: KeychainKey.identityToken)
@@ -383,6 +401,55 @@ extension MyPageViewController {
         guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
         sceneDelegate.switchViewController(for: .loggedOut)
     }
+    
+    private func tryRevoke() {
+        KeyChainManager.delete(key: KeychainKey.accessToken)
+        KeyChainManager.delete(key: KeychainKey.authorizationCode)
+        KeyChainManager.delete(key: KeychainKey.identityToken)
+        
+        do {
+            try CoreDataManager.shared.fetchTravel { travels in
+                if let travels {
+                    travels.forEach {
+                        CoreDataManager.shared.deleteTravel(travelUUID: $0.id)
+                    }
+                }
+            }
+        } catch {
+            debugPrint("코어 데이터 삭제에 실패했습니다.")
+        }
+        
+        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+        sceneDelegate.switchViewController(for: .loggedOut)
+        
+        guard let identityToken = KeyChainManager.load(key: KeychainKey.identityToken),
+              let authorizationCode = KeyChainManager.load(key: KeychainKey.authorizationCode),
+              let accessToken = KeyChainManager.load(key: KeychainKey.accessToken)
+        else { return }
+        inputSubject.send(.appleLogout(identityToken: identityToken, authorizationCode: authorizationCode, accessToken: accessToken))
+    }
+    
+    // FIXME: - 회원탈퇴가 안정화 된 이후 수정해야합니다. :)
+//    private func completeRevoke() {
+//        KeyChainManager.delete(key: KeychainKey.accessToken)
+//        KeyChainManager.delete(key: KeychainKey.authorizationCode)
+//        KeyChainManager.delete(key: KeychainKey.identityToken)
+//        
+//        do {
+//            try CoreDataManager.shared.fetchTravel { travels in
+//                if let travels {
+//                    travels.forEach {
+//                        CoreDataManager.shared.deleteTravel(travelUUID: $0.id)
+//                    }
+//                }
+//            }
+//        } catch {
+//            debugPrint("코어 데이터 삭제에 실패했습니다.")
+//        }
+//        
+//        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+//        sceneDelegate.switchViewController(for: .loggedOut)
+//    }
     
     private func failureRevoke() {
         AlertBuilder(viewController: self)
