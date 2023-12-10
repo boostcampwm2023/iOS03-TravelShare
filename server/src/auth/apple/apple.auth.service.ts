@@ -14,9 +14,9 @@ import {
   AppleIdentityTokenPublicKeys,
 } from './apple.identity.token.public.keys.response.dto';
 import { AppleIdentityTokenPayload } from './apple.identity.token.payload.dto';
-import { createPublicKey, randomUUID } from 'crypto';
+import { createPublicKey, randomInt, randomUUID } from 'crypto';
 import { AppleIdentityTokenHeader } from './apple.identity.token.header.dto';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { AppleAuth } from 'entities/apple.auth.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'entities/user.entity';
@@ -29,6 +29,7 @@ import { AppleClientAuthResponse } from './apple.client.auth.response.dto';
 import { Transactional } from 'typeorm-transactional';
 import { getRandomNickName } from 'utils/namemaker';
 import { AppleClientRevokeResponse } from './apple.client.revoke.response';
+import { Post } from 'entities/post.entity';
 
 /**
  * ### AppleAuthService
@@ -47,6 +48,8 @@ export class AppleAuthService {
     private readonly appleAuthRepository: Repository<AppleAuth>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Post)
+    private readonly postRepository: Repository<Post>,
   ) {}
 
   async auth({ identityToken }: AppleClientAuthBody) {
@@ -217,7 +220,7 @@ export class AppleAuthService {
   private async signup({ sub, email }: AppleIdentityTokenPayload) {
     const user = await this.userRepository.save(
       {
-        email: email ?? `${randomUUID()}@macrogenerated.com`,
+        email: email ?? `${randomInt(10 ** 10, 10 ** 11)}@macrogenerated.com`,
         password: randomUUID(),
         name: getRandomNickName(),
       },
@@ -246,11 +249,42 @@ export class AppleAuthService {
   private async delete({ sub }: AppleIdentityTokenPayload) {
     const { user } = await this.appleAuthRepository.findOneOrFail({
       where: { appleId: sub },
-      relations: { user: true },
+      select: {
+        user: {
+          email: true,
+          writedPosts: { postId: true },
+          followees: { email: true },
+          followers: { email: true },
+        },
+      },
+      relations: {
+        user: {
+          writedPosts: true,
+          followees: true,
+          followers: true,
+        },
+      },
     });
-    await this.appleAuthRepository.delete({ appleId: sub });
-
-    await this.userRepository.remove(user);
+    await this.userRepository.decrement(
+      {
+        email: In(user.followees.map(({ email }) => email)),
+      },
+      'followersNum',
+      1,
+    );
+    await this.userRepository.increment(
+      {
+        email: In(user.followers.map(({ email }) => email)),
+      },
+      'followersNum',
+      1,
+    );
+    await this.userRepository.delete(user);
+    // TODO: soft delete
+    // await this.userRepository.softDelete(user);
+    // await this.postRepository.softDelete({
+    //   postId: In(user.writedPosts.map(({ postId }) => postId)),
+    // });
   }
 
   private createToken(user: Authentication) {
