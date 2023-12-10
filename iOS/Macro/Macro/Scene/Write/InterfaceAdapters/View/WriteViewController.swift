@@ -19,6 +19,7 @@ final class WriteViewController: TabViewController {
     private let didScrollSubject: PassthroughSubject<Int, Never> = .init()
     private let inputSubject: PassthroughSubject<WriteViewModel.Input, Never> = .init()
     private var subscriptions: Set<AnyCancellable> = []
+    private var selectedMarker: NMFMarker?
     private var routeOverlay: NMFPath?
     
     // MARK: - UI Components
@@ -289,6 +290,19 @@ extension WriteViewController {
         titleTextField.addTarget(self, action: #selector(titleTextFieldDidChange), for: .editingChanged)
     }
     
+    func pinMapping(marker: NMFMarker) {
+        let pinnedLocation = marker.position
+        let coordinate = Coordinate(xPosition: pinnedLocation.lng,
+                                    yPosition: pinnedLocation.lat)
+
+        marker.iconTintColor = UIColor.appColor(.purple3)
+        if let selectedMarker {
+            selectedMarker.iconTintColor = UIColor.green
+        }
+        selectedMarker = marker
+        inputSubject.send(.pinMapping(coordinate))
+    }
+    
     func calculateCenterLocation(routePoints: [[Double]]) {
         var maxLatitude = -90.0
         var minLatitude = 90.0
@@ -340,7 +354,6 @@ extension WriteViewController {
         routeOverlay?.mapView = mapView
     }
     
-    // TODO: - 위경도 좌표가 바뀌어 있어요. 다음 스프린트 때, 코어데이터 테이블 추가하면서 수정하도록하겠습니다. :)
     /// Pin이 저장된 곳에  Mark를 찍습니다.
     /// - Parameters:
     ///   - recordedPindedInfo: Pin의 위도, 경도 배열 입니다.
@@ -350,7 +363,12 @@ extension WriteViewController {
             guard let name = placeInfo.placeName?.first, let placeLocation = placeInfo.coordinate else { return }
             marker.position = NMGLatLng(lat: placeLocation.latitude, lng: placeLocation.longitude)
             marker.captionText = "\(index + 1). \(name)"
+            marker.iconTintColor = UIColor.green
             marker.mapView = mapView
+            marker.touchHandler = { [weak self] _ in
+                self?.pinMapping(marker: marker)
+                return true
+            }
         }
     }
 }

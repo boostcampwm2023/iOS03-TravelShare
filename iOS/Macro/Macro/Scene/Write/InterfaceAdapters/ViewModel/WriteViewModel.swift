@@ -55,6 +55,7 @@ final class WriteViewModel: ViewModelProtocol, CarouselViewProtocol {
         case summaryTextUpdate(String)
         case imageDescriptionUpdate(index: Int, description: String)
         case loadTravel
+        case pinMapping(Coordinate)
     }
     
     // MARK: - Output
@@ -96,6 +97,8 @@ extension WriteViewModel {
                 case .loadTravel:
                     guard let travelInfo = self?.travelInfo else { return }
                     self?.outputSubject.send(.updateMap(travelInfo))
+                case let .pinMapping(coordinate):
+                    self?.pinMapping(coordinate: coordinate)
                 }
             }
             .store(in: &cancellables)
@@ -170,6 +173,11 @@ extension WriteViewModel {
             return
         }
         outputSubject.send(.outputDescriptionString(self.contents[index].description ?? ""))
+    }
+    
+    private func pinMapping(coordinate: Coordinate) {
+        guard (0..<pageIndex).contains(pageIndex) else { return }
+        contents[pageIndex].coordinate = coordinate
     }
 }
 
