@@ -12,7 +12,11 @@ import MacroNetwork
 class RouteViewModel: ViewModelProtocol, MapCollectionViewProtocol {
 
     // MARK: - Properties
-    var travels: [TravelInfo] = []
+    var travels: [TravelInfo] = [] {
+        didSet {
+            outputSubject.send(.changeInnerView(travels.isEmpty))
+        }
+    }
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
     
@@ -26,6 +30,8 @@ class RouteViewModel: ViewModelProtocol, MapCollectionViewProtocol {
     enum Output {
         case deleteTravel(String)
         case navigateToWriteView(WriteViewModel)
+        case transView(TabbarType)
+        case changeInnerView(Bool)
     }
 }
 
