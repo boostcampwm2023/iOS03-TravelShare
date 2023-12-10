@@ -399,7 +399,6 @@ private extension ReadViewController {
         let coords = routePoints.map { NMGLatLng(lat: $0.yPosition, lng: $0.xPosition) }
         routeOverlay = NMFPath(points: coords)
         routeOverlay?.color = UIColor.appColor(.purple1)
-        routeOverlay?.outlineColor = .clear
         routeOverlay?.mapView = mapView
     }
     

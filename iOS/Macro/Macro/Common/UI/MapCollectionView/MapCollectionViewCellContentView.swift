@@ -205,7 +205,6 @@ extension MapCollectionViewCellContentView {
         let coords = routePoints.map { NMGLatLng(lat: $0[0], lng: $0[1]) }
         routeOverlay = NMFPath(points: coords)
         routeOverlay?.color = UIColor.appColor(.purple1)
-        routeOverlay?.outlineColor = .clear
         routeOverlay?.mapView = mapView
     }
     
