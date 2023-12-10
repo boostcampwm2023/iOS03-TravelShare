@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'entities/user.entity';
-import { And, Equal, In, Not, Raw, Repository } from 'typeorm';
+import { And, Equal, In, LessThan, Not, Raw, Repository } from 'typeorm';
 import { UserProfileUpdateQuery } from './user.profile.update.query.dto';
 import { Authentication } from 'auth/authentication.dto';
 import { UserProfileResponse } from './user.profile.response.dto';
@@ -114,8 +114,16 @@ export class UserService {
           cause: err,
         });
       });
-    await this.userRepository.decrement({ email: from }, 'followeesNum', 1);
-    await this.userRepository.decrement({ email: to }, 'followersNum', 1);
+    await this.userRepository.decrement(
+      { email: from, followeesNum: Not(LessThan(0)) },
+      'followeesNum',
+      1,
+    );
+    await this.userRepository.decrement(
+      { email: to, followersNum: Not(LessThan(0)) },
+      'followersNum',
+      1,
+    );
   }
 
   private async isUserFollowed(from: string, to: string) {
