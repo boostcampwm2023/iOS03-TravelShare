@@ -12,7 +12,11 @@ final class UserInfoViewModel: ViewModelProtocol {
     
     // MARK: - Properties
     
-    var posts: [PostFindResponse] = []
+    var posts: [PostFindResponse] = [] {
+        didSet {
+            outputSubject.send(.transViewByPostsCount(posts.isEmpty))
+        }
+    }
     var userProfile: UserProfile = UserProfile(email: "", name: "", imageUrl: nil, introduce: nil, followersNum: 0, followeesNum: 0, followee: false, follower: false)
     var searchUserEmail = ""
     private var cancellables = Set<AnyCancellable>()
@@ -50,6 +54,7 @@ final class UserInfoViewModel: ViewModelProtocol {
         case updateUserPost([PostFindResponse])
         case updatePostLike(LikePostResponse)
         case updateUserFollow(FollowPatchResponse)
+        case transViewByPostsCount(Bool)
     }
     
 }
