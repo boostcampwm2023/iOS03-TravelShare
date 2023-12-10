@@ -12,18 +12,25 @@ import UIKit
 final class SearchResultViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     // MARK: - Properties
-    
-    private var tableView: UITableView!
+
     private let viewModel: TravelViewModel
     private let inputSubject: PassthroughSubject<TravelViewModel.Input, Never> = .init()
     private var cancellables = Set<AnyCancellable>()
+    
+    // MARK: - UI Components
+    private var tableView: UITableView!
+    
+    lazy var dataEmptyView: DataEmptyView = DataEmptyView(
+        emptyTitle: "검색 정보가 없습니다."
+    )
     
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        setupTableView()
+        setTableView()
+        setupLayout()
         bind()
     }
     
@@ -44,20 +51,42 @@ final class SearchResultViewController: UIViewController, UITableViewDataSource,
 
 extension SearchResultViewController {
     
-    private func setupTableView() {
+    private func setTableView() {
         tableView = UITableView()
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+    }
+    
+    private func setTranslatesAutoresizingMaskIntoConstraints() {
+       
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(tableView)
+        dataEmptyView.translatesAutoresizingMaskIntoConstraints = false
         
+    }
+    
+    private func addsubviews() {
+        view.addSubview(tableView)
+        view.addSubview(dataEmptyView)
+    }
+    
+    private func setLayoutConstraints() {
         NSLayoutConstraint.activate([
+            
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.rightAnchor.constraint(equalTo: view.rightAnchor)
+            tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            
+            dataEmptyView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            dataEmptyView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150)
         ])
+    }
+    
+    private func setupLayout() {
+        setTranslatesAutoresizingMaskIntoConstraints()
+        addsubviews()
+        setLayoutConstraints()
     }
 }
 // MARK: - Bind
@@ -68,6 +97,8 @@ extension SearchResultViewController {
                 switch output {
                 case .updateSearchResult:
                     self?.tableView.reloadData()
+                case let .transViewBySearchedResultCount(isEmpty):
+                    self?.transViewBySearchedResultCount(isEmpty)
                 default:
                     break
                 }
@@ -87,12 +118,23 @@ extension SearchResultViewController {
         let pinImage = isPinnedNow ? UIImage.appImage(.pinFill) : UIImage.appImage(.pin)
         sender.setImage(pinImage, for: .normal)
     }
+    
+    func transViewBySearchedResultCount(_ isEmpty: Bool) {
+        DispatchQueue.main.async {
+            self.tableView.isHidden = isEmpty
+            self.dataEmptyView.isHidden = !isEmpty
+        }
+    }
 }
 
 // MARK: - TableView
 
 extension SearchResultViewController {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        DispatchQueue.main.async {
+            self.tableView.isHidden = self.viewModel.searchedResult.isEmpty
+            self.dataEmptyView.isHidden = !self.viewModel.searchedResult.isEmpty
+        }
         return viewModel.searchedResult.count
     }
     
