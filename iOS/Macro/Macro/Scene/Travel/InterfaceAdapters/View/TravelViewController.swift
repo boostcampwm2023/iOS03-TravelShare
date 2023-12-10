@@ -363,9 +363,7 @@ extension TravelViewController {
             requireMoreLocation()
             return
         }
-        
-        inputSubject.send(.endTravel)
-        isTraveling = false
+        reconfirmEnd()
     }
     
     private func removeMapLocation() {
@@ -387,7 +385,16 @@ extension TravelViewController {
     }
     
     private func reconfirmEnd() {
-        
+        AlertBuilder(viewController: self)
+            .setTitle("기록 중지")
+            .setMessage("이동 경로와 장소가 저장되며 초기화 됩니다.")
+            .addActionConfirm("확인") {
+                self.inputSubject.send(.endTravel)
+                self.isTraveling = false
+            }
+            .addActionCancel("취소") {
+            }
+            .show()
     }
     
     @objc private func myLocationButtonTapped(_ sender: UITapGestureRecognizer) {
