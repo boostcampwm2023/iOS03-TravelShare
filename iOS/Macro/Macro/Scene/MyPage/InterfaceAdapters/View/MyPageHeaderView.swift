@@ -14,7 +14,7 @@ final class MyPageHeaderView: UIView {
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = imageView.bounds.width / 2
+        imageView.layer.cornerRadius = 60
         imageView.clipsToBounds = true
         imageView.layer.borderColor = UIColor.appColor(.purple2).cgColor
         imageView.layer.borderWidth = 1
