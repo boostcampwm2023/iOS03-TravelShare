@@ -32,6 +32,8 @@ public enum ImageAsset {
         case listBulletIndent
         case scope
         case stopCircle
+        case location
+        case exclamationmarkBubble
     }
     
     public enum CustomImage {
@@ -92,6 +94,10 @@ public extension UIImage {
             return UIImage(systemName: "scope")
         case .stopCircle:
             return UIImage(systemName: "stop.circle")
+        case .location:
+            return UIImage(systemName: "location")
+        case .exclamationmarkBubble:
+            return UIImage(systemName: "exclamationmark.bubble")
         }
     }
     
