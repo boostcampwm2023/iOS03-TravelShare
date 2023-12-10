@@ -373,6 +373,8 @@ extension TravelViewController {
                existingPolyline.mapView = nil
            }
         pathOverlay = nil
+        markers.values.forEach { $0.mapView = nil }
+        markers.removeAll()
     }
     
     private func requireMoreLocation() {
