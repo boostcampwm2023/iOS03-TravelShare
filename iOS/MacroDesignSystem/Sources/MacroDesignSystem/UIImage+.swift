@@ -38,9 +38,10 @@ public enum ImageAsset {
     
     public enum CustomImage {
         case appLogo
-        case InternetDisconnectedImage
-        case ProfileDefaultImage
-        case DisConnectWifi
+        case internetDisconnectedImage
+        case profileDefaultImage
+        case disConnectWifi
+        case emptyImage
     }
 }
 
@@ -105,12 +106,14 @@ public extension UIImage {
         switch name {
         case .appLogo:
             return UIImage(named: "LogoImage")
-        case .InternetDisconnectedImage:
+        case .internetDisconnectedImage:
             return UIImage(named: "InternetDisconnectedImage")
-        case .ProfileDefaultImage:
+        case .profileDefaultImage:
             return UIImage(named: "ProfileDefaultImage")
-        case .DisConnectWifi:
+        case .disConnectWifi:
             return UIImage(named: "DisConnectWifi")
+        case .emptyImage:
+            return UIImage(named: "EmptyImage")
         }
     }
 }
