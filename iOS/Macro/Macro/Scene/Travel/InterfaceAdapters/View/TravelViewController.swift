@@ -23,7 +23,6 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
     private var cancellables = Set<AnyCancellable>()
     private let inputSubject: PassthroughSubject<TravelViewModel.Input, Never> = .init()
     private let viewModel: TravelViewModel
-  //  private var polyline: NMFPolylineOverlay?
     private var pathOverlay: NMFPath?
     private let routeTableViewController: RouteModalViewController
     private var isTraveling = false {
@@ -298,7 +297,6 @@ extension TravelViewController {
         if pathOverlay == nil {
             pathOverlay = NMFPath()
             pathOverlay?.color = UIColor.appColor(.purple1)
-            pathOverlay?.outlineColor = UIColor.clear
             pathOverlay?.path = NMGLineString(points: [
                newCoord, newCoord
             ])
