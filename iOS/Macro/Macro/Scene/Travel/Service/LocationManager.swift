@@ -40,6 +40,7 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
         timer = nil
         sendLocation = nil
         locationManager.allowsBackgroundLocationUpdates = false
+        self.locationPublisher.value = nil
     }
     
     // MARK: - Methods
