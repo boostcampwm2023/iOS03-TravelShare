@@ -49,7 +49,10 @@ export class User {
   })
   followers: User[];
 
-  @ManyToMany(() => User, ({ followers }) => followers)
+  @ManyToMany(() => User, ({ followers }) => followers, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   followees: User[];
 
   @Column('int', { name: 'followers_num', default: 0 })
@@ -58,7 +61,9 @@ export class User {
   @Column('int', { name: 'followees_num', default: 0 })
   followeesNum: number;
 
-  @ManyToMany(() => Post, ({ likedUsers }) => likedUsers)
+  @ManyToMany(() => Post, ({ likedUsers }) => likedUsers, {
+    onDelete: 'CASCADE',
+  })
   likedPosts: Post[];
 
   @OneToMany(() => Post, ({ writer }) => writer)

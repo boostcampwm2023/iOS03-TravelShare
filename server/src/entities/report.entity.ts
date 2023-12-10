@@ -16,13 +16,13 @@ export class Report {
   @PrimaryGeneratedColumn()
   reportId: number;
 
-  @ManyToOne(() => Post)
+  @ManyToOne(() => Post, { onDelete: 'NO ACTION' })
   @JoinColumn({
     name: 'post_id',
   })
   post: Post;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { onDelete: 'NO ACTION' })
   @JoinColumn({
     name: 'user_email',
     referencedColumnName: 'email',

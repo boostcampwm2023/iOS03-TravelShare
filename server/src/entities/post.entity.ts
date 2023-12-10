@@ -26,6 +26,7 @@ export class Post {
 
   @ManyToOne(() => User, ({ writedPosts }) => writedPosts, {
     onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'user_email', referencedColumnName: 'email' })
   writer: User;
@@ -34,9 +35,7 @@ export class Post {
   @Index({ fulltext: true, parser: 'ngram' })
   title: string;
 
-  @OneToMany(() => PostContentElement, ({ post }) => post, {
-    cascade: ['insert', 'soft-remove', 'update'],
-  })
+  @OneToMany(() => PostContentElement, ({ post }) => post)
   contents: PostContentElement[];
 
   @Column({ name: 'view_num', default: 0 })
@@ -45,8 +44,7 @@ export class Post {
   @Column({ nullable: true })
   summary: string;
 
-  @OneToOne(() => Route)
-  @JoinColumn({ name: 'route_id', referencedColumnName: 'routeId' })
+  @OneToOne(() => Route, (route) => route.post)
   route: Route;
 
   @VirtualColumn({

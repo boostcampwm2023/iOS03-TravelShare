@@ -3,8 +3,11 @@ import {
   CreateDateColumn,
   Entity,
   Index,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Post } from './post.entity';
 
 const LINESTRING_COORDINATES_EXTRACT_REGEXP =
   /LINESTRING\(((\-?[\d\.]+ \-?[\d\.]+,?)+)\)/;
@@ -30,6 +33,12 @@ const jsonArrayToLineString = (coordinates: LineString) => {
 export class Route {
   @PrimaryGeneratedColumn({ name: 'route_id' })
   routeId: number;
+
+  @OneToOne(() => Post, (post) => post.route, { onDelete: 'CASCADE' })
+  @JoinColumn({
+    name: 'post_id',
+  })
+  post: Post;
 
   @Column('geometry', {
     spatialFeatureType: 'LineString',

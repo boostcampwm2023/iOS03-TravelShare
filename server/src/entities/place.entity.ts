@@ -36,6 +36,6 @@ export class Place {
   })
   coordinate: Coordinate;
 
-  @ManyToMany(() => Post, ({ pins }) => pins)
+  @ManyToMany(() => Post, ({ pins }) => pins, { onDelete: 'CASCADE' })
   posts: Post[];
 }

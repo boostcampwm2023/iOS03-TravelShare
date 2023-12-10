@@ -6,5 +6,5 @@ export class Authentication {
 
   @IsString()
   @IsIn(['user', 'admin'])
-  role: string;
+  role: 'user' | 'admin';
 }
