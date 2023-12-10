@@ -29,6 +29,11 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
         timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(updateLocation), userInfo: nil, repeats: true)
     }
     
+    func startRecording() {
+        timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(updateLocation), userInfo: nil, repeats: true)
+        locationManager.allowsBackgroundLocationUpdates = true
+    }
+    
     func stopRecording() {
         timer?.invalidate()
         timer = nil

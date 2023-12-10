@@ -16,7 +16,6 @@ final class TravelViewModel: ViewModelProtocol {
     
     private var currentTravel: TravelInfo?
     private let outputSubject = PassthroughSubject<Output, Never>()
-    private let routeRecorder: RouteRecordUseCase
     private let locationSearcher: SearchUseCase
     private let pinnedPlaceManager: PinnedPlaceManageUseCase
     private var cancellables = Set<AnyCancellable>()
@@ -52,8 +51,7 @@ final class TravelViewModel: ViewModelProtocol {
     
     // MARK: - Init
     
-    init(routeRecorder: RouteRecordUseCase, locationSearcher: SearchUseCase, pinnedPlaceManager: PinnedPlaceManageUseCase) {
-        self.routeRecorder = routeRecorder
+    init(locationSearcher: SearchUseCase, pinnedPlaceManager: PinnedPlaceManageUseCase) {
         self.locationSearcher = locationSearcher
         self.pinnedPlaceManager = pinnedPlaceManager
     }
@@ -150,7 +148,6 @@ extension TravelViewModel {
                                           sequence: Int(travel.sequence),
                                           startAt: startAt,
                                           endAt: endAt)
-        routeRecorder.stopRecording()
     
         LocationManager.shared.stopRecording()
         
