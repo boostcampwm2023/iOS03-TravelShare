@@ -68,7 +68,7 @@ class MacroCarouselCollectionView<T: CarouselViewProtocol>: UICollectionView,
             if viewModel.items.count > indexPath.item, let image = viewModel.items[indexPath.item] {
                 cell.prepare(image: image)
             } else {
-                cell.prepare(image: UIImage.appImage(.ProfileDefaultImage))
+                cell.prepare(image: UIImage.appImage(.profileDefaultImage))
             }
             return cell
         }

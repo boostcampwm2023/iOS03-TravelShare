@@ -81,7 +81,7 @@ extension UserResultCell {
     func configure(with profile: UserProfile) {
         userNameLabel.text = profile.name
         guard let imageUrl = profile.imageUrl else {
-            self.profileImageView.image = UIImage.appImage(.ProfileDefaultImage)
+            self.profileImageView.image = UIImage.appImage(.profileDefaultImage)
             return
         }
         guard let url = URL(string: imageUrl) else { return }
@@ -100,7 +100,7 @@ extension UserResultCell {
                         self.profileImageView.image = image
                     }
                 } else {
-                    self.profileImageView.image = UIImage.appImage(.ProfileDefaultImage)
+                    self.profileImageView.image = UIImage.appImage(.profileDefaultImage)
                 }
             }.resume()
         }

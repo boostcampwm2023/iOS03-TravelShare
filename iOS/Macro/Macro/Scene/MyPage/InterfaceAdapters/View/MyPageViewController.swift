@@ -135,7 +135,7 @@ extension MyPageViewController {
                     self.myPageHeaderView.configure(profileImage: image)
                 }
             } else {
-                self.myPageHeaderView.configure(profileImage: UIImage.appImage(.ProfileDefaultImage))
+                self.myPageHeaderView.configure(profileImage: UIImage.appImage(.profileDefaultImage))
             }
         }.resume()
     }
