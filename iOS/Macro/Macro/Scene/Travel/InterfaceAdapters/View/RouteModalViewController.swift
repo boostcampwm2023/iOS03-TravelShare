@@ -176,6 +176,7 @@ extension RouteModalViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = viewModel.savedRoute.pinnedPlaces[indexPath.row].placeName
         cell.textLabel?.isUserInteractionEnabled = true
+        cell.textLabel?.font = UIFont.appFont(.baeEunBody)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTextLabelTap(_:)))
         cell.textLabel?.addGestureRecognizer(tapGesture)
         
