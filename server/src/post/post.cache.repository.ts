@@ -201,6 +201,9 @@ export class PostCacheRepository {
   }
 
   async getMultiPostWithLockAsideAndWriteAroundStrategy(postIds: number[]) {
+    if (!postIds || postIds.length === 0) {
+      return [];
+    }
     const caches = await this.redisService.jsonGet<Post>(
       postIds.map((postId) => this.getBodyKey(postId)),
     );
@@ -248,19 +251,21 @@ export class PostCacheRepository {
       });
 
       postIds.forEach((postId, index) => {
-        if (!caches[index]) {
+        if (!caches[index] && posts?.[0]?.postId === postId) {
           caches[index] = posts.shift();
         }
       });
     }
     return await Promise.all(
-      caches.map(async (cache) => ({
-        ...cache,
-        viewNum:
-          cache.viewNum +
-          (await this.getIncrementedViewedUsersCount(cache.postId)),
-        likeNum: await this.getLikedUsersCount(cache.postId),
-      })),
+      caches
+        .filter((cache) => cache)
+        .map(async (cache) => ({
+          ...cache,
+          viewNum:
+            cache.viewNum +
+            (await this.getIncrementedViewedUsersCount(cache.postId)),
+          likeNum: await this.getLikedUsersCount(cache.postId),
+        })),
     );
   }
 
