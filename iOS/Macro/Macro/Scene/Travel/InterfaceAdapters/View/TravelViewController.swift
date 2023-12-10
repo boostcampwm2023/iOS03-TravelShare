@@ -23,7 +23,8 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
     private var cancellables = Set<AnyCancellable>()
     private let inputSubject: PassthroughSubject<TravelViewModel.Input, Never> = .init()
     private let viewModel: TravelViewModel
-    private var polyline: NMFPolylineOverlay?
+  //  private var polyline: NMFPolylineOverlay?
+    private var pathOverlay: NMFPath?
     private let routeTableViewController: RouteModalViewController
     private var isTraveling = false {
         didSet {
@@ -291,15 +292,23 @@ extension TravelViewController {
     }
     
     private func updateMapWithLocation(_ newLocation: CLLocation) {
+        
         let newCoord = NMGLatLng(lat: newLocation.coordinate.latitude, lng: newLocation.coordinate.longitude)
-        if polyline == nil {
-            polyline = NMFPolylineOverlay([newCoord, newCoord])
-            polyline?.mapView = mapView
-        } else {
-            guard let line = polyline?.line else { return }
-            line.addPoint(newCoord)
-            polyline?.line = line
-            polyline?.mapView = mapView
+    
+        if pathOverlay == nil {
+            pathOverlay = NMFPath()
+            pathOverlay?.color = UIColor.appColor(.purple1)
+            pathOverlay?.outlineColor = UIColor.clear
+            pathOverlay?.path = NMGLineString(points: [
+               newCoord, newCoord
+            ])
+            pathOverlay?.mapView = mapView
+        }
+        else {
+            guard let path = pathOverlay?.path else { return }
+        
+            path.insertPoint(newCoord, at: 0)
+            pathOverlay?.path = path
         }
     }
     
@@ -360,10 +369,10 @@ extension TravelViewController {
     }
     
     private func removeMapLocation() {
-        if let existingPolyline = polyline {
+        if let existingPolyline = pathOverlay {
                existingPolyline.mapView = nil
            }
-        polyline = nil
+        pathOverlay = nil
     }
     
     private func requireMoreLocation() {
