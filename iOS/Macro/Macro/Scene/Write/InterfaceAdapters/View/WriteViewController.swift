@@ -360,7 +360,7 @@ extension WriteViewController {
     func updateMark(recordedPindedInfo: [RecordedPinnedLocationInfomation]) {
         for (index, placeInfo) in recordedPindedInfo.enumerated() {
             let marker = NMFMarker()
-            guard let name = placeInfo.placeName?.first, let placeLocation = placeInfo.coordinate else { return }
+            guard let name = placeInfo.placeName, let placeLocation = placeInfo.coordinate else { return }
             marker.position = NMGLatLng(lat: placeLocation.latitude, lng: placeLocation.longitude)
             marker.captionText = "\(index + 1). \(name)"
             marker.iconTintColor = UIColor.green
