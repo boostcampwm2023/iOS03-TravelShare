@@ -13,6 +13,7 @@ final class TabBarViewController: UIViewController {
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
     internal let viewModel: TabBarViewModel
+    private let inputSubject: PassthroughSubject<TabBarViewModel.Input, Never> = .init()
     
     // MARK: - UI Components
     internal let tabBarBackgroundLargeCirclceView: TabBarBackgroundLargeCirclceView = TabBarBackgroundLargeCirclceView()
@@ -280,6 +281,39 @@ private extension TabBarViewController {
     
     func bind() {
         bindCurrentTabComponentImage()
+        
+        let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
+        
+        outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
+            switch output {
+            case let .changeTap(tabbarType):
+                self?.changeTap(destinationViewType: tabbarType)
+            }
+        }.store(in: &cancellables)
+        
     }
     
+}
+
+extension TabBarViewController {
+    
+    // TODO: - 뷰가 자신의 타입을 가지는 건 좋지 못함. 차후 수정 :)
+    
+    func changeTap(destinationViewType tabType: TabbarType) {
+        guard viewModel.timer == nil else { return }
+        for subview in tabBarBackgroundLargeCirclceView.subviews {
+            if let tabComponentView = subview as? TabComponentView {
+                if tabComponentView.tabComponent.type == tabType {
+                    let image = tabComponentView.tabComponent.image
+                    viewModel.currentTabComponent.value.viewController.view.removeFromSuperview()
+                    viewModel.currentTabComponent.value.viewController.removeFromParent()
+                    self.view.insertSubview(tabComponentView.tabComponent.viewController.view, belowSubview: tabBarBackgroundLineView)
+                    swap(&tabComponentView.tabComponent, &viewModel.currentTabComponent.value)
+                    self.addChild(viewModel.currentTabComponent.value.viewController)
+                    inactiveTabBarCenterView.image = image
+                    break
+                }
+            }
+        }
+    }
 }

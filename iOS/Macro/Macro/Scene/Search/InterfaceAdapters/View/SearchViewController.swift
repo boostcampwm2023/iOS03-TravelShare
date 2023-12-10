@@ -17,6 +17,7 @@ final class SearchViewController: TouchableViewController {
     private var cancellables = Set<AnyCancellable>()
     private let inputSubject: PassthroughSubject<SearchViewModel.Input, Never> = .init()
     let postCollectionViewModel = PostCollectionViewModel(followFeature: FollowFeature(provider: APIProvider(session: URLSession.shared)), patcher: Patcher(provider: APIProvider(session: URLSession.shared)), postSearcher: Searcher(provider: APIProvider(session: URLSession.shared)), sceneType: .searchPostTitle)
+    private var tabBarOutputSubject: PassthroughSubject<TabBarViewModel.Output, Never>
     
     // MARK: - UI Components
     
@@ -75,8 +76,9 @@ final class SearchViewController: TouchableViewController {
     }
     
     // MARK: Init
-    init(viewModel: SearchViewModel) {
+    init(viewModel: SearchViewModel, tabBarOutputSubject: PassthroughSubject<TabBarViewModel.Output, Never>) {
         self.viewModel = viewModel
+        self.tabBarOutputSubject = tabBarOutputSubject
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -143,6 +145,8 @@ extension SearchViewController {
                 self?.updatePostSearchResult(result)
             case let .updateUserSearchResult(result):
                 self?.updateUserSearchResult(result)
+            case let .transView(destinationViewType):
+                self?.transView(destinationViewType)
             }
         }.store(in: &cancellables)
         
@@ -177,6 +181,9 @@ extension SearchViewController {
         userResultCollectionView.reloadData()
     }
     
+    func transView(_ changeTabbarType: TabbarType) {
+        tabBarOutputSubject.send(.changeTap(changeTabbarType))
+    }
 }
 
 // MARK: - LayoutMetrics
