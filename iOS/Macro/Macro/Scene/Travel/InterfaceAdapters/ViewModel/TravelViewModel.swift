@@ -47,6 +47,7 @@ final class TravelViewModel: ViewModelProtocol {
         case updateMarkers
         case showLocationInfo(LocationDetail)
         case moveCamera(Double, Double)
+        case removeMapLocation
     }
     
     // MARK: - Init
@@ -96,6 +97,7 @@ extension TravelViewModel {
          routeRecorder.locationPublisher
          */
         generateTravel()
+        LocationManager.shared.startRecording()
         LocationManager.shared.locationPublisher
             .sink { [weak self] location in
                 guard let self = self else { return }
@@ -116,24 +118,6 @@ extension TravelViewModel {
         }
     }
     
-    private func completeTravel() {
-        let transRoute = savedRoute.routePoints.map({ [$0.coordinate.latitude, $0.coordinate.longitude] })
-        let pinnedTransRoute: [RecordedPinnedLocationInfomation] = savedRoute.pinnedPlaces.map { RecordedPinnedLocationInfomation(
-            placeId: $0.id,
-            placeName: $0.placeName,
-            phoneNumber: $0.phone,
-            category: $0.categoryName,
-            address: $0.addressName,
-            roadAddress: $0.roadAddressName,
-            coordinate: PinnedLocation(latitude: Double($0.mapy) ?? 0,
-                                       longitude: Double($0.mapx) ?? 0))
-        }
-        self.currentTravel?.recordedLocation = transRoute
-        self.currentTravel?.recordedPinnedLocations = pinnedTransRoute
-        let currentTime: Date = Date()
-        self.currentTravel?.endAt = currentTime
-    }
-    
     private func stopRecord() {
         completeTravel()
         guard let travel = self.currentTravel,
@@ -150,7 +134,26 @@ extension TravelViewModel {
                                           endAt: endAt)
     
         LocationManager.shared.stopRecording()
-        
+        savedRoute = SavedRoute()
+        outputSubject.send(.removeMapLocation)
+    }
+    
+    private func completeTravel() {
+        let transRoute = savedRoute.routePoints.map({ [$0.coordinate.latitude, $0.coordinate.longitude] })
+        let pinnedTransRoute: [RecordedPinnedLocationInfomation] = savedRoute.pinnedPlaces.map { RecordedPinnedLocationInfomation(
+            placeId: $0.id,
+            placeName: $0.placeName,
+            phoneNumber: $0.phone,
+            category: $0.categoryName,
+            address: $0.addressName,
+            roadAddress: $0.roadAddressName,
+            coordinate: PinnedLocation(latitude: Double($0.mapy) ?? 0,
+                                       longitude: Double($0.mapx) ?? 0))
+        }
+        self.currentTravel?.recordedLocation = transRoute
+        self.currentTravel?.recordedPinnedLocations = pinnedTransRoute
+        let currentTime: Date = Date()
+        self.currentTravel?.endAt = currentTime
     }
     
     private func searchPlace(with text: String) {

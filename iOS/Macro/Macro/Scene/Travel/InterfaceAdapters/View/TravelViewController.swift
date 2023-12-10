@@ -262,6 +262,8 @@ extension TravelViewController {
                 self?.showLocationInfo(locationDetail)
             case let .moveCamera(mapX, mapY):
                 self?.moveCameraToCoordinates(latitude: mapY, longitude: mapX)
+            case .removeMapLocation:
+                self?.removeMapLocation()
             default: break
             }
         }.store(in: &cancellables)
@@ -357,6 +359,13 @@ extension TravelViewController {
         isTraveling = false
     }
     
+    private func removeMapLocation() {
+        if let existingPolyline = polyline {
+               existingPolyline.mapView = nil
+           }
+        polyline = nil
+    }
+    
     private func requireMoreLocation() {
         AlertBuilder(viewController: self)
             .setTitle("경로가 너무 짧습니다.")
@@ -364,6 +373,10 @@ extension TravelViewController {
             .addActionCancel("확인") {
             }
             .show()
+    }
+    
+    private func reconfirmEnd() {
+        
     }
     
     @objc private func myLocationButtonTapped(_ sender: UITapGestureRecognizer) {
