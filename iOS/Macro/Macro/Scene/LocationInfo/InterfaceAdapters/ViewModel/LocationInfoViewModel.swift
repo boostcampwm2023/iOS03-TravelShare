@@ -14,9 +14,17 @@ final class LocationInfoViewModel: ViewModelProtocol {
     private let outputSubject = PassthroughSubject<Output, Never>()
     private var infoType: InfoType = .post
     private let locationDetail: LocationDetail
-    private (set) var posts: [PostFindResponse] = []
+    private (set) var posts: [PostFindResponse] = [] {
+        didSet {
+            outputSubject.send(.changePost(posts.isEmpty))
+        }
+    }
     private let searcher: SearchUseCase
-    private (set) var relatedLocation: [RelatedLocation] = []
+    private (set) var relatedLocation: [RelatedLocation] = [] {
+        didSet {
+            outputSubject.send(.changeRelatePost(relatedLocation.isEmpty))
+        }
+    }
     
     // MARK: - Input
     
@@ -31,6 +39,8 @@ final class LocationInfoViewModel: ViewModelProtocol {
         case changeTextLabel(LocationDetail?)
         case sendRelatedPost([PostFindResponse])
         case sendRelatedLocation
+        case changePost(Bool)
+        case changeRelatePost(Bool)
     }
     
     // MARK: - Init

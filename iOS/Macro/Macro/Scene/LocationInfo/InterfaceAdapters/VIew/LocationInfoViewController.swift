@@ -138,6 +138,7 @@ extension LocationInfoViewController {
         segmentControl.translatesAutoresizingMaskIntoConstraints = false
         postCollectionView.translatesAutoresizingMaskIntoConstraints = false
         relatedLocationCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        dataEmptyView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func addsubviews() {
@@ -150,6 +151,7 @@ extension LocationInfoViewController {
         view.addSubview(segmentControl)
         view.addSubview(postCollectionView)
         view.addSubview(relatedLocationCollectionView)
+        view.addSubview(dataEmptyView)
     }
     
     private func setLayoutConstraints() {
@@ -179,11 +181,16 @@ extension LocationInfoViewController {
             
             segmentControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             segmentControl.topAnchor.constraint(equalTo: phoneLabel.bottomAnchor, constant: Padding.segmentTop),
-            
+           
             postCollectionView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: Padding.postCollectionViewTop),
             postCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             postCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             postCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
+            dataEmptyView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: Padding.postCollectionViewTop),
+            dataEmptyView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            dataEmptyView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            dataEmptyView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             
             relatedLocationCollectionView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: Padding.postCollectionViewTop),
             relatedLocationCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
@@ -214,6 +221,10 @@ extension LocationInfoViewController {
                 self?.updateRelatedPost(posts)
             case .sendRelatedLocation:
                 self?.updateRelatedLocation()
+            case let .changePost(isEmpty):
+                self?.transViewByPostCount(isEmpty)
+            case let .changeRelatePost(isEmpty):
+                self?.transViewByRelatePostCount(isEmpty)
             }
         }.store(in: &cancellables)
     }
@@ -230,6 +241,16 @@ extension LocationInfoViewController {
     
     private func updateRelatedLocation() {
         relatedLocationCollectionView.reloadData()
+    }
+    
+    private func transViewByPostCount(_ isEmpty: Bool) {
+        dataEmptyView.isHidden = !isEmpty
+        postCollectionView.isHidden = isEmpty
+    }
+    
+    private func transViewByRelatePostCount(_ isEmpty: Bool) {
+        dataEmptyView.isHidden = !isEmpty
+        relatedLocationCollectionView.isHidden = isEmpty
     }
     
     private func changeTextLabel(_ detail: LocationDetail?) {
