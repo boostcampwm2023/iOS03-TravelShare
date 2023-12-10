@@ -91,7 +91,6 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
         updateMyLocationButton()
         searchBar.addTarget(self, action: #selector(searchBarReturnPressed), for: .editingDidEndOnExit)
         hideKeyboardWhenTappedAround()
-      //  waitForValidLocation()
     }
     
     override func viewWillLayoutSubviews() {
@@ -170,7 +169,7 @@ extension TravelViewController {
         
         var image: UIImage?
         if isTravling {
-            image = UIImage.appImage(.pauseCircle)
+            image = UIImage.appImage(.stopCircle)
         } else {
             image = UIImage.appImage(.playCircle)
             
@@ -219,14 +218,14 @@ extension TravelViewController {
     }
     
     func updateMyLocationButton() {
-        let locationImage = UIImage.appImage(.location)?.withRenderingMode(.alwaysTemplate)
+        let locationImage = UIImage.appImage(.scope)?.withRenderingMode(.alwaysTemplate)
         let locationImageView = UIImageView(image: locationImage)
         
         locationImageView.translatesAutoresizingMaskIntoConstraints = false
         myLocationButtonView.addSubview(locationImageView)
         
         NSLayoutConstraint.activate([
-            locationImageView.widthAnchor.constraint(equalToConstant: 30),
+            locationImageView.widthAnchor.constraint(equalToConstant: 35),
             locationImageView.heightAnchor.constraint(equalToConstant: 30),
             locationImageView.centerXAnchor.constraint(equalTo: myLocationButtonView.centerXAnchor),
             locationImageView.centerYAnchor.constraint(equalTo: myLocationButtonView.centerYAnchor)
@@ -257,10 +256,12 @@ extension TravelViewController {
                 self?.removeMarker(for: locationDetail)
             case let .updateRoute(location):
                 self?.updateMapWithLocation(location)
-            case let .updateMarkers(pinnedPlaces):
-                self?.updateMarkers(pinnedPlaces)
+            case .updateMarkers:
+                self?.updateMarkers()
             case let .showLocationInfo(locationDetail):
                 self?.showLocationInfo(locationDetail)
+            case let .moveCamera(mapX, mapY):
+                self?.moveCameraToCoordinates(latitude: mapY, longitude: mapX)
             default: break
             }
         }.store(in: &cancellables)
@@ -278,6 +279,13 @@ extension TravelViewController {
             cameraUpdate.animation = .easeIn
             mapView.moveCamera(cameraUpdate)
         }
+    }
+    
+    private func moveCameraToCoordinates(latitude: Double, longitude: Double) {
+        let position = NMGLatLng(lat: latitude, lng: longitude)
+        let cameraUpdate = NMFCameraUpdate(scrollTo: position)
+        cameraUpdate.animation = .easeIn
+        mapView.moveCamera(cameraUpdate)
     }
     
     private func updateMapWithLocation(_ newLocation: CLLocation) {
@@ -320,42 +328,18 @@ extension TravelViewController {
     private func updateMarkers() {
         markers.values.forEach { $0.mapView = nil }
         markers.removeAll()
-        
         for (index, place) in viewModel.savedRoute.pinnedPlaces.enumerated() {
-            let marker = NMFMarker()
-            marker.position = NMGLatLng(lat: Double(place.mapy) ?? 0.0, lng: Double(place.mapx) ?? 0.0 )
-            marker.captionText = "\(index + 1). \(place.placeName)"
-            marker.mapView = mapView
-            markers[place] = marker
-            marker.touchHandler = { [weak self] _ in
-                self?.handleMarkerTap(marker)
-                return true
-            }
-        }
-    }
-    private func updateMarkers(_ pinnedPlaces: [LocationDetail]) {
-        markers.values.forEach { $0.mapView = nil }
-        markers.removeAll()
-        
-        for (index, place) in pinnedPlaces.enumerated() {
             let marker = NMFMarker()
             marker.position = NMGLatLng(lat: Double(place.mapy) ?? 0.0, lng: Double(place.mapx) ?? 0.0)
             marker.captionText = "\(index + 1). \(place.placeName)"
             marker.mapView = mapView
+            
+            marker.touchHandler = { [weak self] _ in
+                self?.handleMarkerTap(marker)
+                return true
+            }
             markers[place] = marker
         }
-    }
-    
-    private func waitForValidLocation() {
-        LocationManager.shared.locationPublisher
-            .filter { $0.horizontalAccuracy > 0 && $0.horizontalAccuracy < 100 }
-            .first()
-            .receive(on: RunLoop.main)
-            .sink { [weak self] location in
-                guard location.coordinate.latitude != 0.0, location.coordinate.longitude != 0.0 else { return }
-                self?.moveCamera()
-            }
-            .store(in: &cancellables)
     }
     
     @objc private func travelButtonTapped(_ sender: UITapGestureRecognizer) {
@@ -364,19 +348,33 @@ extension TravelViewController {
     }
     
     @objc private func endTravelButtonTapped(_ sender: UITapGestureRecognizer) {
+        if viewModel.savedRoute.routePoints.isEmpty {
+            requireMoreLocation()
+            return
+        }
+        
         inputSubject.send(.endTravel)
         isTraveling = false
     }
     
+    private func requireMoreLocation() {
+        AlertBuilder(viewController: self)
+            .setTitle("경로가 너무 짧습니다.")
+            .setMessage("5초 이상 기록해주세요.")
+            .addActionCancel("확인") {
+            }
+            .show()
+    }
+    
     @objc private func myLocationButtonTapped(_ sender: UITapGestureRecognizer) {
-       moveCamera()
+        moveCamera()
     }
     
     private func moveCamera() {
-        let currentLocation = LocationManager.shared.locationPublisher.value
+        guard let currentLocation = LocationManager.shared.sendLocation else { return }
         let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: currentLocation.coordinate.latitude, lng: currentLocation.coordinate.longitude))
-          cameraUpdate.animation = .easeIn
-          mapView.moveCamera(cameraUpdate)
+        cameraUpdate.animation = .easeIn
+        mapView.moveCamera(cameraUpdate)
     }
     
     private func getSearchResult(_ locationDetails: [LocationDetail]) {

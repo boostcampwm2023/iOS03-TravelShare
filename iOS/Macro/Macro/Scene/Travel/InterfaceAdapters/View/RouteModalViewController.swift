@@ -175,7 +175,23 @@ extension RouteModalViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = viewModel.savedRoute.pinnedPlaces[indexPath.row].placeName
+        cell.textLabel?.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTextLabelTap(_:)))
+        cell.textLabel?.addGestureRecognizer(tapGesture)
+        
         return cell
+    }
+    
+    @objc private func handleTextLabelTap(_ gesture: UITapGestureRecognizer) {
+        guard let label = gesture.view as? UILabel,
+              let cell = label.superview?.superview as? UITableViewCell,
+              let indexPath = tableView.indexPath(for: cell) else {
+            return
+        }
+        
+        let locationInfo = viewModel.savedRoute.pinnedPlaces[indexPath.row]
+        guard let mapX = Double(locationInfo.mapx), let mapY = Double(locationInfo.mapy) else { return }
+        inputSubject.send(.selectSearchedcell(mapX, mapY))
     }
     
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {

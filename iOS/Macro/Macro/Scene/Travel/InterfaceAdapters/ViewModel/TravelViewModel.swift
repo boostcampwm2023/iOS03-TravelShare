@@ -16,7 +16,6 @@ final class TravelViewModel: ViewModelProtocol {
     
     private var currentTravel: TravelInfo?
     private let outputSubject = PassthroughSubject<Output, Never>()
-    private let routeRecorder: RouteRecordUseCase
     private let locationSearcher: SearchUseCase
     private let pinnedPlaceManager: PinnedPlaceManageUseCase
     private var cancellables = Set<AnyCancellable>()
@@ -30,10 +29,9 @@ final class TravelViewModel: ViewModelProtocol {
         case startTravel
         case endTravel
         case searchLocation(String)
-        case exchangeLocation
-        case deleteLocation
         case togglePinnedPlaces(LocationDetail)
         case selectLocation(LocationDetail)
+        case selectSearchedcell(Double, Double)
     }
     
     // MARK: - Output
@@ -46,14 +44,14 @@ final class TravelViewModel: ViewModelProtocol {
         case addPinnedPlaceInMap(LocationDetail)
         case removePinnedPlaceInMap(LocationDetail)
         case updateRoute(CLLocation)
-        case updateMarkers([LocationDetail])
+        case updateMarkers
         case showLocationInfo(LocationDetail)
+        case moveCamera(Double, Double)
     }
     
     // MARK: - Init
     
-    init(routeRecorder: RouteRecordUseCase, locationSearcher: SearchUseCase, pinnedPlaceManager: PinnedPlaceManageUseCase) {
-        self.routeRecorder = routeRecorder
+    init(locationSearcher: SearchUseCase, pinnedPlaceManager: PinnedPlaceManageUseCase) {
         self.locationSearcher = locationSearcher
         self.pinnedPlaceManager = pinnedPlaceManager
     }
@@ -72,25 +70,20 @@ extension TravelViewModel {
                 self?.stopRecord()
             case let .searchLocation(text):
                 self?.searchPlace(with: text)
-            case .exchangeLocation:
-                self?.tempMethod()
-            case .deleteLocation:
-                self?.tempMethod()
             case let .togglePinnedPlaces(locationDetail):
                 self?.togglePinnedPlaces(locationDetail)
             case let .selectLocation(locationDetail):
                 self?.outputSubject.send(.showLocationInfo(locationDetail))
+            case let .selectSearchedcell(mapX, mapY):
+                self?.outputSubject.send(.moveCamera(mapX, mapY))
             }
         }.store(in: &cancellables)
         
         return outputSubject.eraseToAnyPublisher()
     }
     
-    func tempMethod() {
-    }
-    
     func togglePinnedPlaces(_ locationDetail: LocationDetail) {
-        if savedRoute.pinnedPlaces.contains(where: { $0.placeName == locationDetail.placeName }) {
+        if savedRoute.pinnedPlaces.contains(where: { $0.id == locationDetail.id}) {
             removePinnedPlace(locationDetail)
         } else {
             addPinnedPlace(locationDetail)
@@ -106,6 +99,7 @@ extension TravelViewModel {
         LocationManager.shared.locationPublisher
             .sink { [weak self] location in
                 guard let self = self else { return }
+                guard let location = location else { return }
                 self.savedRoute.routePoints.append(location)
                 self.outputSubject.send(.updateRoute(location))
             }
@@ -154,7 +148,6 @@ extension TravelViewModel {
                                           sequence: Int(travel.sequence),
                                           startAt: startAt,
                                           endAt: endAt)
-        routeRecorder.stopRecording()
     
         LocationManager.shared.stopRecording()
         
@@ -176,7 +169,7 @@ extension TravelViewModel {
     func movePinnedPlace(from sourceIndex: Int, to destinationIndex: Int) {
         savedRoute.pinnedPlaces = pinnedPlaceManager.movePinnedPlace(from: sourceIndex, to: destinationIndex, in: savedRoute.pinnedPlaces)
         outputSubject.send(.updatePinnedPlacesTableView(savedRoute.pinnedPlaces))
-        outputSubject.send(.updateMarkers(savedRoute.pinnedPlaces))
+        outputSubject.send(.updateMarkers)
     }
     
     func addPinnedPlace(_ locationDetail: LocationDetail) {
@@ -186,7 +179,7 @@ extension TravelViewModel {
     }
     
     func removePinnedPlace(_ locationDetail: LocationDetail) {
-        if let index = savedRoute.pinnedPlaces.firstIndex(where: { $0.placeName == locationDetail.placeName }) {
+        if let index = savedRoute.pinnedPlaces.firstIndex(where: { $0.id == locationDetail.id }) {
             savedRoute.pinnedPlaces.remove(at: index)
             outputSubject.send(.updatePinnedPlacesTableView(savedRoute.pinnedPlaces))
             outputSubject.send(.removePinnedPlaceInMap(locationDetail))

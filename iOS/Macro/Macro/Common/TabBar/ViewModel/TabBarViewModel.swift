@@ -26,7 +26,6 @@ final class TabBarViewModel {
         let homeViewModel = HomeViewModel(postSearcher: Searcher(provider: provider), followFeature: FollowFeature(provider: provider), patcher: Patcher(provider: provider))
         let routeViewModel = RouteViewModel()
         let travelViewModel = TravelViewModel(
-            routeRecorder: RouteRecorder(provider: provider),
             locationSearcher: Searcher(provider: provider),
             pinnedPlaceManager: PinnedPlaceManager(provider: provider))
         let myPageViewModel = MyPageViewModel(patcher: Patcher(provider: provider), 

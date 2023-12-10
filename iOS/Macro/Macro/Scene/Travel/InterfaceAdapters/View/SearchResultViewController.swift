@@ -6,6 +6,7 @@
 //
 
 import Combine
+import MacroNetwork
 import UIKit
 
 final class SearchResultViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
@@ -75,8 +76,9 @@ extension SearchResultViewController {
     }
 }
 
+// MARK: - Methods
+
 extension SearchResultViewController {
-    // MARK: - Methods
     
     @objc func pinLocation(_ sender: UIButton) {
         let location = viewModel.searchedResult[sender.tag]
@@ -109,6 +111,9 @@ extension SearchResultViewController {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // TODO: 테이블 뷰가 눌리면, 경로추천 segment 실행
+        let provider = APIProvider(session: URLSession.shared)
+        let locationViewModel = LocationInfoViewModel(locationDetail: viewModel.searchedResult[indexPath.row], searcher: Searcher(provider: provider))
+        let locationInfoVC = LocationInfoViewController(viewModel: locationViewModel)
+        navigationController?.pushViewController(locationInfoVC, animated: true)
     }
 }

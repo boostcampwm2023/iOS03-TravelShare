@@ -153,7 +153,6 @@
 		D241DC7C2B0DA0DA0037DDB6 /* SearchType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D241DC7B2B0DA0DA0037DDB6 /* SearchType.swift */; };
 		D263CA132B02DD8900B4A144 /* RouteModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA122B02DD8900B4A144 /* RouteModalViewController.swift */; };
 		D263CA1C2B04074D00B4A144 /* LocationDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA1B2B04074D00B4A144 /* LocationDetail.swift */; };
-		D263CA1E2B0407E000B4A144 /* RouteRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA1D2B0407E000B4A144 /* RouteRecorder.swift */; };
 		D263CA222B040EBE00B4A144 /* TravelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA212B040EBE00B4A144 /* TravelViewModel.swift */; };
 		D263CA242B04134600B4A144 /* ViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA232B04134600B4A144 /* ViewModelProtocol.swift */; };
 		D263CA262B04147E00B4A144 /* TravelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D263CA252B04147E00B4A144 /* TravelViewController.swift */; };
@@ -331,7 +330,6 @@
 		D241DC7B2B0DA0DA0037DDB6 /* SearchType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchType.swift; sourceTree = "<group>"; };
 		D263CA122B02DD8900B4A144 /* RouteModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteModalViewController.swift; sourceTree = "<group>"; };
 		D263CA1B2B04074D00B4A144 /* LocationDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetail.swift; sourceTree = "<group>"; };
-		D263CA1D2B0407E000B4A144 /* RouteRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteRecorder.swift; sourceTree = "<group>"; };
 		D263CA212B040EBE00B4A144 /* TravelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelViewModel.swift; sourceTree = "<group>"; };
 		D263CA232B04134600B4A144 /* ViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelProtocol.swift; sourceTree = "<group>"; };
 		D263CA252B04147E00B4A144 /* TravelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelViewController.swift; sourceTree = "<group>"; };
@@ -1322,7 +1320,6 @@
 		D263CA172B0404BE00B4A144 /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
-				D263CA1D2B0407E000B4A144 /* RouteRecorder.swift */,
 				D263CA272B043C6B00B4A144 /* PinnedPlaceManager.swift */,
 			);
 			path = UseCases;
@@ -1664,7 +1661,6 @@
 				BA11818A2B1D30B9008D151C /* CarouselViewType.swift in Sources */,
 				BA33AA852B0AF9F30065D1E0 /* HomeViewModel.swift in Sources */,
 				AAD0B2BD2B0DA35B003B4D5F /* LoginViewModel.swift in Sources */,
-				D263CA1E2B0407E000B4A144 /* RouteRecorder.swift in Sources */,
 				D263CA1C2B04074D00B4A144 /* LocationDetail.swift in Sources */,
 				BAE3C5892B1996B200BF9798 /* UpdateLikeEndPoint.swift in Sources */,
 				D21B10192B176B2700F2F84E /* PatchResponse.swift in Sources */,
