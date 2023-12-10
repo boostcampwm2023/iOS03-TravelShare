@@ -139,14 +139,15 @@ final class ReadViewController: UIViewController {
     @objc private func reportButtonTouched(_ sender: UITapGestureRecognizer) {
         AlertBuilder(viewController: self)
             .setTitle("신고하기")
-            .setMessage("정말 게시물을 신고 되었습니다.")
+            .setMessage("정말 게시물을 신고 하시겠어요?")
             .addActionConfirm("확인") {
                 guard let postId = self.readPost?.postId,
                       let title = self.readPost?.title,
                       let description = self.readPost?.writer.email
                 else { return }
                 self.inputSubject.send(.reportPost("\(postId)", title, description))
-              
+            }.addActionCancel("취소") {
+               
             }
             .show()
     }
