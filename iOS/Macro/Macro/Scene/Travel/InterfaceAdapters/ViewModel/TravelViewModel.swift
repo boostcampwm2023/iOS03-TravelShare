@@ -30,8 +30,6 @@ final class TravelViewModel: ViewModelProtocol {
         case startTravel
         case endTravel
         case searchLocation(String)
-        case exchangeLocation
-        case deleteLocation
         case togglePinnedPlaces(LocationDetail)
         case selectLocation(LocationDetail)
         case selectSearchedcell(Double, Double)
@@ -74,10 +72,6 @@ extension TravelViewModel {
                 self?.stopRecord()
             case let .searchLocation(text):
                 self?.searchPlace(with: text)
-            case .exchangeLocation:
-                self?.tempMethod()
-            case .deleteLocation:
-                self?.tempMethod()
             case let .togglePinnedPlaces(locationDetail):
                 self?.togglePinnedPlaces(locationDetail)
             case let .selectLocation(locationDetail):
@@ -88,9 +82,6 @@ extension TravelViewModel {
         }.store(in: &cancellables)
         
         return outputSubject.eraseToAnyPublisher()
-    }
-    
-    func tempMethod() {
     }
     
     func togglePinnedPlaces(_ locationDetail: LocationDetail) {
