@@ -15,6 +15,7 @@ final class PostCollectionView: UICollectionView {
     let viewModel: PostCollectionViewModel
     private var cancellables = Set<AnyCancellable>()
     weak var postDelegate: PostCollectionViewDelegate?
+    var readViewDisappear: PassthroughSubject<LikePostResponse, Never> = .init()
     private let inputSubject: PassthroughSubject<PostCollectionViewModel.Input, Never> = .init()
     private let postRefreshControl: UIRefreshControl = UIRefreshControl()
     
@@ -100,9 +101,10 @@ extension PostCollectionView: UICollectionViewDataSource {
         else { return UICollectionViewCell() }
         
         cell.delegate = postDelegate
+        cell.readViewDisappear = self.readViewDisappear
         if !viewModel.posts.isEmpty {
             let item = viewModel.posts[indexPath.row]
-            cell.configure(item: item, viewModel: viewModel, indexPath: indexPath)
+            cell.configure(item: item, viewModel: viewModel, indexPath: indexPath, readViewDisappear: self.readViewDisappear)
         }
         
         return cell

@@ -5,6 +5,7 @@
 //  Created by Byeon jinha on 11/16/23.
 //
 
+import Combine
 import UIKit
 
 final class PostCollectionViewCell: UICollectionViewCell {
@@ -13,6 +14,7 @@ final class PostCollectionViewCell: UICollectionViewCell {
     
     let identifier = "PostCollectionViewCell"
     var viewModel: PostCollectionViewModel?
+    var readViewDisappear: PassthroughSubject<LikePostResponse, Never> = .init()
     weak var delegate: PostCollectionViewDelegate?
     
     // MARK: - UI Components
@@ -24,6 +26,7 @@ final class PostCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         self.postContentView = PostContentView()
+        self.postContentView.readViewDisappear = self.readViewDisappear
         self.postProfileView = PostProfileView()
         super.init(frame: frame)
         
@@ -77,9 +80,10 @@ extension PostCollectionViewCell {
 
 extension PostCollectionViewCell {
     
-    func configure(item: PostFindResponse, viewModel: PostCollectionViewModel, indexPath: IndexPath) {
+    func configure(item: PostFindResponse, viewModel: PostCollectionViewModel, indexPath: IndexPath, readViewDisappear: PassthroughSubject<LikePostResponse, Never>) {
         self.viewModel = viewModel
-        postContentView.configure(item: item, viewModel: viewModel)
+        self.readViewDisappear = readViewDisappear
+        postContentView.configure(item: item, viewModel: viewModel, readViewDisappear: self.readViewDisappear)
         postProfileView.configure(item: item, viewModel: viewModel)
         postContentView.setLayout()
         postProfileView.setLayout()

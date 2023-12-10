@@ -23,6 +23,7 @@ final class ReadViewModel: ViewModelProtocol, CarouselViewProtocol {
     private let useCase: ReadPostUseCaseProtocol
     private let reporter: ReportUseCase
     private let pathcher: PatchUseCase
+    private var likeInfo: LikePostResponse?
     private let outputSubject = PassthroughSubject<Output, Never>()
     private let postId: Int
     private var userEmail: String?
@@ -46,6 +47,7 @@ final class ReadViewModel: ViewModelProtocol, CarouselViewProtocol {
         case searchUser
         case likeImageTap
         case reportPost(String, String, String)
+        case didDisappear
     }
     
     // MARK: - Output
@@ -55,6 +57,7 @@ final class ReadViewModel: ViewModelProtocol, CarouselViewProtocol {
         case navigateToProfileView(String)
         case updatePageIndex(Int)
         case updatePostLike(LikePostResponse)
+        case updatePostCollection(LikePostResponse?)
     }
 }
 
@@ -74,6 +77,8 @@ extension ReadViewModel {
                     self?.like()
                 case let .reportPost(postId, title, description):
                     self?.reportPost(postId: postId, title: title, description: description)
+                case .didDisappear:
+                    self?.outputSubject.send(.updatePostCollection(self?.likeInfo))
                 }
             }
             .store(in: &cancellables)
@@ -101,6 +106,7 @@ extension ReadViewModel {
         pathcher.patchPostLike(postId: postId).sink { _ in
         } receiveValue: { [weak self] likePostResponse in
             guard likePostResponse.postId == self?.postId else { return }
+            self?.likeInfo = likePostResponse
             self?.outputSubject.send(.updatePostLike(likePostResponse))
         }.store(in: &cancellables)
     }
