@@ -288,6 +288,16 @@ private extension ReadViewController {
             .receive(on: RunLoop.main)
             .sink { [weak self] index in
                 self?.carouselView.descriptionLabel.text = self?.readPost?.contents[index].description
+                self?.carouselView.descriptionLabel.text = self?.readPost?.contents[index].description
+                
+                if let coordinate = self?.readPost?.contents[index].coordinate {
+                    let centerLocation = NMGLatLng(
+                        lat: coordinate.yPosition,
+                        lng: coordinate.xPosition)
+                    let cameraUpdate = NMFCameraUpdate(scrollTo: centerLocation)
+                    cameraUpdate.animation = .easeIn
+                    self?.mapView.moveCamera(cameraUpdate)
+                }
             }
             .store(in: &cancellables)
     }
@@ -417,7 +427,6 @@ private extension ReadViewController {
         routeOverlay?.mapView = mapView
     }
     
-    // TODO: - 위경도 좌표가 바뀌어 있어요. 다음 스프린트 때, 코어데이터 테이블 추가하면서 수정하도록하겠습니다. :)
     /// Pin이 저장된 곳에  Mark를 찍습니다.
     /// - Parameters:
     ///   - recordedPindedInfo: Pin의 위도, 경도 배열 입니다.
