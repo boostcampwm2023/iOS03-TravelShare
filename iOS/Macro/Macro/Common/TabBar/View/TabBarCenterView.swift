@@ -11,7 +11,7 @@ final class TabBarCenterView: UIView, CircularViewProtocol {
     
     let imageView: UIImageView = UIImageView()
     
-    var image: UIImage = UIImage(systemName: "house") ?? UIImage() {
+    var image: UIImage? = UIImage(systemName: "house") {
         didSet {
             setNeedsLayout()
         }
@@ -96,7 +96,7 @@ final class TabBarCenterView: UIView, CircularViewProtocol {
         guard let gradientLayer = imageView.layer.sublayers?.compactMap({ $0 as? CAGradientLayer }).first,
               let mask = gradientLayer.mask else { return }
         
-        mask.contents = image.cgImage
+        mask.contents = image?.cgImage
     }
 }
 

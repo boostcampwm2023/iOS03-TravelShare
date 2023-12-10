@@ -40,6 +40,7 @@ final class SearchViewModel: ViewModelProtocol {
     enum Output {
         case updatePostSearchResult([PostFindResponse])
         case updateUserSearchResult([UserProfile])
+        case transView(TabbarType)
     }
     
 }

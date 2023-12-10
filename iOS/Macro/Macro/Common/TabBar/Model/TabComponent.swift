@@ -13,4 +13,5 @@ struct TabComponent {
     let image: UIImage?
     let text: String
     let viewController: UIViewController
+    let type: TabbarType
 }

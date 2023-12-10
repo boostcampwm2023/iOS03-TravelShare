@@ -13,6 +13,7 @@ class RouteViewController: UIViewController {
     // MARK: - Properties
     private let inputSubject: PassthroughSubject<RouteViewModel.Input, Never> = .init()
     private var cancellables = Set<AnyCancellable>()
+    private var tabBarOutputSubject: PassthroughSubject<TabBarViewModel.Output, Never>
     
     // MARK: - UI Components
     let titleLabel: UILabel = {
@@ -21,6 +22,12 @@ class RouteViewController: UIViewController {
         label.font = UIFont.appFont(.baeEunLargeTitle)
         label.textColor = UIColor.appColor(.blue2)
         return label
+    }()
+    
+    let button: UIView = {
+        let button = UIView()
+        button.backgroundColor = .red
+        return button
     }()
     
     let viewModel: RouteViewModel
@@ -40,8 +47,9 @@ class RouteViewController: UIViewController {
     }
     
     // MARK: - Init
-    init(viewModel: RouteViewModel) {
+    init(viewModel: RouteViewModel, tabBarOutputSubject: PassthroughSubject<TabBarViewModel.Output, Never>) {
         self.viewModel = viewModel
+        self.tabBarOutputSubject = tabBarOutputSubject
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -55,11 +63,13 @@ private extension RouteViewController {
     func setTranslatesAutoresizingMaskIntoConstraints() {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         routeCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        button.translatesAutoresizingMaskIntoConstraints = false
     }
     
     func addsubviews() {
         self.view.addSubview(titleLabel)
         self.view.addSubview(routeCollectionView)
+        self.view.addSubview(button)
     }
     
     func setLayoutConstraints() {
@@ -70,7 +80,12 @@ private extension RouteViewController {
             routeCollectionView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
             routeCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             routeCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            routeCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            routeCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
+            button.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
+            button.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            button.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            button.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
     }
     
@@ -78,6 +93,7 @@ private extension RouteViewController {
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
         setLayoutConstraints()
+        addTapGesture()
     }
 }
 
@@ -93,6 +109,10 @@ extension RouteViewController {
                 self?.deleteTravel(uuid: uuid)
             case let .navigateToWriteView(viewModel):
                 self?.navigateToWriteView(viewModel: viewModel)
+            case let .transView(changeTabbarType):
+                self?.transView(changeTabbarType)
+            case let .changeInnerView(isEmpty):
+                self?.changeInnerView(isEmpty)
             }
         }.store(in: &cancellables)
     }
@@ -100,6 +120,25 @@ extension RouteViewController {
 
 // MARK: - Methods
 private extension RouteViewController {
+    
+    func changeInnerView(_ isRouteEmpty: Bool) {
+            routeCollectionView.isHidden = isRouteEmpty
+            button.isHidden = !isRouteEmpty
+    }
+    
+    func addTapGesture() {
+        button.isUserInteractionEnabled = true
+        let addPictrueViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(tappedButton(_:)))
+        button.addGestureRecognizer(addPictrueViewTapGesture)
+    }
+    
+    @objc private func tappedButton(_ sender: UITapGestureRecognizer) {
+        transView(.travel)
+    }
+    
+    func transView(_ changeTabbarType: TabbarType) {
+        tabBarOutputSubject.send(.changeTap(changeTabbarType))
+    }
     
     func fetchLocalTravels() {
         do {
