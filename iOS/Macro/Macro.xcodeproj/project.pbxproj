@@ -84,6 +84,9 @@
 		BA6C6DFC2B05FFC500563B22 /* TabComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DF02B05FFC500563B22 /* TabComponentView.swift */; };
 		BA6C6DFD2B05FFC500563B22 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DF12B05FFC500563B22 /* TabBarViewController.swift */; };
 		BA6C6DFE2B05FFC500563B22 /* TabBarOpacityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DF22B05FFC500563B22 /* TabBarOpacityView.swift */; };
+		BA7954722B2509CA00C4BAC8 /* ReportEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7954712B2509CA00C4BAC8 /* ReportEndPoint.swift */; };
+		BA7954742B2510C400C4BAC8 /* ReportUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7954732B2510C400C4BAC8 /* ReportUseCase.swift */; };
+		BA7954762B2512B300C4BAC8 /* ReportResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7954752B2512B300C4BAC8 /* ReportResponse.swift */; };
 		BA8742F02B204C2800DBDE03 /* CustomAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8742EF2B204C2800DBDE03 /* CustomAlertViewController.swift */; };
 		BA8742F32B204CA800DBDE03 /* CancelAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8742F22B204CA800DBDE03 /* CancelAction.swift */; };
 		BA8742F52B204D0B00DBDE03 /* AlertBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8742F42B204D0B00DBDE03 /* AlertBuilder.swift */; };
@@ -263,6 +266,9 @@
 		BA6C6DF02B05FFC500563B22 /* TabComponentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabComponentView.swift; sourceTree = "<group>"; };
 		BA6C6DF12B05FFC500563B22 /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		BA6C6DF22B05FFC500563B22 /* TabBarOpacityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarOpacityView.swift; sourceTree = "<group>"; };
+		BA7954712B2509CA00C4BAC8 /* ReportEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportEndPoint.swift; sourceTree = "<group>"; };
+		BA7954732B2510C400C4BAC8 /* ReportUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportUseCase.swift; sourceTree = "<group>"; };
+		BA7954752B2512B300C4BAC8 /* ReportResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportResponse.swift; sourceTree = "<group>"; };
 		BA8742EF2B204C2800DBDE03 /* CustomAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlertViewController.swift; sourceTree = "<group>"; };
 		BA8742F22B204CA800DBDE03 /* CancelAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelAction.swift; sourceTree = "<group>"; };
 		BA8742F42B204D0B00DBDE03 /* AlertBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertBuilder.swift; sourceTree = "<group>"; };
@@ -591,6 +597,7 @@
 			isa = PBXGroup;
 			children = (
 				AAD0B30D2B14E394003B4D5F /* ReadEndPoint.swift */,
+				BA7954712B2509CA00C4BAC8 /* ReportEndPoint.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -599,6 +606,7 @@
 			isa = PBXGroup;
 			children = (
 				AAD0B30F2B14E394003B4D5F /* ReadPostUseCase.swift */,
+				BA7954732B2510C400C4BAC8 /* ReportUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -607,6 +615,7 @@
 			isa = PBXGroup;
 			children = (
 				AAD0B3202B1712D1003B4D5F /* ReadPost.swift */,
+				BA7954752B2512B300C4BAC8 /* ReportResponse.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -1566,6 +1575,7 @@
 				BAB24EEC2B16DE55000991A1 /* MapCollectionViewCell.swift in Sources */,
 				D263CA332B06C7B300B4A144 /* SavedRoute.swift in Sources */,
 				BA24D7402B1DF3D600BA8EB5 /* TravelMO+CoreDataProperties.swift in Sources */,
+				BA7954722B2509CA00C4BAC8 /* ReportEndPoint.swift in Sources */,
 				BA8DC3FA2B0B5DD100929E01 /* BaseViewControllerProtocol.swift in Sources */,
 				AAD0B3142B14E394003B4D5F /* ReadViewController.swift in Sources */,
 				AAD0B2DB2B0FB5A5003B4D5F /* ImageUploadEndPoint.swift in Sources */,
@@ -1619,6 +1629,7 @@
 				D2CAA5DD2B1E51C200E825BA /* UserResultCollectionView.swift in Sources */,
 				AAD0B3232B17474D003B4D5F /* UploadPost.swift in Sources */,
 				BA32E17F2B0DC3CB00EA0EE2 /* MyPageViewController.swift in Sources */,
+				BA7954762B2512B300C4BAC8 /* ReportResponse.swift in Sources */,
 				D2CAA5DF2B1E51CF00E825BA /* UserResultCell.swift in Sources */,
 				BA90CBA02B145D6600365AE2 /* FollowUseCase.swift in Sources */,
 				BA6C6DFC2B05FFC500563B22 /* TabComponentView.swift in Sources */,
@@ -1664,6 +1675,7 @@
 				D263CA1C2B04074D00B4A144 /* LocationDetail.swift in Sources */,
 				BAE3C5892B1996B200BF9798 /* UpdateLikeEndPoint.swift in Sources */,
 				D21B10192B176B2700F2F84E /* PatchResponse.swift in Sources */,
+				BA7954742B2510C400C4BAC8 /* ReportUseCase.swift in Sources */,
 				BAB24EDB2B1633B2000991A1 /* ProfileGetResponse.swift in Sources */,
 				D241DC6E2B0D9FFE0037DDB6 /* SearchUseCase.swift in Sources */,
 				BA8DC4052B0B5EFD00929E01 /* SearchViewModel.swift in Sources */,

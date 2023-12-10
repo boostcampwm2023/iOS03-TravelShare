@@ -69,7 +69,10 @@ final class PostContentView: UIView {
         guard let postId: Int = self.postId else { return }
         let provider = APIProvider(session: URLSession.shared)
         let readuseCase = ReadPostUseCase(provider: provider)
-        let readViewModel = ReadViewModel(useCase: readuseCase, postId: postId, pathcher: Patcher(provider: APIProvider(session: URLSession.shared)))
+        let readViewModel = ReadViewModel(useCase: readuseCase,
+                                          postId: postId,
+                                          pathcher: Patcher(provider: provider),
+                                          reporter: Reporter(provider: provider))
         let readViewController = ReadViewController(viewModel: readViewModel)
         delegate?.didTapContent(viewController: readViewController)
         
