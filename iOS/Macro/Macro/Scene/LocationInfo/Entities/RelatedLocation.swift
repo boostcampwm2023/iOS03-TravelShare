@@ -10,12 +10,10 @@ import Foundation
 struct RelatedLocation: Codable {
     let placeId: String
     let placeName: String
-    let phoneNumber: String
+    let phoneNumber: String?
     let category: String
     let address: String
-    let roadAddress: String
+    let roadAddress: String?
     let coordinate: Coordinate
     let postNum: Int
 }
-
-

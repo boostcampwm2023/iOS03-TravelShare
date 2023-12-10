@@ -98,16 +98,22 @@ extension SearchResultViewController {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        let locationDetail = viewModel.searchedResult[indexPath.row]
-        cell.textLabel?.text = locationDetail.placeName
-        let pinButton = UIButton(type: .custom)
-        let pinImage = viewModel.isPinned(locationDetail) ? UIImage.appImage(.pinFill) : UIImage.appImage(.pin)
-        pinButton.setImage(pinImage, for: .normal)
-        pinButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-        pinButton.addTarget(self, action: #selector(pinLocation(_:)), for: .touchUpInside)
-        cell.accessoryView = pinButton
-        pinButton.tag = indexPath.row
+           let locationDetail = viewModel.searchedResult[indexPath.row]
+
+           let cellText = "\(locationDetail.placeName)\n\(   locationDetail.addressName)"
+           cell.textLabel?.text = cellText
+           cell.textLabel?.numberOfLines = 0
+           cell.textLabel?.font = UIFont.appFont(.baeEunCallout)
+           let pinButton = UIButton(type: .custom)
+           let pinImage = viewModel.isPinned(locationDetail) ? UIImage.appImage(.pinFill) : UIImage.appImage(.pin)
+           pinButton.setImage(pinImage, for: .normal)
+           pinButton.tintColor = UIColor.appColor(.purple4)
+           pinButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+           pinButton.addTarget(self, action: #selector(pinLocation(_:)), for: .touchUpInside)
+           cell.accessoryView = pinButton
+           pinButton.tag = indexPath.row
         return cell
+
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
