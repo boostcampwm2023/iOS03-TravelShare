@@ -30,6 +30,7 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     func startRecording() {
+        timer?.invalidate()
         timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(updateLocation), userInfo: nil, repeats: true)
         locationManager.allowsBackgroundLocationUpdates = true
     }
@@ -37,7 +38,9 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
     func stopRecording() {
         timer?.invalidate()
         timer = nil
+        sendLocation = nil
         locationManager.allowsBackgroundLocationUpdates = false
+        self.locationPublisher.value = nil
     }
     
     // MARK: - Methods

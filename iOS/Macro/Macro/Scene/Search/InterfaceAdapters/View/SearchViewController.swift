@@ -73,6 +73,7 @@ final class SearchViewController: TouchableViewController {
         searchSegment.addTarget(self, action: #selector(segmentValueChanged(_:)), for: .valueChanged)
         searchBar.addTarget(self, action: #selector(searchBarReturnPressed), for: .editingDidEndOnExit)
         hideKeyboardWhenTappedAround()
+        searchBar.placeholder = "2글자 이상으로 검색해주세요"
     }
     
     // MARK: Init

@@ -43,7 +43,6 @@ final class UserInfoHeaderView: UIView {
         self.viewModel = viewModel
         super.init(frame: frame)
         followButton.addTarget(self, action: #selector(tapFollowButton), for: .touchUpInside)
-        
         setupLayout()
     }
     
@@ -103,7 +102,7 @@ extension UserInfoHeaderView {
             followButton.isHidden = true
         }
         else {
-            followButton.isEnabled = false
+            followButton.isHidden = false
         }
     }
     

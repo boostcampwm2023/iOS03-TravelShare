@@ -23,7 +23,8 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
     private var cancellables = Set<AnyCancellable>()
     private let inputSubject: PassthroughSubject<TravelViewModel.Input, Never> = .init()
     private let viewModel: TravelViewModel
-    private var polyline: NMFPolylineOverlay?
+  //  private var polyline: NMFPolylineOverlay?
+    private var pathOverlay: NMFPath?
     private let routeTableViewController: RouteModalViewController
     private var isTraveling = false {
         didSet {
@@ -262,6 +263,8 @@ extension TravelViewController {
                 self?.showLocationInfo(locationDetail)
             case let .moveCamera(mapX, mapY):
                 self?.moveCameraToCoordinates(latitude: mapY, longitude: mapX)
+            case .removeMapLocation:
+                self?.removeMapLocation()
             default: break
             }
         }.store(in: &cancellables)
@@ -289,15 +292,23 @@ extension TravelViewController {
     }
     
     private func updateMapWithLocation(_ newLocation: CLLocation) {
+        
         let newCoord = NMGLatLng(lat: newLocation.coordinate.latitude, lng: newLocation.coordinate.longitude)
-        if polyline == nil {
-            polyline = NMFPolylineOverlay([newCoord, newCoord])
-            polyline?.mapView = mapView
-        } else {
-            guard let line = polyline?.line else { return }
-            line.addPoint(newCoord)
-            polyline?.line = line
-            polyline?.mapView = mapView
+    
+        if pathOverlay == nil {
+            pathOverlay = NMFPath()
+            pathOverlay?.color = UIColor.appColor(.purple1)
+            pathOverlay?.outlineColor = UIColor.clear
+            pathOverlay?.path = NMGLineString(points: [
+               newCoord, newCoord
+            ])
+            pathOverlay?.mapView = mapView
+        }
+        else {
+            guard let path = pathOverlay?.path else { return }
+        
+            path.insertPoint(newCoord, at: 0)
+            pathOverlay?.path = path
         }
     }
     
@@ -352,9 +363,16 @@ extension TravelViewController {
             requireMoreLocation()
             return
         }
-        
-        inputSubject.send(.endTravel)
-        isTraveling = false
+        reconfirmEnd()
+    }
+    
+    private func removeMapLocation() {
+        if let existingPolyline = pathOverlay {
+               existingPolyline.mapView = nil
+           }
+        pathOverlay = nil
+        markers.values.forEach { $0.mapView = nil }
+        markers.removeAll()
     }
     
     private func requireMoreLocation() {
@@ -362,6 +380,19 @@ extension TravelViewController {
             .setTitle("경로가 너무 짧습니다.")
             .setMessage("5초 이상 기록해주세요.")
             .addActionCancel("확인") {
+            }
+            .show()
+    }
+    
+    private func reconfirmEnd() {
+        AlertBuilder(viewController: self)
+            .setTitle("기록 중지")
+            .setMessage("이동 경로와 장소가 저장되며 초기화 됩니다.")
+            .addActionConfirm("확인") {
+                self.inputSubject.send(.endTravel)
+                self.isTraveling = false
+            }
+            .addActionCancel("취소") {
             }
             .show()
     }

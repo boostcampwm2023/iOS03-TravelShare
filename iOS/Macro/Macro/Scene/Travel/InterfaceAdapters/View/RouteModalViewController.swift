@@ -85,8 +85,8 @@ extension RouteModalViewController {
         
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
             switch output {
-            case let .updatePinnedPlacesTableView(locationDetails):
-                self?.updatePinnedPlaces(locationDetails)
+            case .updatePinnedPlacesTableView:
+                self?.updatePinnedPlaces()
             default: break
             }
         }.store(in: &cancellables)
@@ -144,7 +144,7 @@ extension RouteModalViewController {
 
 extension RouteModalViewController {
     
-    private func updatePinnedPlaces(_ places: [LocationDetail]) {
+    private func updatePinnedPlaces() {
         self.tableView.reloadData()
     }
     

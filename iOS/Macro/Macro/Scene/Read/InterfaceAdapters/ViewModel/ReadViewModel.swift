@@ -25,6 +25,7 @@ final class ReadViewModel: ViewModelProtocol, CarouselViewProtocol {
     private let pathcher: PatchUseCase
     private let outputSubject = PassthroughSubject<Output, Never>()
     private let postId: Int
+    private var userEmail: String?
     
     // MARK: - Init
     
@@ -42,7 +43,7 @@ final class ReadViewModel: ViewModelProtocol, CarouselViewProtocol {
     
     enum Input {
         case readPosts
-        case searchUser(String)
+        case searchUser
         case likeImageTap
         case reportPost(String, String, String)
     }
@@ -67,8 +68,8 @@ extension ReadViewModel {
                 switch input {
                 case .readPosts:
                     self?.updateReadViewItems()
-                case let .searchUser(userID):
-                    self?.searchUser(id: userID)
+                case let .searchUser:
+                    self?.searchUser(id: self?.userEmail ?? "")
                 case .likeImageTap:
                     self?.like()
                 case let .reportPost(postId, title, description):
@@ -90,6 +91,7 @@ extension ReadViewModel {
                     debugPrint("Read Get Fail : ", error)
                 }
             } receiveValue: { [weak self] readPost in
+                self?.userEmail = readPost.writer.email
                 self?.outputSubject.send(.updatePost(post: readPost))
             }
             .store(in: &cancellables)

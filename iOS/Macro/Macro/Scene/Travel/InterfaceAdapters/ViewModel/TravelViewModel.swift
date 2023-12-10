@@ -40,13 +40,14 @@ final class TravelViewModel: ViewModelProtocol {
         case exchangeCell
         case exchangeLocation
         case updateSearchResult([LocationDetail])
-        case updatePinnedPlacesTableView([LocationDetail])
+        case updatePinnedPlacesTableView
         case addPinnedPlaceInMap(LocationDetail)
         case removePinnedPlaceInMap(LocationDetail)
         case updateRoute(CLLocation)
         case updateMarkers
         case showLocationInfo(LocationDetail)
         case moveCamera(Double, Double)
+        case removeMapLocation
     }
     
     // MARK: - Init
@@ -96,6 +97,7 @@ extension TravelViewModel {
          routeRecorder.locationPublisher
          */
         generateTravel()
+        LocationManager.shared.startRecording()
         LocationManager.shared.locationPublisher
             .sink { [weak self] location in
                 guard let self = self else { return }
@@ -116,6 +118,27 @@ extension TravelViewModel {
         }
     }
     
+    private func stopRecord() {
+        completeTravel()
+        guard let travel = self.currentTravel,
+              let recordedLocation = travel.recordedLocation,
+              let startAt = travel.startAt,
+              let endAt = travel.endAt
+        else { return }
+        
+        CoreDataManager.shared.saveTravel(id: travel.id,
+                                          recordedLocation: recordedLocation,
+                                          recordedPinnedLocations: travel.recordedPinnedLocations,
+                                          sequence: Int(travel.sequence),
+                                          startAt: startAt,
+                                          endAt: endAt)
+    
+        LocationManager.shared.stopRecording()
+        savedRoute = SavedRoute()
+        outputSubject.send(.removeMapLocation)
+        outputSubject.send(.updatePinnedPlacesTableView)
+    }
+    
     private func completeTravel() {
         let transRoute = savedRoute.routePoints.map({ [$0.coordinate.latitude, $0.coordinate.longitude] })
         let pinnedTransRoute: [RecordedPinnedLocationInfomation] = savedRoute.pinnedPlaces.map { RecordedPinnedLocationInfomation(
@@ -134,25 +157,6 @@ extension TravelViewModel {
         self.currentTravel?.endAt = currentTime
     }
     
-    private func stopRecord() {
-        completeTravel()
-        guard let travel = self.currentTravel,
-              let recordedLocation = travel.recordedLocation,
-              let startAt = travel.startAt,
-              let endAt = travel.endAt
-        else { return }
-        
-        CoreDataManager.shared.saveTravel(id: travel.id,
-                                          recordedLocation: recordedLocation,
-                                          recordedPinnedLocations: travel.recordedPinnedLocations,
-                                          sequence: Int(travel.sequence),
-                                          startAt: startAt,
-                                          endAt: endAt)
-    
-        LocationManager.shared.stopRecording()
-        
-    }
-    
     private func searchPlace(with text: String) {
         locationSearcher.searchLocation(query: text, page: searchPageNum)
             .sink { completion in
@@ -168,20 +172,20 @@ extension TravelViewModel {
     
     func movePinnedPlace(from sourceIndex: Int, to destinationIndex: Int) {
         savedRoute.pinnedPlaces = pinnedPlaceManager.movePinnedPlace(from: sourceIndex, to: destinationIndex, in: savedRoute.pinnedPlaces)
-        outputSubject.send(.updatePinnedPlacesTableView(savedRoute.pinnedPlaces))
+        outputSubject.send(.updatePinnedPlacesTableView)
         outputSubject.send(.updateMarkers)
     }
     
     func addPinnedPlace(_ locationDetail: LocationDetail) {
         savedRoute.pinnedPlaces.append(locationDetail)
-        outputSubject.send(.updatePinnedPlacesTableView(savedRoute.pinnedPlaces))
+        outputSubject.send(.updatePinnedPlacesTableView)
         outputSubject.send(.addPinnedPlaceInMap(locationDetail))
     }
     
     func removePinnedPlace(_ locationDetail: LocationDetail) {
         if let index = savedRoute.pinnedPlaces.firstIndex(where: { $0.id == locationDetail.id }) {
             savedRoute.pinnedPlaces.remove(at: index)
-            outputSubject.send(.updatePinnedPlacesTableView(savedRoute.pinnedPlaces))
+            outputSubject.send(.updatePinnedPlacesTableView)
             outputSubject.send(.removePinnedPlaceInMap(locationDetail))
         }
     }
