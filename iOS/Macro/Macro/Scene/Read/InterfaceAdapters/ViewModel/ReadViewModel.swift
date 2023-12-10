@@ -80,10 +80,6 @@ extension ReadViewModel {
         return outputSubject.eraseToAnyPublisher()
     }
     
-    func reportPost() {
-        
-    }
-    
     func updateReadViewItems() {
         useCase.execute(postId: postId)
             .sink { completion in
