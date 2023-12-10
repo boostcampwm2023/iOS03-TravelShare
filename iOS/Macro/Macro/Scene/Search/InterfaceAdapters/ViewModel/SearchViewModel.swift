@@ -16,9 +16,18 @@ final class SearchViewModel: ViewModelProtocol {
     private var cancellables = Set<AnyCancellable>()
     private let outputSubject = PassthroughSubject<Output, Never>()
     private let searcher: SearchUseCase
-    private (set) var searchType: SearchType = .account
-    private (set) var posts: [PostFindResponse] = []
-    private (set) var userList: [UserProfile] = []
+    var searchType: SearchType = .account
+    private (set) var posts: [PostFindResponse] = [] {
+        didSet {
+            outputSubject.send(.transViewByPostsCount(posts.isEmpty && searchType == .post))
+        }
+    }
+    
+    private (set) var userList: [UserProfile] = [] {
+        didSet {
+            outputSubject.send(.transViewByUserListCount(userList.isEmpty && searchType == .account))
+        }
+    }
     private let patcher: PatchUseCase
     
     // MARK: - Init
@@ -41,6 +50,8 @@ final class SearchViewModel: ViewModelProtocol {
         case updatePostSearchResult([PostFindResponse])
         case updateUserSearchResult([UserProfile])
         case transView(TabbarType)
+        case transViewByUserListCount(Bool)
+        case transViewByPostsCount(Bool)
     }
     
 }
