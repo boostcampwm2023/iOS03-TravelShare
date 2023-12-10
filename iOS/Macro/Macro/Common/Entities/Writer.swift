@@ -1,5 +1,5 @@
 //
-//  UserInfo.swift
+//  Writer.swift
 //  Macro
 //
 //  Created by 김나훈 on 11/22/23.
