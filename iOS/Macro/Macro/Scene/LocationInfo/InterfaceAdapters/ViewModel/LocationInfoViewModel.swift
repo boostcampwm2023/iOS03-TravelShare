@@ -14,7 +14,7 @@ final class LocationInfoViewModel: ViewModelProtocol {
     private let outputSubject = PassthroughSubject<Output, Never>()
     private var infoType: InfoType = .post
     private let locationDetail: LocationDetail
-    private (set) var posts: [PostFindResponseHashable] = []
+    private (set) var posts: [PostFindResponse] = []
     private let searcher: SearchUseCase
     private (set) var relatedLocation: [RelatedLocation] = []
     
@@ -29,7 +29,7 @@ final class LocationInfoViewModel: ViewModelProtocol {
     
     enum Output {
         case changeTextLabel(LocationDetail?)
-        case sendRelatedPost([PostFindResponseHashable])
+        case sendRelatedPost([PostFindResponse])
         case sendRelatedLocation
     }
     
@@ -71,9 +71,8 @@ extension LocationInfoViewModel {
         searcher.searchRelatedPost(query: placeId, postCount: 0).sink { _ in
         } receiveValue: { [weak self] response in
             let sortedResponse = response.sorted { $0.postId > $1.postId }
-            let sortedResponseHashable = sortedResponse.map { PostFindResponseHashable(postFindResponse: $0) }
-            self?.posts = sortedResponseHashable
-            self?.outputSubject.send(.sendRelatedPost(sortedResponseHashable))
+            self?.posts = sortedResponse
+            self?.outputSubject.send(.sendRelatedPost(sortedResponse))
         }.store(in: &cancellables)
     }
     

@@ -12,9 +12,7 @@ import UIKit
 
 final class PostCollectionViewModel: ViewModelProtocol {
     
-    var dataSource: UICollectionViewDiffableDataSource<Section, PostFindResponseHashable>!
-    private var dataTask: URLSessionDataTask?
-    var posts: [PostFindResponseHashable] = []
+    var posts: [PostFindResponse] = []
     private let outputSubject = PassthroughSubject<Output, Never>()
     private var cancellables = Set<AnyCancellable>()
     let followFeatrue: FollowUseCase
@@ -68,9 +66,9 @@ extension PostCollectionViewModel {
     }
     
     func increasePostView(_ postId: Int) {
-        if let index = posts.firstIndex(where: { $0.postFindResponse.postId == postId }) {
-            posts[index].postFindResponse.viewNum += 1
-            outputSubject.send(.updatePostView(postId, posts[index].postFindResponse.viewNum))
+        if let index = posts.firstIndex(where: { $0.postId == postId }) {
+            posts[index].viewNum += 1
+            outputSubject.send(.updatePostView(postId, posts[index].viewNum))
         }
     }
     
@@ -92,12 +90,10 @@ extension PostCollectionViewModel {
                 Log.make().error("\(error)")
             }
         } receiveValue: { [weak self] response in
-            let sortedResponse = response.sorted { $0.postId > $1.postId }
-            let sortedResponseHashable = sortedResponse.map { PostFindResponseHashable(postFindResponse: $0) }
-            if sortedResponseHashable.count < 10 {
+            if response.count < 10 {
                 self?.isLastPost = true
             }
-            self?.posts += sortedResponseHashable
+            self?.posts += response
             self?.outputSubject.send(.updatePostContnet)
         }.store(in: &cancellables)
     }
@@ -116,61 +112,14 @@ extension PostCollectionViewModel {
     func loadImage(profileImageStringURL: String, completion: @escaping (UIImage?) -> Void) {
         guard let url = URL(string: profileImageStringURL) else { return }
         
-        let urlRequest = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad)
-        if let cachedResponse = URLCache.shared.cachedResponse(for: URLRequest(url: url)) {
-            let image = UIImage(data: cachedResponse.data)
-            DispatchQueue.main.async {
-                completion(image)
-            }
-        } else {
-            self.dataTask = URLSession.shared.dataTask(with: urlRequest) { data, response, error in
-                if let data = data, let image = UIImage(data: data) {
-                    
-                    let cachedResponse = CachedURLResponse(response: response!, data: data)
-                                       URLCache.shared.storeCachedResponse(cachedResponse, for: URLRequest(url: url))
-                    DispatchQueue.main.async {
-                        completion(image)
-                    }
-                } else {
-                    Log.make().debug("IsCancel \(error)")
-                    self.startDataLoading(url: urlRequest) { image in
-                        completion(image)
-                    }
+        URLSession.shared.dataTask(with: url) { data, _, _ in
+            if let data = data, let image = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    completion(image)
                 }
+            } else {
+                completion(nil)
             }
-            self.dataTask?.resume()
-        }
-    }
-    
-    func cancelLoadingImage(itemName: String?) {
-        dataTask?.cancel()
-        dataTask = nil
-    }
-    
-    func startDataLoading(url: URLRequest, completion: @escaping (UIImage?) -> Void) {
-        if dataTask?.state == .canceling {
-            let newDataTask = URLSession.shared.dataTask(with: url) { data, response, error in
-                if let data = data, let image = UIImage(data: data) {
-                    
-                    let cachedResponse = CachedURLResponse(response: response!, data: data)
-                                       URLCache.shared.storeCachedResponse(cachedResponse, for: url)
-                    DispatchQueue.main.async {
-                        completion(image)
-                    }
-                } else {
-                    Log.make().debug("IsCancel \(error)")
-                }
-            }
-            newDataTask.resume()
-            dataTask = newDataTask
-        } else {
-            DispatchQueue.main.async {
-                completion(UIImage.appImage(.DisConnectWifi))
-            }
-        }
+        }.resume()
     }
 }
-
-    enum Section {
-        case main
-    }

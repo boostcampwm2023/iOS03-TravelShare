@@ -95,7 +95,8 @@ extension ReadProfileView {
                 if let image = profileImage {
                     self?.profileImageView.image = image
                 } else {
-                    self?.profileImageView.image = UIImage.appImage(.ProfileDefaultImage)
+                    let defaultImage = UIImage.appImage(.ProfileDefaultImage)
+                    self?.profileImageView.image = defaultImage
                 }
             }
             self?.userNameLabel.text = writer.name

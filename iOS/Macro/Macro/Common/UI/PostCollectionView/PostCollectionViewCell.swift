@@ -12,7 +12,6 @@ final class PostCollectionViewCell: UICollectionViewCell {
     // MARK: - Properties
     
     let identifier = "PostCollectionViewCell"
-    var item: PostFindResponseHashable?
     var viewModel: PostCollectionViewModel?
     weak var delegate: PostCollectionViewDelegate?
     
@@ -41,7 +40,6 @@ final class PostCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
         postContentView.resetContents()
         postProfileView.resetContents()
-        viewModel?.cancelLoadingImage(itemName: item?.postFindResponse.title)
     }
 }
 
@@ -79,13 +77,13 @@ extension PostCollectionViewCell {
 
 extension PostCollectionViewCell {
     
-    func configure(item: PostFindResponseHashable, viewModel: PostCollectionViewModel) {
+    func configure(item: PostFindResponse, viewModel: PostCollectionViewModel, indexPath: IndexPath) {
         self.viewModel = viewModel
-        self.item = item
         postContentView.configure(item: item, viewModel: viewModel)
         postProfileView.configure(item: item, viewModel: viewModel)
         postContentView.setLayout()
         postProfileView.setLayout()
+        postProfileView.indexPath = indexPath
         postContentView.delegate = delegate
         postProfileView.delegate = delegate
         setTranslatesAutoresizingMaskIntoConstraints()

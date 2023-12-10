@@ -15,7 +15,6 @@ final class PostCollectionView: UICollectionView {
     let viewModel: PostCollectionViewModel
     private var cancellables = Set<AnyCancellable>()
     weak var postDelegate: PostCollectionViewDelegate?
-    
     private let inputSubject: PassthroughSubject<PostCollectionViewModel.Input, Never> = .init()
     private let postRefreshControl: UIRefreshControl = UIRefreshControl()
     
@@ -32,10 +31,9 @@ final class PostCollectionView: UICollectionView {
         
         self.showsVerticalScrollIndicator = false
         self.delegate = self
+        self.dataSource = self
         bind()
         initRefreshControl()
-        configureDataSource()
-        performQuery()
     }
     
     required init?(coder: NSCoder) {
@@ -79,7 +77,7 @@ extension PostCollectionView {
     }
     
     func updatePostContent() {
-        performQuery()
+        self.reloadData()
     }
 }
 
@@ -93,32 +91,25 @@ extension PostCollectionView: UICollectionViewDelegate {
 
 // MARK: - UICollectionViewDataSource Delegate
 
-private extension PostCollectionView {
-    func configureDataSource() {
-        let cellRegistration = UICollectionView.CellRegistration
-        <PostCollectionViewCell, PostFindResponseHashable> { (cell, indexPath, item) in
-            cell.delegate = self.postDelegate
-            cell.configure(item: item, viewModel: self.viewModel)
+extension PostCollectionView: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: "PostCollectionViewCell",
+            for: indexPath) as? PostCollectionViewCell
+        else { return UICollectionViewCell() }
+        
+        cell.delegate = postDelegate
+        if !viewModel.posts.isEmpty {
+            let item = viewModel.posts[indexPath.row]
+            cell.configure(item: item, viewModel: viewModel, indexPath: indexPath)
         }
         
-        viewModel.dataSource = UICollectionViewDiffableDataSource<Section, PostFindResponseHashable>(collectionView: self) {
-            (collectionView: UICollectionView, indexPath: IndexPath, identifier: PostFindResponseHashable) -> UICollectionViewCell? in
-            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
-        }
-        
+        return cell
     }
     
-}
-
-internal extension PostCollectionView {
-    func performQuery() {
-        let posts: [PostFindResponseHashable] = viewModel.posts
-        var snapshot = NSDiffableDataSourceSnapshot<Section, PostFindResponseHashable>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(posts)
-        if viewModel.dataSource != nil {
-            viewModel.dataSource.apply(snapshot, animatingDifferences: true)
-        }
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return viewModel.posts.count
     }
     
 }

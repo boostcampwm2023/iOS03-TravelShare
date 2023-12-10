@@ -42,7 +42,10 @@ final class MacroCarouselViewCell: UICollectionViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-
-        self.carouselImageView.image = nil
+        self.prepare(image: nil)
+    }
+    
+    func prepare(image: UIImage?) {
+        self.carouselImageView.image = image
     }
 }

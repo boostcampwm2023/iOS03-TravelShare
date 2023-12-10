@@ -10,26 +10,21 @@ import MacroNetwork
 import UIKit
 
 final class HomeViewController: TouchableViewController {
-    
+
     // MARK: - Properties
     
     private let viewModel: HomeViewModel
     private let inputSubject: PassthroughSubject<HomeViewModel.Input, Never> = .init()
     private let provider = APIProvider(session: URLSession.shared)
     private var cancellables = Set<AnyCancellable>()
-    let postCollectionViewModel = PostCollectionViewModel(
-        followFeature: FollowFeature(provider: APIProvider(session: URLSession.shared)),
-        patcher: Patcher(provider: APIProvider(session: URLSession.shared)),
-        postSearcher: Searcher(provider: APIProvider(session: URLSession.shared)),
-        sceneType: .home)
-    weak var postDelegate: PostCollectionViewDelegate?
+    let postCollectionViewModel = PostCollectionViewModel( followFeature: FollowFeature(provider: APIProvider(session: URLSession.shared)), patcher: Patcher(provider: APIProvider(session: URLSession.shared)), postSearcher: Searcher(provider: APIProvider(session: URLSession.shared)), sceneType: .home)
     
     // MARK: - UI Components
     
     lazy var postCollectionView: PostCollectionView = {
-        let collectionView = PostCollectionView(frame: .zero, viewModel: postCollectionViewModel)
-        return collectionView
-    }()
+           let collectionView = PostCollectionView(frame: .zero, viewModel: postCollectionViewModel)
+           return collectionView
+       }()
     
     private let homeHeaderView: HomeHeaderView = HomeHeaderView()
     
@@ -56,7 +51,7 @@ final class HomeViewController: TouchableViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-//
+        
     }
     
 }
@@ -64,7 +59,7 @@ final class HomeViewController: TouchableViewController {
 // MARK: - UI Settings
 
 extension HomeViewController {
-    
+
     private func setTranslatesAutoresizingMaskIntoConstraints() {
         homeHeaderView.translatesAutoresizingMaskIntoConstraints = false
         postCollectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -117,11 +112,11 @@ private extension HomeViewController {
 extension HomeViewController {
     
     private func updateSearchResult(_ result: [PostFindResponse]) {
-        let sortedResult = result.sorted { $0.postId > $1.postId }
-        let sortedResultHashable = sortedResult.map { PostFindResponseHashable(postFindResponse: $0) }
-        postCollectionView.viewModel.posts = sortedResultHashable
-        postCollectionView.performQuery()
+        _ = result.sorted { $0.postId < $1.postId }
+        postCollectionView.viewModel.posts = result
+        postCollectionView.reloadData()
     }
+    
 }
 
 // MARK: - LayoutMetrics
@@ -131,7 +126,7 @@ private extension HomeViewController {
     enum Metrics {
         static let homeHeaderViewHeight: CGFloat = 60
     }
-    
+
     enum Padding {
         static let homeHeaderViewTop: CGFloat = 50
         static let homeCollectionViewTop: CGFloat = 10

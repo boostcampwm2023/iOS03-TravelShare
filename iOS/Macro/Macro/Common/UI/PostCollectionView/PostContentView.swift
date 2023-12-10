@@ -12,7 +12,6 @@ import UIKit
 final class PostContentView: UIView {
     
     // MARK: - Properties
-    
     private var imageUrl: String?
     private var cancellables = Set<AnyCancellable>()
     var viewModel: PostCollectionViewModel?
@@ -69,10 +68,7 @@ final class PostContentView: UIView {
         guard let postId: Int = self.postId else { return }
         let provider = APIProvider(session: URLSession.shared)
         let readuseCase = ReadPostUseCase(provider: provider)
-        let readViewModel = ReadViewModel(useCase: readuseCase,
-                                          postId: postId,
-                                          pathcher: Patcher(provider: provider),
-                                          reporter: Reporter(provider: provider))
+        let readViewModel = ReadViewModel(useCase: readuseCase, postId: postId, pathcher: Patcher(provider: APIProvider(session: URLSession.shared)), reporter: Reporter(provider: provider))
         let readViewController = ReadViewController(viewModel: readViewModel)
         delegate?.didTapContent(viewController: readViewController)
         
@@ -139,17 +135,17 @@ extension PostContentView {
         addTapGesture()
     }
     
-    func configure(item: PostFindResponseHashable, viewModel: PostCollectionViewModel?) {
+    func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?) {
         self.viewModel = viewModel
         guard let viewModel = self.viewModel else { return }
         
-        if let imageUrl = item.postFindResponse.imageUrl {
-            viewModel.loadImage(profileImageStringURL: imageUrl) { image in
+        if let imageUrl = item.imageUrl, isValidUrl(urlString: imageUrl) {
+            viewModel.loadImage(profileImageStringURL: imageUrl) { [weak self] image in
                 DispatchQueue.main.async {
                     if let image = image {
-                        self.setProfileImage(image)
+                        self?.setProfileImage(image)
                     } else {
-                        self.setDefaultProfileImage()
+                        self?.setDefaultProfileImage()
                     }
                 }
             }
@@ -157,9 +153,9 @@ extension PostContentView {
             setDefaultProfileImage()
         }
         
-        title.text = item.postFindResponse.title
-        summary.text = item.postFindResponse.summary
-        postId = item.postFindResponse.postId
+        title.text = item.title
+        summary.text = item.summary
+        postId = item.postId
     }
     private func setDefaultProfileImage() {
         let defaultImage = UIImage.appImage(.ProfileDefaultImage)
