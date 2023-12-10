@@ -359,8 +359,8 @@ extension TravelViewController {
     
     private func requireMoreLocation() {
         AlertBuilder(viewController: self)
-            .setTitle("경로")
-            .setMessage("이동하신 경로가 너무 짧습니다. 5초 이상 기록해주세요.")
+            .setTitle("경로가 너무 짧습니다.")
+            .setMessage("5초 이상 기록해주세요.")
             .addActionCancel("확인") {
             }
             .show()
