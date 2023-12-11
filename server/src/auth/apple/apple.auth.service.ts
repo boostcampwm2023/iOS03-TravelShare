@@ -16,7 +16,7 @@ import {
 import { AppleIdentityTokenPayload } from './apple.identity.token.payload.dto';
 import { createPublicKey, randomInt, randomUUID } from 'crypto';
 import { AppleIdentityTokenHeader } from './apple.identity.token.header.dto';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { AppleAuth } from 'entities/apple.auth.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'entities/user.entity';
@@ -140,8 +140,8 @@ export class AppleAuthService {
           this.jwtService.verify(identityToken, { secret: publicKey }),
         );
       }),
-      map(async (identityTokenPayload) => {
-        await this.delete(identityTokenPayload);
+      map((identityTokenPayload) => {
+        this.delete(identityTokenPayload);
         return plainToInstance(AppleAuthTokenBody, {
           client_secret: clientSecret,
           client_id: payload.sub,
@@ -249,37 +249,14 @@ export class AppleAuthService {
   private async delete({ sub }: AppleIdentityTokenPayload) {
     const { user } = await this.appleAuthRepository.findOneOrFail({
       where: { appleId: sub },
-      select: {
-        user: {
-          email: true,
-          writedPosts: { postId: true },
-          followees: { email: true },
-          followers: { email: true },
-        },
-      },
       relations: {
-        user: {
-          writedPosts: true,
-          followees: true,
-          followers: true,
-        },
+        user: true,
       },
     });
-    await this.userRepository.decrement(
-      {
-        email: In(user.followees.map(({ email }) => email)),
-      },
-      'followersNum',
-      1,
-    );
-    await this.userRepository.increment(
-      {
-        email: In(user.followers.map(({ email }) => email)),
-      },
-      'followersNum',
-      1,
-    );
-    await this.userRepository.delete(user);
+    const userDetail = await this.userRepository.findOneBy({
+      email: user.email,
+    });
+    await this.userRepository.remove(userDetail);
     // TODO: soft delete
     // await this.userRepository.softDelete(user);
     // await this.postRepository.softDelete({
