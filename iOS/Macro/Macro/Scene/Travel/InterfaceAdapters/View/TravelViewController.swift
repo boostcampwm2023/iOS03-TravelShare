@@ -16,7 +16,7 @@ protocol RouteTableViewControllerDelegate: AnyObject {
     func routeTableViewEndDragChange()
 }
 
-final class TravelViewController: TabViewController, RouteTableViewControllerDelegate {
+final class TravelViewController: TabViewController, RouteTableViewControllerDelegate, NMFMapViewTouchDelegate {
     
     // MARK: - Properties
     private var routeTableViewHeightConstraint: NSLayoutConstraint?
@@ -95,7 +95,6 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
         updateTravelButton()
         updateMyLocationButton()
         searchBar.addTarget(self, action: #selector(searchBarReturnPressed), for: .editingDidEndOnExit)
-        hideKeyboardWhenTappedAround()
     }
     
     override func viewWillLayoutSubviews() {
@@ -401,7 +400,6 @@ extension TravelViewController {
 // MARK: - Alert
 extension TravelViewController {
     
-    
     private func showLocationDeniedAlert() {
         AlertBuilder(viewController: self)
             .setTitle("위치 서비스 필요")
@@ -444,7 +442,6 @@ extension TravelViewController {
         cameraUpdate.animation = .easeIn
         mapView.moveCamera(cameraUpdate)
     }
-    
     
     private func moveCamera() {
         guard let currentLocation = LocationManager.shared.sendLocation else { return }
@@ -516,7 +513,6 @@ extension TravelViewController {
         navigationController?.pushViewController(locationInfoVC, animated: true)
     }
     
-    
     private func bindCLLocationChanged() {
         LocationManager.shared.authorizationStatusSubject
             .receive(on: RunLoop.main)
@@ -542,5 +538,11 @@ extension TravelViewController {
             newMapView.rightAnchor.constraint(equalTo: view.rightAnchor)
         ])
         updateMarkers()
+        mapView.touchDelegate = self
     }
+    
+    func mapView(_ mapView: NMFMapView, didTapMap latLng: NMGLatLng, point: CGPoint) {
+         self.view.endEditing(true)
+     }
+    
 }
