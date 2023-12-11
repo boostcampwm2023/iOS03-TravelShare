@@ -1,4 +1,4 @@
-import { Global, Module } from '@nestjs/common';
+import { Global, Logger, Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -8,10 +8,9 @@ import { addTransactionalDataSource } from 'typeorm-transactional';
 import { KeywordAutoCompleteService } from './keyword.autocomplete.service';
 import { RedisModule } from './redis/redis.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggerInterceptor } from './logger.interceptor';
 import { CacheModule } from '@nestjs/cache-manager';
-import { TypeOrmExceptionFilter } from './typeorm.exception.filter';
 
 @Global()
 @Module({
@@ -27,17 +26,36 @@ import { TypeOrmExceptionFilter } from './typeorm.exception.filter';
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) =>
-        configService.get('typeorm'),
+      useFactory: (configService: ConfigService) => ({
+        ...configService.get('typeorm'),
+        poolErrorHandler: async (err) => {
+          Logger.error(err);
+          const retryAttempts = 10;
+          let attempt = 0;
+          const retryDelayMs = 1000;
+          setInterval(async () => {
+            Logger.log(`Retry Connect ${attempt}`);
+            if (attempt < retryAttempts)
+              try {
+                const dataSource = addTransactionalDataSource(
+                  configService.get('typeorm'),
+                );
+                await dataSource.initialize();
+                Logger.log(`Connection success`);
+              } catch (err) {
+                Logger.log(
+                  `Failed to reconnect to database on attempt ${attempt}`,
+                );
+                attempt++;
+              }
+          }, retryDelayMs);
+        },
+      }),
       dataSourceFactory: async (options: DataSourceOptions) =>
         addTransactionalDataSource(new DataSource(options)),
     }),
     RedisModule,
     ScheduleModule.forRoot(),
-    CacheModule.register({
-      isGlobal: true,
-      ttl: 1000,
-    }),
   ],
   providers: [
     KeywordAutoCompleteService,
@@ -45,10 +63,10 @@ import { TypeOrmExceptionFilter } from './typeorm.exception.filter';
       provide: APP_INTERCEPTOR,
       useClass: LoggerInterceptor,
     },
-    {
-      provide: APP_FILTER,
-      useClass: TypeOrmExceptionFilter,
-    },
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: TypeOrmExceptionFilter,
+    // },
   ],
   exports: [HttpModule, KeywordAutoCompleteService],
 })

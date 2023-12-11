@@ -221,6 +221,7 @@ export class PostCacheRepository {
           likedUsers: true,
         },
       });
+      console.log(posts);
       await this.redisService.jsonSet(
         ...posts.map((post) => ({
           key: this.getBodyKey(post.postId),
@@ -249,10 +250,9 @@ export class PostCacheRepository {
           likedUsers.map(({ email }) => email),
         );
       });
-
       postIds.forEach((postId, index) => {
-        if (!caches[index] && posts?.[0]?.postId === postId) {
-          caches[index] = posts.shift();
+        if (!caches[index]) {
+          caches[index] = posts.find((post) => post.postId === postId);
         }
       });
     }
@@ -311,6 +311,9 @@ export class PostCacheRepository {
       })
     ).map(({ postId, score }) => ({ value: postId, score }));
     await this.redisService.del(this.REDIS_POST_TOP_SCORE_ZSET_KEY);
+    if (postIdAndScores.length === 0) {
+      return;
+    }
     await this.redisService.zAdd(
       this.REDIS_POST_TOP_SCORE_ZSET_KEY,
       ...postIdAndScores,
