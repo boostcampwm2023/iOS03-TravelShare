@@ -403,21 +403,6 @@ extension MyPageViewController {
     }
     
     private func tryRevoke() {
-        KeyChainManager.delete(key: KeychainKey.accessToken)
-        KeyChainManager.delete(key: KeychainKey.authorizationCode)
-        KeyChainManager.delete(key: KeychainKey.identityToken)
-        
-        do {
-            try CoreDataManager.shared.fetchTravel { travels in
-                if let travels {
-                    travels.forEach {
-                        CoreDataManager.shared.deleteTravel(travelUUID: $0.id)
-                    }
-                }
-            }
-        } catch {
-            debugPrint("코어 데이터 삭제에 실패했습니다.")
-        }
         
         guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
         sceneDelegate.switchViewController(for: .loggedOut)
@@ -426,30 +411,8 @@ extension MyPageViewController {
               let authorizationCode = KeyChainManager.load(key: KeychainKey.authorizationCode),
               let accessToken = KeyChainManager.load(key: KeychainKey.accessToken)
         else { return }
-        inputSubject.send(.appleLogout(identityToken: identityToken, authorizationCode: authorizationCode, accessToken: accessToken))
+        inputSubject.send(.appleRevoke(identityToken: identityToken, authorizationCode: authorizationCode, accessToken: accessToken))
     }
-    
-    // FIXME: - 회원탈퇴가 안정화 된 이후 수정해야합니다. :)
-//    private func completeRevoke() {
-//        KeyChainManager.delete(key: KeychainKey.accessToken)
-//        KeyChainManager.delete(key: KeychainKey.authorizationCode)
-//        KeyChainManager.delete(key: KeychainKey.identityToken)
-//        
-//        do {
-//            try CoreDataManager.shared.fetchTravel { travels in
-//                if let travels {
-//                    travels.forEach {
-//                        CoreDataManager.shared.deleteTravel(travelUUID: $0.id)
-//                    }
-//                }
-//            }
-//        } catch {
-//            debugPrint("코어 데이터 삭제에 실패했습니다.")
-//        }
-//        
-//        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
-//        sceneDelegate.switchViewController(for: .loggedOut)
-//    }
     
     private func failureRevoke() {
         AlertBuilder(viewController: self)

@@ -105,8 +105,6 @@ private extension MyPageViewModel {
     }
     
     func appleRevoke(_ identityToken: String, _ authorizationCode: String, _ accessToken: String) {
-        print("----------\n\(identityToken), identityToken\n")
-        print("\(authorizationCode), authorizationCode\n---------------")
         revoker.withdraw(identityToken: identityToken, authorizationCode: authorizationCode, accessToken: accessToken)
             .sink { [weak self] completion in
                 switch completion {
