@@ -11,6 +11,7 @@ import { Request } from 'express';
 
 import { JWT_CREDENTIAL } from './auth.constants';
 import { PUBLIC_ROUTE_KEY } from './auth.decorators';
+import { UserBlackListManager } from './blacklist/user.blacklist.manager';
 
 @Injectable()
 export class JwtAuthenticationGuard implements CanActivate {
@@ -18,6 +19,7 @@ export class JwtAuthenticationGuard implements CanActivate {
     private readonly jwtService: JwtService,
     private readonly reflector: Reflector,
     @Inject(JWT_CREDENTIAL) private readonly secret: string,
+    private readonly userBlackListManager: UserBlackListManager,
   ) {}
 
   async canActivate(context: ExecutionContext) {
@@ -37,6 +39,9 @@ export class JwtAuthenticationGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: this.secret,
       });
+      if (await this.userBlackListManager.isRevokedOn(payload)) {
+        throw new UnauthorizedException('revoked user authentication');
+      }
       request['user'] = payload;
     } catch (err) {
       throw new UnauthorizedException('Failed to verify jwt token');

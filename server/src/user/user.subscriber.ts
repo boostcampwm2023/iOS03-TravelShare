@@ -8,7 +8,6 @@ import {
   EventSubscriber,
   In,
   RemoveEvent,
-  UpdateEvent,
 } from 'typeorm';
 
 @EventSubscriber()
@@ -17,7 +16,7 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
   constructor(
     private readonly postCacheableService: PostCacheableService,
     @InjectDataSource()
-    private readonly dataSource: DataSource,
+    dataSource: DataSource,
   ) {
     dataSource.subscribers.push(this);
   }

@@ -31,7 +31,7 @@ import { AppleClientAuthResponse } from './apple.client.auth.response.dto';
 import { Transactional } from 'typeorm-transactional';
 import { getRandomNickName } from 'utils/namemaker';
 import { AppleClientRevokeResponse } from './apple.client.revoke.response';
-import { Post } from 'entities/post.entity';
+import { UserBlackListManager } from 'auth/blacklist/user.blacklist.manager';
 
 /**
  * ### AppleAuthService
@@ -50,8 +50,7 @@ export class AppleAuthService {
     private readonly appleAuthRepository: Repository<AppleAuth>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @InjectRepository(Post)
-    private readonly postRepository: Repository<Post>,
+    private readonly userBlackListManager: UserBlackListManager,
   ) {}
 
   async auth({ identityToken }: AppleClientAuthBody) {
@@ -270,6 +269,7 @@ export class AppleAuthService {
         email: user.email,
       });
       await this.userRepository.remove(userDetail);
+      await this.userBlackListManager.addRevokedBlacklist(user.email);
     } catch (err) {
       this.logger.error(err);
       throw new NotFoundException('user not found', { cause: err });

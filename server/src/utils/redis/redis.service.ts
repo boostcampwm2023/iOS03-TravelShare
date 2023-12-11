@@ -36,8 +36,8 @@ export class RedisService {
     return await this.client.set(key, value, options);
   }
 
-  async get<T>(key: string): Promise<T>;
-  async get<T>(keys: string[]): Promise<T[]>;
+  async get(key: string): Promise<string>;
+  async get(keys: string[]): Promise<string[]>;
   async get(keyOrkeys: string | string[]) {
     if (typeof keyOrkeys === 'string') {
       return await this.client.get(keyOrkeys);

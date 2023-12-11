@@ -9,9 +9,10 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'entities/user.entity';
+import { BlackListModule } from './blacklist/blacklist.module';
 
 @Module({
-  imports: [AppleAuthModule, TypeOrmModule.forFeature([User])],
+  imports: [AppleAuthModule, TypeOrmModule.forFeature([User]), BlackListModule],
   controllers: [AuthController],
   providers: [
     {
