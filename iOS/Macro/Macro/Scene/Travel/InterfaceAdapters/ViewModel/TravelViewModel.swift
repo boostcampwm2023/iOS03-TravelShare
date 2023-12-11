@@ -107,7 +107,12 @@ extension TravelViewModel {
             .sink { [weak self] location in
                 guard let self = self else { return }
                 guard let location = location else { return }
-                self.savedRoute.routePoints.append(location)
+                if self.savedRoute.routePoints.isEmpty {
+                    self.savedRoute.routePoints.append(contentsOf: [location, location])
+                }
+                else {
+                    self.savedRoute.routePoints.append(location)
+                }
                 self.outputSubject.send(.updateRoute(location))
             }
             .store(in: &cancellables)

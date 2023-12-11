@@ -15,15 +15,14 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
     private let locationManager = CLLocationManager()
     private var timer: Timer?
     var sendLocation: CLLocation?
-    
+    let authorizationStatusSubject = CurrentValueSubject<CLAuthorizationStatus, Never>(.notDetermined)
     lazy var locationPublisher = CurrentValueSubject<CLLocation?, Never>(sendLocation)
-
+    
     // MARK: - Init
     private override init() {
         super.init()
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
-        locationManager.allowsBackgroundLocationUpdates = true
         locationManager.startUpdatingLocation()
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(updateLocation), userInfo: nil, repeats: true)
@@ -48,9 +47,22 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
         guard let location = locations.first else { return }
         sendLocation = location
     }
-
+    
     @objc private func updateLocation() {
         guard let location = sendLocation else { return }
         self.locationPublisher.value = location
+    }
+}
+
+extension LocationManager {
+    var currentAuthorizationStatus: CLAuthorizationStatus {
+        return locationManager.authorizationStatus
+    }
+    
+    func requestWhenInUseAuthorization() {
+        locationManager.requestWhenInUseAuthorization()
+    }
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        authorizationStatusSubject.send(status)
     }
 }
