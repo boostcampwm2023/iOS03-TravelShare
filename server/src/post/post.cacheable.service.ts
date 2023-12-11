@@ -1,12 +1,18 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  OnModuleInit,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from 'entities/post.entity';
+import { SchemaFieldTypes } from 'redis';
 import { In, Repository } from 'typeorm';
 import { RedisService } from 'utils/redis/redis.service';
 
 @Injectable()
-export class PostCacheRepository {
-  private readonly logger: Logger = new Logger(PostCacheRepository.name);
+export class PostCacheableService implements OnModuleInit {
+  private readonly logger: Logger = new Logger(PostCacheableService.name);
 
   private readonly REDIS_POST_TOP_SCORE_ZSET_KEY = `post:top:scores`;
   private readonly REDIS_POST_BODY_KEY_PREFIX = `post:body`;
@@ -16,6 +22,7 @@ export class PostCacheRepository {
     'post:viewdusers:loadedlist';
   private readonly REDIS_POST_LIKED_USERS_LOADED_LIST_KEY =
     'post:likedusers:loadedlist';
+  private readonly REDIS_POST_BODY_INDEX_KEY = `post:body:index`;
 
   constructor(
     @InjectRepository(Post)
@@ -118,10 +125,15 @@ export class PostCacheRepository {
         postId,
       ))
     ) {
-      const { likedUsers } = await this.postRepository.findOneOrFail({
-        where: { postId },
-        relations: { likedUsers: true },
-      });
+      const { likedUsers } = await this.postRepository
+        .findOneOrFail({
+          where: { postId },
+          relations: { likedUsers: true },
+        })
+        .catch((err) => {
+          this.logger.error(err);
+          throw new NotFoundException(`user not found`, { cause: err });
+        });
       const likedEmails = likedUsers.map(({ email }) => email);
       // const updateEmails =  [
       //   ...likedEmails,
@@ -148,6 +160,25 @@ export class PostCacheRepository {
       } else {
         await this.redisService.setAdd(this.getLikedUsersKey(postId), email);
       }
+    }
+  }
+
+  async deleteLikedUserOnAllPosts(email: string) {
+    const posts = await this.getUpdatedPostIds();
+    posts.forEach(async (postId) => {
+      await this.redisService.setRemove(this.getLikedUsersKey(postId), email);
+    });
+  }
+
+  async evictPostsByWriterEmail(email: string) {
+    const client = this.redisService.getClient();
+    const { documents } = await client.ft.search(
+      this.REDIS_POST_BODY_INDEX_KEY,
+      `@email:{${email.replace(/[\@\.]/g, '\\$&')}}`,
+    );
+    const keys = documents.map(({ id }) => id);
+    if (keys.length > 0) {
+      await this.redisService.del(...keys);
     }
   }
 
@@ -221,7 +252,6 @@ export class PostCacheRepository {
           likedUsers: true,
         },
       });
-      console.log(posts);
       await this.redisService.jsonSet(
         ...posts.map((post) => ({
           key: this.getBodyKey(post.postId),
@@ -333,5 +363,27 @@ export class PostCacheRepository {
 
   async cleanPostLikedUsers(postId: number) {
     return await this.redisService.del(this.getLikedUsersKey(postId));
+  }
+
+  async onModuleInit() {
+    try {
+      await this.redisService
+        .getClient()
+        .ft.info(this.REDIS_POST_BODY_INDEX_KEY);
+    } catch (err) {
+      await this.redisService.getClient().ft.create(
+        this.REDIS_POST_BODY_INDEX_KEY,
+        {
+          '$.writer.email': {
+            type: SchemaFieldTypes.TAG,
+            AS: 'email',
+          },
+        },
+        {
+          ON: 'JSON',
+          PREFIX: this.REDIS_POST_BODY_KEY_PREFIX,
+        },
+      );
+    }
   }
 }
