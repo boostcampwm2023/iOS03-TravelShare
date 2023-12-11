@@ -218,12 +218,7 @@ private extension WriteViewController {
                         .setTitle("글 작성")
                         .setMessage("글 작성 완료")
                         .addActionConfirm("확인") {
-                            if let navigationController = self?.navigationController {
-                                                        navigationController.popViewController(animated: true)
-                            } else {
-                                self?.dismiss(animated: true)
-                                self?.writeSubmitButton.isEnabled = true
-                            }
+                            self?.popViewController()
                         }
                         .show()
                 case let .outputDescriptionString(description):
@@ -386,6 +381,15 @@ extension WriteViewController {
                 }
                 return true
             }
+        }
+    }
+    
+    func popViewController() {
+        if let navigationController = self.navigationController {
+            navigationController.popViewController(animated: true)
+        } else {
+            self.dismiss(animated: true)
+            self.writeSubmitButton.isEnabled = true
         }
     }
 }
