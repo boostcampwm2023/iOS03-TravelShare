@@ -19,7 +19,12 @@ final class WriteViewController: TabViewController {
     private let didScrollSubject: PassthroughSubject<Int, Never> = .init()
     private let inputSubject: PassthroughSubject<WriteViewModel.Input, Never> = .init()
     private var subscriptions: Set<AnyCancellable> = []
-    private var selectedMarker: NMFMarker?
+    private var selectedMarker: NMFMarker? {
+        willSet(newValue) {
+            selectedMarker?.iconTintColor = .clear
+            newValue?.iconTintColor = UIColor.appColor(.red4)
+        }
+    }
     private var routeOverlay: NMFPath?
     
     // MARK: - UI Components
@@ -243,6 +248,12 @@ private extension WriteViewController {
                             self?.writeSubmitButton.isEnabled = true
                         }
                         .show()
+                case let .updatePin(marker):
+                    if let marker {
+                        self?.selectedMarker?.iconTintColor = .clear
+                        self?.selectedMarker = marker
+                        marker.iconTintColor = UIColor.appColor(.red4)
+                    }
                 }
             }
             .store(in: &subscriptions)
@@ -254,10 +265,11 @@ private extension WriteViewController {
             .store(in: &subscriptions)
         
         didScrollSubject
-            .receive(on: DispatchQueue.global())
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] index in
                 self?.viewModel.carouselCurrentIndex = index
                 self?.inputSubject.send(.didScroll(self?.viewModel.carouselCurrentIndex ?? 0))
+                self?.selectedMarker = nil
             }
             .store(in: &subscriptions)
     }
@@ -291,16 +303,18 @@ extension WriteViewController {
     }
     
     func pinMapping(marker: NMFMarker) {
-        let pinnedLocation = marker.position
-        let coordinate = Coordinate(xPosition: pinnedLocation.lng,
-                                    yPosition: pinnedLocation.lat)
-
-        marker.iconTintColor = UIColor.appColor(.purple3)
-        if let selectedMarker {
-            selectedMarker.iconTintColor = UIColor.green
+        if selectedMarker == marker {
+            inputSubject.send(.pinMapping(nil))
+            inputSubject.send(.selectedMarker(nil))
+            selectedMarker = nil
+        } else {
+            let pinnedLocation = marker.position
+            selectedMarker = marker
+            let coordinate = Coordinate(xPosition: pinnedLocation.lng,
+                                        yPosition: pinnedLocation.lat)
+            inputSubject.send(.pinMapping(coordinate))
+            inputSubject.send(.selectedMarker(marker))
         }
-        selectedMarker = marker
-        inputSubject.send(.pinMapping(coordinate))
     }
     
     func calculateCenterLocation(routePoints: [[Double]]) {
@@ -363,10 +377,13 @@ extension WriteViewController {
             guard let name = placeInfo.placeName, let placeLocation = placeInfo.coordinate else { return }
             marker.position = NMGLatLng(lat: placeLocation.latitude, lng: placeLocation.longitude)
             marker.captionText = "\(index + 1). \(name)"
-            marker.iconTintColor = UIColor.green
+            
+            marker.iconTintColor = .clear
             marker.mapView = mapView
             marker.touchHandler = { [weak self] _ in
-                self?.pinMapping(marker: marker)
+                if self?.viewModel.carouselCurrentIndex != self?.viewModel.contents.count ?? 0 {
+                    self?.pinMapping(marker: marker)
+                }
                 return true
             }
         }

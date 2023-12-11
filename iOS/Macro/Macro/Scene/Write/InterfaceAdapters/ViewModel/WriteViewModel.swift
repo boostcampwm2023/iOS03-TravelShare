@@ -6,6 +6,7 @@
 //
 
 import Combine
+import NMapsMap
 import MacroNetwork
 import UIKit.UIImage
 
@@ -34,7 +35,8 @@ final class WriteViewModel: ViewModelProtocol, CarouselViewProtocol {
     private var title: String = ""
     private var summary: String = ""
     private var route: Route = Route(coordinates: [])
-    private var contents: [Content] = []
+    var contents: [Content] = []
+    private var mappingPins: [NMFMarker?] = []
     
     // MARK: - Init
     
@@ -55,7 +57,8 @@ final class WriteViewModel: ViewModelProtocol, CarouselViewProtocol {
         case summaryTextUpdate(String)
         case imageDescriptionUpdate(index: Int, description: String)
         case loadTravel
-        case pinMapping(Coordinate)
+        case pinMapping(Coordinate?)
+        case selectedMarker(NMFMarker?)
     }
     
     // MARK: - Output
@@ -68,6 +71,7 @@ final class WriteViewModel: ViewModelProtocol, CarouselViewProtocol {
         case outputDescriptionString(String)
         case updatePageIndex(Int)
         case updateMap(TravelInfo)
+        case updatePin(NMFMarker?)
     }
 }
 
@@ -84,6 +88,7 @@ extension WriteViewModel {
                 case let .addImageData(imageData):
                     self?.imageDatas.append(imageData)
                     self?.contents.append(Content(imageURL: "", description: nil, coordinate: nil))
+                    self?.mappingPins.append(nil)
                 case .writeSubmit:
                     self?.writeSubmit()
                 case let .didScroll(index):
@@ -99,6 +104,8 @@ extension WriteViewModel {
                     self?.outputSubject.send(.updateMap(travelInfo))
                 case let .pinMapping(coordinate):
                     self?.pinMapping(coordinate: coordinate)
+                case let .selectedMarker(marker):
+                    self?.selectedMarker(marker)
                 }
             }
             .store(in: &cancellables)
@@ -133,7 +140,7 @@ extension WriteViewModel {
             let pins: [Pin] = self.travelInfo.recordedPinnedLocations?.compactMap { pin in
                 Pin(placeId: pin.placeId ?? "",
                     placeName: pin.placeName ?? "",
-                    phoneNumber: pin.phoneNumber == "" ? nil : pin.phoneNumber,
+                    phoneNumber: pin.phoneNumber == "" ? nil : "123-456-7890",
                     category: pin.category ?? "",
                     address: pin.address ?? "",
                     roadAddress: pin.roadAddress == "" ? nil : pin.roadAddress,
@@ -173,11 +180,18 @@ extension WriteViewModel {
             return
         }
         outputSubject.send(.outputDescriptionString(self.contents[index].description ?? ""))
+        guard let marker = mappingPins[carouselCurrentIndex] else { return }
+        outputSubject.send(.updatePin(marker))
     }
     
-    private func pinMapping(coordinate: Coordinate) {
-        guard (0..<pageIndex).contains(pageIndex) else { return }
+    private func pinMapping(coordinate: Coordinate?) {
+        guard (0..<contents.count).contains(pageIndex) else { return }
         contents[pageIndex].coordinate = coordinate
+    }
+    
+    private func selectedMarker(_ marker: NMFMarker?) {
+        guard (0..<contents.count).contains(pageIndex) else { return }
+        mappingPins[carouselCurrentIndex] = marker
     }
 }
 
