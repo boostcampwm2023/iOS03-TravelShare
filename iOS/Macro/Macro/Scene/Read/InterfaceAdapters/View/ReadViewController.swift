@@ -146,6 +146,7 @@ final class ReadViewController: UIViewController {
                       let description = self.readPost?.writer.email
                 else { return }
                 self.inputSubject.send(.reportPost("\(postId)", title, description))
+                self.view.showToast(message: "정상적으로 신고되었습니다.")
             }.addActionCancel("취소") {
                
             }
@@ -332,6 +333,10 @@ private extension ReadViewController {
         postProfile.updateProfil(readPost.writer)
         
         titleLabel.text = readPost.title
+        
+        let email = TokenManager.extractEmailFromJWTToken()
+        
+        reportButtomImageView.isHidden = readPost.writer.email == email
         
         carouselView.descriptionLabel.text = readPost.contents.first?.description
         
