@@ -159,10 +159,13 @@ extension MyInfoViewController {
     }
     
     private func showAlert(_ failError: String) {
-        let alert = UIAlertController(title: "오류", message: failError, preferredStyle: .alert)
-           let okAction = UIAlertAction(title: "확인", style: .default)
-           alert.addAction(okAction)
-           self.present(alert, animated: true, completion: nil)
+        
+        AlertBuilder(viewController: self)
+            .setTitle("오류")
+            .setMessage(failError)
+            .addActionCancel("확인") {
+            }
+            .show()
     }
     
     @objc private func saveButtonTapped() {
