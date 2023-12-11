@@ -1,8 +1,10 @@
 import { HttpService } from '@nestjs/axios';
 import {
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AppleClientAuthBody } from './apple.client.auth.body.dto';
@@ -218,21 +220,31 @@ export class AppleAuthService {
   }
 
   private async signup({ sub, email }: AppleIdentityTokenPayload) {
-    const user = await this.userRepository.save(
-      {
-        email: email ?? `${randomInt(10 ** 10, 10 ** 11)}@macrogenerated.com`,
-        password: randomUUID(),
-        name: getRandomNickName(),
-      },
-      { transaction: false },
-    );
-    await this.appleAuthRepository.save(
-      {
-        appleId: sub,
-        user,
-      },
-      { transaction: false },
-    );
+    const user = await this.userRepository
+      .save(
+        {
+          email: email ?? `${randomInt(10 ** 10, 10 ** 11)}@macrogenerated.com`,
+          password: randomUUID(),
+          name: getRandomNickName(),
+        },
+        { transaction: false },
+      )
+      .catch((err) => {
+        this.logger.error(err);
+        throw new ConflictException('duplicate user', { cause: err });
+      });
+    await this.appleAuthRepository
+      .save(
+        {
+          appleId: sub,
+          user,
+        },
+        { transaction: false },
+      )
+      .catch((err) => {
+        this.logger.error(err);
+        throw new ConflictException('duplicate apple id', { cause: err });
+      });
     return this.createToken(user);
   }
 
@@ -247,16 +259,21 @@ export class AppleAuthService {
 
   @Transactional()
   private async delete({ sub }: AppleIdentityTokenPayload) {
-    const { user } = await this.appleAuthRepository.findOneOrFail({
-      where: { appleId: sub },
-      relations: {
-        user: true,
-      },
-    });
-    const userDetail = await this.userRepository.findOneBy({
-      email: user.email,
-    });
-    await this.userRepository.remove(userDetail);
+    try {
+      const { user } = await this.appleAuthRepository.findOneOrFail({
+        where: { appleId: sub },
+        relations: {
+          user: true,
+        },
+      });
+      const userDetail = await this.userRepository.findOneBy({
+        email: user.email,
+      });
+      await this.userRepository.remove(userDetail);
+    } catch (err) {
+      this.logger.error(err);
+      throw new NotFoundException('user not found', { cause: err });
+    }
     // TODO: soft delete
     // await this.userRepository.softDelete(user);
     // await this.postRepository.softDelete({
