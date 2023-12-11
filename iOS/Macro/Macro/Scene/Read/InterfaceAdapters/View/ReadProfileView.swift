@@ -93,10 +93,14 @@ extension ReadProfileView {
             self?.profilImageUpdate(profileImageStringURL: writer.imageUrl ?? "") { profileImage in
                 
                 if let image = profileImage {
-                    self?.profileImageView.image = image
+                    DispatchQueue.main.async {
+                        self?.profileImageView.image = image
+                    }
                 } else {
                     let defaultImage = UIImage.appImage(.profileDefaultImage)
-                    self?.profileImageView.image = defaultImage
+                    DispatchQueue.main.async {
+                        self?.profileImageView.image = defaultImage
+                    }
                 }
             }
             self?.userNameLabel.text = writer.name
