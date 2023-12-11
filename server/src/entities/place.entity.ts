@@ -17,7 +17,7 @@ export class Place {
   @Column({ name: 'phone_number', nullable: true })
   phoneNumber: string;
 
-  @Column()
+  @Column({ nullable: true })
   category: string;
 
   @Column()
