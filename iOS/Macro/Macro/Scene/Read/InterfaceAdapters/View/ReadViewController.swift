@@ -450,7 +450,6 @@ private extension ReadViewController {
             marker.captionText = pin.placeName
             marker.mapView = mapView
             marker.touchHandler = { [weak self] _ in
-                // handleMarkerTap 함수를 호출할 때, pin 객체를 전달합니다.
                 self?.handleMarkerTap(pin)
                 return true
             }
