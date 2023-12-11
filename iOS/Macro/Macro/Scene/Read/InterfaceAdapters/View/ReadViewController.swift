@@ -18,7 +18,7 @@ final class ReadViewController: UIViewController {
     private var readPost: ReadPost?
     private var cancellables = Set<AnyCancellable>()
     private let didScrollSubject: PassthroughSubject<Int, Never> = .init()
-    private var readViewDisappear: PassthroughSubject<LikePostResponse, Never> = .init()
+    private var readViewDisappear: PassthroughSubject<ReadPost, Never> = .init()
     private let inputSubject: PassthroughSubject<ReadViewModel.Input, Never> = .init()
     private var routeOverlay: NMFPath?
     
@@ -119,7 +119,7 @@ final class ReadViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
-    init(viewModel: ReadViewModel, readViewDisappear: PassthroughSubject<LikePostResponse, Never>) {
+    init(viewModel: ReadViewModel, readViewDisappear: PassthroughSubject<ReadPost, Never>) {
         self.viewModel = viewModel
         self.readViewDisappear = readViewDisappear
         super.init(nibName: nil, bundle: nil)
@@ -277,9 +277,9 @@ private extension ReadViewController {
                     self?.likeImageView.image = likePostResponse.liked ? UIImage.appImage(.handThumbsupFill) : UIImage.appImage(.handThumbsup)
                     self?.likeImageView.tintColor = likePostResponse.liked ? UIColor.appColor(.purple2) : UIColor.appColor(.purple5)
                     self?.likeImageView.isUserInteractionEnabled = true
-                case let .updatePostCollection(likeInfo):
-                    guard let likeInfo else { return }
-                    self?.readViewDisappear.send(likeInfo)
+                case let .updatePostCollection(post):
+                    guard let post else { return }
+                    self?.readViewDisappear.send(post)
                 }
             }
             .store(in: &cancellables)
