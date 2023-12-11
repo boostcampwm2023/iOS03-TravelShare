@@ -353,8 +353,10 @@ private extension ReadViewController {
         calculateCenterLocation(routePoints: readPost.route.coordinates)
         updateMapWithLocation(routePoints: readPost.route.coordinates )
         
-        // TODO: - 핀 로직 수정 후 작업
         updateMark(recordedPindedInfo: readPost.pins)
+           if let firstPin = readPost.pins.first {
+               updateFirstMarkerColor(placeId: firstPin.placeId)
+           }
     }
     
     func downloadImages(imageURLs: [String], completion: @escaping ([UIImage?]) -> Void) {
@@ -438,31 +440,31 @@ private extension ReadViewController {
     /// - Parameters:
     ///   - recordedPindedInfo: Pin의 위도, 경도 배열 입니다.
     func updateMark(recordedPindedInfo: [Pin]) {
-            // 기존 마커를 지우고 새로 생성
-            markers.values.forEach { $0.mapView = nil }
-            markers.removeAll()
+        markers.values.forEach { $0.mapView = nil }
+        markers.removeAll()
 
-            for pin in recordedPindedInfo {
-                let marker = NMFMarker()
-                marker.position = NMGLatLng(lat: pin.coordinate.yPosition, lng: pin.coordinate.xPosition)
-                marker.captionText = pin.placeName
-                marker.mapView = mapView
-
-                // 마커 딕셔너리에 저장
-                markers[pin.placeId] = marker
-            }
+        for pin in recordedPindedInfo {
+            let marker = NMFMarker()
+            marker.position = NMGLatLng(lat: pin.coordinate.yPosition, lng: pin.coordinate.xPosition)
+            marker.captionText = pin.placeName
+            marker.mapView = mapView
+            markers[pin.placeId] = marker
         }
+    }
+    
+    func updateFirstMarkerColor(placeId: String) {
+        if let marker = markers[placeId] {
+            marker.iconTintColor = UIColor.appColor(.red4)
+        }
+    }
     
     func handleScrollEvent(index: Int) {
            guard let pin = readPost?.pins[index] else { return }
            let marker = markers[pin.placeId]
-
-           // 이전에 선택된 마커의 색상을 원래대로 되돌림
         markers.values.forEach { $0.iconTintColor = UIColor.clear }
-
-           // 선택된 마커의 색상 변경
         marker?.iconTintColor = UIColor.appColor(.red4)
        }
+    
     func handleMarkerTap(_ placeInfo: Pin) {
         let locationDetail = LocationDetail(addressName: placeInfo.address, categoryGroupCode: placeInfo.category, categoryGroupName: "-", categoryName: "-", distance: "", id: placeInfo.placeId, phone: placeInfo.phoneNumber, placeName: placeInfo.placeName, placeUrl: "", roadAddressName: placeInfo.roadAddress ?? "", mapx: "", mapy: "")
         let searcher = Searcher(provider: APIProvider(session: URLSession.shared))
