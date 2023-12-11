@@ -1,8 +1,10 @@
 import { HttpService } from '@nestjs/axios';
 import {
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AppleClientAuthBody } from './apple.client.auth.body.dto';
@@ -16,7 +18,7 @@ import {
 import { AppleIdentityTokenPayload } from './apple.identity.token.payload.dto';
 import { createPublicKey, randomInt, randomUUID } from 'crypto';
 import { AppleIdentityTokenHeader } from './apple.identity.token.header.dto';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { AppleAuth } from 'entities/apple.auth.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'entities/user.entity';
@@ -140,8 +142,8 @@ export class AppleAuthService {
           this.jwtService.verify(identityToken, { secret: publicKey }),
         );
       }),
-      map(async (identityTokenPayload) => {
-        await this.delete(identityTokenPayload);
+      map((identityTokenPayload) => {
+        this.delete(identityTokenPayload);
         return plainToInstance(AppleAuthTokenBody, {
           client_secret: clientSecret,
           client_id: payload.sub,
@@ -218,21 +220,31 @@ export class AppleAuthService {
   }
 
   private async signup({ sub, email }: AppleIdentityTokenPayload) {
-    const user = await this.userRepository.save(
-      {
-        email: email ?? `${randomInt(10 ** 10, 10 ** 11)}@macrogenerated.com`,
-        password: randomUUID(),
-        name: getRandomNickName(),
-      },
-      { transaction: false },
-    );
-    await this.appleAuthRepository.save(
-      {
-        appleId: sub,
-        user,
-      },
-      { transaction: false },
-    );
+    const user = await this.userRepository
+      .save(
+        {
+          email: email ?? `${randomInt(10 ** 10, 10 ** 11)}@macrogenerated.com`,
+          password: randomUUID(),
+          name: getRandomNickName(),
+        },
+        { transaction: false },
+      )
+      .catch((err) => {
+        this.logger.error(err);
+        throw new ConflictException('duplicate user', { cause: err });
+      });
+    await this.appleAuthRepository
+      .save(
+        {
+          appleId: sub,
+          user,
+        },
+        { transaction: false },
+      )
+      .catch((err) => {
+        this.logger.error(err);
+        throw new ConflictException('duplicate apple id', { cause: err });
+      });
     return this.createToken(user);
   }
 
@@ -247,39 +259,21 @@ export class AppleAuthService {
 
   @Transactional()
   private async delete({ sub }: AppleIdentityTokenPayload) {
-    const { user } = await this.appleAuthRepository.findOneOrFail({
-      where: { appleId: sub },
-      select: {
-        user: {
-          email: true,
-          writedPosts: { postId: true },
-          followees: { email: true },
-          followers: { email: true },
+    try {
+      const { user } = await this.appleAuthRepository.findOneOrFail({
+        where: { appleId: sub },
+        relations: {
+          user: true,
         },
-      },
-      relations: {
-        user: {
-          writedPosts: true,
-          followees: true,
-          followers: true,
-        },
-      },
-    });
-    await this.userRepository.decrement(
-      {
-        email: In(user.followees.map(({ email }) => email)),
-      },
-      'followersNum',
-      1,
-    );
-    await this.userRepository.increment(
-      {
-        email: In(user.followers.map(({ email }) => email)),
-      },
-      'followersNum',
-      1,
-    );
-    await this.userRepository.delete(user);
+      });
+      const userDetail = await this.userRepository.findOneBy({
+        email: user.email,
+      });
+      await this.userRepository.remove(userDetail);
+    } catch (err) {
+      this.logger.error(err);
+      throw new NotFoundException('user not found', { cause: err });
+    }
     // TODO: soft delete
     // await this.userRepository.softDelete(user);
     // await this.postRepository.softDelete({

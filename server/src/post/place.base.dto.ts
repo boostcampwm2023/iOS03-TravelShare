@@ -3,7 +3,6 @@ import { Type } from 'class-transformer';
 import {
   IsNumberString,
   IsOptional,
-  IsPhoneNumber,
   IsString,
   ValidateNested,
 } from 'class-validator';
@@ -23,15 +22,17 @@ export class PlaceBase {
     example: '01012345678',
     required: false,
   })
-  @IsPhoneNumber('KR')
+  @IsString()
   @IsOptional()
   phoneNumber: string;
 
   @ApiProperty({
     description: '매장 카테고리입니다.',
     example: '무엇 > 무엇 > 무엇',
+    required: false,
   })
   @IsString()
+  @IsOptional()
   category: string;
 
   @ApiProperty({ description: '장소 주소', example: '어디동 ' })

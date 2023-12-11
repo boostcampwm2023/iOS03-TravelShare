@@ -10,7 +10,6 @@ import { RedisModule } from './redis/redis.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggerInterceptor } from './logger.interceptor';
-import { CacheModule } from '@nestjs/cache-manager';
 
 @Global()
 @Module({

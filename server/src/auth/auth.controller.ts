@@ -1,4 +1,4 @@
-import { Body, Post, Put } from '@nestjs/common';
+import { Body, Delete, Post, Put } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -61,5 +61,11 @@ export class AuthController {
         role,
       }),
     );
+  }
+
+  @ApiBearerAuth('access-token')
+  @Delete('delete')
+  async delete(@AuthenticatedUser() user: Authentication) {
+    await this.authService.delete(user);
   }
 }

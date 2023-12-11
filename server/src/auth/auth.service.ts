@@ -61,6 +61,15 @@ export class AuthService {
     };
   }
 
+  async delete(user: Authentication) {
+    const userDetail = await this.userRepository
+      .findOneByOrFail(user)
+      .catch((err) => {
+        throw new NotFoundException('user not found', { cause: err });
+      });
+    await this.userRepository.remove(userDetail);
+  }
+
   private async createAccessToken(user: Authentication) {
     return {
       accessToken: await this.jwtService.signAsync({

@@ -30,7 +30,7 @@ import { PostConfig } from './post.config.dto';
 import { Cron } from '@nestjs/schedule';
 import { PostLikeQuery } from './post.like.query.dto';
 import { PostListQuery } from './post.list.query.dto';
-import { PostCacheRepository } from './post.cache.repository';
+import { PostCacheableService } from './post.cacheable.service';
 
 const { all: allPromise } = Promise;
 const { min } = Math;
@@ -49,7 +49,7 @@ export class PostService implements OnModuleInit {
     private readonly routeRepository: Repository<Route>,
     @InjectRepository(Place)
     private readonly placeRepository: Repository<Place>,
-    private readonly postCacheRepository: PostCacheRepository,
+    private readonly postCacheableService: PostCacheableService,
     private readonly postConfig: PostConfig,
   ) {}
 
@@ -186,7 +186,7 @@ export class PostService implements OnModuleInit {
     let postIds: number[];
     switch (sortBy) {
       case 'top':
-        postIds = await this.postCacheRepository.getTopScorePostIds(
+        postIds = await this.postCacheableService.getTopScorePostIds(
           pagination.skip,
           pagination.take,
         );
@@ -204,7 +204,7 @@ export class PostService implements OnModuleInit {
     }
 
     const posts =
-      await this.postCacheRepository.getMultiPostWithLockAsideAndWriteAroundStrategy(
+      await this.postCacheableService.getMultiPostWithLockAsideAndWriteAroundStrategy(
         postIds,
       );
 
@@ -213,7 +213,10 @@ export class PostService implements OnModuleInit {
       await all(
         posts.map(async (post) => ({
           ...post,
-          liked: await this.postCacheRepository.isLikedUser(post.postId, email),
+          liked: await this.postCacheableService.isLikedUser(
+            post.postId,
+            email,
+          ),
         })),
       ),
     );
@@ -221,18 +224,18 @@ export class PostService implements OnModuleInit {
 
   async detail({ postId }: PostDetailQuery, { email }: Authentication) {
     const post =
-      await this.postCacheRepository.getPostWithLockAsideAndWriteAroundStrategy(
+      await this.postCacheableService.getPostWithLockAsideAndWriteAroundStrategy(
         postId,
       );
     if (post.public !== true && post.writer.email !== email) {
       throw new BadRequestException('비공개 게시글입니다.');
     }
-    if (!(await this.postCacheRepository.isViewedUser(postId, email))) {
-      await this.postCacheRepository.addViewedUser(postId, email);
+    if (!(await this.postCacheableService.isViewedUser(postId, email))) {
+      await this.postCacheableService.addViewedUser(postId, email);
     }
     return plainToInstance(PostDetailResponse, {
       ...post,
-      liked: await this.postCacheRepository.isLikedUser(postId, email),
+      liked: await this.postCacheableService.isLikedUser(postId, email),
     });
   }
 
@@ -343,7 +346,7 @@ export class PostService implements OnModuleInit {
       return plainToInstance(PostSearchResponse, []);
     }
     const posts =
-      await this.postCacheRepository.getMultiPostWithLockAsideAndWriteAroundStrategy(
+      await this.postCacheableService.getMultiPostWithLockAsideAndWriteAroundStrategy(
         postIds,
       );
 
@@ -352,7 +355,7 @@ export class PostService implements OnModuleInit {
       await all(
         posts.map(async (post) => ({
           ...post,
-          liked: await this.postCacheRepository.isLikedUser(
+          liked: await this.postCacheableService.isLikedUser(
             post.postId,
             user.email,
           ),
@@ -362,11 +365,11 @@ export class PostService implements OnModuleInit {
   }
 
   async like({ postId }: PostLikeQuery, { email }: Authentication) {
-    await this.postCacheRepository.addOrRemoveLikedUser(postId, email);
+    await this.postCacheableService.addOrRemoveLikedUser(postId, email);
     return plainToInstance(PostLikeResponse, {
       postId,
-      likeNum: await this.postCacheRepository.getLikedUsersCount(postId),
-      liked: await this.postCacheRepository.isLikedUser(postId, email),
+      likeNum: await this.postCacheableService.getLikedUsersCount(postId),
+      liked: await this.postCacheableService.isLikedUser(postId, email),
     });
   }
 
@@ -377,7 +380,7 @@ export class PostService implements OnModuleInit {
       `cache persisting starts. alpha: ${alpha}, beta: ${beta}, gamma: ${gamma}`,
     );
 
-    const updateList = await this.postCacheRepository.getUpdatedPostIds();
+    const updateList = await this.postCacheableService.getUpdatedPostIds();
     const posts = await this.postRepository.find({
       where: { postId: In(updateList) },
       relations: { likedUsers: true },
@@ -394,11 +397,11 @@ export class PostService implements OnModuleInit {
     await all(
       posts.map(async (post) => {
         const incrementedViewNum =
-          await this.postCacheRepository.getIncrementedViewedUsersCount(
+          await this.postCacheableService.getIncrementedViewedUsersCount(
             post.postId,
           );
         const incrementedlikeNum = min(
-          (await this.postCacheRepository.getLikedUsersCount(post.postId)) -
+          (await this.postCacheableService.getLikedUsersCount(post.postId)) -
             post.likedUsers.length,
         );
         //update score
@@ -416,7 +419,7 @@ export class PostService implements OnModuleInit {
 
         const oldLikedUsers = post.likedUsers.map(({ email }) => email);
         const currentlyLikedUsers =
-          await this.postCacheRepository.getLikedUserEmails(post.postId);
+          await this.postCacheableService.getLikedUserEmails(post.postId);
 
         const unlikedUsers = oldLikedUsers.filter(
           (email) => !currentlyLikedUsers.includes(email),
@@ -436,25 +439,25 @@ export class PostService implements OnModuleInit {
           .of(post.postId)
           .add(likedUsers);
 
-        this.postCacheRepository.cleanPostViewdUsers(post.postId);
-        this.postCacheRepository.cleanPostLikedUsers(post.postId);
+        this.postCacheableService.cleanPostViewdUsers(post.postId);
+        this.postCacheableService.cleanPostLikedUsers(post.postId);
       }),
     ).catch((err) => {
       this.logger.error(err);
     });
 
-    await this.postCacheRepository.cleanPostUpdatedIds();
-    await this.postCacheRepository.updateTopPostsScoreZSet();
+    await this.postCacheableService.cleanPostUpdatedIds();
+    await this.postCacheableService.updateTopPostsScoreZSet();
 
     this.logger.debug('cache persistenced');
   }
 
   @Cron('0 */10 * * * *')
   async updateTaskTopPostScores() {
-    await this.postCacheRepository.updateTopPostsScoreZSet();
+    await this.postCacheableService.updateTopPostsScoreZSet();
   }
 
   async onModuleInit() {
-    await this.postCacheRepository.updateTopPostsScoreZSet();
+    await this.postCacheableService.updateTopPostsScoreZSet();
   }
 }

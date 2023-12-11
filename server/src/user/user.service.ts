@@ -16,12 +16,14 @@ import { UserFollowersQuery } from './user.followers.query.dto';
 import { UserFollowersResponse } from './user.followers.response.dto';
 import { UserFolloweesQuery } from './user.followees.query.dto';
 import { UserFolloweesResponse } from './user.followees.response.dto';
+import { PostCacheableService } from 'post/post.cacheable.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly postCacheableService: PostCacheableService,
   ) {}
 
   async updateUserInfo(
@@ -30,6 +32,7 @@ export class UserService {
   ) {
     // TODO 검색어 자동완성에서 기존 닉네임 삭제 새로운 닉네임 추가
     await this.userRepository.update({ email }, userInfo);
+    await this.postCacheableService.evictPostsByWriterEmail(email);
     return plainToInstance(UserProfileUpdateResponse, {});
   }
 
