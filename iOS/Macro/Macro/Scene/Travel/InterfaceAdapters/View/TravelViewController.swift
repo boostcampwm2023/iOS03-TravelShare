@@ -25,6 +25,11 @@ final class TravelViewController: TabViewController, RouteTableViewControllerDel
     private let viewModel: TravelViewModel
     private var pathOverlay: NMFPath?
     private let routeTableViewController: RouteModalViewController
+    private var locationAuthorizationStatus: CLAuthorizationStatus = .notDetermined {
+        didSet {
+            recreateMapView()
+        }
+    }
     private var isTraveling = false {
         didSet {
             updateTravelButton()
@@ -243,7 +248,7 @@ extension TravelViewController {
 extension TravelViewController {
     
     private func bind() {
-        
+        bindCLLocationChanged()
         let outputSubject = viewModel.transform(with: inputSubject.eraseToAnyPublisher())
         
         outputSubject.receive(on: RunLoop.main).sink { [weak self] output in
@@ -271,40 +276,24 @@ extension TravelViewController {
     }
 }
 
-// MARK: - Methods
+// MARK: - Markers & MMFPath
 
 extension TravelViewController {
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.first {
-            let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: location.coordinate.latitude, lng: location.coordinate.longitude))
-            cameraUpdate.animation = .easeIn
-            mapView.moveCamera(cameraUpdate)
-        }
-    }
-    
-    private func moveCameraToCoordinates(latitude: Double, longitude: Double) {
-        let position = NMGLatLng(lat: latitude, lng: longitude)
-        let cameraUpdate = NMFCameraUpdate(scrollTo: position)
-        cameraUpdate.animation = .easeIn
-        mapView.moveCamera(cameraUpdate)
-    }
-    
     private func updateMapWithLocation(_ newLocation: CLLocation) {
         
         let newCoord = NMGLatLng(lat: newLocation.coordinate.latitude, lng: newLocation.coordinate.longitude)
-    
+        
         if pathOverlay == nil {
             pathOverlay = NMFPath()
             pathOverlay?.color = UIColor.appColor(.purple1)
             pathOverlay?.path = NMGLineString(points: [
-               newCoord, newCoord
+                newCoord, newCoord
             ])
             pathOverlay?.mapView = mapView
         }
         else {
             guard let path = pathOverlay?.path else { return }
-        
+            
             path.insertPoint(newCoord, at: 0)
             pathOverlay?.path = path
         }
@@ -351,9 +340,28 @@ extension TravelViewController {
         }
     }
     
+    private func removeMapLocation() {
+        if let existingPolyline = pathOverlay {
+            existingPolyline.mapView = nil
+        }
+        pathOverlay = nil
+        markers.values.forEach { $0.mapView = nil }
+        markers.removeAll()
+    }
+    
+    private func handleMarkerTap(_ marker: NMFMarker) {
+        if let locationDetail = markers.first(where: { $0.value == marker })?.key {
+            showLocationInfo(locationDetail)
+        }
+    }
+}
+
+// MARK: Button Actions
+
+extension TravelViewController {
+    
     @objc private func travelButtonTapped(_ sender: UITapGestureRecognizer) {
-        inputSubject.send(.startTravel)
-        isTraveling = true
+        checkLocationAuthorization(tag: 0)
     }
     
     @objc private func endTravelButtonTapped(_ sender: UITapGestureRecognizer) {
@@ -364,13 +372,43 @@ extension TravelViewController {
         reconfirmEnd()
     }
     
-    private func removeMapLocation() {
-        if let existingPolyline = pathOverlay {
-               existingPolyline.mapView = nil
-           }
-        pathOverlay = nil
-        markers.values.forEach { $0.mapView = nil }
-        markers.removeAll()
+    @objc private func myLocationButtonTapped(_ sender: UITapGestureRecognizer) {
+        checkLocationAuthorization(tag: 1)
+    }
+    
+    private func checkLocationAuthorization(tag: Int) {
+        switch LocationManager.shared.currentAuthorizationStatus {
+        case .authorizedWhenInUse, .authorizedAlways:
+            switch tag {
+            case 0: startTravel()
+            default: moveCamera()
+            }
+        case .notDetermined:
+            LocationManager.shared.requestWhenInUseAuthorization()
+        case .restricted, .denied:
+            showLocationDeniedAlert()
+        @unknown default:
+            break
+        }
+    }
+    
+    private func startTravel() {
+        inputSubject.send(.startTravel)
+        isTraveling = true
+    }
+}
+
+// MARK: - Alert
+extension TravelViewController {
+    
+    
+    private func showLocationDeniedAlert() {
+        AlertBuilder(viewController: self)
+            .setTitle("위치 서비스 필요")
+            .setMessage("설정에서 위치 서비스를 활성화해야 합니다.")
+            .addActionCancel("확인") {
+            }
+            .show()
     }
     
     private func requireMoreLocation() {
@@ -384,7 +422,7 @@ extension TravelViewController {
     
     private func reconfirmEnd() {
         AlertBuilder(viewController: self)
-            .setTitle("기록 중지")
+            .setTitle("기록 저장")
             .setMessage("이동 경로와 장소가 저장되며 초기화 됩니다.")
             .addActionConfirm("확인") {
                 self.inputSubject.send(.endTravel)
@@ -395,9 +433,18 @@ extension TravelViewController {
             .show()
     }
     
-    @objc private func myLocationButtonTapped(_ sender: UITapGestureRecognizer) {
-        moveCamera()
+}
+
+// MARK: - Methods
+extension TravelViewController {
+    
+    private func moveCameraToCoordinates(latitude: Double, longitude: Double) {
+        let position = NMGLatLng(lat: latitude, lng: longitude)
+        let cameraUpdate = NMFCameraUpdate(scrollTo: position)
+        cameraUpdate.animation = .easeIn
+        mapView.moveCamera(cameraUpdate)
     }
+    
     
     private func moveCamera() {
         guard let currentLocation = LocationManager.shared.sendLocation else { return }
@@ -468,9 +515,32 @@ extension TravelViewController {
         let locationInfoVC = LocationInfoViewController(viewModel: LocationInfoViewModel(locationDetail: locationDetail, searcher: searcher))
         navigationController?.pushViewController(locationInfoVC, animated: true)
     }
-    private func handleMarkerTap(_ marker: NMFMarker) {
-        if let locationDetail = markers.first(where: { $0.value == marker })?.key {
-            showLocationInfo(locationDetail)
-        }
+    
+    
+    private func bindCLLocationChanged() {
+        LocationManager.shared.authorizationStatusSubject
+            .receive(on: RunLoop.main)
+            .sink { [weak self] status in
+                self?.locationAuthorizationStatus = status
+                
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func recreateMapView() {
+        mapView.removeFromSuperview()
+        let newMapView = NMFMapView()
+        newMapView.translatesAutoresizingMaskIntoConstraints = false
+        newMapView.positionMode = .normal
+        view.insertSubview(newMapView, at: 0)
+        mapView = newMapView
+        
+        NSLayoutConstraint.activate([
+            newMapView.topAnchor.constraint(equalTo: view.topAnchor),
+            newMapView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            newMapView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            newMapView.rightAnchor.constraint(equalTo: view.rightAnchor)
+        ])
+        updateMarkers()
     }
 }
