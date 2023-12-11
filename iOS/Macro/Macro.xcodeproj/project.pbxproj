@@ -1854,7 +1854,9 @@
 				INFOPLIST_FILE = Macro/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "어디갈래";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "여행 경로를 확인하고 기록하기 위해 위치 동의가 필요합니다.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "여행 경로를 확인하고 기록하기 위해 백그라운드에서 위치 추적을 허용합니다.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "여행 경로를 확인하고 기록하기 위해 포그라운드와 백그라운드에서 위치 추적을 허용합니다..";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "여행 경로를 확인하고 기록하기 위해 백그라운드에서 위치 추적을 허용합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "프로필에 사진을 사용하기 위해 라이브러리 사용이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -1894,7 +1896,9 @@
 				INFOPLIST_FILE = Macro/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "어디갈래";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "여행 경로를 확인하고 기록하기 위해 위치 동의가 필요합니다.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "여행 경로를 확인하고 기록하기 위해 백그라운드에서 위치 추적을 허용합니다.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "여행 경로를 확인하고 기록하기 위해 포그라운드와 백그라운드에서 위치 추적을 허용합니다..";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "여행 경로를 확인하고 기록하기 위해 백그라운드에서 위치 추적을 허용합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "프로필에 사진을 사용하기 위해 라이브러리 사용이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
