@@ -357,6 +357,7 @@ private extension ReadViewController {
            if let firstPin = readPost.pins.first {
                updateFirstMarkerColor(placeId: firstPin.placeId)
            }
+        
     }
     
     func downloadImages(imageURLs: [String], completion: @escaping ([UIImage?]) -> Void) {
@@ -448,6 +449,11 @@ private extension ReadViewController {
             marker.position = NMGLatLng(lat: pin.coordinate.yPosition, lng: pin.coordinate.xPosition)
             marker.captionText = pin.placeName
             marker.mapView = mapView
+            marker.touchHandler = { [weak self] _ in
+                // handleMarkerTap 함수를 호출할 때, pin 객체를 전달합니다.
+                self?.handleMarkerTap(pin)
+                return true
+            }
             markers[pin.placeId] = marker
         }
     }
