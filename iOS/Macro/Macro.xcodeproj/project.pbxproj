@@ -87,6 +87,7 @@
 		BA7954742B2510C400C4BAC8 /* ReportUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7954732B2510C400C4BAC8 /* ReportUseCase.swift */; };
 		BA7954762B2512B300C4BAC8 /* ReportResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7954752B2512B300C4BAC8 /* ReportResponse.swift */; };
 		BA7954782B2520C400C4BAC8 /* TabbarType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7954772B2520C400C4BAC8 /* TabbarType.swift */; };
+		BA8174C32B27753900CB5063 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8174C22B27753900CB5063 /* ToastView.swift */; };
 		BA8742F02B204C2800DBDE03 /* CustomAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8742EF2B204C2800DBDE03 /* CustomAlertViewController.swift */; };
 		BA8742F32B204CA800DBDE03 /* CancelAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8742F22B204CA800DBDE03 /* CancelAction.swift */; };
 		BA8742F52B204D0B00DBDE03 /* AlertBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8742F42B204D0B00DBDE03 /* AlertBuilder.swift */; };
@@ -270,6 +271,7 @@
 		BA7954732B2510C400C4BAC8 /* ReportUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportUseCase.swift; sourceTree = "<group>"; };
 		BA7954752B2512B300C4BAC8 /* ReportResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportResponse.swift; sourceTree = "<group>"; };
 		BA7954772B2520C400C4BAC8 /* TabbarType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarType.swift; sourceTree = "<group>"; };
+		BA8174C22B27753900CB5063 /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		BA8742EF2B204C2800DBDE03 /* CustomAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlertViewController.swift; sourceTree = "<group>"; };
 		BA8742F22B204CA800DBDE03 /* CancelAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelAction.swift; sourceTree = "<group>"; };
 		BA8742F42B204D0B00DBDE03 /* AlertBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertBuilder.swift; sourceTree = "<group>"; };
@@ -876,6 +878,14 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		BA8174C12B27752A00CB5063 /* ToastView */ = {
+			isa = PBXGroup;
+			children = (
+				BA8174C22B27753900CB5063 /* ToastView.swift */,
+			);
+			path = ToastView;
+			sourceTree = "<group>";
+		};
 		BA8742EE2B204C0700DBDE03 /* AlertView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1256,6 +1266,7 @@
 			isa = PBXGroup;
 			children = (
 				D241DC702B0DA0070037DDB6 /* CommonUIComponents.swift */,
+				BA8174C12B27752A00CB5063 /* ToastView */,
 				BAEA834D2B25D4CB000B52D4 /* EmptyView */,
 				BA8742EE2B204C0700DBDE03 /* AlertView */,
 				BAE3C5972B1C7F6E00BF9798 /* CarouselView */,
@@ -1630,6 +1641,7 @@
 				AAD0B2D52B0E04CA003B4D5F /* MacroCarouselViewCell.swift in Sources */,
 				D2CAA5E52B1F140A00E825BA /* FollowList.swift in Sources */,
 				BABE98332B17C67300903F4F /* MyPageHeaderView.swift in Sources */,
+				BA8174C32B27753900CB5063 /* ToastView.swift in Sources */,
 				BA00A08D2B177113007F7BB9 /* DateFormatter.swift in Sources */,
 				BA90CB842B0F3BF600365AE2 /* PostCollectionViewCell.swift in Sources */,
 				BA6C6DFD2B05FFC500563B22 /* TabBarViewController.swift in Sources */,
