@@ -14,7 +14,7 @@ final class PostCollectionViewCell: UICollectionViewCell {
     
     let identifier = "PostCollectionViewCell"
     var viewModel: PostCollectionViewModel?
-    var readViewDisappear: PassthroughSubject<LikePostResponse, Never> = .init()
+    var readViewDisappear: PassthroughSubject<ReadPost, Never> = .init()
     weak var delegate: PostCollectionViewDelegate?
     
     // MARK: - UI Components
@@ -80,7 +80,7 @@ extension PostCollectionViewCell {
 
 extension PostCollectionViewCell {
     
-    func configure(item: PostFindResponse, viewModel: PostCollectionViewModel, indexPath: IndexPath, readViewDisappear: PassthroughSubject<LikePostResponse, Never>) {
+    func configure(item: PostFindResponse, viewModel: PostCollectionViewModel, indexPath: IndexPath, readViewDisappear: PassthroughSubject<ReadPost, Never>) {
         self.viewModel = viewModel
         self.readViewDisappear = readViewDisappear
         postContentView.configure(item: item, viewModel: viewModel, readViewDisappear: self.readViewDisappear)

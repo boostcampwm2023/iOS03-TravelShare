@@ -17,7 +17,7 @@ final class PostContentView: UIView {
     var viewModel: PostCollectionViewModel?
     private let provider = APIProvider(session: URLSession.shared)
     private let inputSubject: PassthroughSubject<PostCollectionViewModel.Input, Never> = .init()
-    var readViewDisappear: PassthroughSubject<LikePostResponse, Never> = .init()
+    var readViewDisappear: PassthroughSubject<ReadPost, Never> = .init()
     weak var delegate: PostCollectionViewDelegate?
     var postId: Int?
     
@@ -136,7 +136,7 @@ extension PostContentView {
         addTapGesture()
     }
     
-    func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?, readViewDisappear: PassthroughSubject<LikePostResponse, Never>) {
+    func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?, readViewDisappear: PassthroughSubject<ReadPost, Never>) {
         self.viewModel = viewModel
         self.readViewDisappear = readViewDisappear
         guard let viewModel = self.viewModel else { return }

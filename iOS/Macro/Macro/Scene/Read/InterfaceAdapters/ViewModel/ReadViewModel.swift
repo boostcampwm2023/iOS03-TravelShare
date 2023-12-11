@@ -23,7 +23,7 @@ final class ReadViewModel: ViewModelProtocol, CarouselViewProtocol {
     private let useCase: ReadPostUseCaseProtocol
     private let reporter: ReportUseCase
     private let pathcher: PatchUseCase
-    private var likeInfo: LikePostResponse?
+    private var readPost: ReadPost?
     private let outputSubject = PassthroughSubject<Output, Never>()
     private let postId: Int
     private var userEmail: String?
@@ -57,7 +57,7 @@ final class ReadViewModel: ViewModelProtocol, CarouselViewProtocol {
         case navigateToProfileView(String)
         case updatePageIndex(Int)
         case updatePostLike(LikePostResponse)
-        case updatePostCollection(LikePostResponse?)
+        case updatePostCollection(ReadPost?)
     }
 }
 
@@ -71,14 +71,14 @@ extension ReadViewModel {
                 switch input {
                 case .readPosts:
                     self?.updateReadViewItems()
-                case let .searchUser:
+                case .searchUser:
                     self?.searchUser(id: self?.userEmail ?? "")
                 case .likeImageTap:
                     self?.like()
                 case let .reportPost(postId, title, description):
                     self?.reportPost(postId: postId, title: title, description: description)
                 case .didDisappear:
-                    self?.outputSubject.send(.updatePostCollection(self?.likeInfo))
+                    self?.outputSubject.send(.updatePostCollection(self?.readPost))
                 }
             }
             .store(in: &cancellables)
@@ -93,6 +93,7 @@ extension ReadViewModel {
                 }
             } receiveValue: { [weak self] readPost in
                 self?.userEmail = readPost.writer.email
+                self?.readPost = readPost
                 self?.outputSubject.send(.updatePost(post: readPost))
             }
             .store(in: &cancellables)
@@ -106,7 +107,8 @@ extension ReadViewModel {
         pathcher.patchPostLike(postId: postId).sink { _ in
         } receiveValue: { [weak self] likePostResponse in
             guard likePostResponse.postId == self?.postId else { return }
-            self?.likeInfo = likePostResponse
+            self?.readPost?.liked = likePostResponse.liked
+            self?.readPost?.likeNum = likePostResponse.likeNum
             self?.outputSubject.send(.updatePostLike(likePostResponse))
         }.store(in: &cancellables)
     }

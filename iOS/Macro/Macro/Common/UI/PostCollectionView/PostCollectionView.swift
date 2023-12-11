@@ -15,7 +15,7 @@ final class PostCollectionView: UICollectionView {
     let viewModel: PostCollectionViewModel
     private var cancellables = Set<AnyCancellable>()
     weak var postDelegate: PostCollectionViewDelegate?
-    var readViewDisappear: PassthroughSubject<LikePostResponse, Never> = .init()
+    var readViewDisappear: PassthroughSubject<ReadPost, Never> = .init()
     private let inputSubject: PassthroughSubject<PostCollectionViewModel.Input, Never> = .init()
     private let postRefreshControl: UIRefreshControl = UIRefreshControl()
     

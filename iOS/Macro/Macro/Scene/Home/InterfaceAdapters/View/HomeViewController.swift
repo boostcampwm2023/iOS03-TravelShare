@@ -17,7 +17,7 @@ final class HomeViewController: TouchableViewController {
     private let inputSubject: PassthroughSubject<HomeViewModel.Input, Never> = .init()
     private let provider = APIProvider(session: URLSession.shared)
     private var cancellables = Set<AnyCancellable>()
-    private let readViewDisappear: PassthroughSubject<LikePostResponse, Never> = .init()
+    private let readViewDisappear: PassthroughSubject<ReadPost, Never> = .init()
     let postCollectionViewModel = PostCollectionViewModel( followFeature: FollowFeature(provider: APIProvider(session: URLSession.shared)), patcher: Patcher(provider: APIProvider(session: URLSession.shared)), postSearcher: Searcher(provider: APIProvider(session: URLSession.shared)), sceneType: .home)
     
     // MARK: - UI Components
@@ -105,8 +105,8 @@ private extension HomeViewController {
         
         readViewDisappear
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] likeInfo in
-                self?.updateLikeInfo(likeInfo)
+            .sink { [weak self] readPost in
+                self?.updateLikeInfo(readPost)
             }
             .store(in: &cancellables)
     }
@@ -122,12 +122,13 @@ extension HomeViewController {
         postCollectionView.reloadData()
     }
     
-    private func updateLikeInfo(_ likeInfo: LikePostResponse) {
+    private func updateLikeInfo(_ readPost: ReadPost) {
         postCollectionView.viewModel.posts.enumerated().forEach {
-            if $1.postId == likeInfo.postId {
+            if $1.postId == readPost.postId {
                 var post = postCollectionView.viewModel.posts[$0]
-                post.likeNum = likeInfo.likeNum
-                post.liked = likeInfo.liked
+                post.likeNum = readPost.likeNum
+                post.liked = readPost.liked
+                post.viewNum = readPost.viewNum
                 
                 postCollectionView.viewModel.posts[$0] = post
                 postCollectionView.reloadData()
