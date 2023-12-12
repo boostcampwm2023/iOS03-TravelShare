@@ -137,28 +137,40 @@ extension PostContentView {
     }
     
     func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?, readViewDisappear: PassthroughSubject<ReadPost, Never>) {
-        self.viewModel = viewModel
-        self.readViewDisappear = readViewDisappear
-        guard let viewModel = self.viewModel else { return }
-        
-        if let imageUrl = item.imageUrl, isValidUrl(urlString: imageUrl) {
-            viewModel.loadImage(profileImageStringURL: imageUrl) { [weak self] image in
+            self.viewModel = viewModel
+            self.readViewDisappear = readViewDisappear
+            self.imageUrl = item.imageUrl
+
+            if let imageUrl = item.imageUrl, isValidUrl(urlString: imageUrl) {
+                self.loadImage(profileImageStringURL: imageUrl)
+            } else {
+                setDefaultProfileImage()
+            }
+
+            title.text = item.title
+            summary.text = item.summary
+            postId = item.postId
+        }
+
+        func loadImage(profileImageStringURL: String) {
+            guard let url = URL(string: profileImageStringURL) else {
+                setDefaultProfileImage()
+                return
+            }
+            
+            URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
                 DispatchQueue.main.async {
-                    if let image = image {
-                        self?.setProfileImage(image)
-                    } else {
-                        self?.setDefaultProfileImage()
+                    if self?.imageUrl == profileImageStringURL {
+                        if let data = data, let image = UIImage(data: data) {
+                            self?.setProfileImage(image)
+                        } else {
+                            self?.setDefaultProfileImage()
+                        }
                     }
                 }
-            }
-        } else {
-            setDefaultProfileImage()
+            }.resume()
         }
-        
-        title.text = item.title
-        summary.text = item.summary
-        postId = item.postId
-    }
+    
     private func setDefaultProfileImage() {
         let defaultImage = UIImage.appImage(.profileDefaultImage)
         setProfileImage(defaultImage)

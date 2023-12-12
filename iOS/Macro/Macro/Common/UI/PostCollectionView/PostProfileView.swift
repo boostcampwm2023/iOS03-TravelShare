@@ -167,30 +167,39 @@ extension PostProfileView {
 
 extension PostProfileView {
     func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?) {
-        self.viewModel = viewModel
-        guard let viewModel = self.viewModel else { return }
+         self.viewModel = viewModel
+         self.imageUrl = item.writer.imageUrl
 
-        if let imageUrl = item.writer.imageUrl, isValidUrl(urlString: imageUrl) {
-            viewModel.loadImage(profileImageStringURL: imageUrl) { [weak self] image in
-                DispatchQueue.main.async {
-                    if let image = image {
-                        self?.setProfileImage(image)
-                    } else {
-                        self?.setDefaultProfileImage()
-                    }
-                }
-            }
-        } else {
-            setDefaultProfileImage()
-        }
+         if let imageUrl = item.writer.imageUrl, isValidUrl(urlString: imageUrl) {
+             self.loadImage(profileImageStringURL: imageUrl, forCellWithIndexPath: indexPath)
+         } else {
+             setDefaultProfileImage()
+         }
 
-        userNameLabel.text = item.writer.name
-        likeImageView.image = item.liked ? LikeImage.liked : LikeImage.unliked
-        likeImageView.tintColor = item.liked ? LikeColor.liked : LikeColor.unliked
-        likeCountLabel.text = "\(item.likeNum)"
-        viewCountLabel.text = "\(item.viewNum)"
-        postId = item.postId
-    }
+         userNameLabel.text = item.writer.name
+         likeImageView.image = item.liked ? LikeImage.liked : LikeImage.unliked
+         likeImageView.tintColor = item.liked ? LikeColor.liked : LikeColor.unliked
+         likeCountLabel.text = "\(item.likeNum)"
+         viewCountLabel.text = "\(item.viewNum)"
+         postId = item.postId
+     }
+     
+     func loadImage(profileImageStringURL: String, forCellWithIndexPath indexPath: IndexPath?) {
+         guard let url = URL(string: profileImageStringURL) else { return }
+         
+         URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+             DispatchQueue.main.async {
+                 if self?.imageUrl == profileImageStringURL {
+                     if let data = data, let image = UIImage(data: data) {
+                         self?.setProfileImage(image)
+                     } else {
+                         self?.setDefaultProfileImage()
+                     }
+                 }
+             }
+         }.resume()
+     }
+    
     private func setDefaultProfileImage() {
         let defaultImage = UIImage.appImage(.profileDefaultImage)
         setProfileImage(defaultImage)

@@ -98,6 +98,8 @@ final class ReadViewController: UIViewController {
         return mapView
     }()
     
+    private var markers: [String: NMFMarker] = [:]
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -290,7 +292,7 @@ private extension ReadViewController {
             .sink { [weak self] index in
                 self?.carouselView.descriptionLabel.text = self?.readPost?.contents[index].description
                 self?.carouselView.descriptionLabel.text = self?.readPost?.contents[index].description
-                
+                self?.handleScrollEvent(index: index)
                 if let coordinate = self?.readPost?.contents[index].coordinate {
                     let centerLocation = NMGLatLng(
                         lat: coordinate.yPosition,
@@ -351,8 +353,11 @@ private extension ReadViewController {
         calculateCenterLocation(routePoints: readPost.route.coordinates)
         updateMapWithLocation(routePoints: readPost.route.coordinates )
         
-        // TODO: - 핀 로직 수정 후 작업
         updateMark(recordedPindedInfo: readPost.pins)
+           if let firstPin = readPost.pins.first {
+               updateFirstMarkerColor(placeId: firstPin.placeId)
+           }
+        
     }
     
     func downloadImages(imageURLs: [String], completion: @escaping ([UIImage?]) -> Void) {
@@ -436,14 +441,40 @@ private extension ReadViewController {
     /// - Parameters:
     ///   - recordedPindedInfo: Pin의 위도, 경도 배열 입니다.
     func updateMark(recordedPindedInfo: [Pin]) {
-        for (index, placeInfo) in recordedPindedInfo.enumerated() {
+        markers.values.forEach { $0.mapView = nil }
+        markers.removeAll()
+
+        for pin in recordedPindedInfo {
             let marker = NMFMarker()
-            let name = placeInfo.placeName
-            let placeLocation = placeInfo.coordinate
-            marker.position = NMGLatLng(lat: placeLocation.yPosition, lng: placeLocation.xPosition)
-            marker.captionText = "\(index + 1). \(name)"
+            marker.position = NMGLatLng(lat: pin.coordinate.yPosition, lng: pin.coordinate.xPosition)
+            marker.captionText = pin.placeName
             marker.mapView = mapView
+            marker.touchHandler = { [weak self] _ in
+                self?.handleMarkerTap(pin)
+                return true
+            }
+            markers[pin.placeId] = marker
         }
+    }
+    
+    func updateFirstMarkerColor(placeId: String) {
+        if let marker = markers[placeId] {
+            marker.iconTintColor = UIColor.appColor(.red4)
+        }
+    }
+    
+    func handleScrollEvent(index: Int) {
+           guard let pin = readPost?.pins[index] else { return }
+           let marker = markers[pin.placeId]
+        markers.values.forEach { $0.iconTintColor = UIColor.clear }
+        marker?.iconTintColor = UIColor.appColor(.red4)
+       }
+    
+    func handleMarkerTap(_ placeInfo: Pin) {
+        let locationDetail = LocationDetail(addressName: placeInfo.address, categoryGroupCode: placeInfo.category, categoryGroupName: "-", categoryName: "-", distance: "", id: placeInfo.placeId, phone: placeInfo.phoneNumber, placeName: placeInfo.placeName, placeUrl: "", roadAddressName: placeInfo.roadAddress ?? "", mapx: "", mapy: "")
+        let searcher = Searcher(provider: APIProvider(session: URLSession.shared))
+        let locationInfoVC = LocationInfoViewController(viewModel: LocationInfoViewModel(locationDetail: locationDetail, searcher: searcher))
+        navigationController?.pushViewController(locationInfoVC, animated: true)
     }
 }
 
