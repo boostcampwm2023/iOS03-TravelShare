@@ -356,7 +356,15 @@ private extension ReadViewController {
             self?.carouselView.updateData(images)
         }
         
-        calculateCenterLocation(routePoints: readPost.route.coordinates)
+        let routePoints: [[Double]] = readPost.route.coordinates.compactMap { [$0.yPosition, $0.xPosition] }
+        var pinPoints: [[Double]] = []
+        for content in readPost.contents {
+            if let xPosition = content.coordinate?.xPosition, let yPosition = content.coordinate?.yPosition {
+                pinPoints.append([yPosition, xPosition])
+            }
+        }
+                
+        calculateCenterLocation(routePoints: routePoints, pinPoints: pinPoints)
         updateMapWithLocation(routePoints: readPost.route.coordinates )
         
         updateMark(recordedPindedInfo: readPost.pins)
@@ -389,15 +397,33 @@ private extension ReadViewController {
         }
     }
     
-    func calculateCenterLocation(routePoints: [Coordinate]) {
+    func calculateCenterLocation(routePoints: [[Double]], pinPoints: [[Double]]) {
         var maxLatitude = -90.0
         var minLatitude = 90.0
         var maxLongitude = -180.0
         var minLongitude = 180.0
         
         for point in routePoints {
-            let latitude = point.yPosition
-            let longitude = point.xPosition
+            let latitude = point[0]
+            let longitude = point[1]
+            
+            if latitude > maxLatitude {
+                maxLatitude = latitude
+            }
+            if latitude < minLatitude {
+                minLatitude = latitude
+            }
+            if longitude > maxLongitude {
+                maxLongitude = longitude
+            }
+            if longitude < minLongitude {
+                minLongitude = longitude
+            }
+        }
+        
+        for point in pinPoints {
+            let latitude = point[0]
+            let longitude = point[1]
             
             if latitude > maxLatitude {
                 maxLatitude = latitude
@@ -424,7 +450,7 @@ private extension ReadViewController {
         let zoomLevelLongitude = log2(90 / distanceLongitude)
         let zoomLevel = min(min(zoomLevelLatitude, zoomLevelLongitude), 15)
         mapView.zoomLevel = zoomLevel
-        
+       
         let cameraUpdate = NMFCameraUpdate(scrollTo: centerLocation )
         mapView.moveCamera(cameraUpdate)
     }

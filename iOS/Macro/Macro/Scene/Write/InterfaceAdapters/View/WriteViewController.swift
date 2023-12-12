@@ -244,7 +244,15 @@ private extension WriteViewController {
                 case let .updateMap(travel):
                     guard let recordedLocation = travel.recordedLocation else { return }
                     guard let recordedPinedInfo = travel.recordedPinnedLocations else { return }
-                    self?.calculateCenterLocation(routePoints: recordedLocation)
+                    
+                    var pinPoints: [[Double]] = []
+                    if let recordedPinnedLocations = travel.recordedPinnedLocations {
+                        for recordedPinnedLocation in recordedPinnedLocations {
+                            guard let latitude = recordedPinnedLocation.coordinate?.latitude, let longitude = recordedPinnedLocation.coordinate?.longitude else { return }
+                            pinPoints.append([latitude, longitude])
+                        }
+                    }
+                    self?.calculateCenterLocation(routePoints: recordedLocation, pinPoints: pinPoints)
                     self?.updateMapWithLocation(routePoints: recordedLocation)
                     
                     self?.updateMark(recordedPindedInfo: recordedPinedInfo)
@@ -326,13 +334,31 @@ extension WriteViewController {
         }
     }
     
-    func calculateCenterLocation(routePoints: [[Double]]) {
+    func calculateCenterLocation(routePoints: [[Double]], pinPoints: [[Double]]) {
         var maxLatitude = -90.0
         var minLatitude = 90.0
         var maxLongitude = -180.0
         var minLongitude = 180.0
         
         for point in routePoints {
+            let latitude = point[0]
+            let longitude = point[1]
+            
+            if latitude > maxLatitude {
+                maxLatitude = latitude
+            }
+            if latitude < minLatitude {
+                minLatitude = latitude
+            }
+            if longitude > maxLongitude {
+                maxLongitude = longitude
+            }
+            if longitude < minLongitude {
+                minLongitude = longitude
+            }
+        }
+        
+        for point in pinPoints {
             let latitude = point[0]
             let longitude = point[1]
             
@@ -361,7 +387,7 @@ extension WriteViewController {
         let zoomLevelLongitude = log2(90 / distanceLongitude)
         let zoomLevel = min(min(zoomLevelLatitude, zoomLevelLongitude), 15)
         mapView.zoomLevel = zoomLevel
-        
+       
         let cameraUpdate = NMFCameraUpdate(scrollTo: centerLocation )
         mapView.moveCamera(cameraUpdate)
     }
