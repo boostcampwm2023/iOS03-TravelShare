@@ -18,7 +18,7 @@ import {
 import { AppleIdentityTokenPayload } from './apple.identity.token.payload.dto';
 import { createPublicKey, randomInt, randomUUID } from 'crypto';
 import { AppleIdentityTokenHeader } from './apple.identity.token.header.dto';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { AppleAuth } from 'entities/apple.auth.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'entities/user.entity';
@@ -32,6 +32,7 @@ import { Transactional } from 'typeorm-transactional';
 import { getRandomNickName } from 'utils/namemaker';
 import { AppleClientRevokeResponse } from './apple.client.revoke.response';
 import { UserBlackListManager } from 'auth/blacklist/user.blacklist.manager';
+import { PostCacheableService } from 'post/post.cacheable.service';
 
 /**
  * ### AppleAuthService
@@ -51,6 +52,7 @@ export class AppleAuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly userBlackListManager: UserBlackListManager,
+    private readonly postCacheableService: PostCacheableService,
   ) {}
 
   async auth({ identityToken }: AppleClientAuthBody) {
@@ -265,11 +267,36 @@ export class AppleAuthService {
           user: true,
         },
       });
-      const userDetail = await this.userRepository.findOneBy({
-        email: user.email,
+      const userDetail = await this.userRepository.findOne({
+        where: { email: user.email },
+        relations: {
+          followees: true,
+          followers: true,
+        },
       });
+      if (user.followees.length > 0) {
+        await this.userRepository.decrement(
+          {
+            email: In(user.followees.map(({ email }) => email)),
+          },
+          'followersNum',
+          1,
+        );
+      }
+      if (user.followers.length > 0) {
+        await this.userRepository.decrement(
+          {
+            email: In(user.followers.map(({ email }) => email)),
+          },
+          'followeesNum',
+          1,
+        );
+      }
+      await this.postCacheableService.deleteLikedUserOnAllPosts(
+        userDetail.email,
+      );
       await this.userRepository.remove(userDetail);
-      await this.userBlackListManager.addRevokedBlacklist(user.email);
+      await this.userBlackListManager.addRevokedBlacklist(userDetail.email);
     } catch (err) {
       this.logger.error(err);
       throw new NotFoundException('user not found', { cause: err });

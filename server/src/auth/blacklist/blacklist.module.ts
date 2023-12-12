@@ -4,6 +4,6 @@ import { UserBlackListManager } from './user.blacklist.manager';
 @Global()
 @Module({
   providers: [UserBlackListManager],
-  exports: [UserBlackListManager]
+  exports: [UserBlackListManager],
 })
 export class BlackListModule {}
