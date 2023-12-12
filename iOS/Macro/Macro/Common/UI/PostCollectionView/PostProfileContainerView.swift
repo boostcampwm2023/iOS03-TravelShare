@@ -1,5 +1,5 @@
 //
-//  PostProfileView.swift
+//  PostProfileContainerView.swift
 //  Macro
 //
 //  Created by Byeon jinha on 11/17/23.
@@ -9,7 +9,7 @@ import Combine
 import MacroNetwork
 import UIKit
 
-final class PostProfileView: UIView {
+final class PostProfileContainerView: UIView {
     
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
@@ -98,7 +98,7 @@ final class PostProfileView: UIView {
 
 // MARK: - UI Settings
 
-extension PostProfileView {
+extension PostProfileContainerView {
     
     func setTranslatesAutoresizingMaskIntoConstraints() {
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -159,13 +159,17 @@ extension PostProfileView {
         profileImageView.isUserInteractionEnabled = true
         let profileImageViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(profileImageTap(_:)))
         profileImageView.addGestureRecognizer(profileImageViewTapGesture)
+        
+        userNameLabel.isUserInteractionEnabled = true
+        let userNameTapGesture = UITapGestureRecognizer(target: self, action: #selector(profileImageTap(_:)))
+        userNameLabel.addGestureRecognizer(userNameTapGesture)
     }
     
 }
 
 // MARK: - Method
 
-extension PostProfileView {
+extension PostProfileContainerView {
     func configure(item: PostFindResponse, viewModel: PostCollectionViewModel?) {
          self.viewModel = viewModel
          self.imageUrl = item.writer.imageUrl
@@ -220,7 +224,7 @@ extension PostProfileView {
 
 // MARK: - Layout Metrics
 
-extension PostProfileView {
+extension PostProfileContainerView {
     enum LikeImage {
         static let liked: UIImage? = UIImage.appImage(.handThumbsupFill)
         static let unliked: UIImage? = UIImage.appImage(.handThumbsup)

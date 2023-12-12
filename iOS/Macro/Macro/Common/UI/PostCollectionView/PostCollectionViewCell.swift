@@ -20,14 +20,14 @@ final class PostCollectionViewCell: UICollectionViewCell {
     // MARK: - UI Components
     
     let postContentView: PostContentView
-    let postProfileView: PostProfileView
+    let postProfileView: PostProfileContainerView
     
     // MARK: - Init
     
     override init(frame: CGRect) {
         self.postContentView = PostContentView()
         self.postContentView.readViewDisappear = self.readViewDisappear
-        self.postProfileView = PostProfileView()
+        self.postProfileView = PostProfileContainerView()
         super.init(frame: frame)
         
         setTranslatesAutoresizingMaskIntoConstraints()

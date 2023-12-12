@@ -39,39 +39,9 @@ final class ReadViewController: UIViewController {
         return view
     }()
     
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor.appColor(.blue5)
-        label.font = UIFont.appFont(.baeEunTitle1)
-        label.textAlignment = .center
-        return label
-    }()
-    
-    private lazy var reportButtomImageView: UIImageView = {
-        let image: UIImage? = UIImage.appImage(.exclamationmarkBubble)
-        let imageView = UIImageView(image: image)
-        imageView.tintColor = UIColor.appColor(.purple4)
-        return imageView
-    }()
-    
-    private lazy var carouselView: MacroCarouselView = MacroCarouselView(
-        didScrollOutputSubject: didScrollSubject,
-        inputSubject: inputSubject,
-        viewModel: viewModel)
-    
-    private let likeImageView: UIImageView = {
-        let image: UIImage? = UIImage.appImage(.handThumbsup)
-        let imageView: UIImageView = UIImageView()
-        imageView.image = image
-        imageView.tintColor = UIColor.appColor(.purple5)
-        return imageView
-    }()
-    
-    private let likeCountLabel: UILabel = {
-        let label: UILabel = UILabel()
-        label.textColor = UIColor.appColor(.purple5)
-        label.font = UIFont.appFont(.baeEunBody)
-        return label
+    private let postLikeView: PostLikeView = {
+       let postLikeView = PostLikeView()
+        return postLikeView
     }()
     
     private let viewImageView: UIImageView = {
@@ -88,6 +58,37 @@ final class ReadViewController: UIViewController {
         label.font = UIFont.appFont(.baeEunBody)
         return label
     }()
+    
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor.appColor(.blue5)
+        label.font = UIFont.appFont(.baeEunTitle1)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }()
+    
+    private let summaryLabel: VerticalAlignLabel = {
+        let label = VerticalAlignLabel()
+        label.textColor = UIColor.appColor(.blue5)
+        label.font = UIFont.appFont(.baeEunBody)
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        label.verticalAlignment = .top
+        return label
+    }()
+    
+    private lazy var reportButtomImageView: UIImageView = {
+        let image: UIImage? = UIImage.appImage(.exclamationmarkBubble)
+        let imageView = UIImageView(image: image)
+        imageView.tintColor = UIColor.appColor(.purple4)
+        return imageView
+    }()
+    
+    private lazy var carouselView: MacroCarouselView = MacroCarouselView(
+        didScrollOutputSubject: didScrollSubject,
+        inputSubject: inputSubject,
+        viewModel: viewModel)
     
     private let mapView: NMFMapView = {
         let mapView = NMFMapView()
@@ -134,7 +135,7 @@ final class ReadViewController: UIViewController {
     // MARK: - Handle Gesture
     
     @objc private func likeImageViewTap(_ sender: UITapGestureRecognizer) {
-        likeImageView.isUserInteractionEnabled = false
+        postLikeView.isUserInteractionEnabled = false
         inputSubject.send(.likeImageTap)
     }
     
@@ -166,12 +167,14 @@ private extension ReadViewController {
         postProfile.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         carouselView.translatesAutoresizingMaskIntoConstraints = false
-        likeImageView.translatesAutoresizingMaskIntoConstraints = false
-        likeCountLabel.translatesAutoresizingMaskIntoConstraints = false
-        viewImageView.translatesAutoresizingMaskIntoConstraints = false
-        viewCountLabel.translatesAutoresizingMaskIntoConstraints = false
+        
         mapView.translatesAutoresizingMaskIntoConstraints = false
         reportButtomImageView.translatesAutoresizingMaskIntoConstraints = false
+        summaryLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        postLikeView.translatesAutoresizingMaskIntoConstraints = false
+        viewImageView.translatesAutoresizingMaskIntoConstraints = false
+        viewCountLabel.translatesAutoresizingMaskIntoConstraints = false
     }
     
     func addSubviews() {
@@ -180,9 +183,9 @@ private extension ReadViewController {
         [
             postProfile,
             titleLabel,
+            summaryLabel,
             carouselView,
-            likeImageView,
-            likeCountLabel,
+            postLikeView,
             viewImageView,
             viewCountLabel,
             mapView,
@@ -197,6 +200,11 @@ private extension ReadViewController {
             scrollView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
+            scrollContentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            scrollContentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            scrollContentView.widthAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.widthAnchor),
+            scrollContentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -100),
+            
             postProfile.topAnchor.constraint(equalTo: scrollContentView.topAnchor),
             postProfile.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 10),
             postProfile.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -10),
@@ -208,31 +216,30 @@ private extension ReadViewController {
             reportButtomImageView.widthAnchor.constraint(equalToConstant: 30),
             
             titleLabel.topAnchor.constraint(equalTo: postProfile.bottomAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor),
-            titleLabel.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor),
+            titleLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 30),
+            titleLabel.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 20),
+            titleLabel.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -20),
             
-            carouselView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
-            carouselView.heightAnchor.constraint(equalToConstant: 400),
-            carouselView.widthAnchor.constraint(equalToConstant: UIScreen.width),
+            summaryLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
+            summaryLabel.widthAnchor.constraint(equalToConstant: 278),
+            summaryLabel.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             
-            likeImageView.topAnchor.constraint(equalTo: carouselView.bottomAnchor, constant: 40),
-            likeImageView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 24),
+            postLikeView.topAnchor.constraint(equalTo: summaryLabel.bottomAnchor, constant: 40),
+            postLikeView.heightAnchor.constraint(equalToConstant: 30),
+            postLikeView.widthAnchor.constraint(equalToConstant: 60),
+            postLikeView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 24),
             
-            likeCountLabel.centerYAnchor.constraint(equalTo: likeImageView.centerYAnchor),
-            likeCountLabel.leadingAnchor.constraint(equalTo: likeImageView.trailingAnchor, constant: 10),
-            
-            viewImageView.topAnchor.constraint(equalTo: carouselView.bottomAnchor, constant: 40),
-            viewImageView.leadingAnchor.constraint(equalTo: likeCountLabel.trailingAnchor, constant: 10),
+            viewImageView.topAnchor.constraint(equalTo: summaryLabel.bottomAnchor, constant: 40),
+            viewImageView.leadingAnchor.constraint(equalTo: postLikeView.trailingAnchor, constant: 20),
             
             viewCountLabel.centerYAnchor.constraint(equalTo: viewImageView.centerYAnchor),
             viewCountLabel.leadingAnchor.constraint(equalTo: viewImageView.trailingAnchor, constant: 10),
             
-            scrollContentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            scrollContentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            scrollContentView.widthAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.widthAnchor),
-            scrollContentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            carouselView.topAnchor.constraint(equalTo: postLikeView.bottomAnchor, constant: 20),
+            carouselView.heightAnchor.constraint(equalToConstant: 400),
+            carouselView.widthAnchor.constraint(equalToConstant: UIScreen.width),
             
-            mapView.topAnchor.constraint(equalTo: likeImageView.bottomAnchor, constant: 10),
+            mapView.topAnchor.constraint(equalTo: carouselView.bottomAnchor, constant: 10),
             mapView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 24),
             mapView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -24),
             mapView.heightAnchor.constraint(equalToConstant: UIScreen.width - 48),
@@ -245,13 +252,14 @@ private extension ReadViewController {
         addSubviews()
         setLayoutConstraints()
         postProfile.setLayout()
+        postLikeView.setLayout()
         addTapGesture()
     }
     
     func addTapGesture() {
-        likeImageView.isUserInteractionEnabled = true
+        postLikeView.isUserInteractionEnabled = true
         let likeImageViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(likeImageViewTap(_:)))
-        likeImageView.addGestureRecognizer(likeImageViewTapGesture)
+        postLikeView.addGestureRecognizer(likeImageViewTapGesture)
         
         reportButtomImageView.isUserInteractionEnabled = true
         let reportTapGesture = UITapGestureRecognizer(target: self, action: #selector(reportButtonTouched(_:)))
@@ -276,10 +284,8 @@ private extension ReadViewController {
                 case let .updatePageIndex(index):
                     self?.updatePageIndex(index)
                 case let .updatePostLike(likePostResponse):
-                    self?.likeCountLabel.text = "\(likePostResponse.likeNum)"
-                    self?.likeImageView.image = likePostResponse.liked ? UIImage.appImage(.handThumbsupFill) : UIImage.appImage(.handThumbsup)
-                    self?.likeImageView.tintColor = likePostResponse.liked ? UIColor.appColor(.purple2) : UIColor.appColor(.purple5)
-                    self?.likeImageView.isUserInteractionEnabled = true
+                    self?.postLikeView.isUserInteractionEnabled = true
+                    self?.postLikeView.updateLike(likePostResponse)
                 case let .updatePostCollection(post):
                     guard let post else { return }
                     self?.readViewDisappear.send(post)
@@ -329,13 +335,15 @@ private extension ReadViewController {
     func updatePost(_ readPost: ReadPost) {
         self.readPost = readPost
         
-        likeCountLabel.text = "\(readPost.likeNum)"
-        
+        postLikeView.updatePost(readPost)
+
         viewCountLabel.text = "\(readPost.viewNum)"
         
         postProfile.updateProfil(readPost.writer)
         
         titleLabel.text = readPost.title
+        
+        summaryLabel.text = readPost.summary
         
         let email = TokenManager.extractEmailFromJWTToken()
         
@@ -347,9 +355,6 @@ private extension ReadViewController {
         downloadImages(imageURLs: imageURLs) { [weak self] images in
             self?.carouselView.updateData(images)
         }
-        
-        self.likeImageView.image = readPost.liked ? UIImage.appImage(.handThumbsupFill) : UIImage.appImage(.handThumbsup)
-        self.likeImageView.tintColor = readPost.liked ? UIColor.appColor(.purple2) : UIColor.appColor(.purple5)
         
         calculateCenterLocation(routePoints: readPost.route.coordinates)
         updateMapWithLocation(routePoints: readPost.route.coordinates )

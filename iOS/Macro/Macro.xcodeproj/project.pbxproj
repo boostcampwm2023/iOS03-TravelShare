@@ -83,6 +83,8 @@
 		BA6C6DFC2B05FFC500563B22 /* TabComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DF02B05FFC500563B22 /* TabComponentView.swift */; };
 		BA6C6DFD2B05FFC500563B22 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DF12B05FFC500563B22 /* TabBarViewController.swift */; };
 		BA6C6DFE2B05FFC500563B22 /* TabBarOpacityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6C6DF22B05FFC500563B22 /* TabBarOpacityView.swift */; };
+		BA7401902B28177B00245AB3 /* UILabel+.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA74018F2B28177B00245AB3 /* UILabel+.swift */; };
+		BA7401942B281BE600245AB3 /* PostLikeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7401932B281BE600245AB3 /* PostLikeView.swift */; };
 		BA7954722B2509CA00C4BAC8 /* ReportEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7954712B2509CA00C4BAC8 /* ReportEndPoint.swift */; };
 		BA7954742B2510C400C4BAC8 /* ReportUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7954732B2510C400C4BAC8 /* ReportUseCase.swift */; };
 		BA7954762B2512B300C4BAC8 /* ReportResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7954752B2512B300C4BAC8 /* ReportResponse.swift */; };
@@ -103,7 +105,7 @@
 		BA8DC41B2B0B6ADD00929E01 /* MacroNetwork in Frameworks */ = {isa = PBXBuildFile; productRef = BA8DC41A2B0B6ADD00929E01 /* MacroNetwork */; };
 		BA90CB3B2B0EF88700365AE2 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CB3A2B0EF88700365AE2 /* LocationManager.swift */; };
 		BA90CB842B0F3BF600365AE2 /* PostCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CB802B0F3BF600365AE2 /* PostCollectionViewCell.swift */; };
-		BA90CB852B0F3BF600365AE2 /* PostProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CB812B0F3BF600365AE2 /* PostProfileView.swift */; };
+		BA90CB852B0F3BF600365AE2 /* PostProfileContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CB812B0F3BF600365AE2 /* PostProfileContainerView.swift */; };
 		BA90CB862B0F3BF600365AE2 /* PostContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CB822B0F3BF600365AE2 /* PostContentView.swift */; };
 		BA90CB872B0F3BF600365AE2 /* PostCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CB832B0F3BF600365AE2 /* PostCollectionView.swift */; };
 		BA90CB912B0FB10900365AE2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA90CB902B0FB10900365AE2 /* LaunchScreen.storyboard */; };
@@ -267,6 +269,8 @@
 		BA6C6DF02B05FFC500563B22 /* TabComponentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabComponentView.swift; sourceTree = "<group>"; };
 		BA6C6DF12B05FFC500563B22 /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		BA6C6DF22B05FFC500563B22 /* TabBarOpacityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarOpacityView.swift; sourceTree = "<group>"; };
+		BA74018F2B28177B00245AB3 /* UILabel+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+.swift"; sourceTree = "<group>"; };
+		BA7401932B281BE600245AB3 /* PostLikeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostLikeView.swift; sourceTree = "<group>"; };
 		BA7954712B2509CA00C4BAC8 /* ReportEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportEndPoint.swift; sourceTree = "<group>"; };
 		BA7954732B2510C400C4BAC8 /* ReportUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportUseCase.swift; sourceTree = "<group>"; };
 		BA7954752B2512B300C4BAC8 /* ReportResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportResponse.swift; sourceTree = "<group>"; };
@@ -285,7 +289,7 @@
 		BA8DC4142B0B602D00929E01 /* WriteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteViewController.swift; sourceTree = "<group>"; };
 		BA90CB3A2B0EF88700365AE2 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		BA90CB802B0F3BF600365AE2 /* PostCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCollectionViewCell.swift; sourceTree = "<group>"; };
-		BA90CB812B0F3BF600365AE2 /* PostProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostProfileView.swift; sourceTree = "<group>"; };
+		BA90CB812B0F3BF600365AE2 /* PostProfileContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostProfileContainerView.swift; sourceTree = "<group>"; };
 		BA90CB822B0F3BF600365AE2 /* PostContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostContentView.swift; sourceTree = "<group>"; };
 		BA90CB832B0F3BF600365AE2 /* PostCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCollectionView.swift; sourceTree = "<group>"; };
 		BA90CB902B0FB10900365AE2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -593,6 +597,7 @@
 			children = (
 				AAD0B30A2B14E394003B4D5F /* ReadProfileView.swift */,
 				AAD0B30B2B14E394003B4D5F /* ReadViewController.swift */,
+				BA7401932B281BE600245AB3 /* PostLikeView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -814,6 +819,7 @@
 				BA00A08C2B177113007F7BB9 /* DateFormatter.swift */,
 				BA6C6DE42B05FFC400563B22 /* UIScreen+.swift */,
 				D21B10482B19854900F2F84E /* UIViewController+.swift */,
+				BA74018F2B28177B00245AB3 /* UILabel+.swift */,
 				D21B104A2B1A22D500F2F84E /* Log.swift */,
 				D2EDFAAD2B212B9B00723E7E /* UIView+.swift */,
 				BA8742F42B204D0B00DBDE03 /* AlertBuilder.swift */,
@@ -1039,7 +1045,7 @@
 			isa = PBXGroup;
 			children = (
 				BA90CB802B0F3BF600365AE2 /* PostCollectionViewCell.swift */,
-				BA90CB812B0F3BF600365AE2 /* PostProfileView.swift */,
+				BA90CB812B0F3BF600365AE2 /* PostProfileContainerView.swift */,
 				BA90CB822B0F3BF600365AE2 /* PostContentView.swift */,
 				BA90CB832B0F3BF600365AE2 /* PostCollectionView.swift */,
 				D2CAA5CB2B1DA6A500E825BA /* PostCollectionViewModel.swift */,
@@ -1688,7 +1694,8 @@
 				D2CAA5E72B1F14BE00E825BA /* FollowListEndPoint.swift in Sources */,
 				BAB24EDD2B16390D000991A1 /* FollowResponse.swift in Sources */,
 				D2CAA5E12B1F0F6E00E825BA /* FollowViewController.swift in Sources */,
-				BA90CB852B0F3BF600365AE2 /* PostProfileView.swift in Sources */,
+				BA90CB852B0F3BF600365AE2 /* PostProfileContainerView.swift in Sources */,
+				BA7401902B28177B00245AB3 /* UILabel+.swift in Sources */,
 				D21B10162B17636800F2F84E /* PatchUseCase.swift in Sources */,
 				BA6C6DFB2B05FFC500563B22 /* TabBarBackgroundLargeCirclceView.swift in Sources */,
 				BA57BB682B2068AF00171F4E /* RevokeUseCase.swift in Sources */,
@@ -1697,6 +1704,7 @@
 				BA33AA852B0AF9F30065D1E0 /* HomeViewModel.swift in Sources */,
 				AAD0B2BD2B0DA35B003B4D5F /* LoginViewModel.swift in Sources */,
 				D263CA1C2B04074D00B4A144 /* LocationDetail.swift in Sources */,
+				BA7401942B281BE600245AB3 /* PostLikeView.swift in Sources */,
 				BAE3C5892B1996B200BF9798 /* UpdateLikeEndPoint.swift in Sources */,
 				D21B10192B176B2700F2F84E /* PatchResponse.swift in Sources */,
 				BA7954742B2510C400C4BAC8 /* ReportUseCase.swift in Sources */,

@@ -109,6 +109,8 @@ private extension PostContentView {
             opcityView.trailingAnchor.constraint(equalTo: mainImageView.trailingAnchor),
             
             title.centerXAnchor.constraint(equalTo: mainImageView.centerXAnchor),
+            title.leadingAnchor.constraint(greaterThanOrEqualTo: mainImageView.leadingAnchor, constant: 10),
+            title.trailingAnchor.constraint(lessThanOrEqualTo: mainImageView.trailingAnchor, constant: -10),
             title.centerYAnchor.constraint(equalTo: mainImageView.centerYAnchor),
             
             summary.centerXAnchor.constraint(equalTo: mainImageView.centerXAnchor),
