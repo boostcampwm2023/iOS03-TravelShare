@@ -354,10 +354,7 @@ private extension ReadViewController {
         updateMapWithLocation(routePoints: readPost.route.coordinates )
         
         updateMark(recordedPindedInfo: readPost.pins)
-           if let firstPin = readPost.pins.first {
-               updateFirstMarkerColor(placeId: firstPin.placeId)
-           }
-        
+        handleScrollEvent(index: 0)
     }
     
     func downloadImages(imageURLs: [String], completion: @escaping ([UIImage?]) -> Void) {
@@ -457,18 +454,12 @@ private extension ReadViewController {
         }
     }
     
-    func updateFirstMarkerColor(placeId: String) {
-        if let marker = markers[placeId] {
-            marker.iconTintColor = UIColor.appColor(.red4)
-        }
-    }
-    
     func handleScrollEvent(index: Int) {
-        guard let pinPosition = readPost?.contents[index].coordinate else { return }
+        guard (0..<(readPost?.contents.count ?? 0)).contains(index), let pinPosition = readPost?.contents[index].coordinate else { return }
         let marker = markers.values.filter {
             $0.position == NMGLatLng(lat: pinPosition.yPosition, lng: pinPosition.xPosition)
         }.first
-        debugPrint(marker?.captionText)
+        
         markers.values.forEach { $0.iconTintColor = UIColor.clear }
         marker?.iconTintColor = UIColor.appColor(.red4)
     }
