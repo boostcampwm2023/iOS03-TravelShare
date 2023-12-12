@@ -119,8 +119,8 @@ private extension MacroCarouselView {
         
         NSLayoutConstraint.activate([
             descriptionTextField.topAnchor.constraint(equalTo: macroCarouselCollectionView.bottomAnchor, constant: 20),
-            descriptionTextField.leadingAnchor.constraint(equalTo: macroCarouselCollectionView.leadingAnchor, constant: 50),
-            descriptionTextField.trailingAnchor.constraint(equalTo: macroCarouselCollectionView.trailingAnchor, constant: -50),
+            descriptionTextField.leadingAnchor.constraint(equalTo: macroCarouselCollectionView.leadingAnchor, constant: 45),
+            descriptionTextField.trailingAnchor.constraint(equalTo: macroCarouselCollectionView.trailingAnchor, constant: -45),
             descriptionTextField.heightAnchor.constraint(equalToConstant: 50)
         ])
         
@@ -134,8 +134,8 @@ private extension MacroCarouselView {
         
         NSLayoutConstraint.activate([
             descriptionLabel.topAnchor.constraint(equalTo: macroCarouselCollectionView.bottomAnchor, constant: 20),
-            descriptionLabel.leadingAnchor.constraint(equalTo: macroCarouselCollectionView.leadingAnchor, constant: 50),
-            descriptionLabel.trailingAnchor.constraint(equalTo: macroCarouselCollectionView.trailingAnchor, constant: -50)
+            descriptionLabel.leadingAnchor.constraint(equalTo: macroCarouselCollectionView.leadingAnchor, constant: 45),
+            descriptionLabel.trailingAnchor.constraint(equalTo: macroCarouselCollectionView.trailingAnchor, constant: -45)
         ])
         
         descriptionTextField.addTarget(self, action: #selector(descriptionTextFieldDidChange), for: .editingChanged)
