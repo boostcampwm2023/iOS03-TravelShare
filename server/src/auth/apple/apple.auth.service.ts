@@ -283,7 +283,7 @@ export class AppleAuthService {
           1,
         );
       }
-      if (user.followers.length > 0) {
+      if (userDetail.followers.length > 0) {
         await this.userRepository.decrement(
           {
             email: In(userDetail.followers.map(({ email }) => email)),
