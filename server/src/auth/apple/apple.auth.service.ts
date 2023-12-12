@@ -274,10 +274,10 @@ export class AppleAuthService {
           followers: true,
         },
       });
-      if (user.followees.length > 0) {
+      if (userDetail.followees.length > 0) {
         await this.userRepository.decrement(
           {
-            email: In(user.followees.map(({ email }) => email)),
+            email: In(userDetail.followees.map(({ email }) => email)),
           },
           'followersNum',
           1,
@@ -286,7 +286,7 @@ export class AppleAuthService {
       if (user.followers.length > 0) {
         await this.userRepository.decrement(
           {
-            email: In(user.followers.map(({ email }) => email)),
+            email: In(userDetail.followers.map(({ email }) => email)),
           },
           'followeesNum',
           1,
