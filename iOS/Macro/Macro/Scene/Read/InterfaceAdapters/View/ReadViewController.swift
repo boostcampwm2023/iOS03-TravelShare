@@ -292,6 +292,7 @@ private extension ReadViewController {
             .sink { [weak self] index in
                 self?.carouselView.descriptionLabel.text = self?.readPost?.contents[index].description
                 self?.carouselView.descriptionLabel.text = self?.readPost?.contents[index].description
+                self?.markers.values.forEach { $0.iconTintColor = UIColor.clear }
                 self?.handleScrollEvent(index: index)
                 if let coordinate = self?.readPost?.contents[index].coordinate {
                     let centerLocation = NMGLatLng(
@@ -460,7 +461,6 @@ private extension ReadViewController {
             $0.position == NMGLatLng(lat: pinPosition.yPosition, lng: pinPosition.xPosition)
         }.first
         
-        markers.values.forEach { $0.iconTintColor = UIColor.clear }
         marker?.iconTintColor = UIColor.appColor(.red4)
     }
     
