@@ -464,11 +464,14 @@ private extension ReadViewController {
     }
     
     func handleScrollEvent(index: Int) {
-           guard let pin = readPost?.pins[index] else { return }
-           let marker = markers[pin.placeId]
+        guard let pinPosition = readPost?.contents[index].coordinate else { return }
+        let marker = markers.values.filter {
+            $0.position == NMGLatLng(lat: pinPosition.yPosition, lng: pinPosition.xPosition)
+        }.first
+        debugPrint(marker?.captionText)
         markers.values.forEach { $0.iconTintColor = UIColor.clear }
         marker?.iconTintColor = UIColor.appColor(.red4)
-       }
+    }
     
     func handleMarkerTap(_ placeInfo: Pin) {
         let locationDetail = LocationDetail(addressName: placeInfo.address, categoryGroupCode: placeInfo.category, categoryGroupName: "-", categoryName: "-", distance: "", id: placeInfo.placeId, phone: placeInfo.phoneNumber, placeName: placeInfo.placeName, placeUrl: "", roadAddressName: placeInfo.roadAddress ?? "", mapx: "", mapy: "")
