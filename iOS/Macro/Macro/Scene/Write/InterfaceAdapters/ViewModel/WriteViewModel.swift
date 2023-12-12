@@ -140,7 +140,7 @@ extension WriteViewModel {
             let pins: [Pin] = self.travelInfo.recordedPinnedLocations?.compactMap { pin in
                 Pin(placeId: pin.placeId ?? "",
                     placeName: pin.placeName ?? "",
-                    phoneNumber: pin.phoneNumber == "" ? nil : "123-456-7890",
+                    phoneNumber: pin.phoneNumber == "" ? nil : pin.phoneNumber,
                     category: pin.category ?? "",
                     address: pin.address ?? "",
                     roadAddress: pin.roadAddress == "" ? nil : pin.roadAddress,
