@@ -39,11 +39,11 @@ final class WriteViewController: TabViewController {
         return view
     }()
     
-    private let isVisibilityButton: UIButton = {
-        let button = UIButton()
-        let image = UIImage.appImage(.lockOpenFill)?.withTintColor(UIColor.appColor(.statusGreen), renderingMode: .alwaysOriginal)
-        button.setImage(image, for: .normal)
-        return button
+    private let isVisibilityButton: UISwitch = {
+        let uiSwitch = UISwitch()
+        uiSwitch.isOn = true
+        uiSwitch.onTintColor = UIColor.appColor(.purple2)
+        return uiSwitch
     }()
     
     private let titleTextField: UITextField = {
@@ -72,6 +72,14 @@ final class WriteViewController: TabViewController {
         mapView.layer.borderWidth = 1
         mapView.layer.borderColor = UIColor.appColor(.purple1).cgColor
         return mapView
+    }()
+    
+    private let postPrivateLabel: UILabel = {
+        let label = UILabel()
+        label.text = "게시물 공유하기"
+        label.font = UIFont.appFont(.baeEunBody)
+        label.textColor = UIColor.appColor(.purple4)
+        return label
     }()
     
     private let writeSubmitButton: UIButton = {
@@ -118,6 +126,8 @@ private extension WriteViewController {
         mapView.translatesAutoresizingMaskIntoConstraints = false
         writeSubmitButton.translatesAutoresizingMaskIntoConstraints = false
         scrollContentView.translatesAutoresizingMaskIntoConstraints = false
+        postPrivateLabel.translatesAutoresizingMaskIntoConstraints = false
+        isVisibilityButton.translatesAutoresizingMaskIntoConstraints = false
     }
     
     func addsubviews() {
@@ -128,7 +138,9 @@ private extension WriteViewController {
             summaryTextView,
             carouselView,
             mapView,
-            writeSubmitButton
+            writeSubmitButton,
+            postPrivateLabel,
+            isVisibilityButton
         ].forEach { self.scrollContentView.addSubview($0) }
     }
     
@@ -147,7 +159,7 @@ private extension WriteViewController {
             summaryTextView.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 20),
             summaryTextView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 20),
             summaryTextView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -20),
-            summaryTextView.heightAnchor.constraint(equalToConstant: 210),
+            summaryTextView.heightAnchor.constraint(equalToConstant: 100),
             
             carouselView.topAnchor.constraint(equalTo: summaryTextView.bottomAnchor, constant: 20),
             carouselView.heightAnchor.constraint(equalToConstant: 400),
@@ -158,7 +170,13 @@ private extension WriteViewController {
             mapView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -24),
             mapView.heightAnchor.constraint(equalToConstant: UIScreen.width - 48),
             
-            writeSubmitButton.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 30),
+            postPrivateLabel.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 20),
+            postPrivateLabel.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor, constant: 24),
+            
+            isVisibilityButton.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 20),
+            isVisibilityButton.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor, constant: -24),
+            
+            writeSubmitButton.topAnchor.constraint(equalTo: postPrivateLabel.bottomAnchor, constant: 30),
             writeSubmitButton.bottomAnchor.constraint(equalTo: scrollContentView.bottomAnchor, constant: -50),
             writeSubmitButton.centerXAnchor.constraint(equalTo: scrollContentView.centerXAnchor),
             writeSubmitButton.widthAnchor.constraint(equalToConstant: UIScreen.width - 40),
@@ -179,7 +197,6 @@ private extension WriteViewController {
     }
     
     func setLayout() {
-        titleTextField.rightView = isVisibilityButton
         view.backgroundColor = .white
         setTranslatesAutoresizingMaskIntoConstraints()
         addsubviews()
@@ -199,10 +216,7 @@ private extension WriteViewController {
             .sink { [weak self] output in
                 switch output {
                 case let .isVisibilityToggle(isVisibility):
-                    DispatchQueue.main.async {
-                        let image = (isVisibility ? UIImage.appImage(.lockOpenFill) : UIImage.appImage(.lockFill))?.withTintColor(isVisibility ? UIColor.appColor(.statusGreen) : UIColor.appColor(.statusRed), renderingMode: .alwaysOriginal)
-                        self?.isVisibilityButton.setImage(image, for: .normal)
-                    }
+                    self?.isVisibilityButton.isOn = isVisibility
                     // imageData Cell에 추가
                 case let .outputImageData(imageDatas):
                     var images = [UIImage?]()
