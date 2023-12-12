@@ -55,7 +55,26 @@ private extension PostCollectionView {
             default: break
             }
         }.store(in: &cancellables)
-    }
+        
+        readViewDisappear
+                .sink { [weak self] updatedPost in
+                    self?.reloadCellForReadPost(updatedPost)
+                }
+                .store(in: &cancellables)
+        }
+
+        func reloadCellForReadPost(_ readPost: ReadPost) {
+            guard let index = viewModel.posts.firstIndex(where: { $0.postId == readPost.postId }) else { return }
+            
+            viewModel.posts[index].likeNum = readPost.likeNum
+                viewModel.posts[index].liked = readPost.liked
+                viewModel.posts[index].viewNum = readPost.viewNum
+            let indexPath = IndexPath(item: index, section: 0)
+            DispatchQueue.main.async {
+                self.reloadItems(at: [indexPath])
+            }
+            
+        }
 }
 
 // MARK: - Methods
