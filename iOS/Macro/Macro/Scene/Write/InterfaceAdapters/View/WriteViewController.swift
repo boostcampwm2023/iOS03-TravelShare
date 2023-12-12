@@ -359,7 +359,7 @@ extension WriteViewController {
         
         let zoomLevelLatitude = log2(90 / distanceLatitude)
         let zoomLevelLongitude = log2(90 / distanceLongitude)
-        let zoomLevel = min(zoomLevelLatitude, zoomLevelLongitude)
+        let zoomLevel = min(min(zoomLevelLatitude, zoomLevelLongitude), 15)
         mapView.zoomLevel = zoomLevel
         
         let cameraUpdate = NMFCameraUpdate(scrollTo: centerLocation )
