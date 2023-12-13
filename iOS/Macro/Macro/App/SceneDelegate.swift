@@ -40,6 +40,12 @@ extension SceneDelegate {
     func switchViewController(for loginState: LoginState) {
         
         switch loginState {
+        case .enter:
+            let userAgreementViewModel = UserAgreementViewModel()
+            let userAgreementViewController = UserAgreementViewController(viewModel: userAgreementViewModel)
+            self.navigationController = UINavigationController(rootViewController: userAgreementViewController)
+            self.window?.rootViewController = self.navigationController
+
         case .loggedIn:
             if TokenManager.refreshToken(cancellables: &cancellables) {
                 let tabbarViewModel = TabBarViewModel()
@@ -108,6 +114,7 @@ private extension SceneDelegate {
 }
 
 enum LoginState {
+    case enter
     case loggedIn
     case loggedOut
 }
