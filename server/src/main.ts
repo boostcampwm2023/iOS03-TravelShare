@@ -18,7 +18,7 @@ async function bootstrap() {
     bufferLogs: true,
   });
   const config = app.get(ConfigService);
-  app.useBodyParser('json', { type: 'application/json' });
+  app.useBodyParser('json', { type: 'application/json', limit: '50mb' });
   app.useLogger(app.get(APPLICATION_LOGGER_SYMBOL));
 
   const documentConfig = new DocumentBuilder()
