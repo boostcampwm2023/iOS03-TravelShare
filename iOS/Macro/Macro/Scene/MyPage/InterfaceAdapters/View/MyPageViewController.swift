@@ -403,6 +403,14 @@ extension MyPageViewController {
     }
     
     private func tryRevoke() {
+        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+        sceneDelegate.switchViewController(for: .loggedOut)
+        
+        guard let identityToken = KeyChainManager.load(key: KeychainKey.identityToken),
+              let authorizationCode = KeyChainManager.load(key: KeychainKey.authorizationCode),
+              let accessToken = KeyChainManager.load(key: KeychainKey.accessToken)
+        else { return }
+        
         KeyChainManager.delete(key: KeychainKey.accessToken)
         KeyChainManager.delete(key: KeychainKey.authorizationCode)
         KeyChainManager.delete(key: KeychainKey.identityToken)
@@ -419,13 +427,6 @@ extension MyPageViewController {
             Log.make().debug("코어 데이터 삭제에 실패했습니다.")
         }
         
-        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
-        sceneDelegate.switchViewController(for: .loggedOut)
-        
-        guard let identityToken = KeyChainManager.load(key: KeychainKey.identityToken),
-              let authorizationCode = KeyChainManager.load(key: KeychainKey.authorizationCode),
-              let accessToken = KeyChainManager.load(key: KeychainKey.accessToken)
-        else { return }
         inputSubject.send(.appleRevoke(identityToken: identityToken, authorizationCode: authorizationCode, accessToken: accessToken))
     }
     
