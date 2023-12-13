@@ -118,6 +118,11 @@
 		BA90CBA82B147E1900365AE2 /* UserInfoEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CBA72B147E1900365AE2 /* UserInfoEndPoint.swift */; };
 		BA90CBB22B14988400365AE2 /* Macro.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BA90CBB02B14988400365AE2 /* Macro.xcdatamodeld */; };
 		BA90CBC12B149E1700365AE2 /* TravelInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA90CBC02B149E1700365AE2 /* TravelInfo.swift */; };
+		BAA51F0F2B295BB400283C82 /* UserAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA51F0E2B295BB400283C82 /* UserAgreementViewController.swift */; };
+		BAA51F142B295BE900283C82 /* UserAgreementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA51F132B295BE900283C82 /* UserAgreementViewModel.swift */; };
+		BAA51F172B295DBA00283C82 /* UserAgreementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA51F162B295DBA00283C82 /* UserAgreementModel.swift */; };
+		BAA51F192B2960FB00283C82 /* UserAgreementTapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA51F182B2960FB00283C82 /* UserAgreementTapView.swift */; };
+		BAA51F1B2B2970C700283C82 /* UserAgreementHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA51F1A2B2970C700283C82 /* UserAgreementHeaderView.swift */; };
 		BAB24ED72B15D3D7000991A1 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB24ED42B15D3D7000991A1 /* CoreDataManager.swift */; };
 		BAB24ED82B15D3D7000991A1 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB24ED52B15D3D7000991A1 /* CoreDataStack.swift */; };
 		BAB24EDB2B1633B2000991A1 /* ProfileGetResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB24EDA2B1633B2000991A1 /* ProfileGetResponse.swift */; };
@@ -302,6 +307,11 @@
 		BA90CBA72B147E1900365AE2 /* UserInfoEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoEndPoint.swift; sourceTree = "<group>"; };
 		BA90CBB12B14988400365AE2 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		BA90CBC02B149E1700365AE2 /* TravelInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelInfo.swift; sourceTree = "<group>"; };
+		BAA51F0E2B295BB400283C82 /* UserAgreementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAgreementViewController.swift; sourceTree = "<group>"; };
+		BAA51F132B295BE900283C82 /* UserAgreementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAgreementViewModel.swift; sourceTree = "<group>"; };
+		BAA51F162B295DBA00283C82 /* UserAgreementModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAgreementModel.swift; sourceTree = "<group>"; };
+		BAA51F182B2960FB00283C82 /* UserAgreementTapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAgreementTapView.swift; sourceTree = "<group>"; };
+		BAA51F1A2B2970C700283C82 /* UserAgreementHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAgreementHeaderView.swift; sourceTree = "<group>"; };
 		BAB24ED42B15D3D7000991A1 /* CoreDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		BAB24ED52B15D3D7000991A1 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		BAB24EDA2B1633B2000991A1 /* ProfileGetResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileGetResponse.swift; sourceTree = "<group>"; };
@@ -1103,6 +1113,7 @@
 		BAA07ADE2B0251CF00884F3C /* Scene */ = {
 			isa = PBXGroup;
 			children = (
+				BAA51F0D2B295BA100283C82 /* UserAgreement */,
 				BAB24EE32B16DAFE000991A1 /* Route */,
 				BA90CB8D2B0FAFE300365AE2 /* LaunchScreen */,
 				BA32E1912B0DEBC500EA0EE2 /* LocationInfo */,
@@ -1126,6 +1137,50 @@
 				AA46C4B92B02304400856628 /* SceneDelegate.swift */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		BAA51F0D2B295BA100283C82 /* UserAgreement */ = {
+			isa = PBXGroup;
+			children = (
+				BAA51F102B295BBD00283C82 /* InterfaceAdapters */,
+			);
+			path = UserAgreement;
+			sourceTree = "<group>";
+		};
+		BAA51F102B295BBD00283C82 /* InterfaceAdapters */ = {
+			isa = PBXGroup;
+			children = (
+				BAA51F152B295D9F00283C82 /* Entities */,
+				BAA51F112B295BC400283C82 /* ViewModel */,
+				BAA51F122B295BCA00283C82 /* View */,
+			);
+			path = InterfaceAdapters;
+			sourceTree = "<group>";
+		};
+		BAA51F112B295BC400283C82 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				BAA51F132B295BE900283C82 /* UserAgreementViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		BAA51F122B295BCA00283C82 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				BAA51F0E2B295BB400283C82 /* UserAgreementViewController.swift */,
+				BAA51F182B2960FB00283C82 /* UserAgreementTapView.swift */,
+				BAA51F1A2B2970C700283C82 /* UserAgreementHeaderView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		BAA51F152B295D9F00283C82 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				BAA51F162B295DBA00283C82 /* UserAgreementModel.swift */,
+			);
+			path = Entities;
 			sourceTree = "<group>";
 		};
 		BAB24ED32B15D3D7000991A1 /* CoreData */ = {
@@ -1556,6 +1611,7 @@
 				BA8DC4152B0B602D00929E01 /* WriteViewController.swift in Sources */,
 				BA1181872B1D2787008D151C /* CarouselViewProtocol.swift in Sources */,
 				BAE3C58E2B1AF5B300BF9798 /* FollowPatchFollowee.swift in Sources */,
+				BAA51F1B2B2970C700283C82 /* UserAgreementHeaderView.swift in Sources */,
 				D241DC7C2B0DA0DA0037DDB6 /* SearchType.swift in Sources */,
 				BA90CBA82B147E1900365AE2 /* UserInfoEndPoint.swift in Sources */,
 				AAD0B3212B1712D1003B4D5F /* ReadPost.swift in Sources */,
@@ -1600,6 +1656,7 @@
 				D2CAA5E32B1F11B600E825BA /* FollowType.swift in Sources */,
 				BA7954782B2520C400C4BAC8 /* TabbarType.swift in Sources */,
 				D2CAA5DB2B1E151800E825BA /* RelatedLocationCell.swift in Sources */,
+				BAA51F172B295DBA00283C82 /* UserAgreementModel.swift in Sources */,
 				BA00A0892B1732E6007F7BB9 /* MapCollectionViewCellHeaderView.swift in Sources */,
 				BAB24EEC2B16DE55000991A1 /* MapCollectionViewCell.swift in Sources */,
 				D263CA332B06C7B300B4A144 /* SavedRoute.swift in Sources */,
@@ -1670,6 +1727,8 @@
 				D21B100B2B1497E000F2F84E /* IntroductionEditView.swift in Sources */,
 				D21B10072B14660600F2F84E /* MyInfoViewController.swift in Sources */,
 				BA32E1772B0DC2F900EA0EE2 /* UserInfoViewController.swift in Sources */,
+				BAA51F142B295BE900283C82 /* UserAgreementViewModel.swift in Sources */,
+				BAA51F192B2960FB00283C82 /* UserAgreementTapView.swift in Sources */,
 				AAD0B2982B0B0841003B4D5F /* CacheManager.swift in Sources */,
 				D263CA242B04134600B4A144 /* ViewModelProtocol.swift in Sources */,
 				D241DC782B0DA07E0037DDB6 /* PostFindEndPoint.swift in Sources */,
@@ -1703,6 +1762,7 @@
 				BA11818A2B1D30B9008D151C /* CarouselViewType.swift in Sources */,
 				BA33AA852B0AF9F30065D1E0 /* HomeViewModel.swift in Sources */,
 				AAD0B2BD2B0DA35B003B4D5F /* LoginViewModel.swift in Sources */,
+				BAA51F0F2B295BB400283C82 /* UserAgreementViewController.swift in Sources */,
 				D263CA1C2B04074D00B4A144 /* LocationDetail.swift in Sources */,
 				BA7401942B281BE600245AB3 /* PostLikeView.swift in Sources */,
 				BAE3C5892B1996B200BF9798 /* UpdateLikeEndPoint.swift in Sources */,
