@@ -50,7 +50,7 @@ private extension UserAgreementHeaderView {
             titleLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             
             appLogoImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            appLogoImageView.widthAnchor.constraint(equalToConstant: 56),
+            appLogoImageView.widthAnchor.constraint(equalToConstant: 40),
             appLogoImageView.heightAnchor.constraint(equalToConstant: 40),
             appLogoImageView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -20)
         ])
