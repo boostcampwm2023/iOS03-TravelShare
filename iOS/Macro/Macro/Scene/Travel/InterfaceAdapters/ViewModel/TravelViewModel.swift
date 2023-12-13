@@ -19,6 +19,7 @@ final class TravelViewModel: ViewModelProtocol {
     private let locationSearcher: SearchUseCase
     private let pinnedPlaceManager: PinnedPlaceManageUseCase
     private var cancellables = Set<AnyCancellable>()
+    private var locationSubscription: AnyCancellable?
     private (set) var savedRoute: SavedRoute = SavedRoute()
     private (set) var searchedResult: [LocationDetail] = [] {
         didSet {
@@ -53,6 +54,7 @@ final class TravelViewModel: ViewModelProtocol {
         case moveCamera(Double, Double)
         case removeMapLocation
         case transViewBySearchedResultCount(Bool)
+        case breakRecord
     }
     
     // MARK: - Init
@@ -101,21 +103,28 @@ extension TravelViewModel {
          routeRecorder.startRecording()
          routeRecorder.locationPublisher
          */
-        generateTravel()
-        LocationManager.shared.startRecording()
-        LocationManager.shared.locationPublisher
-            .sink { [weak self] location in
+        locationSubscription?.cancel() // 이전 구독 취소
+           generateTravel()
+           LocationManager.shared.startRecording()
+           locationSubscription = LocationManager.shared.locationPublisher
+               .sink { [weak self] location in
                 guard let self = self else { return }
                 guard let location = location else { return }
+                
                 if self.savedRoute.routePoints.isEmpty {
                     self.savedRoute.routePoints.append(contentsOf: [location, location])
+                    self.outputSubject.send(.updateRoute(location))
+                }
+                else if self.savedRoute.routePoints.last == location { }
+                else if self.savedRoute.routePoints.count >= 10000 {
+                    self.outputSubject.send(.breakRecord)
                 }
                 else {
                     self.savedRoute.routePoints.append(location)
+                    self.outputSubject.send(.updateRoute(location))
                 }
-                self.outputSubject.send(.updateRoute(location))
             }
-            .store(in: &cancellables)
+            
     }
     
     private func generateTravel() {
@@ -145,6 +154,8 @@ extension TravelViewModel {
     
         LocationManager.shared.stopRecording()
         savedRoute = SavedRoute()
+        locationSubscription?.cancel() 
+            locationSubscription = nil
         outputSubject.send(.removeMapLocation)
         outputSubject.send(.updatePinnedPlacesTableView)
     }

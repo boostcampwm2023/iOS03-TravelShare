@@ -16,6 +16,7 @@ final class MapCollectionViewCellContentView<T: MapCollectionViewProtocol>: UIVi
     var viewModel: T?
     var travelInfo: TravelInfo?
     private var routeOverlay: NMFPath?
+    private var markers: [NMFMarker] = []
     
     // MARK: - UI Components
     
@@ -141,6 +142,8 @@ extension MapCollectionViewCellContentView {
     
     func configure(item: TravelInfo) {
         self.travelInfo = item
+        markers.forEach { $0.mapView = nil }
+        markers.removeAll()
         
         guard let start = item.startAt, let end = item.endAt else { return }
         self.title.text = "\(Date.transDate(start)) ~ \(Date.transDate(end))"
@@ -157,8 +160,10 @@ extension MapCollectionViewCellContentView {
         updateMapWithLocation(routePoints: recordedLocation)
         
         guard let recordedPinnedInfo = item.recordedPinnedLocations else { return }
+        if let recordedPinnedInfo = item.recordedPinnedLocations {
+            updateMark(recordedPindedInfo: recordedPinnedInfo)
+        }
         
-        updateMark(recordedPindedInfo: recordedPinnedInfo)
     }
     
     /// Center 좌표를 센터값을 구하고, 좌표간 거리를 기반으로 Zoom Level을 설정합니다.
@@ -217,7 +222,7 @@ extension MapCollectionViewCellContentView {
         let zoomLevelLongitude = log2(90 / distanceLongitude)
         let zoomLevel = min(min(zoomLevelLatitude, zoomLevelLongitude), 15)
         mapView.zoomLevel = zoomLevel
-       
+        
         let cameraUpdate = NMFCameraUpdate(scrollTo: centerLocation )
         mapView.moveCamera(cameraUpdate)
     }
@@ -244,6 +249,7 @@ extension MapCollectionViewCellContentView {
             marker.position = NMGLatLng(lat: placeLocation.latitude, lng: placeLocation.longitude)
             marker.captionText = "\(index + 1). \(name)"
             marker.mapView = mapView
+            markers.append(marker)
         }
     }
 }
