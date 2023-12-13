@@ -268,6 +268,8 @@ extension TravelViewController {
                 self?.moveCameraToCoordinates(latitude: mapY, longitude: mapX)
             case .removeMapLocation:
                 self?.removeMapLocation()
+            case .breakRecord:
+                self?.breakRecord()
             default: break
             }
         }.store(in: &cancellables)
@@ -431,6 +433,17 @@ extension TravelViewController {
             .show()
     }
     
+    private func breakRecord() {
+        AlertBuilder(viewController: self)
+            .setTitle("기록 중지")
+            .setMessage("장시간 기록으로, 기록을 중지합니다.")
+            .addActionConfirm("확인") {
+            }
+            .show()
+        self.inputSubject.send(.endTravel)
+        self.isTraveling = false
+    }
+    
 }
 
 // MARK: - Methods
@@ -542,7 +555,7 @@ extension TravelViewController {
     }
     
     func mapView(_ mapView: NMFMapView, didTapMap latLng: NMGLatLng, point: CGPoint) {
-         self.view.endEditing(true)
-     }
+        self.view.endEditing(true)
+    }
     
 }
