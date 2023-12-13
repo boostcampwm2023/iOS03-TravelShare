@@ -110,13 +110,13 @@ extension TravelViewModel {
                .sink { [weak self] location in
                 guard let self = self else { return }
                 guard let location = location else { return }
-                print(savedRoute.routePoints.count)
+                
                 if self.savedRoute.routePoints.isEmpty {
                     self.savedRoute.routePoints.append(contentsOf: [location, location])
                     self.outputSubject.send(.updateRoute(location))
                 }
                 else if self.savedRoute.routePoints.last == location { }
-                else if self.savedRoute.routePoints.count >= 7000 {
+                else if self.savedRoute.routePoints.count >= 10000 {
                     self.outputSubject.send(.breakRecord)
                 }
                 else {
