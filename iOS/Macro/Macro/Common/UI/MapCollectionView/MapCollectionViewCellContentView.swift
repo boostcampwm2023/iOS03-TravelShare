@@ -146,7 +146,14 @@ extension MapCollectionViewCellContentView {
         self.title.text = "\(Date.transDate(start)) ~ \(Date.transDate(end))"
         
         guard let recordedLocation = item.recordedLocation else { return }
-        calculateCenterLocation(routePoints: recordedLocation)
+        var pinPoints: [[Double]] = []
+        if let recordedPinnedLocations = item.recordedPinnedLocations {
+            for pinLocation in recordedPinnedLocations {
+                guard let latitude = pinLocation.coordinate?.latitude, let longitude = pinLocation.coordinate?.longitude else { return }
+                pinPoints.append([latitude, longitude])
+            }
+        }
+        calculateCenterLocation(routePoints: recordedLocation, pinPoints: pinPoints)
         updateMapWithLocation(routePoints: recordedLocation)
         
         guard let recordedPinnedInfo = item.recordedPinnedLocations else { return }
@@ -157,13 +164,31 @@ extension MapCollectionViewCellContentView {
     /// Center 좌표를 센터값을 구하고, 좌표간 거리를 기반으로 Zoom Level을 설정합니다.
     /// - Parameters:
     ///   - routePoints: 위도, 경도 배열 입니다.
-    func calculateCenterLocation(routePoints: [[Double]]) {
+    func calculateCenterLocation(routePoints: [[Double]], pinPoints: [[Double]]) {
         var maxLatitude = -90.0
         var minLatitude = 90.0
         var maxLongitude = -180.0
         var minLongitude = 180.0
         
         for point in routePoints {
+            let latitude = point[0]
+            let longitude = point[1]
+            
+            if latitude > maxLatitude {
+                maxLatitude = latitude
+            }
+            if latitude < minLatitude {
+                minLatitude = latitude
+            }
+            if longitude > maxLongitude {
+                maxLongitude = longitude
+            }
+            if longitude < minLongitude {
+                minLongitude = longitude
+            }
+        }
+        
+        for point in pinPoints {
             let latitude = point[0]
             let longitude = point[1]
             
@@ -190,7 +215,7 @@ extension MapCollectionViewCellContentView {
         
         let zoomLevelLatitude = log2(90 / distanceLatitude)
         let zoomLevelLongitude = log2(90 / distanceLongitude)
-        let zoomLevel = min(zoomLevelLatitude, zoomLevelLongitude)
+        let zoomLevel = min(min(zoomLevelLatitude, zoomLevelLongitude), 15)
         mapView.zoomLevel = zoomLevel
        
         let cameraUpdate = NMFCameraUpdate(scrollTo: centerLocation )
