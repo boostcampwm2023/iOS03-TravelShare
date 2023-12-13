@@ -267,7 +267,7 @@ export class AppleAuthService {
           user: true,
         },
       });
-      const userDetail = await this.userRepository.findOne({
+      const userDetail = await this.userRepository.findOneOrFail({
         where: { email: user.email },
         relations: {
           followees: true,
@@ -295,7 +295,7 @@ export class AppleAuthService {
       await this.postCacheableService.deleteLikedUserOnAllPosts(
         userDetail.email,
       );
-      await this.userRepository.remove(userDetail);
+      await this.userRepository.delete({email: userDetail.email})
       await this.userBlackListManager.addRevokedBlacklist(userDetail.email);
     } catch (err) {
       this.logger.error(err);
