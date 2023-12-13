@@ -110,6 +110,7 @@ extension TravelViewModel {
                 if self.savedRoute.routePoints.isEmpty {
                     self.savedRoute.routePoints.append(contentsOf: [location, location])
                 }
+                else if self.savedRoute.routePoints.last == location { }
                 else {
                     self.savedRoute.routePoints.append(location)
                 }
