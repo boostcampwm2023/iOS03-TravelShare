@@ -28,7 +28,7 @@ struct TokenManager {
         }
         let currentTimeInterval = Date().timeIntervalSince1970
         
-        return currentTimeInterval < tokenExp ? LoginState.loggedIn : LoginState.loggedOut
+        return currentTimeInterval < tokenExp ? LoginState.enter : LoginState.loggedOut
     }
     
     static func refreshToken(cancellables: inout Set<AnyCancellable>) -> Bool {

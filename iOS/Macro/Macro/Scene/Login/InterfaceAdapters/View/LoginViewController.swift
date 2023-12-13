@@ -111,7 +111,7 @@ private extension LoginViewController {
             .sink { [weak self] output in
                 switch output {
                 case.appleLoginCompleted:
-                    self?.loginStateSubject.value = .loggedIn
+                    self?.loginStateSubject.value = .enter
                 }
             }
             .store(in: &subscriptions)
