@@ -34,6 +34,8 @@ public enum ImageAsset {
         case stopCircle
         case location
         case exclamationmarkBubble
+        case checkmarkCircle
+        case checkmarkCircleFill
     }
     
     public enum CustomImage {
@@ -99,6 +101,10 @@ public extension UIImage {
             return UIImage(systemName: "location")
         case .exclamationmarkBubble:
             return UIImage(systemName: "exclamationmark.bubble")
+        case .checkmarkCircle:
+            return UIImage(systemName: "checkmark.circle")
+        case .checkmarkCircleFill:
+            return UIImage(systemName: "checkmark.circle.fill")
         }
     }
     

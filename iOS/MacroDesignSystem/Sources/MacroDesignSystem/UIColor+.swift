@@ -53,6 +53,7 @@ public enum ColorAsset {
     public enum SpecialColor {
         case opacity30
         case grabber
+        case isInactive
     }
 }
 
@@ -110,6 +111,7 @@ public extension UIColor {
         switch name {
         case .opacity30: return UIColor(hexCode: "#242831", alpha: 0.3)
         case .grabber: return UIColor(hexCode: "#C6C8CB")
+        case .isInactive: return UIColor(hexCode: "C4C4C4")
         }
     }
 }
