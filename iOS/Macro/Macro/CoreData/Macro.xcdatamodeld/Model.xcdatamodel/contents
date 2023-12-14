@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22225" systemVersion="23B81" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="RecordedPinnedLocation" representedClassName="RecordedPinnedLocationMO" syncable="YES">
+        <attribute name="address" optional="YES" attributeType="String"/>
+        <attribute name="category" optional="YES" attributeType="String"/>
+        <attribute name="coordinate" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataDouble" customClassName="[Double]"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="phoneNumber" optional="YES" attributeType="String"/>
+        <attribute name="placeId" optional="YES" attributeType="String"/>
+        <attribute name="placeName" optional="YES" attributeType="String"/>
+        <attribute name="roadAddress" optional="YES" attributeType="String"/>
+        <relationship name="travel" optional="YES" maxCount="1" deletionRule="Cascade" ordered="YES" destinationEntity="Travel" inverseName="recordedPinnedLocations" inverseEntity="Travel"/>
+    </entity>
+    <entity name="Travel" representedClassName="TravelMO" syncable="YES">
+        <attribute name="endAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="recordedLocation" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="[[Double]]"/>
+        <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="startAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="recordedPinnedLocations" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="RecordedPinnedLocation" inverseName="travel" inverseEntity="RecordedPinnedLocation"/>
+    </entity>
+</model>

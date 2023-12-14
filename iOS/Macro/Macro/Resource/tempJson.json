@@ -1,0 +1,30 @@
+[
+    {
+        "postId": 1,
+        "title": "서울여행",
+        "summary": "즐거웠음",
+        "imageUrl": "https://cdn.pixabay.com/photo/2016/01/20/13/28/woman-1151562_1280.jpg",
+        "likeNum": 30,
+        "viewNum": 300,
+        "writer": {
+            "email": "www.naver.com",
+            "name": "nahun",
+            "imageUrl": "https://cdn.pixabay.com/photo/2016/01/20/13/28/woman-1151562_1280.jpg"
+        },
+        "liked": true
+    },
+    {
+        "postId": 2,
+        "title": "부산여행",
+        "summary": "재밌었음",
+        "imageUrl": "https://cdn.pixabay.com/photo/2016/01/20/13/28/woman-1151562_1280.jpg",
+        "likeNum": 300,
+        "viewNum": 3000,
+        "writer": {
+            "email": "www.naver.com",
+            "name": "gatsby",
+            "imageUrl": "https://cdn.pixabay.com/photo/2016/01/20/13/28/woman-1151562_1280.jpg"
+        },
+        "liked": false
+    }
+]

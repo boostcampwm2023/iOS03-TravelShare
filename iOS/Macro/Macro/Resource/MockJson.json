@@ -1,0 +1,146 @@
+[
+    {
+        "userInfo": {
+            "userid": "0000",
+            "profile": "https://i.namu.wiki/i/aqnNERqFPQAS4Y96MNf9EdjukXDaOheizUha_2rHfhCNVWchbMWgQr-N841tHFdhToc9__NtzNZJcL50KaQ-D9OLiL69UhaPKiRO14x0RpH1ANejTOhsaK-I_j2D6gdXazzN8UVOiNIm8w1eDANfow.webp",
+            "username": "먹고죽은돼지때깔핑크색",
+            "followers": 10
+        },
+        "routeInfo": {
+            "postid": 10,
+            "title": "부산 떡볶이 맛집 투어🍢",
+            "view": 10200,
+            "likes": 2024,
+            "summary": "화려한 가성비가 감싸는, 부산 덕천동 ‘맛나집’",
+            "image": "https://img.siksinhot.com/article/1605847278655138.jpg",
+            "route": [
+                "서울숲",
+                "빙봉"
+            ],
+            "hashtag": [
+                "레저",
+                "서울숲"
+            ]
+        }
+    },
+    {
+        "userInfo": {
+            "userid": "0000",
+            "profile": "https://cdn.pixabay.com/photo/2016/01/20/13/28/woman-1151562_1280.jpg",
+            "username": "진하",
+            "followers": 10
+        },
+        "routeInfo": {
+            "postid": 10,
+            "title": "서울숲 추천 데이트 코스🌲",
+            "view": 102,
+            "likes": 20,
+            "summary": "서울숲에서 로맨틱한 데이트를 즐겨보세요.",
+            "image": "https://images.pexels.com/photos/3278215/pexels-photo-3278215.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+            "route": [
+                "서울숲",
+                "빙봉"
+            ],
+            "hashtag": [
+                "레저",
+                "서울숲"
+            ]
+        }
+    },
+    {
+        "userInfo": {
+            "userid": "0000",
+            "profile": "https://cdn.pixabay.com/photo/2020/10/11/19/51/cat-5646889_1280.jpg",
+            "username": "거제송이향",
+            "followers": 10
+        },
+        "routeInfo": {
+            "postid": 10,
+            "title": "한강 자전거 라이딩 코스🚲",
+            "view": 107,
+            "likes": 12,
+            "summary": "한강 자전거 라이딩을 즐기는 코스",
+            "image": "https://images.pexels.com/photos/35799/summer-still-life-suitcase-in-field-grass-summer.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+            "route": [
+                "서울숲",
+                "빙봉"
+            ],
+            "hashtag": [
+                "레저",
+                "서울숲"
+            ]
+        }
+    },
+    {
+        "userInfo": {
+            "userid": "0000",
+            "profile": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQinXPnNOULEcrgvqJTJS9Z8CXqYj1BhF8OlQ&usqp=CAU",
+            "username": "우리농산물",
+            "followers": 10
+        },
+        "routeInfo": {
+            "postid": 10,
+            "title": "북한산 등산 코스🥾",
+            "view": 103,
+            "likes": 15,
+            "summary": "북한산 등산을 위한 안내 및 팁",
+            "image": "https://images.pexels.com/photos/1879305/pexels-photo-1879305.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+            "route": [
+                "서울숲",
+                "빙봉"
+            ],
+            "hashtag": [
+                "레저",
+                "서울숲"
+            ]
+        }
+    },
+    {
+        "userInfo": {
+            "userid": "0000",
+            "profile": "https://images.pexels.com/photos/1060791/pexels-photo-1060791.jpeg",
+            "username": "제주도 귤쟁이",
+            "followers": 10
+        },
+        "routeInfo": {
+            "postid": 10,
+            "title": "낙산사 힐링 코스🏔️",
+            "view": 1000,
+            "likes": 204,
+            "summary": "낙산사에서 정적인 시간을 보내며 마음을 찾아보세요. 후 더길어지면 자리려나",
+            "image": "https://images.pexels.com/photos/346767/pexels-photo-346767.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+            "route": [
+                "서울숲",
+                "빙봉"
+            ],
+            "hashtag": [
+                "레저",
+                "서울숲"
+            ]
+        }
+    },
+    {
+        "userInfo": {
+            "userid": "0000",
+            "profile": "https://images.pexels.com/photos/1060791/pexels-photo-1060791.jpeg",
+            "username": "jinha",
+            "followers": 10
+        },
+        "routeInfo": {
+            "postid": 10,
+            "title": "홍대 거리 놀이 코스🎡",
+            "view": 303,
+            "likes": 108,
+            "summary": "홍대 거리에서 다양한 놀이와 음식을 즐겨보세요",
+            "image": "https://images.pexels.com/photos/1051072/pexels-photo-1051072.jpeg?auto=compress&cs=tinysrgb&w=800",
+            "route": [
+                "서울숲",
+                "빙봉"
+            ],
+            "hashtag": [
+                "레저",
+                "서울숲"
+            ]
+        }
+    }
+]

@@ -1,0 +1,35 @@
+# Git URL : https://github.com/realm/SwiftLint
+# Reference : https://realm.github.io/SwiftLint/index.html
+excluded:
+  - Pods
+  - Macro/App/AppDelegate.swift
+  - Macro/App/SceneDelegate.swift
+analyzer_rules:
+  - unused_declaration
+  - unused_import
+disabled_rules:
+# 추가한 rules
+  - todo
+  - orphaned_doc_comment
+  - empty_xctest_method
+  - redundant_type_annotation
+  - number_separator
+  - empty_count
+  - object_literal
+  - file_name
+  - trailing_whitespace
+  - sorted_imports
+  - file_header
+  - vertical_whitespace_opening_braces
+  - vertical_whitespace_closing_braces
+  - statement_position
+  # if, else 등등에서 나오는 경고 무시
+  - function_parameter_count
+  - type_body_length
+  # 함수의 파라미터 개수가 최대 5개인 것을 무시
+
+# Customized Configurable Rules
+line_length: 250
+force_cast: error
+
+

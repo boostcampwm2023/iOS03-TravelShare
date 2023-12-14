@@ -96,3 +96,4 @@ iOSInjectionProject/
 # End of https://www.toptal.com/developers/gitignore/api/cocoapods,swift
 *.xcuserstate
 .DS_Store
+iOS/Macro/Podfile.lock
