@@ -40,9 +40,10 @@ https://github.com/boostcampwm2023/iOS03-TravelShare/assets/37203016/5ca89cf7-9a
 
 
 ## 기술 스택
-### BE
-
-<details><summary>기술 스택</summary>
+<details>
+    <summary style="font-size: 20px;font-weight: 600;">
+        🔙 BE
+    </summary>
 
 ---
 
@@ -76,8 +77,9 @@ https://github.com/boostcampwm2023/iOS03-TravelShare/assets/37203016/5ca89cf7-9a
 
 </details>
     
-### iOS
-<details><summary>기술 스택</summary>
+<details>
+    <summary style="font-size: 20px;font-weight: 600;">            🍏 iOS
+    </summary>
 
 ---
     
@@ -112,12 +114,6 @@ https://github.com/boostcampwm2023/iOS03-TravelShare/assets/37203016/5ca89cf7-9a
 
 - 비즈니스 로직 중심으로 배치하기 때문에 클린 아키텍쳐와 의존성 역전 원칙을 가장 존중하기 좋은 패턴이라 생각
 - 적은 시간에 개발을 마쳐야 하기 때문에 MVP, VIPER 보다는 익숙한 패턴임으로 선택
-    
-#### 그외
-    
-- UIKit
-- URLSession
-- SwiftLint
 
 ---
 
@@ -125,9 +121,68 @@ https://github.com/boostcampwm2023/iOS03-TravelShare/assets/37203016/5ca89cf7-9a
     
 ---
     
-## iOS 고민Log
+# 만났던 Issue Log
 
-### 글 로딩 속도 개선 고민과 실행한 해결 방안
+---
+
+1. [셀 재사용 및 이미지 로딩 문제 해결 🔄](#셀-재사용-및-이미지-로딩-문제-해결-🔄)
+2. [글 로딩 속도 개선 고민과 실행한 해결 방안 🏃‍](#글-로딩-속도-개선-고민과-실행한-해결-방안-🏃‍♂️)
+3. [좋아요 클릭 후 데이터 반영에 대한 고민 👍](#좋아요-클릭-후-데이터-반영에-대한-고민-👍)
+4. [비동기 이미지 매핑 방법 고민과 해결 방안 📥](#비동기-이미지-매핑-방법-고민과-해결-방안-📥)
+5. [위치 정확도 이슈 🛰️](#위치-정확도-이슈-🛰️)
+6. [이동 경로의 좌표 수 최적화 🛣️](#이동-경로의-좌표-수-최적화-🛣️)
+7. [공간데이터를 어떻게 다룰 것인가? 📊](#공간데이터를-어떻게-다룰-것인가?-📊)
+8. [로그를 손쉽게 관리하려면 어떡해야 할까? 🔍](#로그를-손쉽게-관리하려면-어떡해야-할까?-🔍)
+9. [어떤 전략으로 캐싱을 해야할까? + 동시성과 일관성의 문제 🗄️](#어떤-전략으로-캐싱을-해야할까?-+-동시성과-일관성의-문제-🗄️)
+
+---
+
+## iOS 
+
+### 셀 재사용 및 이미지 로딩 문제 해결 🔄
+<details>
+    
+---
+
+## 원인
+- **비동기 이미지 로딩:** 이미지를 비동기적으로 로드할 때, 네트워크 요청이 완료되기 전에 사용자가 스크롤을 하여 셀이 재사용될 수 있습니다. 이로 인해 이전 셀에 대한 이미지 로드 요청이 새로 재사용된 셀에 영향을 줌
+- **이전 상태 유지:** 셀이 재사용될 때 이전 셀의 상태(예: 이미지, 텍스트)가 초기화되지 않아 새 셀에 잘못된 데이터가 표시
+    
+## 시도했던 방법
+**1. 초기화 로직 추가:** ``prepareForReuse`` 메소드를 오버라이드하여 셀이 재사용되기 전에 셀의 상태를 초기화
+    - 셀이 재사용 될 때 이전에 설정된 이미지나 텍스트가 남아있게 되며, 새로운 데이터가 로드되기 전까지 잘못된 정보를 보여줄 수 있음
+    - 이미지 로딩 같은 비동기 작업이 완료되기 전에 셀이 재사용될 경우, 이전 셀의 이미지 요청 결과가 새 셀에 적용될 수 있음.
+    
+```swift
+override func prepareForReuse() {
+    super.prepareForReuse()
+    mainImageView.image = nil
+    title.text = ""
+    summary.text = ""
+    postId = nil
+}
+```
+    
+-> **개선은 됐지만 완벽한 해결은 못했음.**
+- 셀의 뷰 자체는 초기화되지만, 이미 시작된 비동기 이미지 로딩 작업은 계속 진행됨
+- 이미지 로딩과 같은 비동기 작업의 결과가 도착했을 때, 해당 결과가 현재 셀의 데이터와 일치하는지 확인하는 로직이 없다면, 여전히 이미지가 표시될 수 있음.
+    
+**2. 이미지 로딩 로직 변경:** ``prepareForReuse``로 문제를 완전히 해결할 수 없으므로 추가적인 로직이 필요
+    - 셀이 이미지 로딩을 요청하고, 로딩 중에 다른 데이터를 표시해야 할 새 셀로 재사용 되었을 때, 이전 이미지 로딩 요청의 결과가 새 셀에 적용될 수 있음.
+    - 결과적으로 셀에 잘못된 이미지가 표시되는 문제가 발생
+
+해결 방법
+- 각 셀에 이미지 URL을 저장하고, 이미지 로딩이 완료되었을 때 해당 URL이 현재 셀의 URL과 일치하는지 확인
+- 일치할 경우에만 이미지를 셀에 설정. 이렇게 하면 재사용된 셀에 대한 잘못된 이미지 설정을 방지할 수 있음
+    
+## 결론
+``prepareForReuse``를 사용한 초기화는 셀의 재사용 시 이전 상태를 리셋하는데 유용하지만, 비동기적으로 로딩되는 데이터(특히 이미지)에 대해서는 완벽한 해결책이 되지 못합니다. 이미지 로딩 로직을 변경하여 로딩 완료 시점에 셀의 현재 상태와 일치하는지 확인하는 추가적인 로직이 필요합니다. 이렇게 함으로써 셀 재사용 시 발생할 수 있는 잘못된 데이터 표시 문제를 효과적으로 해결할 수 있습니다.
+    
+---
+    
+</details>
+
+### 글 로딩 속도 개선 고민과 실행한 해결 방안 🏃‍♂️
 <details> 
 
 ---
@@ -158,7 +213,7 @@ https://github.com/boostcampwm2023/iOS03-TravelShare/assets/37203016/5ca89cf7-9a
     
 </details>
 
-### 좋아요 클릭 후 데이터 반영에 대한 고민
+### 좋아요 클릭 후 데이터 반영에 대한 고민 👍
 <details>
     
 ---
@@ -168,16 +223,16 @@ https://github.com/boostcampwm2023/iOS03-TravelShare/assets/37203016/5ca89cf7-9a
     
 ## 해결 방안
 ### 1. home화면 Appear시 API 요청을 통해 데이터 최신화
-- 고민한 해결 방안: View가 Load시가 아니라 Appear시에 API 요청을 통해 데이터를 최신화 하는 방안
+- 고민한 해결 방안: View가 Load시가 아니라 **Appear**시에 API 요청을 통해 데이터를 최신화 하는 방안
 - 문제점
     - Appear 시점에서 API를 호출하면 빈번한 API 요청으로 서버 부하가 커지고, 홈 화면으로 전환 시 앱이 느려보이는 문제가 발생
     - BE 로직으로 인해 홈 화면으로 전환 시 방금 전에 본 게시글의 위치가 변경 되는 이슈 발생
-### 2. 해당 Cell의 Data를 클라이언트에서 수정 후 이를 Home 화면에 반영
+### 2. 해당 **Cell의 Data를 클라이언트에서 수정** 후 이를 Home 화면에 반영
 - **고민한 해결 방안**
     - 좋아요 클릭 시 상세 피이지의 데이터를 수정하고, 이를 Home 화면에 반영하는 방식
 - **수정 방법**
     - 글 상세 페이지에서 좋아요 클릭 시, 해당 글의 데이터를 수정하고, 이를 홈 화면으로 넘겨서 해당 Cell의 데이터를 업데이트
-    - Disappear 시점에서 데이터를 업데이트하여 자연스러운 흐름을 유지
+    - **Disappear** 시점에서 데이터를 업데이트하여 자연스러운 흐름을 유지
 - **장점**
     - 로컬에서 작업하므로 속도가 빠르고 앱이 자연스러워 보임
     
@@ -185,13 +240,13 @@ https://github.com/boostcampwm2023/iOS03-TravelShare/assets/37203016/5ca89cf7-9a
     
 </details>
 
-### 비동기 이미지 매핑 방법 고민과 해결 방안
+### 비동기 이미지 매핑 방법 고민과 해결 방안 📥
 <details>
 
 --- 
 
 ### 문제 도입
-우선적으로 이미지를 Object Storage에 업로드하고 해당 이미지에 대한 URL을 가져오는 작업을 비동기적으로 처리하면서 이미지와 관련된 다른 정보(마커, 설명 글 등)을 함께 매핑하는 상황에서 문제가 발생
+우선적으로 이미지를 **Object Storage**에 업로드하고 해당 이미지에 대한 URL을 가져오는 작업을 비동기적으로 처리하면서 이미지와 관련된 다른 정보(마커, 설명 글 등)을 함께 **매핑하는 상황에서 문제가 발생**
     
 ### 기존 로직
 1. 이미지를 Object Storage에 업로드
@@ -202,7 +257,7 @@ https://github.com/boostcampwm2023/iOS03-TravelShare/assets/37203016/5ca89cf7-9a
 이미지를 비동기적으로 가져오기 때문에 이미지 URL이 먼저 도착하는 경우, 이미지와 관련된 다른 정보와 매핑이 뒤섞이는 문제가 발생
     
 ### 해결 방법
-현재 사용 중인 방법은 UIImage 배열과 같은 크기의 배열을 사용하여 index값을 활용하여 이미지 URL을 매핑하여 비동기 문제를 해결
+현재 사용 중인 방법은 UIImage 배열과 같은 크기의 배열을 사용하여 **index**값을 활용하여 이미지 URL을 매핑하여 비동기 문제를 해결
 그러나 이 방식은 배열의 크기를 이미지의 개수에 맞게 미리 할당해야 하므로 공간을 낭비하는 문제가 있음
 추후 개선 예정
 
@@ -210,25 +265,7 @@ https://github.com/boostcampwm2023/iOS03-TravelShare/assets/37203016/5ca89cf7-9a
 
 </details>
 
-### enum vs struct
-<details>
-    
----
-    
-## 대화 주제
-디자인 시스템을 모듈화하여 값을 static하게 관리할 때, enum과 struct 중 어떤 타입을 사용해야 하는지에 대한 대화를 하였습니다.
-    
-## 의견들
-1. **S017_변진하:** 클래스에 static let으로 선언해도 되는데 왜 enum 타입을 사용했는지 의문을 제기하며, struct로 수정해도 괜찮을 것이라고 주장.
-2. **S002_김경호:** enum은 상태를 표현하기 위해 사용하고, struct는 데이터 모델링을 위한 것으로 이해하며, 디자인 변경 시 쉬운 수정을 고려하여 static하게 관리하는 것은 struct가 더 적합하다 생각
-3. **S017_변진하:** struct는 private init()을 통해 휴먼 에러를 방지할 수 있지만, enum은 가독성이 좋아 코드 관리가 더 용이하다 생각
-4. **S003_김나훈:** enum을 사용하면 인스턴스 생성이 불가능하여 다른 문제를 방지할 수 있으며, struct를 사용하면 인스턴스 생성이 가능하다고 생각
-    
----
-    
-</details>
-
-### 위치 정확도 이슈
+### 위치 정확도 이슈 🛰️
 <details>
     
 ---
@@ -250,20 +287,20 @@ GPS를 사용하여 내 위치를 기록할 때 정확한 위치를 읽어오지
     
 </details>
 
-### 이동 경로의 좌표 수 최적화
+### 이동 경로의 좌표 수 최적화 🛣️
 <details>
     
 ---
     
 ### 문제점
-- CoreLocation에서 이동 중에 주기적으로 좌표 값을 제공하며, 이로 인해 이동 경로의 좌표 수가 많은 케이스가 발생 가능성이 있음
+- **CoreLocation**에서 이동 중에 주기적으로 좌표 값을 제공하며, 이로 인해 **이동 경로의 좌표 수가 많은 케이스**가 발생 가능성이 있음
 - 좌표 수가 많으면 서버에 저장 및 다른 사용자의 여행 기록을 받아서 화면에 그리는 데 많은 시간이 발생하는 이슈가 존재
     
 ### 해결방안
 1. **좌표 값 최적화를 통한 성능 개선**
-    - CoreLocation에서 제공하는 모든 좌표 값을 사용하는 것이 아니라, Timer를 활용하여 일정 시간마다 최근에 리턴된 좌표를 이어서 사용.
-    - 특정 시간(5초)마다 1번씩 좌표를 사용하는 방식으로 개선
-    - 서버에 저장할 때 과부하를 방지하고, 지도에 그릴 때 성능 개선 효과를 기대
+    - **CoreLocation**에서 제공하는 모든 좌표 값을 사용하는 것이 아니라, **Timer**를 활용하여 일정 시간마다 최근에 리턴된 좌표를 이어서 사용.
+    - **특정 시간(5초)마다 1번씩 좌표**를 사용하는 방식으로 개선
+    - 서버에 저장할 때 **과부하를 방지**하고, 지도에 그릴 때 성능 개선 효과를 기대
     
 2. **좌표 수 간격 조정**
     - 일정 시간 간격을 조정하여 몇 초마다 1번씩 좌표를 사용할지 팀 내에서 의논
@@ -271,7 +308,7 @@ GPS를 사용하여 내 위치를 기록할 때 정확한 위치를 읽어오지
 
 3. **성능 및 지도 표현 테스트**
     - 각 시간 간격(3초, 5초, 10초, 20초)에 대한 테스트를 수행하여 서버 부하 없이도 성능을 유지하몀ㄴ서 지도에 좌표를 그릴 수 있는 최적의 간격을 찾음
-    - 테스트 결과, 5초 주기로 좌표를 사용했을 때, 서버 부하가 적고 지도에 끊김이 없는 것 확인
+    - 테스트 결과, **5초 주기로 좌표를 사용했을 때, 서버 부하가 적고 지도에 끊김이 없는 것 확인**
 
 4. **좌표 압축**
     - 일직선 경로나, 아니면 많은 양을 압축을 하여 데이터 전송하는 로직을 추후에 기술적 도전으로 계획 중
@@ -282,10 +319,10 @@ GPS를 사용하여 내 위치를 기록할 때 정확한 위치를 읽어오지
 
 ---
 
-## BE 고민 Log
+## BE
 
 
-### 공간데이터를 어떻게 다룰 것인가?
+### 공간데이터를 어떻게 다룰 것인가? 📊
 
 <details>
     
@@ -303,7 +340,7 @@ GPS를 사용하여 내 위치를 기록할 때 정확한 위치를 읽어오지
 
 예를 들어 사용자가 어떤 경로를 저장한다면 그 형태는 어떻게 될까요?
 
-우선 일반적인 지도 상에서 위치를 표현하려면 위도(latitude)와 경도(logitude)로 이루어진 좌표쌍으로 표현하게 됩니다.
+우선 일반적인 지도 상에서 위치를 표현하려면 **위도(latitude)**와 **경도(logitude)**로 이루어진 좌표쌍으로 표현하게 됩니다.
 
 그리고 사용자가 이동한 경로는 곧 실수로 이루어진 좌표쌍의 배열이 될 것 입니다.
 
@@ -386,7 +423,7 @@ export class Post {
 
 이에 저희는 하나의 레코드에 온전히 좌표를 저장할 방법은 없을까 생각해보았는데요.
 
-2. JSON 데이터
+#### 2. JSON 데이터
 
 mysql은 단순 데이터 뿐만 아니라 json 데이터 타입을 지원하는데요.
 
@@ -424,7 +461,7 @@ json은 구조화된 데이터 표현에 적합하기 때문에 mysql도 이 부
 
 정확히 CRUD만을 위해선 충분히 좋은 대안이지만 완벽하진 않습니다.
 
-3. Geometry 데이터
+#### 3. Geometry 데이터
 
 mysql은 공식적으로 공간 데이터에 대한 지원을 위해 geometry 데이터 타입을 도입하였습니다.
 
@@ -489,7 +526,7 @@ Geometry 형식을 통해 하나의 컬럼에 데이터에 필요한 공간정�
 </details>
     
     
-### 로그를 손쉽게 관리하려면 어떡해야 할까?
+### 로그를 손쉽게 관리하려면 어떡해야 할까? 🔍
 
 <details>
     
@@ -687,12 +724,15 @@ export class PostService implements OnModuleInit {
     
 </details>
     
-### 어떤 전략으로 캐싱을 해야할까? + 동시성과 일관성의 문제
+### 어떤 전략으로 캐싱을 해야할까? + 동시성과 일관성의 문제(300ms=>30ms) 🗄️
 
 <details>
 
 ---
     
+![image](https://hackmd.io/_uploads/BkZwK68LT.png)
+![image](https://hackmd.io/_uploads/HyW5taIUp.png)
+
 어플리케이션이 어느정도 틀이 잡히면서 서버의 응답속도를 조금이라도 높여야겠다는 필요성이 느껴졌는데요.
 
 우선 저희 서비스에서 가장 많이 호출될 것으로 예상되는 메인화면의 API 응답 형식은 아래와 같습니다.
@@ -708,15 +748,15 @@ export class PostService implements OnModuleInit {
     // 게시글 요약
     "imageUrl": "string",
     // 게시글 대표 이미지 url
-    "likeNum": 0,
-    // 좋아요 개수
-    "viewNum": 0,
-    // 조회수
     "writer": {
       "email": "string",
       "name": "string",
       "imageUrl": "string",
     },
+    "likeNum": 0,
+    // 좋아요 개수
+    "viewNum": 0,
+    // 조회수
     // 작성자
     "liked": true
     // 게시글 좋아요 여부
@@ -775,14 +815,232 @@ https://docs.nestjs.com/techniques/caching
 "liked": true
 // 게시글 좋아요 여부
 ```
-좋아요 여부가 신경쓸 점이 많았는데요.
+좋아요 여부는 어떤 유저가 요청하냐에 따라 매번 다른 응답을 주어야 하는 데이터입니다.
+    
+2. 유저에 따라 달라져야 하는 좋아요, 조회수 처리
+    
+좋아요가 유저-게시글 당 반드시 한 번만 가능해야 함은 명백합니다.
+조회수 또한 유저가 게시글을 보는 매번 올릴 순 없기 때문에
+유저가 게시글을 이미 봤다면 적어도 한동안은 조회수가 올라감을 방지해야 합니다.
+    
+즉, 이는 좋아요, 조회수가 단순히 카운팅만 하고 끝내는 로직으로 처리하긴 힘들다는 점을 의미합니다.
 
-사실 위의 데이터들은 어느정도 단순하게 캐싱 처리를 해도 큰 문제가 생기진 않을 것이라 생각이 들지만
-좋아요 여부는 유저 개인에 관련된 데이터이기 때문에, 어떤 식으로 처리해야 할지 고민이 많았습니다.
+3. 좋아요의 동시성 문제
+    
+그렇다면 좋아요를 한 유저의 관리는 데이터베이스에서 관리하고 카운팅만 분리하면 어떨까요?
+    
+```ts
+# 게시글 좋아요 요청
+@Transactional()
+async like(user, post) {
+    if(!isLiked(user, post)) {
+        setLike(user, post);
+        incrementLikeCount(post);
+    } else {
+        unsetLike(user, post);
+        decrementLikeCount(post);
+    }
+}
+```
+그럴듯 하지만 문제가 생기게 되는데요    
+    
+한 명의 유저가 빠른 속도로 좋아요를 누를 경우
+```
+connection 1 START TRANSACTION
+connection 2 START TRANSACTION
 
-사실 캐싱을 고려하기 전부터 좋아요 여부나 조회수, 좋아요는 조금 고민이 많은 데이터였습니다.
+connection 1 좋아요 여부 확인 => false
+connection 2 좋아요 어부 확인 => false
 
----
+connection 1 좋아요 추가
+connection 2 좋아요 추가 => DUPLICATE ENTRY(게시글-유저 관계)
+
+connection 1 좋아요 개수 추가
+connection 2 ROLLBACK
+
+connection 1 COMMIT
+```
+좋아요를 추가하는 시나리오에선 위와 같이 Transaction에 의해
+connection 2의 중복된 요청이 실패하고 increment가 진행되지 않습니다.
+    
+그러나,
+    
+좋아요를 취소하는 시나리오에선
+
+```
+connection 1 START TRANSACTION
+connection 2 START TRANSACTION
+
+connection 1 좋아요 여부 확인 => false
+connection 2 좋아요 어부 확인 => false
+
+connection 1 좋아요 취소
+connection 2 좋아요 취소
+
+connection 1 좋아요 개수 감소
+connection 2 좋아요 개수 감소
+
+connection 1 COMMIT
+connection 2 COMMIT
+```
+좋아요를 취소하는 것은 중복 여부를 체크하지 못하기 때문에
+likeNum이 두 번 모두 감소하며 commit이 완료되어버립니다.
+
+극단적으론 좋아요가 음수가 되어버립니다.
+    
+현재 서버 로직상 좋아요에 대한 validation을 진행 중이므로
+
+```ts
+export class PostSearchResponse {
+    ...
+  @ApiProperty({ description: '좋아요 개수' })
+  @Min(0)
+  @IsInt()
+  likeNum: number;
+    ...
+}
+
+```
+    
+서버가 맛이 가버리는 상황이 나타나기도 했습니다.
+그렇다고 좋아요가 마이너스인 상황은 사용자에게도 꽤 눈에 띄는 오류일 것이라 생각이 들었구요.
+
+이에 해결방안으로는 Exclusive Lock을 걸어주는 방법이 있었는데요.
+조회 속도를 늘리기 위해 노력하는 와중에 Lock을 걸어 대기를 시키는 것은 상당히 아쉬운 결정이었습니다.
+심지어 InnoDB는 gap lock을 통해 주변 레코드까지 락을 걸어버리니
+겨우 좋아요로 인해 감당할 비용이 너무 크다고 느껴졌습니다.
+    
+#### 그래서 어떤 전략인데?
+    
+결론적으론 게시글의 데이터를 각 성격에 맞게 각자의 전략을 만들어 캐싱하기로 결정하였습니다.
+데이터의 저장은 다양한 데이터타입과 연산, 빠른 속도가 보장되는 레디스에게 위임하는 것이 좋겠다고 생각이 들었습니다.
+
+```
+"postId": 0,
+// 게시글 고유 id
+"title": "string",
+// 게시글 제목
+"summary": "string",
+// 게시글 요약
+"imageUrl": "string",
+// 게시글 대표 이미지 url
+"writer": {
+  "email": "string",
+  "name": "string",
+  "imageUrl": "string",
+}
+```
+결론적으론 게시글의 콘텐츠 데이터는 Cache를 우선 체크하고,
+Cache miss가 날 때 DB에서 조회하여 Cache를 업데이트하는 방식으로 결정하였습니다.
+
+![image](https://hackmd.io/_uploads/BJnldhB8a.png)
+    
+```
+"likeNum": 0,
+// 좋아요 개수
+"viewNum": 0,
+// 조회수
+"liked": true
+// 게시글 좋아요 여부
+```
+게시글의 좋아요와 조회수의 경우 
+[좋아요 개수 조회 최적화](https://tecoble.techcourse.co.kr/post/2022-10-10-like-count/)
+위 게시글에서 힌트를 얻었는데요.
+
+좋아요와 조회수는 수정, 조회가 빈번하지만 데이터베이스에 즉시 영속화되어야 할만큼 중요한 정보는 아니라고 생각이 들었습니다.
+
+따라서 모든 수정과 조회는 캐시에 진행하고 적절한 스케쥴링을 통해 데이터베이스에 반영하기로 결정하였습니다.
+
+![image](https://hackmd.io/_uploads/rJOwt2H86.png)
+    
+#### 구현은?
+    
+우선 캐시를 저장하는 것은 Redis를 이용하기로 하였는데요.
+    
+게시글 콘텐츠의 경우 Json 데이터 타입을 이용해 저장하였습니다.
+    
+단순히 게시글을 JSON.stringfy하여 텍스트로 저장하는 것보단,
+공식적으로 지원되는 데이터 타입이 좋겠다고 생각이 들었습니다.
+또 json을 위한 Fulltext indexing을 따로 지원하여 추후 캐시에 대한 검색 등에 있어서도 좀 더 유리할 것이라 생각했습니다.
+
+또 게시글을 리스트 단위로 저장하는 것보단, 각 게시글마다 따로 저장하고 조회하여(MGET 커맨드 이용) Cache hit 빈도를 높이고 싶었습니다.
+    
+![image](https://hackmd.io/_uploads/Hywya3rLa.png)
+
+한편, 좋아요와 조회수는 sets를 이용해 저장하기로 했는데요.
+좋아요는 물론, 조회수도 한 유저가 중복적인 요청을 하였다고 해서 매번 조회수를 1씩 카운트하면 안되기 때문에
+두 데이터 모두 어떤 유저가 좋아요를 했고, 조회를 했는지 저장해서 주기적으로 데이터베이스에 반영하는 것이 좋을 것이라 생각했습니다.
+    
+![image](https://hackmd.io/_uploads/Hym1A2rLa.png)
+
+이제 어떤 게시글에 대한 요청이 들어올 시
+```ts
+    
+    let postId = ....
+    let email = ....
+    let post = redis.JSON.GET(postId);
+    // 게시글을 조회합니다.
+    if(!post) {
+        //게시글이 없을 시 DB에서 로딩하고 Cache도 업데이트해줍니다.
+        post = mysql.select(postId);
+        redis.JSON.SET(postId, post);
+    }
+    // 좋아요와 조회수, 좋아요 여부를 획득
+    let likeNum = redis.SETCARD(postId);
+    let viewNum = redis.SETCARD(postId);
+    let isLiked = redis.SETISMEMBER(postId, email)
+    // 응답 형태로 가공합니다.
+    return {
+        ...post, likeNum, viewNum, isLiked
+    }
+```
+위와 같이 처리하는 시나리오로 진행하게 됩니다.
+
+만약 여러 게시글에 대한 요청이 들어오는 경우
+```ts
+     let postIds = mysql.select(postId).from(post).where(...);
+     // JOIN이 사라지고 로딩할 데이터가 postId만 남아 쿼리 실행시간이 줄어듭니다.
+    let posts = redis.JSON.MGET(postIds);
+    let cacheMissedPostIds = postIds.filter((postId, index)=> !posts[index]);
+    // 캐시 미스된 포스팅들
+    let dbPosts = mysql.select(...).from(post).where((postId In cacheMissedPostIds));
+    ...
+```
+    
+좋아요, 조회 요청이 들어올 시
+```ts    
+    redis.SETADD(postId, email);
+    // 좋아요
+    if(redis.SETISMEMBER(email)) {
+        redis.SETREM(postId, email);
+    } else {
+        redis.SETADD(postId, email);
+    }
+```
+와 같이 처리하게 됩니다.
+    
+마지막으로 신경쓸 부분은 스케쥴링을 통해 좋아요와 조회 정보를 데이터베이스로 영속화하는 부분이었습니다.
+    
+```ts
+    @Cron('0 0 * * * *')
+  async updateTaskToViewsAndLikesAndScores() {
+    ...
+  }
+```
+
+저희 팀은 이러한 작업을 통해
+쿼리 요청을 최대한 줄여 특히 메인화면의 경우 캐시 히트가 잦아
+응답시간을 250~350ms에서 20~40ms까지 줄여볼 수 있었는데요.
+    
+다양한 성격의 데이터를 어떻게 처리할까에 대해서 고민을 많이 해볼 수 있어 좋은 시간이었습니다.
+    
+그러나 이로 인해 게시글 관련 API를 조회할 경우 서버 내부 코드에서는
+기존 보다 한 계층을 더 거쳐야 할 정도로 로직이 복잡해지는 부분도 있었는데요.
+    
+캐싱 로직을 좀 더 비즈니스 로직에서 분리하고 싶었으나,
+아직까진 마땅한 아이디어를 찾지 못했습니다.
+    
+추후에는 리팩토링과 함께 해당 부분을 건드려보고 싶습니다.
     
 </details>
 
@@ -893,9 +1151,27 @@ https://docs.nestjs.com/techniques/caching
 
 ![image](https://github.com/boostcampwm2023/iOS03-TravelShare/assets/37203016/9d4a611f-18aa-4224-9246-383a8c29d10e)
 
+---
 
 </details>
 
+## 공부 Log
+    
+### 김경호의 HexColor 공부
+<details>
+    
+- HexCode 구성: HexCode는 16진수 6자리로 구성되며, 각각의 2자리는 Red, Green, Blue를 나타냄
+- UIColor에서의 사용: UIColor에서는 R, G, B 값을 각각 나눠서 넣어줘야 합니다. 이를 위해 HexCode를 2자리씩 나눠서 계산합니다.
+
+계산 방법:
+
+HexCode를 2자리씩 나누기 위해 >> 연산자를 사용하여 밀어주고, & 연산자를 통해 나머지 값을 제거합니다.
+계산하고자 하는 자리수를 하위 8자리로 만들어줍니다.
+0xFF와의 & 연산을 통해 다른 자리를 제거합니다.
+그 결과를 Double로 변환하고, 255.0으로 나눠줌으로써 값을 계산합니다.
+이 방식을 사용하면 HexCode를 RGB 값으로 변환할 수 있습니다.
+</details>
+    
 ## 🏡 팀 페이지
 
 :pushpin: [Notion](https://necessary-grin-f0b.notion.site/ed1785c63de744659485ba8b78125281?pvs=4)
@@ -905,3 +1181,4 @@ https://docs.nestjs.com/techniques/caching
 | 그라운드 룰 | Commit Convention | Issue Convention | PR Convention |
 | -------- | -------- | -------- | -------- |
 | :pushpin: [그라운드 룰](https://necessary-grin-f0b.notion.site/d45a562d318049d48164335c3e9e562d?pvs=4)     | :pushpin: [Commit Convention](https://necessary-grin-f0b.notion.site/Commit-Convention-b750a1e1db7342edbc2d3956b1841d0e?pvs=4)     | :pushpin: [Issue Convention](https://necessary-grin-f0b.notion.site/Issue-Convention-54d447f4915c4efba9519eba91bab816?pvs=4)     | :pushpin: [PR Convention](https://necessary-grin-f0b.notion.site/PR-Convention-e095863a5dd54b9eba42692dcf61eb19?pvs=4)     |
+
