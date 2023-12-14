@@ -7,12 +7,12 @@
 - **여행 공유 플랫폼**
 - **다른 여행자의 여행을 참고해서 편하게 자신만의 여행 계획을 세워보세요.**
 - **계획한 여행을 기록하고 공유하세요.**
-
 <p align="center">  
-  <img src="https://github.com/boostcampwm2023/iOS03-TravelShare/assets/37203016/9d07533e-2e65-43f4-b8b7-175849512125" align="center" width="24%">  
-  <img src="https://github.com/boostcampwm2023/iOS03-TravelShare/assets/37203016/2c4c60f9-918a-46d5-976b-a84fdff20c16" align="center" width="24%">  
-  <img src="https://github.com/boostcampwm2023/iOS03-TravelShare/assets/37203016/759f09ba-86b1-420a-a54d-99058a7533da" align="center" width="24%">  
-  <img src="https://github.com/boostcampwm2023/iOS03-TravelShare/assets/37203016/32c51384-6232-4dc1-98cf-c46b42c4686a" align="center" width="24%">  
+  <img src="https://github.com/boostcampwm2023/iOS03-TravelShare/assets/87685946/7d55273f-cfad-4573-8234-fcc71bc10b00" align="center" width="18%">  
+  <img src="https://github.com/boostcampwm2023/iOS03-TravelShare/assets/87685946/42f8136b-d9c7-45d6-96c4-508a144bcdf6" align="center" width="18%">  
+  <img src="https://github.com/boostcampwm2023/iOS03-TravelShare/assets/87685946/83ebcb7c-cfc9-4560-acc7-06eb71af5bbd" align="center" width="18%">  
+  <img src="https://github.com/boostcampwm2023/iOS03-TravelShare/assets/87685946/37f1e84e-bae8-48f0-a108-f88e7921b470" align="center" width="18%"> 
+  <img src="https://github.com/boostcampwm2023/iOS03-TravelShare/assets/87685946/4341d7ae-9dfc-4880-8a08-d6a9098dbf51" align="center" width="18%"> 
 </p>
 
 ## 우리 앱만의 차이점
