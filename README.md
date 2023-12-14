@@ -24,7 +24,7 @@
 
 ## 🏞️ 앱 시연 영상
 
-https://github.com/boostcampwm2023/iOS03-TravelShare/assets/37203016/5ca89cf7-9a6e-47da-87b4-6b5c28227b9f
+https://github.com/boostcampwm2023/iOS03-TravelShare/assets/118811606/b2eb3944-aa11-4ab3-ac9d-3f2ef63dc076
 
 ## 🙏 Macro 팀 소개 
 
