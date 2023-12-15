@@ -9,7 +9,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { AppleClientAuthBody } from './apple.client.auth.body.dto';
 import { ConfigService } from '@nestjs/config';
-import { catchError, identity, map, mergeMap, throwError } from 'rxjs';
+import { catchError, identity, map, mergeMap, retry, throwError } from 'rxjs';
 import { plainToInstance } from 'class-transformer';
 import {
   AppleIdentityTokenPublicKey,
@@ -153,6 +153,7 @@ export class AppleAuthService {
       }),
       mergeMap((data) => {
         return this.httpService.request({ ...tokenRequest, data }).pipe(
+          retry(5),
           catchError((err) => {
             this.logger.error(JSON.stringify(err));
             return throwError(
@@ -295,7 +296,7 @@ export class AppleAuthService {
       await this.postCacheableService.deleteLikedUserOnAllPosts(
         userDetail.email,
       );
-      await this.userRepository.delete({email: userDetail.email})
+      await this.userRepository.delete({ email: userDetail.email });
       await this.userBlackListManager.addRevokedBlacklist(userDetail.email);
     } catch (err) {
       this.logger.error(err);
