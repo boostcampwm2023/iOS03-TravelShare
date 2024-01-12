@@ -124,9 +124,9 @@ extension WriteViewModel {
     }
     
     private func writeSubmit() {
-        let imageSaveManager = ImageSaveManager()
+        let imageSaveManager = ImageSaveManager.shared
         
-        convertImageDataToImageURL(imageDatas: imageDatas) { imageURLs in
+        imageSaveManager.convertImageDatasToImageURLs(imageDatas: imageDatas) { imageURLs in
             imageURLs.enumerated().forEach {
                 self.contents[$0].imageURL = $1
             }
@@ -192,35 +192,5 @@ extension WriteViewModel {
     private func selectedMarker(_ marker: NMFMarker?) {
         guard (0..<contents.count).contains(pageIndex) else { return }
         mappingPins[carouselCurrentIndex] = marker
-    }
-}
-
-extension WriteViewModel {
-    func convertImageDataToImageURL(imageDatas: [Data], completion: @escaping (([String]) -> Void)) {
-        guard !imageDatas.isEmpty else {
-            completion([])
-            return
-        }
-        
-        let provider = APIProvider(session: URLSession.shared)
-        let uploadImageUseCase = UploadImage(provider: provider)
-        var imageURLs = Array(repeating: "", count: imageDatas.count)
-        var count = 0
-        
-        imageDatas.enumerated().forEach { index, imageData in
-            uploadImageUseCase.execute(imageData: imageData)
-                .receive(on: DispatchQueue.global())
-                .sink { result in
-                    if case let .failure(error) = result {
-                        debugPrint("Image Upload Fail : ", error)
-                    } else if count == imageDatas.count {
-                        completion(imageURLs)
-                    }
-                } receiveValue: { imageURLResponse in
-                    count += 1
-                    imageURLs[index] = imageURLResponse.url
-                }
-                .store(in: &self.cancellables)
-        }
     }
 }

@@ -155,14 +155,11 @@ private extension MyPageViewModel {
     }
     
     func uploadImage(_ data: Data) {
-        uploader.execute(imageData: data).sink { completion in
-            if case let .failure(error) = completion {
-                Log.make().error("\(error)")
-            }
-        } receiveValue: {  [weak self] response in
-            self?.outputSubject.send(.profileEdit(response.url))
-            self?.modifyInformation(1, response.url)
-        }.store(in: &cancellables)
+        let imageSaveManager = ImageSaveManager.shared
+        imageSaveManager.convertImageDataToImageURL(imageData: data) { [weak self] imageURL in
+            self?.outputSubject.send(.profileEdit(imageURL))
+            self?.modifyInformation(1, imageURL)
+        }
     }
     
     func modifyInformation(_ cellIndex: Int, _ query: String) {
