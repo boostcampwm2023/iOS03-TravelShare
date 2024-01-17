@@ -24,6 +24,7 @@ export class AppleAuthController {
   @ApiResponse({ type: AppleClientAuthResponse })
   @Public()
   @Post('auth')
+  //TODO: refactor
   async auth(@Body() payload: AppleClientAuthBody) {
     return await this.appleAuthService.auth(payload);
   }
