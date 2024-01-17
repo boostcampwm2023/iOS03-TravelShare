@@ -5,6 +5,7 @@ import { ReportPostQuery } from './report.post.query.dto';
 import { AuthenticatedUser } from 'auth/auth.decorators';
 import { Authentication } from 'auth/authentication.dto';
 import { ReportService } from './report.service';
+import { ReportUserQuery } from './report.user.query.dto';
 
 @ApiTags('report')
 @ApiBearerAuth('access-token')
@@ -21,5 +22,13 @@ export class ReportController {
     @AuthenticatedUser() user: Authentication,
   ) {
     await this.reportService.isBadPost(query, user);
+  }
+
+  @ApiOperation({
+    summary: '유저 신고',
+  })
+  @Post('user')
+  async baduser(@Query() query: ReportUserQuery) {
+    await this.reportService.isBadPost({} as any, { ...query, role: 'user' });
   }
 }
