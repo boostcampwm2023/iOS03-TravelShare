@@ -247,7 +247,9 @@ export class AppleAuthService {
         this.logger.error(err);
         throw new ConflictException('duplicate apple id', { cause: err });
       });
-    return this.createToken(user);
+    const token = this.createToken(user);
+    token.isSignup = true;
+    return token;
   }
 
   private async signin({ sub }: AppleIdentityTokenPayload) {
