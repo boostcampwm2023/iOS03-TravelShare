@@ -2,7 +2,7 @@ name: deploy Project to Server
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "dev-BE" ]
     paths:
       - 'server/**'
       - '.git/workflows/**'
@@ -20,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: 'dev'
+          ref: 'dev-BE'
 
       - name: Setting application.yaml before building app
         env:
